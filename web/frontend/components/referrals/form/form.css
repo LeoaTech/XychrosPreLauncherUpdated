@@ -1,0 +1,29 @@
+/* .closeBtn,
+.deleteBtn {
+  background-color: #ea3694;
+  color: white;
+}
+
+.closeBtn {
+  height: 30px;
+  width: 40px;
+  border-radius: 5px;
+}
+
+.label__title{
+  
+}
+.closeBtn:hover {
+  background-color: crimson;
+}
+
+.deleteBtn {
+  margin-top: 35px;
+  width: 100px;
+  float: right;
+}
+
+.deleteBtn:hover {
+  background-color: crimson;
+}
+ */

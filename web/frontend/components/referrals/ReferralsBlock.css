@@ -1,0 +1,74 @@
+.cellAction {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 30px;
+}
+
+.actionbtn,
+.deletebtn {
+  color: var(--primary-color);
+  font-size: 25px;
+  cursor: pointer;
+}
+
+
+.deletebtn:hover,
+.actionbtn:hover{
+  color: var(--secondary-text-color);
+}
+
+.datatable {
+  padding: 20px;
+  height: 100%;
+  font-size: 32px;
+  margin-top: 20px;
+}
+
+.rdt_Table {
+  border: 1px solid #fcfcfc;
+
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+
+
+/* .rdt_TableHeadRow,
+.rdt_TableCol,
+
+ */
+
+.rdt_TableCol {
+  background-color: #000;
+  border: 1px solid rgb(245, 242, 242);
+}
+
+.rdt_TableHeadRow {
+  border: none;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  border-bottom: 1px solid rgb(239, 239, 239);
+}
+
+.rdt_TableCell {
+  border: 1px solid rgb(214, 208, 208);
+  border-right: 1px solid rgb(249, 246, 246);
+}
+
+/* .rdt_TableCol {
+  border-bottom: none;
+  border-top: 1px solid rgb(227, 225, 225);
+  border-left: 1px solid rgb(214, 212, 212);
+} */
+
+[data-column-id="id"].rdt_TableCol {
+  max-width: 20px;
+  border-top-left-radius: 10px;
+}
+[data-column-id="details"].rdt_TableCol {
+  border-top-right-radius: 10px;
+}

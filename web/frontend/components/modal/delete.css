@@ -1,0 +1,68 @@
+.delete-modal-container {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 300px;
+  line-height: normal;
+  border: 1px solid #95a5a6;
+  box-shadow: 24;
+  background-color: var(--secondary-text-color);
+  border-radius: 15px;
+  border-top: none;
+  padding: 4;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+}
+
+.modal__nav h6 {
+  text-align: center;
+  margin-left: 10px;
+}
+
+.modal__body {
+  margin: 10px;
+  font-size: 18px;
+}
+
+.action__btn-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+  margin-top: 25px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.delete__btn,
+.close__btn {
+  border: 1px solid rgb(135, 135, 135);
+  padding: 8px;
+  margin: 10px;
+  height: 50px;
+  width: 150px;
+  font-size: 22px;
+  border-radius: 10px;
+  background-color: var(--secondary-color);
+  text-align: center;
+  color: #fff;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.delete__btn:hover,
+.close__btn:hover {
+  background-color: #1c1b1b;
+  border: 1px solid var(--secondary-color);
+  color: var(--secondary-color);
+}
