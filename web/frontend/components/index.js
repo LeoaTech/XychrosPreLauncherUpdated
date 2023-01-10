@@ -5,4 +5,8 @@ export { default as HomeComponent } from "./home/HomeComponent";
 export { default as Campaign } from "./campaigns/Campaign";
 export { default as Referral } from "./referrals/Referrals";
 export { default as MainPage } from "./ui/MainPage";
+//export { default as UserProfile } from "./user/UserProfile";
+//export { default as Pricing } from "./pricing/Pricing";
+//export { default as FAQ } from "./faq/FAQ";
+
 export * from "./providers";

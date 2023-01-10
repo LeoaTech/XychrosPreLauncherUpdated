@@ -1,0 +1,162 @@
+.new-campaign-container {
+  color: var(--primary-color);
+  padding: 25px;
+  margin: 25px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Navbar */
+
+section {
+  background-color: var(--secondary-text-color);
+  padding: 35px;
+  margin-bottom: 40px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+.new-campaign-container nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.nav-title {
+  font-weight: 700;
+  font-size: 40px;
+}
+
+.save-btn {
+  height: 60px;
+  width: 130px;
+  background-color: var(--secondary-color);
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 26px;
+  font-weight: 500;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+/* Form Sections */
+
+.campaign-form form {
+  display: flex;
+  /* gap: 100px; */
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Labels */
+
+label {
+  font-size: 23px;
+  font-weight: 500;
+  margin: 20px 0;
+  color:rgb(200, 199, 199)
+}
+
+/* Input Fields inside the form */
+.campaign-form form input {
+  background-color: rgba(52, 50, 50, 0.935);
+  border: none;
+  padding: 25px 10px;
+  border-radius: 12px;
+  height: 40px;
+  color: white;
+  width: 600px;
+  font-size: 23px;
+  font-weight: 500;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.campaign-form button a:hover {
+  text-decoration: underline;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-btn {
+  height: auto;
+  padding: 15px;
+  word-wrap: break-word;
+  width: 250px;
+  background-color: var(--secondary-color);
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+/* Checkboxes Section */
+
+.check-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 40px;
+  margin-left: 20px;
+}
+
+.check-group{
+    justify-content: center;
+    align-items: center;
+}
+
+.check-group input {
+  height: 28px;
+  margin: 10px;
+  width: 50px;
+  border-radius: 10px;
+  background-color: var(--secondary-text-color);
+  border: 1px solid var(--primary-color);
+
+}
+
+input[type="checkbox"]:checked {
+  accent-color: var(--secondary-text-color);
+  border: 1px solid var(--primary-color);
+}
+
+/* Settings Preference */
+.settings-form {
+  display: flex;
+  gap: 50px;
+}
+
+.section1,
+.section2 {
+  padding: 35px;
+  margin: 20px;
+  width: 100%;
+  margin-bottom: 45px;
+}
+
+.section1 h2,.section2 h2{
+    margin-bottom: 20px;
+    font-size: 29px;
+    font-weight: 700;
+    margin-left: 20px;
+}
