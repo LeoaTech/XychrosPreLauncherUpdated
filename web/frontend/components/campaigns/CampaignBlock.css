@@ -1,0 +1,74 @@
+.campaign-block {
+  width: 94%;
+  background: var(--sidebar-bg-color);
+  border:1px solid #fff;
+  box-shadow: 0px 4px 4px rgb(0 0 0 / 15%);
+  border-radius: 10px;
+  display: flex;
+  margin: 28px 14px;
+  padding: 11px 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.camapign-block-name {
+ 
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 35px;
+  color: #fff;
+}
+
+.campaign-block-product-name {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  text-decoration-line: underline;
+  color: #d8d4d6;
+}
+
+.campaign-block-duration {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #8b8a8a;
+}
+
+.campaign-kpis {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.campaign-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  flex-direction: column;
+}
+
+.clicks-icon {
+  width: 33px;
+  height: 31px;
+}
+.revenue-icon {
+  width: 43px;
+  height: 46px;
+}
+
+.referral-icon {
+  width: 37px;
+  height: 46px;
+}
+
+.campaign-icon {
+  width: 55px;
+  height: 62px;
+}
