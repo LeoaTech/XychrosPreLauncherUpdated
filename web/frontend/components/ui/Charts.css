@@ -1,0 +1,61 @@
+.chart {
+  box-shadow: 0px 2px 10px rgba(32, 32, 32, 0.815);
+  border-radius: 6px;
+  margin-top: 30px;
+  background-color:var(--secondary-text-color);
+}
+
+.chart-header {
+  padding: 25px 5%;
+  border-bottom: 2px solid #ececec;
+}
+
+.chart-heading {
+  /* font-family: 'Roboto'; */
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  color: #b0adad;
+}
+
+.chart-value {
+  /* font-family: 'Roboto'; */
+  font-style: normal;
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 47px;
+  letter-spacing: -0.0375em;
+  color: var(--primary-color);
+}
+
+.chart-subheading {
+  /* font-family: 'Roboto'; */
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #f1eeee;
+}
+
+.chart canvas {
+  margin: 2% 3%;
+  max-height: 300px;
+}
+
+.single-chart #line canvas {
+}
+
+.dual-charts #radar canvas {
+  color:white;
+
+  /* max-width: 620px !important;
+  max-height: 400px !important; */
+  flex: 1 1 1px;
+}
+
+.dual-charts #donut canvas {
+  /* max-width: 572px !important;
+  max-height: 400px !important; */
+  flex: 1 1 1px;
+}

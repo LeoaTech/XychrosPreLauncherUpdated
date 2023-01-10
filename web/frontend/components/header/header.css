@@ -1,0 +1,95 @@
+/* Navbar container */
+
+.navbar__container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  position: relative;
+  margin-right: 6px;
+  /* border-bottom: 1px solid #242323; */
+}
+
+/* Left Nav links */
+.nav-btn {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-btn-text {
+  margin-right: 10px;
+  font-weight: 500;
+  font-size: 19px;
+}
+
+.nav-btn-icon {
+  position: absolute;
+  display: inline-flex;
+  height: 55px;
+  width: 55px;
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+}
+
+/* Center Nav Logo */
+
+.center img {
+  width: 250px;
+}
+
+/* Right Nav Links */
+
+.right-links {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 20px;
+}
+
+.right-links button {
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2;
+  cursor: pointer;
+  padding: 1px;
+}
+
+.userProfile img {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.userProfile button {
+  background: none;
+  /* color:var(--main-text-color); */
+  border: none;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* .userProfile:hover{
+    background-color: rgb(218, 217, 217);
+    border-radius: 25px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    -ms-border-radius: 25px;
+    -o-border-radius: 25px;
+} */

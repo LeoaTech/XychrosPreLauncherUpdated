@@ -1,0 +1,231 @@
+.sidebar-container {
+  height: 98.5vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.top {
+  overflow: hidden;
+  overflow: auto;
+}
+
+.bottom {
+  margin-bottom: 45px;
+}
+
+.sidebar-content .sidebar-logo{
+ width: 200px;
+}
+
+
+.onlylogo{
+  width: 55px;
+  margin: 0 20px;
+  display: none;
+}
+
+/* All Links style in Side bar */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+/* Logo in side Bar */
+
+.sidebar_header {
+  padding: 15px;
+}
+
+.menu-toggle-icon {
+  border: none;
+  background-color: transparent;
+  color: white;
+}
+
+/* New Campaign button  */
+
+.add-btn-link {
+  margin-top: 10px;
+  /* margin: 20px; */
+  font-weight: 500;
+
+}
+
+.add-btn-link button {
+  width: 100%;
+  display: flex;
+  font-weight: 500;
+  /* padding: 5px; */
+  align-items: center;
+  background-color: rgb(234, 234, 234);
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.add-btn-link button:hover {
+  background-color: rgb(111, 101, 224);
+  color: white;
+  border:1px solid rgb(50, 50, 50);
+  display: flex;
+  font-weight: 700;
+  font-size: 19px;
+  align-items: center;
+ 
+  /* padding-top: 2px;
+  padding-bottom: 2px; */
+
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.add-icon-text {
+  display: block;
+  font-size: 22px;
+}
+
+.sidebar-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  margin-right: 10px;
+  gap: 7px;
+  padding: 12px;
+}
+
+/* All Pages Links in Center of Sidebar */
+
+.sidebar_links {
+  margin-top: 30px;
+}
+
+.sidebar_links div {
+  margin: 3px;
+  margin-top: 4px;
+}
+
+.icon-img {
+  width: 25px;
+  height: 25px;
+}
+
+.icon-img img {
+  width: 25px;
+  height: 25px;
+}
+.icon-text {
+  display: block;
+  font-weight: 500;
+  font-size: 27px;
+}
+
+/* Active Link */
+.activelink {
+  display: flex;
+  font-weight: 700;
+  font-size: 19px;
+  align-items: center;
+  gap: 20px;
+  color: white;
+  padding-left: 10px;
+  padding-top: 1em;
+  padding-bottom: 25px;
+  margin: 16px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+/* In-Active Links */
+
+.normallink {
+  display: flex;
+  font-weight: 500;
+  font-size: 19px;
+  align-items: center;
+  color: rgb(193, 193, 193);
+  gap: 20px;
+  padding-left: 10px;
+  padding-top: 1em;
+  padding-bottom: 25px;
+  margin: 16px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.normallink img {
+  color: white;
+  height: 25px;
+  width: 25px;
+}
+
+.normallink:hover,
+.activelink:hover {
+  /* margin: 4px; */
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.sidebar-link-bottom a {
+  bottom: 50px;
+  top: 60%;
+  /* left: 0;
+  top: 190px;
+  bottom: 0; */
+}
+
+/* Media Queries */
+
+
+@media only screen and (max-width: 2134px) {
+
+  /* .sidebar-content .sidebar-logo{
+    display: none;
+  }
+  .onlylogo{
+    display: block;
+  }
+  .icon-text {
+    display: none;
+  }
+  .add-icon-text{
+    display: none;
+  }
+
+  .add-btn-link {
+
+   
+  }
+  
+  .add-btn-link button {
+    width: 100%;
+    
+} */
+}
+
+@media only screen and (max-width: 768px) {
+  .icon-text {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .icon-text{
+    display: none;
+  }
+
+  
+ 
+}

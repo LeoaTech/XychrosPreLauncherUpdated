@@ -1,0 +1,90 @@
+/* Fonts */
+
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap");
+
+/* Variables */
+:root {
+  --sidebar-bg-color: #232229;
+  --main-text-color: rgb(29, 28, 28);
+  --main-bg-color: #fcfcfc;
+  --primary-color: #fcfcfc;
+  --secondary-text-color: #232229;
+  --secondary-color: #5447df;
+  --active-link-bg-color: #5447df;
+  --active-link-color: #fff;
+  --shadow-color: #766fc5;
+  --card-bg-color: rgb(238, 237, 251);
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+
+/* Main App */
+.app {
+  display: flex;
+  height: 100vh;
+  /* position: relative; */
+}
+
+/* Side bar */
+.sidebar {
+  height: 100vh;
+  width: 14%;
+  padding: 10px;
+  overflow: hidden;
+  background-color: var(--sidebar-bg-color);
+  color: var(--primary-color);
+  /* position: fixed; */
+
+  z-index: 1000;
+}
+
+/* SideBar */
+
+.sidebar .side-close {
+  width: 8%;
+}
+
+/* Main HomePage  (left-container) */
+
+.main__container {
+  width: 86%;
+  background-color: var(--main-bg-color);
+  padding: 10px;
+  justify-content: flex-start;
+  gap: 20px;
+  height: 100vh;
+}
+
+.main__container.dark {
+  background-color: var(--main-text-color);
+}
+
+.header {
+  /* position: static;
+  width: 100%; */
+}
+
+@media only screen and (min-width: 2134px) {
+  /* .sidebar{
+    width: 8%;
+  }
+
+  .main__container{
+    width: 92%;
+  } */
+}
+
+@media only screen and (max-width: 768px) {
+  /* .sidebar.side-close {
+    width: 8%;
+  }
+
+  .main__container.fullscreen {
+    width: 92%;
+  } */
+}
