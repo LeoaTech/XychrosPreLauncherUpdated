@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Lalezar&family=Lato&display=swap');
+
+.section-layout {
+  display: flex;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-layout.horizontal {
+  flex-direction: column;
+}
+
+.section-layout.vertical {
+  flex-direction: row;
+}
+
+.three-fourth {
+  min-width: 100vw;
+  min-height: 60vh;
+}
+
+.one-fourth {
+  min-width: 100vw;
+  min-height: 40vh;
+}
+
+.half {
+  min-width: 50vw;
+  min-height: 100vh;
+}
+
+.spaced-evenly {
+  justify-content: space-evenly !important;
+}
+
+.spaced {
+  text-align: center;
+}
+
+#form-submission {
+  display: flex;
+  flex-direction: column;
+}
+
+.email-input-product-prelaucher {
+  border-radius: 45px;
+  min-height: 60px;
+  width: 40vw;
+  font-size: 20px;
+  padding: 4%;
+  border: none;
+  margin-bottom: 10px;
+}
+
+.email-input-product-prelaucher:hover {
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .4);
+}
+
+input[type='email']:focus {
+  box-shadow: none;
+}
+
+.submit-button-product-prelaunch {
+  border-radius: 45px;
+  margin: 10px auto;
+}

@@ -1,0 +1,315 @@
+<script>
+  let first_page_settings = {{ block.settings | json }};
+  console.log(first_page_settings);
+  window.onload = (e) => {
+
+    var el = document.querySelector('.product-prelaunch');
+    el.parentElement.style.padding = '0';
+    el.parentElement.style.margin = '0';{% if block.settings.show_header_footer == false %}var node,
+        nodes = [];
+
+      do {
+        var parent = el.parentNode;
+
+// Collect element children
+        for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
+          node = parent.childNodes[i];
+
+// Collect only sibling nodes that are elements and not the current element
+          if (node.nodeType == 1 && node != el) {
+            nodes.push(node);
+          }
+        }
+
+// Go up to parent
+        el = parent;
+
+// Stop when processed the body's child nodes
+      } while (el.tagName.toLowerCase() != 'body');
+
+// Hide the collected nodes
+      nodes.forEach(function(node) {
+        node.style.display = 'none';
+      });{% endif %}let image_background = 'https:' + first_page_settings.background;
+    console.log(image_background);
+    document.getElementById('background-image').style.backgroundImage = 'url(' + image_background + ')';{%- comment -%}if (first_page_settings.background) {
+        let image_background = 'https:' + first_page_settings.background;
+        console.log(image_background);
+        document.getElementById('background-image').style.backgroundImage = 'url(' + image_background + ')';
+      } else {
+        document.getElementById('background-image').style.backgroundImage = 'url("../assets/verticalBackground.png")';
+      }
+    {%- endcomment -%}
+
+    var form = document.getElementById('form-submission'),
+      actionPath = '',
+      formData = null;
+
+    form.addEventListener('submit', (e) => {
+      console.log('I came here to test!');
+      e.preventDefault();
+
+      formData = new URLSearchParams(new FormData(form)).toString();
+      actionPath = form.getAttribute('action') + '?' + formData;
+
+      console.log(formData);
+      console.log(actionPath);
+
+      const fetchOptions = {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        data: formData
+      };
+
+      console.log(fetchOptions.data);
+
+      const response = fetch(actionPath, fetchOptions);
+
+      console.log(response);
+
+      return;
+
+    });
+  }
+</script>
+
+<style>
+  .submit-button {
+    color: {{ block.settings.button_font_color }};
+    background: {{ block.settings.button_color }};
+    font-size: {{ block.settings.button_font_size }}px;
+  }
+
+  .product-prelaunch {
+    display: block !important;
+    width: 100vw;
+
+  }
+
+  .header_text {
+    color: {{ block.settings.header_color }};
+    font-size: {{ block.settings.header_font_size }}px;
+    font-weight: 400;
+    padding: 0 2%;
+    font-family: 'Lalezar';
+  }
+
+  .subheader_text {
+    color: {{ block.settings.subheader_color }};
+    font-size: {{ block.settings.subheader_font_size }}px;
+    font-weight: 400;
+    padding: 0 2%;
+    font-family: 'Lalezar';
+  }
+
+  .tag-line {
+    color: {{ block.settings.cta_tag_color }};
+    font-size: {{ block.settings.cta_tag_font_size }}px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding: 0 2%;
+  }
+
+  .text-layout {
+    background-color: {{ block.settings.bg_color }};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .img-layout {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    {% if block.settings.text_layout == 'left' %}
+      align-items: flex-start;
+    {% elsif block.settings.text_layout == 'right' %}
+      align-items: flex-end;
+    {% else %}
+      align-items: center;
+    {% endif %}
+    opacity: {{ block.settings.background_opacity }};
+    filter: brightness({{ block.settings.background_brightness | times: 100 }}%);
+  }
+</style>
+
+{% render "first_page" %}
+
+{% schema %}
+  {
+    "name": "PreLauncher First Page",
+    "target": "section",
+    "templates": ["page"],
+    "class": "product-prelaunch",
+
+// "tag": "section",
+    "stylesheet": "first_page.css",
+
+// "javascript": "first-page.js",
+    "settings": [
+      {
+        "type": "product",
+        "id": "product",
+        "label": "Product"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_header_footer",
+        "label": "Show Header & Footer",
+        "default": true
+      },
+      {
+        "label": "Background Color",
+        "id": "bg_color",
+        "type": "color_background",
+        "default": "linear-gradient(#ffffff, #000000)"
+      },
+      {
+        "type": "radio",
+        "id": "layout",
+        "label": "Layout",
+        "options": [
+          {
+            "value": "horizontal",
+            "label": "Top-Bottom "
+          }, {
+            "value": "vertical",
+            "label": "Left-Right"
+          }
+        ],
+        "default": "horizontal"
+      }, {
+        "label": "Background Image",
+        "id": "background",
+        "type": "image_picker"
+
+// "default": "#000000"
+      }, {
+        "label": "Image Opacity",
+        "id": "background_opacity",
+        "type": "range",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "default": 1
+      }, {
+        "label": "Image brightness",
+        "id": "background_brightness",
+        "type": "range",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "default": 1
+      }, {
+        "label": "Header",
+        "id": "header_text",
+        "type": "text",
+        "default": "We are soon opening our doors to serve you"
+      }, {
+        "label": "Header Color",
+        "id": "header_color",
+        "type": "color",
+        "default": "#000000"
+      }, {
+        "label": "Header Font Size",
+        "id": "header_font_size",
+        "type": "range",
+        "min": 24,
+        "max": 48,
+        "step": 2,
+        "unit": "px",
+        "default": 36
+      }, {
+        "label": "Sub Header",
+        "id": "subheader_text",
+        "type": "text",
+        "default": "Enter SubHeader"
+      }, {
+        "label": "Sub Header Color",
+        "id": "subheader_color",
+        "type": "color",
+        "default": "#000000"
+      }, {
+        "label": "Sub Header Font Size",
+        "id": "subheader_font_size",
+        "type": "range",
+        "min": 16,
+        "max": 32,
+        "step": 2,
+        "unit": "px",
+        "default": 24
+      }, {
+        "type": "select",
+        "id": "text_layout",
+        "label": "Text Layout",
+        "options": [
+          {
+            "value": "center",
+            "label": "Center"
+          }, {
+            "value": "left",
+            "label": "Left"
+          }, {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "center"
+      }, {
+        "label": "Tag Line",
+        "id": "cta_tag_text",
+        "type": "text",
+        "default": "We are soon opening our doors to serve you"
+      }, {
+        "label": "Tag Line Text Color",
+        "id": "cta_tag_color",
+        "type": "color",
+        "default": "#000000"
+      }, {
+        "label": "Tag Line Font Size",
+        "id": "cta_tag_font_size",
+        "type": "range",
+        "min": 16,
+        "max": 32,
+        "step": 1,
+        "unit": "px",
+        "default": 24
+      }, {
+        "label": "Button Text",
+        "id": "button_text",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Button Color",
+        "id": "button_color",
+        "type": "color",
+        "default": "#000000"
+      }, {
+        "label": "Button Font Color",
+        "id": "button_font_color",
+        "type": "color",
+        "default": "#fff"
+      }, {
+        "label": "Button Font Size",
+        "id": "button_font_size",
+        "type": "range",
+        "min": 14,
+        "max": 24,
+        "step": 1,
+        "unit": "px",
+        "default": 20
+      }, {
+        "type": "page",
+        "id": "page",
+        "label": "Link to Page"
+      }
+    ]
+  }
+{% endschema %}

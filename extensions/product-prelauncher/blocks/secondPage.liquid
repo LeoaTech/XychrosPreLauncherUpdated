@@ -1,0 +1,311 @@
+<script>
+  let second_page_settings = {{ block.settings | json }};
+  console.log(second_page_settings);
+
+  let product_list = {{ block.settings.product_list | json }};
+
+  window.onload = (e) => {
+
+    var el = document.querySelector('.product-prelaunch-second-page');
+    el.parentElement.style.padding = '0';
+    el.parentElement.style.margin = '0';
+    if (second_page_settings.show_header_footer == false) {
+      var node,
+        nodes = [];
+
+      do {
+        var parent = el.parentNode;
+
+// Collect element children
+        for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
+          node = parent.childNodes[i];
+
+// Collect only sibling nodes that are elements and not the current element
+          if (node.nodeType == 1 && node != el) {
+            nodes.push(node);
+          }
+        }
+
+// Go up to parent
+        el = parent;
+
+// Stop when processed the body's child nodes
+      } while (el.tagName.toLowerCase() != 'body');
+
+// Hide the collected nodes
+      nodes.forEach(function(node) {
+        node.style.display = 'none';
+      });
+    }
+
+    let second_image_background = 'https:' + second_page_settings.background;
+    console.log(second_image_background);
+    document.getElementById('second-background-image').style.backgroundImage = 'linear-gradient(rgba(0, 0, 0,' + second_page_settings.background_brightness + ' ), rgba(0, 0, 0,' + second_page_settings.background_brightness + ')),url(' + second_image_background + ')';
+  }
+</script>
+
+<style>
+  .product-prelaunch-second-page {
+    display: block !important;
+    width: 100vw;
+  }
+
+  .announcement {
+    background-color: {{ block.settings.announcement_bg_color }};
+    color: {{ block.settings.announcement_color }};
+    font-size: {{ block.settings.announcement_font_size }}px;
+    font-weight: 800;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+  }
+
+  .preheader_text {
+    color: {{ block.settings.preheader_color }};
+    font-size: {{ block.settings.preheader_font_size }}px;
+    font-weight: 800;
+    padding: 0 2%;
+  }
+
+  .header_text {
+    color: {{ block.settings.header_color }};
+    font-size: {{ block.settings.header_font_size }}px;
+    font-weight: 800;
+    padding: 0 2%;
+  }
+
+  .subheader_text {
+    color: {{ block.settings.subheader_color }};
+    font-size: {{ block.settings.subheader_font_size }}px;
+    font-weight: 500;
+    padding: 0 2%;
+  }
+
+  .footer_text {
+    color: {{ block.settings.footer_color }};
+    font-size: {{ block.settings.footer_font_size }}px;
+    font-weight: 400;
+    position: absolute;
+    bottom: 0;
+    left: 48vw;
+  }
+
+  .img-layout {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    {% if block.settings.text_layout == 'left' %}
+      align-items: flex-start;
+      padding: 4vw;
+    {% elsif block.settings.text_layout == 'right' %}
+      align-items: flex-end;
+      padding: 4vw;
+    {% else %}
+      align-items: center;
+    {% endif %}
+  }
+
+  .gift-layout {
+    background-color: {{ block.settings.bg_color }};
+  }
+
+  svg > path {
+    fill: {{ block.settings.header_color }} !important;
+  }
+</style>
+
+{% render "second_page" %}
+
+
+
+{% schema %}
+  {
+    "name": "PreLauncher Second Page",
+    "target": "section",
+    "templates": ["page"],
+    "class": "product-prelaunch-second-page",
+
+// "tag": "section",
+    "stylesheet": "second_page.css",
+    "javascript": "second-page.js",
+    "settings": [
+      {
+        "label": "Announcement Background Color",
+        "id": "announcement_bg_color",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "label": "Announcement Text",
+        "id": "announcement_text",
+        "type": "text",
+        "default": "This is announcement section"
+      },
+      {
+        "label": "Announcement Text Color",
+        "id": "announcement_color",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "label": "Announcement Font Size",
+        "id": "announcement_font_size",
+        "type": "range",
+        "min": 10,
+        "max": 14,
+        "step": 1,
+        "unit": "px",
+        "default": 12
+      }, {
+        "type": "checkbox",
+        "id": "show_header_footer",
+        "label": "Show Header & Footer",
+        "default": true
+      }, {
+        "type": "radio",
+        "id": "layout",
+        "label": "Layout",
+        "options": [
+          {
+            "value": "horizontal",
+            "label": "Top-Bottom "
+          }, {
+            "value": "vertical",
+            "label": "Left-Right"
+          }
+        ],
+        "default": "horizontal"
+      }, {
+        "label": "Background Image",
+        "id": "background",
+        "type": "image_picker"
+
+// "default": "#000000"
+      }, {
+        "label": "Image brightness",
+        "id": "background_brightness",
+        "type": "range",
+        "min": 0,
+        "max": 1,
+        "step": 0.1,
+        "default": 1
+      }, {
+        "label": "Background Color",
+        "id": "bg_color",
+        "type": "color",
+        "default": "#fff"
+      }, {
+        "label": "Pre-Header",
+        "id": "preheader_text",
+        "type": "text",
+        "default": "This is PreHeader Text"
+      }, {
+        "label": "Pre-Header Color",
+        "id": "preheader_color",
+        "type": "color",
+        "default": "#000000"
+      }, {
+        "label": "Pre-Header Font Size",
+        "id": "preheader_font_size",
+        "type": "range",
+        "min": 12,
+        "max": 16,
+        "step": 1,
+        "unit": "px",
+        "default": 14
+      }, {
+        "label": "Header",
+        "id": "header_text",
+        "type": "text",
+        "default": "This is Header Text"
+      }, {
+        "label": "Header Color",
+        "id": "header_color",
+        "type": "color",
+        "default": "#000000"
+      }, {
+        "label": "Header Font Size",
+        "id": "header_font_size",
+        "type": "range",
+        "min": 12,
+        "max": 24,
+        "step": 1,
+        "unit": "px",
+        "default": 20
+      }, {
+        "label": "Sub Header",
+        "id": "subheader_text",
+        "type": "text",
+        "default": "This is SubHeader Text"
+      }, {
+        "label": "Sub Header Color",
+        "id": "subheader_color",
+        "type": "color",
+        "default": "#000000"
+      }, {
+        "label": "Sub Header Font Size",
+        "id": "subheader_font_size",
+        "type": "range",
+        "min": 10,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "default": 14
+      }, {
+        "type": "select",
+        "id": "text_layout",
+        "label": "Text Layout",
+        "options": [
+          {
+            "value": "center",
+            "label": "Center"
+          }, {
+            "value": "left",
+            "label": "Left"
+          }, {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "center"
+      }, {
+        "type": "product_list",
+        "id": "product_list",
+        "label": "Prize Products",
+        "limit": 5
+      }, {
+        "label": "Icon",
+        "id": "icon",
+        "type": "image_picker"
+      }, {
+        "label": "Hover Icon",
+        "id": "hover_icon",
+        "type": "image_picker"
+
+// "default": "#000000"
+      }, {
+        "label": "Footer Text",
+        "id": "footer_text",
+        "type": "text",
+        "default": "This is the Footer Text"
+      }, {
+        "label": "Footer Color",
+        "id": "footer_color",
+        "type": "color",
+        "default": "#000000"
+      }, {
+        "label": "Footer Font Size",
+        "id": "footer_font_size",
+        "type": "range",
+        "min": 10,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "default": 14
+      }
+    ]
+  }
+{% endschema %}

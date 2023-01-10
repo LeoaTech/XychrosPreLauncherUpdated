@@ -1,0 +1,30 @@
+<div class="section-layout {{ block.settings.layout}}">
+  <div id='background-image' class="img-layout {% if block.settings.layout == 'horizontal' %}three-fourth{% else %}half{% endif %}">
+    {% if block.settings.layout == 'horizontal' %}
+      <div class="subheader_text">{{ block.settings.subheader_text}}</div>
+      <div class="header_text">{{ block.settings.header_text}}</div>
+    {% else %}
+      <div class="hidden">this div is hidden</div>
+    {% endif %}
+
+  </div>
+  <div class="text-layout {% if block.settings.layout == 'horizontal' %}one-fourth{% else %}half spaced-evenly{% endif %}">
+    {% if block.settings.layout == 'vertical' %}
+      <div class="spaced">
+        <div class="subheader_text">{{ block.settings.subheader_text}}</div>
+        <div class="header_text">{{ block.settings.header_text}}</div>
+      </div>
+      <div class="spaced">
+      {% endif %}
+      <div class="tag-line" style="color:{{ block.settings.cta_tag_color}};font-size:{{ block.settings.cta_tag_font_size}}px;">{{ block.settings.cta_tag_text }}</div>
+
+      <form action='/apps/xychros-product-prelauncher/api/getuser' id="form-submission">
+        <input type="email" required id="email" name="email" placeholder="Enter your email" class='email-input-product-prelaucher'/>
+
+        <input type="submit" value="{{ block.settings.button_text }}" class="button submit-button submit-button-product-prelaunch"/>
+      </form>
+      {% if block.settings.layout == 'vertical' %}
+      </div>
+    {% endif %}
+  </div>
+</div>
