@@ -8,7 +8,7 @@
   border: 1px solid #95a5a6;
   color:"#fff";
   box-shadow: 24;
-  background-color: var(--secondary-text-color);
+  background-color: var(--primary-color);
   border-radius: 15px;
   line-height: 37px;
   border-top: none;
@@ -23,7 +23,7 @@
 }
 
 .modal__nav {
-  background-color: var(--secondary-color);
+  background-color: var(--secondary-text-color);
   display: flex;
   justify-content: space-between;
   border: none;
@@ -41,7 +41,9 @@
   justify-content: center;
   align-items: center;
 }
-
+.modal_container section{
+  background-color: #fff;
+}
 .btn__close {
   width: 100px;
   height: 35px;
@@ -71,17 +73,18 @@
 
 .modal__body {
   padding: 10px 15px;
-  color:#fff
+  background-color:#fff;
+  
 }
 
 .modal__body p {
-  font-size: 22px;
+  font-size: 18px;
   margin-top: 10px;
 }
 
 .referral_detail-table {
-  border: 1px solid rgb(220, 217, 217);
-  background-color: #333;
+  border: 1px solid rgb(65, 64, 64);
+  background-color: var(--primary-color);
   border-top: none;
   height: 400px;
   width: 500px;
@@ -97,13 +100,13 @@
 }
 
 .referral_detail_header {
-  border-bottom: 1px solid rgb(75, 75, 75);
+  /* border-bottom: 1px solid rgb(75, 75, 75); */
   height: 50px;
   padding: 8px;
 }
 
 .rdt_Table {
-  border: 1px solid #fcfcfc;
+  border: 1px solid #111111;
 
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -111,16 +114,20 @@
   border-top-left-radius: 10px;
 }
 
+.rdt_TableCell {
+  border-right:1px solid rgb(233, 228, 228)
+}
+
 .rdt_TableCol {
-  background-color: #000;
-  border: 1px solid rgb(245, 242, 242);
+  /* background-color: #000; */
+  /* border: 1px solid rgb(40, 39, 39); */
 }
 
 .rdt_TableHeadRow {
   border: none;
   border-top-right-radius: 15px;
   border-top-left-radius: 15px;
-  border-bottom: 1px solid rgb(239, 239, 239);
+  border-bottom: 1px solid rgb(14, 13, 13);
 }
 
 [data-column-id="id"].rdt_TableCol {
