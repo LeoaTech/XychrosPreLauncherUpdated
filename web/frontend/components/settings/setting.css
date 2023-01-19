@@ -1,0 +1,259 @@
+.settings-container {
+  color: var(--primary-color);
+  padding: 25px;
+  margin: 25px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Navbar */
+
+section {
+  background-color: var(--secondary-text-color);
+  padding: 35px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+.settings-container nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.nav-title {
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.save-btn {
+  height: 60px;
+  width: 130px;
+  background-color: var(--secondary-color);
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 26px;
+  font-weight: 500;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.settings-container p {
+  font-size: 17px;
+}
+
+/* Labels */
+
+label {
+  font-size: 23px;
+  font-weight: 500;
+  margin: 20px 0;
+  color: rgb(200, 199, 199);
+}
+
+/* Checkboxes Section */
+
+.check-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.check-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.check-group input {
+  height: 28px;
+  margin: 10px;
+  width: 50px;
+  border-radius: 10px;
+  background-color: var(--secondary-text-color);
+  border: 1px solid var(--primary-color);
+}
+
+input[type="checkbox"]:checked {
+  accent-color: var(--secondary-text-color);
+  border: 1px solid var(--primary-color);
+}
+
+/* Settings Preference */
+.settings-form {
+  display: flex;
+  gap: 3px;
+}
+
+.section1,
+.section2 {
+  padding: 30px;
+  margin: 20px;
+  width: 100%;
+  margin-bottom: 35px;
+}
+
+.section1 h2,
+.section2 h2 {
+  margin-bottom: 20px;
+  font-size: 29px;
+  font-weight: 700;
+  margin-left: 15px;
+}
+.email-section {
+  height: 100%;
+}
+.email-section h2 {
+  padding-left: 20px;
+  font-size: 29px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  font-weight: 700;
+}
+.email-section div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(59, 59, 59);
+}
+
+.email-section div img {
+  height: 60px;
+  width: 200px;
+  margin: 30px 0;
+}
+
+.email-textarea {
+  width: 100%;
+  overflow-y: hidden;
+  border: none;
+  font-size: 25px;
+  color: #fff;
+  padding: 35px;
+  margin-bottom: 20px;
+  background-color: rgb(59, 59, 59);
+}
+
+
+/* Media Queries */
+
+@media only screen and (max-width: 1490px) {
+  .settings-container{
+    padding: 5px;
+    margin: 10px;
+  }
+}
+@media only screen and (max-width: 900px) {
+  .settings-container {
+    padding: 15px 10px;
+    margin: 15px 10px;
+  }
+
+  section {
+    padding: 15px 13px;
+    margin-bottom: 20px;
+  }
+
+  .nav-title {
+    font-weight: 700;
+    font-size: 30px;
+  }
+
+  .save-btn {
+    height: 50px;
+    width: 100px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .settings-container {
+    padding: 15px 10px;
+    margin: 15px 10px;
+  }
+
+  section {
+    padding: 15px 10px;
+    margin-bottom: 20px;
+  }
+
+  .nav-title {
+    font-weight: 500;
+    font-size: 30px;
+  }
+
+  .save-btn {
+    height: 50px;
+    width: 100px;
+  }
+
+  .check-fields {
+    margin-left: 10px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .settings-container {
+    padding: 10px 5px;
+    margin: 10px 5px;
+  }
+
+  .settings-container nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 20px;
+  }
+  section {
+    /* padding: 5px 4px; */
+    margin-bottom: 20px;
+  }
+
+  .campaign-form form input {
+    width: 300px;
+  }
+
+  .nav-title {
+    font-weight: 500;
+    font-size: 30px;
+  }
+
+  .save-btn {
+    height: 50px;
+    width: 100px;
+  }
+
+  .check-fields {
+    margin-left: 10px;
+  }
+
+  .check-group label{
+   
+      font-size: 23px;
+      font-weight: 300;
+      margin: 20px 0;
+      color: rgb(200, 199, 199);
+      line-height: 30px;
+  }
+
+  .check-group{
+    display: block;
+  }
+
+  .check-group input {
+    height: 28px;
+    width: 30px;
+  }
+}
