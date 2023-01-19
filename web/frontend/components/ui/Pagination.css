@@ -2,8 +2,8 @@
   display: flex;
   align-items: center;
   position: absolute;
-  bottom: 30px;
-  right: 50px;
+  bottom: 10px;
+  right: 70px;
   cursor: pointer;
 }
 
