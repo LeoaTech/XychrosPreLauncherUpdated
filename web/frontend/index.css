@@ -1,14 +1,13 @@
 /* Fonts */
 
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Asul:wght@400;700&family=Open+Sans:wght@400;500;600;700&display=swap");
 /* Variables */
 :root {
-  --sidebar-bg-color: #232229;
-  --main-text-color: rgb(29, 28, 28);
+  --sidebar-bg-color: #222124;
+  --main-text-color: rgb(19, 17, 17);
   --main-bg-color: #fcfcfc;
   --primary-color: #fcfcfc;
-  --secondary-text-color: #232229;
+  --secondary-text-color: #222124;
   --secondary-color: #5447df;
   --active-link-bg-color: #5447df;
   --active-link-color: #fff;
@@ -20,71 +19,217 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Asul", sans-serif;
 }
 
 /* Main App */
 .app {
   display: flex;
-  height: 100vh;
-  /* position: relative; */
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
 /* Side bar */
 .sidebar {
-  height: 100vh;
-  width: 14%;
+  min-height: 100vh;
+  width: 17%;
   padding: 10px;
   overflow: hidden;
+  position: relative;
+
   background-color: var(--sidebar-bg-color);
   color: var(--primary-color);
-  /* position: fixed; */
-
-  z-index: 1000;
-}
-
-/* SideBar */
-
-.sidebar .side-close {
-  width: 8%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  transition: 280ms ease-in-out;
+  -webkit-transition: 280ms ease-in-out;
+  -moz-transition: 280ms ease-in-out;
+  -ms-transition: 280ms ease-in-out;
+  -o-transition: 280ms ease-in-out;
 }
 
 /* Main HomePage  (left-container) */
 
 .main__container {
-  width: 86%;
-  background-color: var(--main-bg-color);
+  width: 83%;
+  margin-left: auto;
+  position: relative;
+  clear: both;
+  overflow: auto;
+  background-color: var(--main-text-color);
   padding: 10px;
   justify-content: flex-start;
   gap: 20px;
-  height: 100vh;
+  min-height: 100vh;
+  z-index: 0;
 }
 
-.main__container.dark {
+.main__container.full {
   background-color: var(--main-text-color);
+  width: 100%;
+  margin-left: auto;
+  padding: 10px;
+  justify-content: flex-start;
+  gap: 20px;
+  min-height: 100vh;
+  z-index: 0;
 }
 
 .header {
-  /* position: static;
-  width: 100%; */
+  width: 100%;
 }
 
-@media only screen and (min-width: 2134px) {
-  /* .sidebar{
-    width: 8%;
+@media screen and (max-width: 1480px) {
+  .sidebar {
+    width: 20%;
   }
 
-  .main__container{
-    width: 92%;
-  } */
+  .main__container {
+    width: 80%;
+  }
 }
 
-@media only screen and (max-width: 768px) {
-  /* .sidebar.side-close {
-    width: 8%;
+@media only screen and (max-width: 1024px) {
+  .sidebar {
+    width: 350px;
+    /*margin-left: -350px;
+    */
+    min-height: 100vh;
+    padding: 10px;
+    overflow: hidden;
+    background-color: var(--sidebar-bg-color);
+    color: var(--primary-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+    transition: 280ms ease-in-out;
+    -webkit-transition: 280ms ease-in-out;
+    -moz-transition: 280ms ease-in-out;
+    -ms-transition: 280ms ease-in-out;
+    -o-transition: 280ms ease-in-out;
+  }
+  .sidebar.closed {
+    display: none;
   }
 
-  .main__container.fullscreen {
-    width: 92%;
+  .main__container {
+    background-color: var(--main-text-color);
+    width: 100%;
+    margin-left: 0;
+    float: left;
+    padding: 10px;
+    justify-content: flex-start;
+    gap: 20px;
+    min-height: 100vh;
+    z-index: 0;
+  }
+}
+
+@media only screen and (max-width: 786px) {
+  .sidebar.closed {
+    display: none;
+  }
+
+  .sidebar {
+    width: 350px;
+    min-height: 100vh;
+    padding: 10px;
+    overflow: hidden;
+    background-color: var(--sidebar-bg-color);
+    color: var(--primary-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+  }
+
+  /* SideBar Closes when active menu False */
+
+  /* .sidebar-overlay {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(128, 126, 126, 0.674);
+    backdrop-filter: blur(2px);
+    visibility: hidden;
+    opacity: 0;
   } */
+
+  .main__container {
+    width: 100%;
+    z-index: 0;
+    padding: 2px;
+  }
+
+  .main__container.full {
+    width: 100vw;
+    z-index: 0;
+    padding: 2px;
+  }
+  /* .main__container .sidebar-overlay{
+    visibility: visible;
+    opacity: 1;
+  } */
+}
+/* No less than 400px, no greater than 900px */
+@media (min-width: 1280px) and (max-width: 1440px) {
+  .main__container {
+    gap: 5px;
+  }
+}
+
+
+.react-datepicker__header{
+  background-color: #252424 !important;
+
+}
+​ .react-datepicker__header:not(.react-datepicker__header--has-time-select) {
+  background-color: #252424;
+  padding: 5px 0;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: #fcfcfc;
+}
+
+.react-datepicker__current-month {
+  width: 350px;
+  font-size: 23px;
+}
+.react-datepicker__day-name {
+  font-size: 23px;
+}
+
+.react-datepicker__week {
+  padding: 10px;
+}
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: white !important;
+  margin: 0.5rem !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: #f5f2f2 !important;
+}
+
+.react-datepicker__month-container {
+  font-size: 24px;
+  padding: 5px;
+  min-width: 290px;
+  max-width: 350px;
+  background-color: #333;
 }
