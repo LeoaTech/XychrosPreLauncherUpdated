@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useState, forwardRef } from "react";
 import "./newcampaign.css";
 import { Link } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { SideLogo } from "../../assets/index";
+const InitialDefaultEmail = `Hi,
 
-const NewCampaignForm = () => {
+Thank you for subscribing to {campaign.name} for the pre-launch of {product.name}. You can now invite your friends and family to join you in collecting more rewards and points by using {referral.link}.
+
+So far, {referral.friends_count} friends have joined using your referral link. You can redeem your points by using the discount code {referral.discount_code} at checkout. 
+
+We are excited to have you on board!
+
+{shop.name}`;
+
+function NewCampaignForm() {
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  // const ExampleCustomInput = forwardRef(({ value, onClick, onChange }, ref) => (
+  //   <input
+  //     value={value}
+  //     className="example-custom-input"
+  //     onClick={onClick}
+  //     onChange={onChange}
+  //     ref={ref}
+  //   />
+  // ));
+
+  const [defaultEmail, setDefaultEmail] = useState(InitialDefaultEmail);
+
   return (
     <div className="new-campaign-container">
       <nav>
@@ -20,13 +47,26 @@ const NewCampaignForm = () => {
               <label htmlFor="name">Campaign Name</label>
               <input type="text" name="title" id="title" />
               <label htmlFor="name">Start Date</label>
-              <input type="text" name="" id="" />
+              <DatePicker
+                minDate={new Date()}
+                showDisabledMonthNavigation
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+              />
+
+              {/* <input type="text" name="" id="" value={startDate} onChange={(e) => setStartDate(e.target.value)}/> */}
             </div>
             <div className="form-group">
               <label htmlFor="name">Product Link</label>
               <input type="text" name="" id="" />
               <label htmlFor="name">End Date</label>
-              <input type="text" name="" id="" />
+              <DatePicker
+                value={endDate}
+                minDate={new Date()}
+                showDisabledMonthNavigation
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+              />
             </div>
             <div>
               <button className="edit-btn">
@@ -105,11 +145,19 @@ const NewCampaignForm = () => {
       <section>
         <div className="email-section">
           <h2>Email Draft</h2>
-          <div></div>
+          <div>
+            <img src={SideLogo} alt="Shop Logo" />
+            <textarea
+              className="email-textarea"
+              rows={9}
+              value={defaultEmail}
+              onChange={setDefaultEmail}
+            />
+          </div>
         </div>
       </section>
     </div>
   );
-};
+}
 
 export default NewCampaignForm;
