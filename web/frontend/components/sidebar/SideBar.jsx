@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import {
   MdSettings,
   MdAdd,
   MdOutlineMessage,
+  MdOutlineClose,
 } from "react-icons/md";
-import { FaHome, FaBullhorn } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
+import { HiSpeakerphone } from "react-icons/hi";
+import { TbFidgetSpinner } from "react-icons/tb";
+import { RiCustomerServiceLine } from "react-icons/ri";
+import { GiShipWheel } from "react-icons/gi";
 import "./sidebar.css";
 import { useStateContext } from "../../contexts/ContextProvider";
 import {
@@ -18,11 +23,9 @@ import {
   webhook,
 } from "../../assets/index";
 
-
-
 const SideBar = () => {
   const { activeMenu, setActiveMenu, screenSize } = useStateContext();
-  const [isActive, setIsActive] = useState(false);
+  // const [isActive, setIsActive] = useState(false);
 
   const handleToggle = () => {
     if (activeMenu && screenSize <= 786) {
@@ -34,126 +37,127 @@ const SideBar = () => {
     {
       title: "Home",
       path: "/home",
-      icon: <FaHome />,
+      icon: <FaHome style={{ color: "#fff", height: 30, width: 30 }} />,
     },
     {
       title: "Campaigns",
       path: "/campaigns",
-      icon: <FaBullhorn />,
+      icon: <HiSpeakerphone style={{ color: "#fff", height: 30, width: 30 }} />,
     },
     {
       title: "Referrals",
       path: "/referrals",
-      icon: <img src={Omnichannnel} alt="referral" />,
+      icon: <GiShipWheel style={{ color: "#fff", height: 30, width: 30 }} />,
     },
     {
       title: "Settings",
       path: "/settings",
-      icon: <MdSettings style={{ color: "#fff" }} />,
+      icon: <MdSettings style={{ color: "#fff", height: 30, width: 30 }} />,
     },
     {
       title: "Integrations",
       path: "/integrations",
-      icon: <img src={webhook} alt="integrations" style={{ color: "#fff" }} />,
+      icon: (
+        <TbFidgetSpinner style={{ color: "#fff", height: 30, width: 30 }} />
+      ),
     },
     {
       title: "Support",
       path: "/support",
       icon: (
-        <img
-          src={CustomerSupport}
-          alt="integrations"
-          style={{ color: "#fff" }}
+        <RiCustomerServiceLine
+          style={{ color: "#fff", height: 30, width: 30 }}
         />
       ),
     },
-   
   ];
 
   return (
     <div className="sidebar-container">
-      {activeMenu && (
-        <>
-          <div className="top">
-            <div className="sidebar-content">
-              <div className="sidebar_header">
+      <>
+        <div className="top">
+          <div className="sidebar-content">
+            <div className="sidebar_header">
+              <MdOutlineClose
+                className="close-menubtn"
+                style={{ height: 30, width: 35 }}
+                onClick={() => setActiveMenu(false)}
+              />
+              <img
+                // onClick={() => setActiveMenu((prev) => !prev)}
+                src={SideLogo}
+                alt="Logo"
+                className="sidebar-logo"
+              />
+              {/*  {activeMenu ? (
+                
+              ) : (
                 <img
-                  onClick={handleToggle}
-                  src={SideLogo}
-                  alt="Logo"
-                  className="sidebar-logo"
-                />
-                <img
-                  onClick={handleToggle}
+                  // onClick={() => setActiveMenu((prev) => !prev)}
                   src={Logo}
                   alt="Logo"
                   className="onlylogo"
                 />
-              </div>
-              {/* <button className="menu-toggle-icon">
-              <MdOutlineCancel
-                style={{ color: "#fff", height: "35px", width: "35px" }}
-              />
-            </button> */}
-            </div>
-
-            {/* Add Campaign Link */}
-
-            <div className="add-btn-link">
-              <button>
-                <NavLink
-                  to="/newcampaign"
-                  onClick={handleToggle}
-                  className="sidebar-add-btn"
-                >
-                  <span className="icon-img">
-                    <MdAdd />
-                  </span>
-                  {activeMenu && <p className="add-icon-text">New Campaign</p>}
-                </NavLink>
-              </button>
-            </div>
-
-            {/* Center links */}
-
-            <div className="sidebar_links">
-              {links.map((link) => (
-                <div key={link.title}>
-                  <NavLink
-                    to={link.path}
-                    key={link.title}
-                    onClick={handleToggle}
-                    className={({ isActive }) =>
-                      isActive ? "activelink" : "normallink"
-                    }
-                  >
-                    <span className="icon-img">{link.icon}</span>
-                    {activeMenu && <p className="icon-text">{link.title}</p>}
-                  </NavLink>
-                </div>
-              ))}
+              )} */}
             </div>
           </div>
 
-          <div className="bottom">
-            {" "}
-            <div className="sidebar-link-bottom">
+          {/* Add Campaign Link */}
+
+          <div className={activeMenu ? "add-btn-link" : "addbtn-link"}>
+            <button>
               <NavLink
-                to="/feedback"
+                to="/newcampaign"
                 onClick={handleToggle}
-                className={({ isActive }) =>
-                  isActive ? "activelink" : "normallink"
-                }
+                className={activeMenu ? "sidebar-add-btn" : "sidebar-add-icon"}
               >
-                <span className="icon-img">
-                  <MdOutlineMessage />
+                <span className="add-icon-img">
+                  <MdAdd style={{ height: 30, width: 30 }} />
                 </span>
-                {activeMenu && <p className="icon-text">Feedback</p>}
+                <p className="add-icon-text">New Campaign</p>
               </NavLink>
-            </div>
+            </button>
           </div>
-        </>
-      )}
+
+          {/* Center links */}
+
+          <div className="sidebar_links">
+            {links.map((link) => (
+              <div key={link.title}>
+                <NavLink
+                  to={link.path}
+                  key={link.title}
+                  onClick={handleToggle}
+                  className={({ isActive }) =>
+                    isActive ? "activelink" : "normallink"
+                  }
+                >
+                  <span className="icon-img">{link.icon}</span>
+                  <p className="icon-text">{link.title}</p>
+                </NavLink>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bottom">
+          {" "}
+          <div className="sidebar-link-bottom">
+            <NavLink
+              to="/feedback"
+              onClick={handleToggle}
+              className={({ isActive }) =>
+                isActive ? "activelink" : "normallink"
+              }
+            >
+              <span className="icon-img">
+                <MdOutlineMessage style={{ height: 30, width: 30 }} />
+              </span>
+              <p className="icon-text">Feedback</p>
+            </NavLink>
+          </div>
+        </div>
+      </>
     </div>
   );
 };
