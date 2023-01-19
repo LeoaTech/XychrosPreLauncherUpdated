@@ -54,15 +54,14 @@ const customStyles = {
 
 const ShowModal = ({ openModal, setOpenModal, values }) => {
   const handleClose = () => {
-    // console.log("Clicked", openModal);
     setOpenModal((prev) => !prev);
-    document.body.style.overflow = "unset";
+    // document.body.style.overflow = "unset";
   };
 
   let newData = [{ ...values, date: "2022/12/12" }];
   // console.log(newData);
   return openModal ? (
-    <div>
+    <div className="modal">
       <div className="modal_container">
         <nav className="modal__nav">
           <h6>Referral Details</h6>
