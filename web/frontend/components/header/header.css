@@ -6,7 +6,7 @@
   padding: 10px;
   position: relative;
   margin-right: 6px;
-  /* border-bottom: 1px solid #242323; */
+  /* border-bottom: 1px solid #f0ecec; */
 }
 
 /* Left Nav links */
@@ -37,10 +37,16 @@
   border-radius: 50%;
 }
 
+
+.left button{
+  display: none;
+
+}
+
 /* Center Nav Logo */
 
 .center img {
-  width: 250px;
+  width: 200px;
 }
 
 /* Right Nav Links */
@@ -93,3 +99,40 @@
     -ms-border-radius: 25px;
     -o-border-radius: 25px;
 } */
+
+@media only screen and (max-width:1024px){
+  .left button{
+    display: block;
+  }
+}
+
+@media only screen and (max-width:786px){
+
+  .navbar__container{
+    background-color: var(--secondary-text-color);
+    padding: 5px;
+  }
+  .left button{
+    display: block;
+  }
+
+  .right-links button{
+    display: none;
+  }
+}
+
+@media only screen and (max-width:500px){
+
+  .navbar__container{
+    background-color: var(--secondary-text-color);
+    padding: 5px;
+  }
+  .left button{
+    display: block;
+  }
+
+  .right-links button{
+    display: none;
+  }
+}
+
