@@ -2,7 +2,7 @@ import SummaryCard from "../ui/SummaryCard";
 import { Marketing, Sale, subscriber, arrow } from "../../assets/index";
 import ReferralsBlock from "./ReferralsBlock";
 import React, { useState } from "react";
-
+import "./referral.css";
 const Referrals = () => {
   // const [getReferrals, setReferrals] = useState([
   //   {
@@ -44,7 +44,7 @@ const Referrals = () => {
         />
       </div>
 
-      <div>
+      <div className="referral_table">
         <ReferralsBlock />
       </div>
     </div>
