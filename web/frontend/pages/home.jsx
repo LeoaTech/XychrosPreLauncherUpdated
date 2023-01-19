@@ -13,18 +13,18 @@ export default function Home() {
         <SideBar />
       </div>
     ) : (
-      <div className={darkTheme ?"sidebar":"sidebar dark"}>
+      <div className={darkTheme ?"sidebar closed":"sidebar dark"}>
         <SideBar />
       </div>
     )}
-   { activeMenu ? <div className={darkTheme ? "main__container dark":"main__container"}>
+   { activeMenu ? <div className={darkTheme ? "main__container ":"main__container dark"}>
       <MainPage>
         <div className="header">
           <Header />
         </div>
         <HomeComponent />
       </MainPage>
-    </div>:  <div className={darkTheme ?"main__container dark": "main__container"}>
+    </div>:  <div className={darkTheme ?"main__container full": "main__container dark"}>
       <MainPage>
         <div className="header">
           <Header />
