@@ -8,5 +8,6 @@ export { default as MainPage } from "./ui/MainPage";
 //export { default as UserProfile } from "./user/UserProfile";
 //export { default as Pricing } from "./pricing/Pricing";
 //export { default as FAQ } from "./faq/FAQ";
-
+export {default as NewCampaignForm} from "./newcampaign/NewCampaignForm";
+export {default as Settings} from "./settings/SettingComponent"
 export * from "./providers";

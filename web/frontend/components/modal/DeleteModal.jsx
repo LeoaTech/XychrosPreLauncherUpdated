@@ -8,7 +8,7 @@ const DeleteModal = ({ openModal, setDeleteModal, values, handleDelete }) => {
     setDeleteModal((prev) => !prev);
   };
   return openModal ? (
-    <div style={{ height: "300px" }}>
+    <div className="modal">
       <div className="delete-modal-container">
         <nav className="modal__nav">
           <h6>Alert </h6>

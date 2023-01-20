@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import {
-  MdOutlineKeyboardArrowDown,
-  MdOutlinePriceChange,
-} from "react-icons/md";
+import { MdOutlinePriceChange } from "react-icons/md";
 import { CgNotes } from "react-icons/cg";
+import { HiOutlineUser } from "react-icons/hi";
 import "./header.css";
 
 import { useStateContext } from "../../contexts/ContextProvider";
-import { profile, SideLogo } from "../../assets/index";
+import { SideLogo } from "../../assets/index";
 
 const NavButton = ({ title, customFunction, color, icon, dotColor }) => (
   <span>
@@ -48,25 +46,29 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    if (screenSize <= 786) {
-      setActiveMenu(false);
-    } else {
+    if (screenSize > 980) {
       setActiveMenu(true);
+    } else if (screenSize < 980) {
+      setActiveMenu(false);
     }
   }, [screenSize]);
 
   return (
     <div className="navbar__container">
       <div className="left">
-        {/* <NavButton
-          // customFunction={() => setActiveMenu((prev) => !prev)}
+        <NavButton
+          customFunction={() => setActiveMenu(!activeMenu)}
           color="#fff"
           icon={<AiOutlineMenu style={{ height: "45px", width: "35px" }} />}
-        /> */}
+        />
       </div>
       <div className="center">
         {/* logo */}
-        <img src={SideLogo} alt="XychrosLogo" />
+        <img
+          src={SideLogo}
+          alt="XychrosLogo"
+          onClick={() => setActiveMenu(!activeMenu)}
+        />
       </div>
 
       <div className="right">
@@ -92,7 +94,7 @@ const Header = () => {
               className="userProfile"
               onClick={() => handleClick("UserProfile")}
             >
-              <img src={profile} alt="avatar" />
+              <HiOutlineUser style={{ height: "30px", width: "30px", color:"#fff" }} />
               {/* <button>
                 <MdOutlineKeyboardArrowDown
                   style={{ height: "25px", width: "28px" , fontSize:24, color: "white" }}
@@ -101,8 +103,6 @@ const Header = () => {
             </div>
           </div>
         </div>
-
-      
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-.new-campaign-container {
+.settings-container {
   color: var(--primary-color);
   padding: 25px;
   margin: 25px;
@@ -8,7 +8,7 @@
   justify-content: space-between;
 }
 
-/*------------------- Navbar ------------------- */
+/* Navbar */
 
 section {
   background-color: var(--secondary-text-color);
@@ -20,7 +20,7 @@ section {
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
 }
-.new-campaign-container nav {
+.settings-container nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -30,7 +30,6 @@ section {
 .nav-title {
   font-weight: 700;
   font-size: 30px;
-  /* font-size: 40px; */
 }
 
 .save-btn {
@@ -49,12 +48,8 @@ section {
   -o-border-radius: 10px;
 }
 
-/* Form Sections */
-
-.campaign-form form {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+.settings-container p {
+  font-size: 17px;
 }
 
 /* Labels */
@@ -64,50 +59,6 @@ label {
   font-weight: 500;
   margin: 20px 0;
   color: rgb(200, 199, 199);
-}
-
-/* Input Fields inside the form */
-.campaign-form form input {
-  background-color: rgba(52, 50, 50, 0.935);
-  border: none;
-  padding: 25px 10px;
-  border-radius: 12px;
-  height: 40px;
-  color: white;
-  width: 400px;
-  font-size: 23px;
-  font-weight: 500;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
-  -ms-border-radius: 12px;
-  -o-border-radius: 12px;
-}
-
-.campaign-form button a:hover {
-  text-decoration: underline;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.edit-btn {
-  height: auto;
-  padding: 15px;
-  word-wrap: break-word;
-  width: 250px;
-  background-color: var(--secondary-color);
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: 500;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
 }
 
 /* Checkboxes Section */
@@ -121,7 +72,8 @@ label {
 }
 
 .check-group {
-  justify-content: center;
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -160,7 +112,6 @@ input[type="checkbox"]:checked {
   font-weight: 700;
   margin-left: 15px;
 }
-
 .email-section {
   height: 100%;
 }
@@ -187,7 +138,7 @@ input[type="checkbox"]:checked {
 
 .email-textarea {
   width: 100%;
-  /* height: 400px; */
+  overflow-y: hidden;
   border: none;
   font-size: 25px;
   color: #fff;
@@ -196,91 +147,44 @@ input[type="checkbox"]:checked {
   background-color: rgb(59, 59, 59);
 }
 
+
 /* Media Queries */
 
 @media only screen and (max-width: 1490px) {
-  .new-campaign-container{
+  .settings-container{
     padding: 5px;
     margin: 10px;
   }
-
-
-  .campaign-form form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-    line-height: 30px;
-  }
-
-  label {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 20px;
-    margin: 20px 0;
-    color: rgb(200, 199, 199);
-  }
-
-  /* Input Fields inside the form */
-  .campaign-form form input {
-    width: 400px;
-    font-size: 20px;
-  }
 }
-
-@media only screen and (max-width: 1287px) {
-  .nav-title {
-    font-weight: 700;
-    font-size: 20px;
-  }
-
-  .campaign-form form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 25px;
-    line-height: 30px;
-  }
-
-  label {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 20px;
-    margin: 20px 0;
-    color: rgb(200, 199, 199);
-  }
-
-  /* Input Fields inside the form */
-  .campaign-form form input {
-    width: 440px;
-    font-size: 20px;
-  }
-
-  .campaign-form button a:hover {
-    text-decoration: underline;
-  }
-
-  /* Checkboxes Section */
-
-  .check-group input {
-    height: 30px;
-    width: 30px;
-  }
-  /* Settings Form */
-  .settings-form {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
 @media only screen and (max-width: 900px) {
-  .new-campaign-container {
+  .settings-container {
     padding: 15px 10px;
     margin: 15px 10px;
   }
 
   section {
     padding: 15px 13px;
+    margin-bottom: 20px;
+  }
+
+  .nav-title {
+    font-weight: 700;
+    font-size: 30px;
+  }
+
+  .save-btn {
+    height: 50px;
+    width: 100px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .settings-container {
+    padding: 15px 10px;
+    margin: 15px 10px;
+  }
+
+  section {
+    padding: 15px 10px;
     margin-bottom: 20px;
   }
 
@@ -293,31 +197,6 @@ input[type="checkbox"]:checked {
     height: 50px;
     width: 100px;
   }
-}
-@media only screen and (max-width: 768px) {
-  .new-campaign-container {
-    padding: 15px 10px;
-    margin: 15px 10px;
-  }
-
-  section {
-    padding: 15px 10px;
-    margin-bottom: 20px;
-  }
-
-  .campaign-form form input {
-    width: 450px;
-  }
-
-  .nav-title {
-    font-weight: 500;
-    font-size: 30px;
-  }
-
-  .save-btn {
-    height: 50px;
-    width: 80px;
-  }
 
   .check-fields {
     margin-left: 10px;
@@ -325,16 +204,16 @@ input[type="checkbox"]:checked {
 }
 
 @media only screen and (max-width: 500px) {
-  .new-campaign-container {
-    padding: 10px 0px;
-    margin: 10px 0px;
+  .settings-container {
+    padding: 10px 5px;
+    margin: 10px 5px;
   }
 
-  .new-campaign-container nav {
+  .settings-container nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 40px;
     margin-bottom: 20px;
   }
   section {
@@ -358,5 +237,23 @@ input[type="checkbox"]:checked {
 
   .check-fields {
     margin-left: 10px;
+  }
+
+  .check-group label{
+   
+      font-size: 23px;
+      font-weight: 300;
+      margin: 20px 0;
+      color: rgb(200, 199, 199);
+      line-height: 30px;
+  }
+
+  .check-group{
+    display: block;
+  }
+
+  .check-group input {
+    height: 28px;
+    width: 30px;
   }
 }
