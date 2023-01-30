@@ -4,6 +4,7 @@
   display: flex;
   margin: 0 !important;
   padding: 0 !important;
+  box-sizing: border-box;
 }
 
 .section-layout.horizontal {
@@ -15,13 +16,13 @@
 }
 
 .full {
-  width: 100vw;
-  height: 50vh;
+  width: 100%;
+  height: 50%;
 }
 
 .half {
-  min-width: 50vw;
-  min-height: 100vh;
+  min-width: 50%;
+  min-height: 100%;
 }
 
 .announcement {
@@ -58,6 +59,7 @@
   height: 100%;
   background-color: #011936;
 }
+
 .timeline-items {
   margin-left: -5px;
   margin-right: -5px;
@@ -147,6 +149,7 @@
   width: 100%;
   background-color: #011936;
 }
+
 .vertical-timeline-items {
   margin-left: -5px;
   margin-right: -5px;
@@ -203,6 +206,7 @@
 .vertical .sometext {
   padding-bottom: 0;
 }
+
 .vertical-timeline-headers {
   font-weight: 600;
   font-size: 20px;
@@ -231,4 +235,141 @@
 
 .vertical.spaced {
   width: 100%;
+}
+
+.refferal-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #fff;
+  min-height: 55px;
+  width: 40vw;
+  padding: 0 5px;
+  border-radius: 5rem;
+  border: none;
+  margin-bottom: 10px;
+}
+
+.refferal-container:hover {
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .4);
+}
+
+.referral-link-inp {
+  width: 80%;
+  height: 100%;
+  background: #fff;
+  border: none;
+  font-size: 20px;
+}
+
+input[type='text']:focus {
+  border: none;
+}
+
+
+input[value] {
+  color: #4A3B2A;
+}
+
+@media screen and (max-width: 600px) {
+  .refferal-container {
+    width: 80%;
+    height: 100%;
+    margin: 2%;
+  }
+}
+
+.copy-link-btn {
+  color: white;
+  background: #4A3B2A;
+  border-radius: 5rem;
+  border: none;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  height: 100%;
+  width: 27%;
+}
+
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5rem;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+.socials {
+  display: flex;
+  flex-direction: row;
+}
+
+.socials a>svg {
+  padding: 1rem;
+  width: 3.8rem;
+  cursor: pointer;
+  fill: #4A3B2A;
 }

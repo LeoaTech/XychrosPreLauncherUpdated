@@ -11,35 +11,28 @@
       do {
         var parent = el.parentNode;
 
-// Collect element children
+        // Collect element children
         for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
           node = parent.childNodes[i];
 
-// Collect only sibling nodes that are elements and not the current element
+          // Collect only sibling nodes that are elements and not the current element
           if (node.nodeType == 1 && node != el) {
             nodes.push(node);
           }
         }
 
-// Go up to parent
+        // Go up to parent
         el = parent;
 
-// Stop when processed the body's child nodes
+        // Stop when processed the body's child nodes
       } while (el.tagName.toLowerCase() != 'body');
 
-// Hide the collected nodes
+      // Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
       });{% endif %}let image_background = 'https:' + first_page_settings.background;
     console.log(image_background);
-    document.getElementById('background-image').style.backgroundImage = 'url(' + image_background + ')';{%- comment -%}if (first_page_settings.background) {
-        let image_background = 'https:' + first_page_settings.background;
-        console.log(image_background);
-        document.getElementById('background-image').style.backgroundImage = 'url(' + image_background + ')';
-      } else {
-        document.getElementById('background-image').style.backgroundImage = 'url("../assets/verticalBackground.png")';
-      }
-    {%- endcomment -%}
+    document.getElementById('background-image').style.backgroundImage = 'linear-gradient(rgba(0, 0, 0,' + first_page_settings.background_brightness + ' ), rgba(0, 0, 0,' + first_page_settings.background_brightness + ')),url(' + image_background + ')';
 
     var form = document.getElementById('form-submission'),
       actionPath = '',
@@ -64,51 +57,52 @@
       };
 
       console.log(fetchOptions.data);
-
       const response = fetch(actionPath, fetchOptions);
-
       console.log(response);
-
       return;
-
     });
   }
 </script>
 
 <style>
+  .section-layout {
+    font-size: {{ block.settings.base_font_size }};
+  }
+
   .submit-button {
+    font-size: 0.5em;
     color: {{ block.settings.button_font_color }};
     background: {{ block.settings.button_color }};
-    font-size: {{ block.settings.button_font_size }}px;
   }
 
   .product-prelaunch {
     display: block !important;
     width: 100vw;
-
   }
 
   .header_text {
     color: {{ block.settings.header_color }};
-    font-size: {{ block.settings.header_font_size }}px;
+    font-size: 4.5em;
     font-weight: 400;
     padding: 0 2%;
     font-family: 'Lalezar';
+    text-align: center;
   }
 
   .subheader_text {
     color: {{ block.settings.subheader_color }};
-    font-size: {{ block.settings.subheader_font_size }}px;
+    font-size: 2.5em;
     font-weight: 400;
-    padding: 0 2%;
+    padding: 0 3%;
     font-family: 'Lalezar';
+    text-align: center;
   }
 
   .tag-line {
     color: {{ block.settings.cta_tag_color }};
-    font-size: {{ block.settings.cta_tag_font_size }}px;
+    font-size: 1.5em;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 1em;
     padding: 0 2%;
   }
 
@@ -135,8 +129,6 @@
     {% else %}
       align-items: center;
     {% endif %}
-    opacity: {{ block.settings.background_opacity }};
-    filter: brightness({{ block.settings.background_brightness | times: 100 }}%);
   }
 </style>
 
@@ -146,13 +138,9 @@
   {
     "name": "PreLauncher First Page",
     "target": "section",
+    "stylesheet": "first_page.css",
     "templates": ["page"],
     "class": "product-prelaunch",
-
-// "tag": "section",
-    "stylesheet": "first_page.css",
-
-// "javascript": "first-page.js",
     "settings": [
       {
         "type": "product",
@@ -168,8 +156,8 @@
       {
         "label": "Background Color",
         "id": "bg_color",
-        "type": "color_background",
-        "default": "linear-gradient(#ffffff, #000000)"
+        "type": "color",
+        "default": "#000000"
       },
       {
         "type": "radio",
@@ -189,24 +177,23 @@
         "label": "Background Image",
         "id": "background",
         "type": "image_picker"
-
-// "default": "#000000"
       }, {
-        "label": "Image Opacity",
-        "id": "background_opacity",
-        "type": "range",
-        "min": 0,
-        "max": 1,
-        "step": 0.1,
-        "default": 1
-      }, {
-        "label": "Image brightness",
+        "label": "Image Overlay",
         "id": "background_brightness",
         "type": "range",
         "min": 0,
         "max": 1,
         "step": 0.1,
-        "default": 1
+        "default": 0
+      }, {
+        "label": "Text Base Font Size",
+        "id": "base_font_size",
+        "type": "range",
+        "min": 16,
+        "max": 32,
+        "step": 1,
+        "unit": "px",
+        "default": 24
       }, {
         "label": "Header",
         "id": "header_text",
@@ -218,16 +205,7 @@
         "type": "color",
         "default": "#000000"
       }, {
-        "label": "Header Font Size",
-        "id": "header_font_size",
-        "type": "range",
-        "min": 24,
-        "max": 48,
-        "step": 2,
-        "unit": "px",
-        "default": 36
-      }, {
-        "label": "Sub Header",
+        "label": "Pre Header",
         "id": "subheader_text",
         "type": "text",
         "default": "Enter SubHeader"
@@ -236,15 +214,6 @@
         "id": "subheader_color",
         "type": "color",
         "default": "#000000"
-      }, {
-        "label": "Sub Header Font Size",
-        "id": "subheader_font_size",
-        "type": "range",
-        "min": 16,
-        "max": 32,
-        "step": 2,
-        "unit": "px",
-        "default": 24
       }, {
         "type": "select",
         "id": "text_layout",
@@ -273,15 +242,6 @@
         "type": "color",
         "default": "#000000"
       }, {
-        "label": "Tag Line Font Size",
-        "id": "cta_tag_font_size",
-        "type": "range",
-        "min": 16,
-        "max": 32,
-        "step": 1,
-        "unit": "px",
-        "default": 24
-      }, {
         "label": "Button Text",
         "id": "button_text",
         "type": "text",
@@ -296,15 +256,6 @@
         "id": "button_font_color",
         "type": "color",
         "default": "#fff"
-      }, {
-        "label": "Button Font Size",
-        "id": "button_font_size",
-        "type": "range",
-        "min": 14,
-        "max": 24,
-        "step": 1,
-        "unit": "px",
-        "default": 20
       }, {
         "type": "page",
         "id": "page",

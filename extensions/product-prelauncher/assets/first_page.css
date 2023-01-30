@@ -40,6 +40,8 @@
 #form-submission {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .email-input-product-prelaucher {

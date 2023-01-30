@@ -16,23 +16,23 @@
       do {
         var parent = el.parentNode;
 
-// Collect element children
+        // Collect element children
         for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
           node = parent.childNodes[i];
 
-// Collect only sibling nodes that are elements and not the current element
+          // Collect only sibling nodes that are elements and not the current element
           if (node.nodeType == 1 && node != el) {
             nodes.push(node);
           }
         }
 
-// Go up to parent
+        // Go up to parent
         el = parent;
 
-// Stop when processed the body's child nodes
+        // Stop when processed the body's child nodes
       } while (el.tagName.toLowerCase() != 'body');
 
-// Hide the collected nodes
+      // Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
       });
@@ -109,7 +109,8 @@
   }
 
   .gift-layout {
-    background-color: {{ block.settings.bg_color }};
+    background-color: {{ block.settings.bg_color }}
+    ;
   }
 
   svg > path {
@@ -119,16 +120,12 @@
 
 {% render "second_page" %}
 
-
-
 {% schema %}
   {
     "name": "PreLauncher Second Page",
     "target": "section",
     "templates": ["page"],
     "class": "product-prelaunch-second-page",
-
-// "tag": "section",
     "stylesheet": "second_page.css",
     "javascript": "second-page.js",
     "settings": [
@@ -182,16 +179,14 @@
         "label": "Background Image",
         "id": "background",
         "type": "image_picker"
-
-// "default": "#000000"
       }, {
-        "label": "Image brightness",
+        "label": "Image Overlay",
         "id": "background_brightness",
         "type": "range",
         "min": 0,
         "max": 1,
         "step": 0.1,
-        "default": 1
+        "default": 0
       }, {
         "label": "Background Color",
         "id": "bg_color",
@@ -284,8 +279,6 @@
         "label": "Hover Icon",
         "id": "hover_icon",
         "type": "image_picker"
-
-// "default": "#000000"
       }, {
         "label": "Footer Text",
         "id": "footer_text",
