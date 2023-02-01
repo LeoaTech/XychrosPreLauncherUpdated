@@ -3,10 +3,9 @@
 .navbar__container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 10px;
   position: relative;
-  margin-right: 6px;
-  /* border-bottom: 1px solid #f0ecec; */
 }
 
 /* Left Nav links */
@@ -37,16 +36,14 @@
   border-radius: 50%;
 }
 
-
-.left button{
+.left button {
   display: none;
-
 }
 
 /* Center Nav Logo */
 
 .center img {
-  width: 200px;
+  width: 180px;
 }
 
 /* Right Nav Links */
@@ -54,7 +51,9 @@
 .right-links {
   display: flex;
   justify-content: space-evenly;
-  gap: 20px;
+  align-items: center;
+  gap: 25px;
+  /* margin-right: 30px; */
 }
 
 .right-links button {
@@ -79,7 +78,7 @@
   height: 35px;
   width: 35px;
   border-radius: 50%;
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 
 .userProfile button {
@@ -91,48 +90,54 @@
   cursor: pointer;
 }
 
-/* .userProfile:hover{
-    background-color: rgb(218, 217, 217);
-    border-radius: 25px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    -ms-border-radius: 25px;
-    -o-border-radius: 25px;
-} */
+.header-links:active,
+.header-links:focus {
+  background-color: var(--secondary-color);
+  display: flex;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: #fff;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  /* /* margin-left: auto;  */
+  margin-bottom: 20px;
+}
 
-@media only screen and (max-width:1024px){
-  .left button{
+@media only screen and (max-width: 1024px) {
+  .left button {
     display: block;
   }
 }
 
-@media only screen and (max-width:786px){
-
-  .navbar__container{
+@media only screen and (max-width: 786px) {
+  .navbar__container {
     background-color: var(--secondary-text-color);
     padding: 5px;
   }
-  .left button{
+  .left button {
     display: block;
   }
 
-  .right-links button{
+  .right-links button {
+    display: none;
+  }
+
+  .userProfile {
     display: none;
   }
 }
 
-@media only screen and (max-width:500px){
-
-  .navbar__container{
+@media only screen and (max-width: 500px) {
+  .navbar__container {
     background-color: var(--secondary-text-color);
-    padding: 5px;
+    /* padding: 5px; */
   }
-  .left button{
+  .left button {
     display: block;
   }
 
-  .right-links button{
+  .right-links button {
     display: none;
   }
 }
-
