@@ -1,0 +1,107 @@
+.pricing-details {
+  height: 900px;
+  max-height: auto;
+  min-width: 400px;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--secondary-text-color);
+  border: none;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.pricing-details:first-child {
+  background-color: var(--secondary-color);
+}
+
+.price-detail-block {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  margin: 20px;
+}
+
+.price-detail-block h3 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.price-bottom h2 {
+  font-size: 29px;
+  margin: 20px 0;
+  font-weight: 700;
+}
+.pricing-features {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+}
+
+.pricing-features p {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 18px 0;
+  line-height: 1.1;
+  word-break: keep-all;
+}
+
+.feature {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.btn-subscribe {
+  height: 50px;
+  background-color: rgb(233, 229, 229);
+  width: 200px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  border: none;
+  align-items: center;
+  text-align: center;
+  border-radius: 25px;
+  color: black;
+  cursor: pointer;
+  font-size: 23px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+}
+
+@media screen and (max-width: 786px) {
+  .pricing-details {
+    min-height: 1000px;
+    max-height: fit-content;
+    min-width: 400px;
+    max-width: 450px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .pricing-details {
+    min-height: 900px;
+    max-height: 100%;
+    min-width: 320px;
+    max-width: 370px;
+  }
+
+  .pricing-features p {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 18px 0;
+    line-height: 1.02;
+  }
+}
