@@ -29,8 +29,6 @@
   width: 31px;
 }
 
-
-
 @media only screen and (max-width: 900px) {
   .short-summary-card {
     width: 180px;
@@ -38,8 +36,8 @@
     display: flex;
     padding: 10px 7px;
     justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
- 
   }
 
   .short-summary-card-value {
@@ -47,12 +45,15 @@
   }
 }
 
-
 @media only screen and (max-width: 786px) {
   .short-summary-card {
-    width: 130px;
-    height: 130px;
+    width: 120px;
+    height: 100px;
+    padding: 10px 16px;
     flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
     margin: 10px;
   }
 
@@ -64,12 +65,12 @@
 @media only screen and (max-width: 500px) {
   .short-summary-card {
     width: 100px;
-    margin: 10px 5px;
+    margin: 10px 0px;
     display: flex;
-    padding: 10px 7px;
+    padding: 10px 4px;
     justify-content: space-between;
     flex-wrap: wrap;
- 
+    align-items: center;
   }
 
   .short-summary-card-value {
