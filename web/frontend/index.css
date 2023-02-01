@@ -1,6 +1,11 @@
 /* Fonts */
 
 @import url("https://fonts.googleapis.com/css2?family=Asul:wght@400;700&family=Open+Sans:wght@400;500;600;700&display=swap");
+
+
+
+
+
 /* Variables */
 :root {
   --sidebar-bg-color: #222124;
@@ -186,6 +191,21 @@
   }
 }
 
+
+
+/* React Datepicker Custom Styles */
+
+
+.react-datepicker{
+  margin-left: 35px;
+}
+
+
+.react-datepicker__triangle {
+  margin-left: 68px;
+  position: absolute;
+  width: 0;
+}
 
 .react-datepicker__header{
   background-color: #252424 !important;
