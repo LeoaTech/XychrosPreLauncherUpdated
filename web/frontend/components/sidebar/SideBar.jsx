@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
+import { HiOutlineUser } from "react-icons/hi";
 import {
   MdSettings,
   MdAdd,
   MdOutlineMessage,
   MdOutlineClose,
+  MdOutlinePriceChange,
 } from "react-icons/md";
+import { CgNotes } from "react-icons/cg";
 import { FaHome } from "react-icons/fa";
 import { HiSpeakerphone } from "react-icons/hi";
 import { TbFidgetSpinner } from "react-icons/tb";
@@ -24,7 +27,9 @@ import {
 } from "../../assets/index";
 
 const SideBar = () => {
-  const { activeMenu, setActiveMenu, screenSize } = useStateContext();
+  const { activeMenu, setActiveMenu, screenSize, mobileMenu } =
+    useStateContext();
+
   // const [isActive, setIsActive] = useState(false);
 
   const handleToggle = () => {
@@ -104,12 +109,12 @@ const SideBar = () => {
 
           {/* Add Campaign Link */}
 
-          <div className={activeMenu ? "add-btn-link" : "addbtn-link"}>
+          <div className="add-btn-link">
             <button>
               <NavLink
                 to="/newcampaign"
                 onClick={handleToggle}
-                className={activeMenu ? "sidebar-add-btn" : "sidebar-add-icon"}
+                className="sidebar-add-btn"
               >
                 <span className="add-icon-img">
                   <MdAdd style={{ height: 30, width: 30 }} />
@@ -140,9 +145,59 @@ const SideBar = () => {
           </div>
         </div>
 
+        {/* Sidebar Bottom Links and Mobile View Links */}
+
         <div className="bottom">
           {" "}
           <div className="sidebar-link-bottom">
+            {mobileMenu && (
+              <NavLink
+                to="/userprofile"
+                onClick={handleToggle}
+                className={({ isActive }) =>
+                  isActive ? "activelink" : "normallink"
+                }
+              >
+                <span className="icon-img">
+                  <HiOutlineUser
+                    style={{ height: "30px", width: "30px", color: "#fff" }}
+                  />{" "}
+                </span>
+                <p className="icon-text">User Profile</p>
+              </NavLink>
+            )}
+
+            {mobileMenu && (
+              <NavLink
+                to="/faq"
+                onClick={handleToggle}
+                className={({ isActive }) =>
+                  isActive ? "activelink" : "normallink"
+                }
+              >
+                <span className="icon-img">
+                  <CgNotes style={{ height: "30px", width: "30px" }} />{" "}
+                </span>
+                <p className="icon-text">FAQ</p>
+              </NavLink>
+            )}
+            {mobileMenu && (
+              <NavLink
+                to="/price"
+                onClick={handleToggle}
+                className={({ isActive }) =>
+                  isActive ? "activelink" : "normallink"
+                }
+              >
+                <span className="icon-img">
+                  <MdOutlinePriceChange
+                    style={{ height: "30px", width: "30px" }}
+                  />{" "}
+                </span>
+                <p className="icon-text">Pricing</p>
+              </NavLink>
+            )}
+
             <NavLink
               to="/feedback"
               onClick={handleToggle}
