@@ -6,8 +6,14 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 import "./CampaignBlock.css";
 import { Link } from "react-router-dom";
+import { useStateContext } from "../../contexts/ContextProvider";
+import { useState } from "react";
+import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
 
 export default function CampaignBlock(props) {
+  const { activeMenu, isEdit, setIsEdit } = useStateContext();
+  const [editData, setEditData] = useState([]);
+  const [isToggled, setIsToggled] = useState(false);
   const {
     id,
     campaign_name,
@@ -17,10 +23,27 @@ export default function CampaignBlock(props) {
     start_date,
     end_date,
   } = props.data;
+
+  const handleEdit = () => {
+    setIsEdit(true);
+    setEditData(props.data.id);
+    console.log(editData);
+  };
+
   return (
     <div className="campaign-block">
       <div className="campaign-details">
-        <div className="camapign-block-name">{campaign_name}</div>
+        <div className="camapign-block-name">
+          {campaign_name}
+          <span>
+            <ToggleSwitch
+              rounded={true}
+              isToggled={isToggled}
+              onToggle={() => setIsToggled(!isToggled)}
+            />
+          </span>
+        </div>
+
         <Link to={product_link} className="campaign-block-product-name">
           {product_name}
         </Link>
@@ -47,7 +70,12 @@ export default function CampaignBlock(props) {
             }}
           >
             <div className="icon-image">
-              <FaEdit />
+              <Link to={`/campaigns/${id}`} onClick={handleEdit}>
+                <FaEdit style={{ height: "30px", width: "30px" }} />
+                <div>
+                  <span>Edit</span>
+                </div>
+              </Link>
             </div>
           </IconContext.Provider>
           <IconContext.Provider
@@ -57,7 +85,12 @@ export default function CampaignBlock(props) {
             }}
           >
             <div className="icon-image">
-              <RiDeleteBin6Line />
+              <RiDeleteBin6Line
+                style={{ height: "30px", width: "30px", color: "red" }}
+              />
+              <div>
+                <span style={{ color: "red" }}>Delete</span>
+              </div>
             </div>
           </IconContext.Provider>
         </div>
