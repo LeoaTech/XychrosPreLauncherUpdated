@@ -21,6 +21,9 @@
   font-size: 26px;
   line-height: 35px;
   color: #fff;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .campaign-block-product-name {
@@ -58,6 +61,10 @@
   flex-direction: column;
 }
 
+.campaign-actions div span {
+  display: none;
+}
+
 .clicks-icon {
   width: 33px;
   height: 31px;
@@ -77,11 +84,8 @@
   height: 62px;
 }
 
-
 @media only screen and (max-width: 900px) {
   .campaign-block {
-    /* width: 94%; */
-
     display: flex;
     margin: 20px 11px;
     padding: 11px 15px;
@@ -89,37 +93,38 @@
     justify-content: space-between;
     align-items: center;
   }
-  .campaign-right-card {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+
+  .campaign-details {
+    margin-bottom: 14px;
   }
 
-  .campaign-kpis {
-    display: flex;
-    justify-content: space-between;
-  }
   .campaign-actions {
     display: flex;
-    flex-direction: row;
-    gap: 10rem;
-
     margin-bottom: 5px;
   }
 
-  .campaign-actions .icon-image {
-    height: 50px;
-    width: 50px;
+  .campaign-actions div {
+    font-size: 20px;
+    font-weight: 300;
+    color: white;
   }
 }
 
 @media only screen and (max-width: 768px) {
+  /* .campaign-right-card {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    align-items: center;
+  } */
+
+  .campaign-details {
+    margin-bottom: 14px;
+  }
   .campaign-right-card {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    /* justify-content: space-between; */
-    /* align-items: center; */
   }
 
   .campaign-kpis {
@@ -130,13 +135,24 @@
   .campaign-actions {
     display: flex;
     flex-direction: row;
-    gap: 5rem;
-    margin-bottom: 10px;
+    gap: 12rem;
   }
 
-  .campaign-actions .icon-image {
-    height: 50px;
-    width: 50px;
+  .campaign-actions div {
+    font-size: 20px;
+    font-weight: 300;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .campaign-actions div a {
+    display: flex;
+  }
+
+  .campaign-actions div span {
+    display: block;
   }
 
   .revenue-icon {
@@ -145,16 +161,22 @@
   }
 }
 
-@media only screen and (max-width: 500px) {
+@media screen and (max-width: 500px) {
   .campaign-block {
-    /* width: 94%; */
-
     display: flex;
     margin: 20px 11px;
     padding: 11px 15px;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .campaign-details {
+    margin-bottom: 14px;
+  }
+
+  .camapign-block-name {
+    gap: 7rem;
   }
   .campaign-right-card {
     flex-direction: column;
@@ -166,16 +188,38 @@
     display: flex;
     justify-content: space-between;
   }
+
   .campaign-actions {
     display: flex;
     flex-direction: row;
-    gap: 10rem;
-
-    margin-bottom: 10px;
+    gap: 8rem;
   }
 
-  .campaign-actions .icon-image {
-    height: 50px;
-    width: 50px;
+  .campaign-actions div {
+    font-size: 20px;
+    font-weight: 300;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Summmary cards icons */
+  .campaign-icon {
+    width: 39px;
+    height: 38px;
+  }
+  .clicks-icon {
+    width: 30px;
+    height: 31px;
+  }
+  .revenue-icon {
+    width: 33px;
+    height: 36px;
+  }
+
+  .referral-icon {
+    width: 30px;
+    height: 40px;
   }
 }
