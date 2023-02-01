@@ -1,0 +1,199 @@
+.account-section {
+  padding: 20px;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  justify-content: space-between;
+}
+
+/* Title  */
+
+.account-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.account-title h2 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+/* Save Btn */
+
+.account-section button {
+  float: right;
+}
+
+/* Contact And  Billing Details */
+.contact-details,
+.billing-details {
+  background-color: #1b1a21;
+  padding: 35px 30px;
+  margin: 20px 0;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.billing-cards {
+  margin-top: 30px;
+  display: flex;
+  /* justify-content: center; */
+  gap: 20px;
+  overflow: auto;
+  padding-bottom: 20px;
+}
+
+/* Billing Card */
+
+.billing-card {
+  border-radius: 10px;
+  background-color: var(--secondary-text-color);
+}
+
+.billing-card:first-child {
+  background-color: #6e68b5;
+}
+
+.billing-cards button:first-child {
+  background-color: var(--secondary-color);
+}
+
+.contact-details h3,
+.billing-details h3 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+/* Contact Details Form */
+
+.form-section form {
+  line-height: 1.7;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.form-input-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-input-group label {
+  font-size: 19px;
+  font-weight: 500;
+  margin-top: 20px;
+  margin-bottom: 6px;
+  color: rgb(200, 199, 199);
+}
+
+.form-section form input {
+  background-color: rgba(41, 40, 40, 0.921);
+  border: none;
+  padding: 25px 10px;
+  border-radius: 12px;
+  height: 37px;
+  color: white;
+  width: 400px;
+  font-size: 23px;
+  font-weight: 500;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.btnSave {
+  height: 50px;
+  background-color: rgb(233, 229, 229);
+  width: 160px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  border: none;
+  align-items: center;
+  text-align: center;
+  border-radius: 25px;
+  color: black;
+  cursor: pointer;
+  font-size: 23px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+}
+
+@media screen and (max-width: 1024px) {
+
+  .contact-details,
+  .billing-details {
+    width: 100%;
+    background-color: #1b1a21;
+    padding: 56px;
+  }
+  .form-section form input {
+    width: 470px;
+  }
+
+  .form-section form {
+    flex-direction: column;
+  }
+
+ 
+}
+
+/* Mobile View */
+
+@media screen and (max-width: 500px) {
+  .account-section {
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    justify-content: space-between;
+  }
+  .contact-details,
+  .billing-details {
+    width: 100%;
+    background-color: #1b1a21;
+    padding: 36px;
+  }
+
+  .billing-details h3,
+  .contact-details h3 {
+    font-size: 20px;
+  }
+
+  .billing-details p {
+    font-size: 14px;
+  }
+  .form-section form {
+    flex-direction: column;
+  }
+
+  .form-section form input {
+    width: 280px;
+  }
+
+  .btnSave {
+    height: 40px;
+    width: 120px;
+  }
+
+  .billing-cards {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    overflow: auto;
+
+    padding-bottom: 5%;
+  }
+}

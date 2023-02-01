@@ -1,0 +1,79 @@
+.card-block {
+  height: 300px;
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 20px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.card-block h2 {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+}
+
+.feature p {
+  font-size: 15px;
+}
+
+.card-content .card-slug {
+  display: flex;
+  justify-content: center;
+  text-decoration: underline;
+  font-size: 22px;
+}
+
+.price-tag {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.price-tag p {
+  font-size: 23px;
+  margin-bottom: 5px;
+}
+
+.subscribed-btn {
+  height: 40px;
+  background-color: rgb(233, 229, 229);
+  width: 120px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  border: none;
+  align-items: center;
+  text-align: center;
+  border-radius: 25px;
+  color: black;
+  cursor: pointer;
+  font-size: 18px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+}
+
+
+
+@media screen and (max-width: 500px) {
+  .card-block {
+    height: 300px;
+    width: 270px;
+  }
+}

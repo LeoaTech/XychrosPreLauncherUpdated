@@ -1,9 +1,16 @@
 import React, { useState, forwardRef } from "react";
-import "./newcampaign.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { SideLogo } from "../../assets/index";
+import { AiOutlineCalendar } from "react-icons/ai";
+import { integratelinks } from "./socialLinks";
+import SocialBlock from "./socialsBlocks/SocialBlock";
+import { useStateContext } from "../../contexts/ContextProvider";
+import "./newcampaign.css";
+
+
+// Default Email Settings
 const InitialDefaultEmail = `Hi,
 
 Thank you for subscribing to {campaign.name} for the pre-launch of {product.name}. You can now invite your friends and family to join you in collecting more rewards and points by using {referral.link}.
@@ -14,35 +21,54 @@ We are excited to have you on board!
 
 {shop.name}`;
 
+
+
+
 function NewCampaignForm() {
+  const { isEdit, setIsEdit } = useStateContext();
+  const navigate = useNavigate();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
-  // const ExampleCustomInput = forwardRef(({ value, onClick, onChange }, ref) => (
-  //   <input
-  //     value={value}
-  //     className="example-custom-input"
-  //     onClick={onClick}
-  //     onChange={onChange}
-  //     ref={ref}
-  //   />
-  // ));
+  const ExampleCustomInput = forwardRef(({ value, onClick, onChange }, ref) => (
+    <div className="wrapper">
+      <div className="icon">
+        <AiOutlineCalendar
+          style={{ height: "20px", width: "20px" }}
+          onClick={onClick}
+        />
+      </div>
+      <input
+        value={value}
+        className="example-custom-input"
+        onChange={onChange}
+        ref={ref}
+      ></input>
+    </div>
+  ));
 
   const [defaultEmail, setDefaultEmail] = useState(InitialDefaultEmail);
 
+  
+  // Save & Update Campaign Button
+  const handleClick = () => {
+    setIsEdit(false), navigate("/campaigns");
+  };
   return (
     <div className="new-campaign-container">
       <nav>
         <div></div>
-        <h1 className="nav-title">New Campaign</h1>
-        <button type="submit" className="save-btn">
-          Save
+        <h1 className="nav-title">
+          {isEdit ? "Edit Campaign" : "New Campaign"}
+        </h1>
+        <button className="save-btn" onClick={handleClick}>
+          {isEdit ? "Update" : "Save"}
         </button>
       </nav>
       {/* Text Input  Form Section  */}
       <section>
         <div className="campaign-form">
-          <form onSubmit={""}>
+          <form>
             <div className="form-group">
               <label htmlFor="name">Campaign Name</label>
               <input type="text" name="title" id="title" />
@@ -50,6 +76,7 @@ function NewCampaignForm() {
               <DatePicker
                 minDate={new Date()}
                 showDisabledMonthNavigation
+                customInput={<ExampleCustomInput />}
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
               />
@@ -63,6 +90,7 @@ function NewCampaignForm() {
               <DatePicker
                 value={endDate}
                 minDate={new Date()}
+                customInput={<ExampleCustomInput />}
                 showDisabledMonthNavigation
                 selected={endDate}
                 onChange={(date) => setEndDate(date)}
@@ -144,7 +172,7 @@ function NewCampaignForm() {
 
       <section>
         <div className="email-section">
-          <h2>Email Draft</h2>
+          <h2>Welcome Email Draft</h2>
           <div>
             <img src={SideLogo} alt="Shop Logo" />
             <textarea
@@ -156,6 +184,53 @@ function NewCampaignForm() {
           </div>
         </div>
       </section>
+
+      {/* Referral Email */}
+
+      <section>
+        <div className="email-section">
+          <h2>Referral Email Draft</h2>
+          <div>
+            <img src={SideLogo} alt="Shop Logo" />
+            <textarea
+              className="email-textarea"
+              rows={9}
+              value={defaultEmail}
+              onChange={setDefaultEmail}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Social Settings Integration */}
+
+      <div className="integration-container">
+        {/* Navbar */}
+        {/* <div className="nav">
+          <div className="navtitle">
+            <h1>Klaviyo Integration</h1>
+            <div className="check-input">
+              <input type="checkbox" name="" id="" />
+              <label htmlFor="">Integrate with Klaviyo</label>
+            </div>
+          </div>
+          <button type="submit" className="saveBtn">
+            Save
+          </button>
+        </div> */}
+
+        <div className="social-media-section">
+          <h1>Social Media Integration</h1>
+
+          <div className="social-links-container">
+            {integratelinks.map((link) => (
+              <div className="socialblock" key={link.id}>
+                <SocialBlock link={link} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
