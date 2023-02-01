@@ -1,7 +1,10 @@
 .settings-container {
   color: var(--primary-color);
-  padding: 25px;
-  margin: 25px;
+  margin-top: 15px;
+  width: 100%;
+  /* min-width: calc(100vw - 250px); */
+  padding: 15px 20px;
+  overflow: auto;
 
   display: flex;
   flex-direction: column;
@@ -80,10 +83,12 @@ label {
 .check-group input {
   height: 28px;
   margin: 10px;
-  width: 50px;
+  width: 25px;
   border-radius: 10px;
   background-color: var(--secondary-text-color);
   border: 1px solid var(--primary-color);
+  padding-left: 15px;
+  text-indent: -15px;
 }
 
 input[type="checkbox"]:checked {
@@ -97,10 +102,10 @@ input[type="checkbox"]:checked {
   gap: 3px;
 }
 
-.section1,
-.section2 {
+section .section1,
+section .section2 {
   padding: 30px;
-  margin: 20px;
+  margin: 20px 5px;
   width: 100%;
   margin-bottom: 35px;
 }
@@ -127,7 +132,7 @@ input[type="checkbox"]:checked {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgb(59, 59, 59);
+  background-color: rgb(38, 38, 38);
 }
 
 .email-section div img {
@@ -144,14 +149,13 @@ input[type="checkbox"]:checked {
   color: #fff;
   padding: 35px;
   margin-bottom: 20px;
-  background-color: rgb(59, 59, 59);
+  background-color: rgb(38, 38, 38);
 }
-
 
 /* Media Queries */
 
 @media only screen and (max-width: 1490px) {
-  .settings-container{
+  .settings-container {
     padding: 5px;
     margin: 10px;
   }
@@ -176,11 +180,24 @@ input[type="checkbox"]:checked {
     height: 50px;
     width: 100px;
   }
+
+  .check-fields .check-group {
+    margin-left: 20px;
+  }
+
+  .check-group input {
+    height: 25px;
+    margin: 10px;
+    width: 25px;
+    border-radius: 10px;
+    background-color: var(--secondary-text-color);
+    border: 1px solid var(--primary-color);
+  }
 }
 @media only screen and (max-width: 768px) {
   .settings-container {
-    padding: 15px 10px;
-    margin: 15px 10px;
+    padding: 15px 27px;
+    margin: 15px 5px;
   }
 
   section {
@@ -239,21 +256,21 @@ input[type="checkbox"]:checked {
     margin-left: 10px;
   }
 
-  .check-group label{
-   
-      font-size: 23px;
-      font-weight: 300;
-      margin: 20px 0;
-      color: rgb(200, 199, 199);
-      line-height: 30px;
+  .check-group label {
+    font-size: 23px;
+    font-weight: 300;
+    margin: 20px 0;
+    line-break: loose;
+    color: rgb(200, 199, 199);
+    line-height: 30px;
   }
 
-  .check-group{
+  .check-group {
     display: block;
   }
 
   .check-group input {
-    height: 28px;
-    width: 30px;
+    height: 25px;
+    width: 25px;
   }
 }
