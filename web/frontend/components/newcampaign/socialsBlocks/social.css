@@ -1,0 +1,55 @@
+.social-section {
+  color: #fff;
+  background-color: var(--secondary-text-color);
+  padding: 30px;
+  margin: 25px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  height: 100%;
+}
+
+.social-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.social-icons {
+  font-size: 34px;
+  color: rgb(89, 88, 88);
+}
+.social-title h3 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.message-input {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.issue-textarea {
+  height: 170px;
+  width: 100%;
+  border: none;
+  font-size: 25px;
+  color: #fff;
+  padding: 35px;
+  margin-bottom: 20px;
+  background-color: rgb(42, 40, 40);
+}
+
+@media screen and (max-width: 500px) {
+  .social-section {
+    padding: 20px;
+    margin: 10px;
+  }
+}
