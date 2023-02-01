@@ -11,7 +11,7 @@ import { useStateContext } from "../../contexts/ContextProvider";
 
 export default function CampaignsComponent(props) {
   // const fetch = useAuthenticatedFetch();
-  const { activeMenu } = useStateContext();
+  const { activeMenu,isEdit,setIsEdit } = useStateContext();
 
   const [getCampaigns, setCampaigns] = useState([
     {
