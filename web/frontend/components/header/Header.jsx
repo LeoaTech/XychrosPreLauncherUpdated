@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { CgNotes } from "react-icons/cg";
@@ -7,6 +7,7 @@ import "./header.css";
 
 import { useStateContext } from "../../contexts/ContextProvider";
 import { SideLogo } from "../../assets/index";
+import { Link } from "react-router-dom";
 
 const NavButton = ({ title, customFunction, color, icon, dotColor }) => (
   <span>
@@ -27,13 +28,12 @@ const Header = () => {
   const {
     activeMenu,
     setActiveMenu,
-    isClicked,
-    setIsClicked,
+    setMobileMenu,
     handleClick,
     screenSize,
     setScreenSize,
   } = useStateContext();
-
+  const [isActive, setIsActive] = useState(false);
   useEffect(() => {
     const handleResize = () => {
       setScreenSize(window.innerWidth);
@@ -48,8 +48,10 @@ const Header = () => {
   useEffect(() => {
     if (screenSize > 980) {
       setActiveMenu(true);
+      setMobileMenu(false);
     } else if (screenSize < 980) {
       setActiveMenu(false);
+      setMobileMenu(true);
     }
   }, [screenSize]);
 
@@ -67,40 +69,46 @@ const Header = () => {
         <img
           src={SideLogo}
           alt="XychrosLogo"
-          onClick={() => setActiveMenu(!activeMenu)}
+          // onClick={() => setActiveMenu(!activeMenu)}
         />
       </div>
 
       <div className="right">
         {/* price , profile,faq*/}
         <div className="right-links">
-          <NavButton
-            title="Pricing"
-            customFunction={() => handleClick("Price")}
-            color="#fff"
-            icon={
-              <MdOutlinePriceChange style={{ height: "35px", width: "35px" }} />
-            }
-          />
-          <NavButton
-            title="FAQs"
-            customFunction={() => handleClick("Faq")}
-            color="#fff"
-            icon={<CgNotes style={{ height: "30px", width: "30px" }} />}
-          />
-
-          <div>
-            <div
-              className="userProfile"
-              onClick={() => handleClick("UserProfile")}
-            >
-              <HiOutlineUser style={{ height: "30px", width: "30px", color:"#fff" }} />
-              {/* <button>
-                <MdOutlineKeyboardArrowDown
-                  style={{ height: "25px", width: "28px" , fontSize:24, color: "white" }}
+          <Link to="/price" onClick={() => setIsActive(true)}>
+            <NavButton
+              title="Pricing"
+              className={({ isActive }) =>
+                isActive ? "" : "header-links"
+              }
+              color="#fff"
+              icon={
+                <MdOutlinePriceChange
+                  style={{ height: "35px", width: "35px" }}
                 />
-              </button> */}
-            </div>
+              }
+            />
+          </Link>
+
+          <Link to="/faq">
+            <NavButton
+              title="FAQs"
+              color="#fff"
+              icon={<CgNotes style={{ height: "30px", width: "30px" }} />}
+            />
+          </Link>
+          <div>
+            <Link to="/userprofile">
+              <div
+                className="userProfile"
+                onClick={() => handleClick("UserProfile")}
+              >
+                <HiOutlineUser
+                  style={{ height: "30px", width: "30px", color: "#fff" }}
+                />
+              </div>
+            </Link>
           </div>
         </div>
       </div>
