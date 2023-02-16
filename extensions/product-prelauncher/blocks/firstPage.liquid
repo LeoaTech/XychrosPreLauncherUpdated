@@ -11,23 +11,23 @@
       do {
         var parent = el.parentNode;
 
-        // Collect element children
+// Collect element children
         for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
           node = parent.childNodes[i];
 
-          // Collect only sibling nodes that are elements and not the current element
+// Collect only sibling nodes that are elements and not the current element
           if (node.nodeType == 1 && node != el) {
             nodes.push(node);
           }
         }
 
-        // Go up to parent
+// Go up to parent
         el = parent;
 
-        // Stop when processed the body's child nodes
+// Stop when processed the body's child nodes
       } while (el.tagName.toLowerCase() != 'body');
 
-      // Hide the collected nodes
+// Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
       });{% endif %}let image_background = 'https:' + first_page_settings.background;
@@ -66,13 +66,16 @@
 
 <style>
   .section-layout {
-    font-size: {{ block.settings.base_font_size }};
+    font-size: {{ block.settings.base_font_size }}
+    ;
   }
 
   .submit-button {
-    font-size: 0.5em;
-    color: {{ block.settings.button_font_color }};
-    background: {{ block.settings.button_color }};
+    font-size: 1em;
+    color: {{ block.settings.button_font_color }}
+    ;
+    background: {{ block.settings.button_color }}
+    ;
   }
 
   .product-prelaunch {
@@ -81,7 +84,8 @@
   }
 
   .header_text {
-    color: {{ block.settings.header_color }};
+    color: {{ block.settings.header_color }}
+    ;
     font-size: 4.5em;
     font-weight: 400;
     padding: 0 2%;
@@ -90,7 +94,8 @@
   }
 
   .subheader_text {
-    color: {{ block.settings.subheader_color }};
+    color: {{ block.settings.subheader_color }}
+    ;
     font-size: 2.5em;
     font-weight: 400;
     padding: 0 3%;
@@ -99,7 +104,8 @@
   }
 
   .tag-line {
-    color: {{ block.settings.cta_tag_color }};
+    color: {{ block.settings.cta_tag_color }}
+    ;
     font-size: 1.5em;
     font-weight: 600;
     margin-bottom: 1em;
@@ -107,7 +113,8 @@
   }
 
   .text-layout {
-    background-color: {{ block.settings.bg_color }};
+    background-color: {{ block.settings.bg_color }}
+    ;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -129,6 +136,20 @@
     {% else %}
       align-items: center;
     {% endif %}
+  }
+
+
+  @media screen and (max-width: 600px) {
+    .header_text {
+      font-size: 2.5rem;
+    }
+    .subheader_text {
+      font-size: 2rem;
+    }
+
+    .tag-line {
+      font-size: 2.7rem;
+    }
   }
 </style>
 
