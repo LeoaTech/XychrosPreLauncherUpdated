@@ -207,8 +207,9 @@
   }
 
   .support-form {
-    width: 350px;
+    width: 370px;
     padding: 8px;
+    margin: 13px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
