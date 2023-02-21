@@ -5,7 +5,7 @@ import { useThemeContext } from '../../contexts/ThemeContext';
 
 const Campaigns = () => {
   const {activeMenu}  = useStateContext();
-  const {darkTheme} = useThemeContext()
+  const {darkTheme} = useThemeContext();
 
   return (
     <div className="app">
