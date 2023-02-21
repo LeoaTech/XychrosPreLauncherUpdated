@@ -1,5 +1,4 @@
 import "../modal/modal.css";
-import { AiOutlineClose } from "react-icons/ai";
 import DataTable from "react-data-table-component";
 import { modalColumns, referralRows } from "../referrals/dummyData";
 
