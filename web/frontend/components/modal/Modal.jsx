@@ -3,23 +3,24 @@ import { AiOutlineClose } from "react-icons/ai";
 import DataTable from "react-data-table-component";
 import { modalColumns, referralRows } from "../referrals/dummyData";
 
-
 // Data Table custom styles
 const customStyles = {
   headCells: {
     style: {
       fontSize: "17px",
       fontWeight: "bold",
-      paddingLeft: "0 5px",
+      // paddingLeft: "0 8px",
       justifyContent: "center",
       color: "#232227",
-      borderTop:"1px solid gray",
       backgroundColor: "#FCFCFC",
-      borderBottom: "1px solid gray",
+
+      // border:"1px solid gray",
+      
+      borderBottom: "none",
+      borderTop: "none",
+
       borderRight: "1px solid gray",
-      borderLeft: "1px solid gray",
-
-
+      // borderLeft: "1px solid gray",
     },
   },
   cells: {
@@ -27,10 +28,10 @@ const customStyles = {
       textAlign: "center",
       alignItems: "center",
       justifyContent: "center",
-      border: "none",
-      borderRight: "1px solidgray",
-      borderLeft: "1px solid gray",
-      borderBottom: "1px solid gray",
+      // border:" none",
+      // borderRight: "1px solidgray",
+      // borderLeft: "1px solid gray",
+      // borderBottom: "1px solid gray",
     },
   },
   rows: {
