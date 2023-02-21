@@ -4,7 +4,7 @@
   width: 100%;
   /* min-width: calc(100vw - 250px); */
   padding: 15px 20px;
-  overflow: auto;
+  /* overflow: auto; */
 
   display: flex;
   flex-direction: column;
@@ -223,7 +223,7 @@ section .section2 {
 @media only screen and (max-width: 500px) {
   .settings-container {
     padding: 10px 5px;
-    margin: 10px 5px;
+    margin: 10px 0px;
   }
 
   .settings-container nav {
