@@ -15,7 +15,12 @@ const SocialBlock = ({ link }) => {
         </div>
 
         <div className="message-input">
-          <textarea className="issue-textarea" rows={4} />
+          <input
+            className="referral-input"
+            // value={
+            //   "Beyond excited for the launch of {{ product.title }}!! Join the club by subscribing at https://www.store-name.com/pages/name/referrallink"
+            // }
+          />
         </div>
       </div>
     </div>
