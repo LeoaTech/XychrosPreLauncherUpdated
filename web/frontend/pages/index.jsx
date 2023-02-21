@@ -4,7 +4,7 @@ import {
   fetchCampaign,
   fetchAllCampaigns,
 } from "../app/features/campaigns/campaignSlice";
-import useFetchCampaignsData from "../app/features/constant/fetchCampaignsData";
+import useFetchCampaignsData from "../constant/fetchCampaignsData";
 import { SideBar, Header, HomeComponent, MainPage } from "../components/index";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
@@ -24,8 +24,6 @@ export default function HomePage() {
       dispatch(fetchCampaign(data));
     }
   }, [dispatch, data]);
-
-  
 
   return (
     <div className="app">
