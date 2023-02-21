@@ -164,6 +164,12 @@ CREATE TABLE public.campaigns (
 
 ALTER TABLE public.campaigns OWNER TO postgres;
 
+--   Add New Column is_active for Campaigns Table 
+-- Reference Link: https://stackoverflow.com/questions/11938621/postgresql-add-boolean-column-to-table-set-default
+ALTER TABLE public.campaigns ADD COLUMN is_active BOOLEAN;
+UPDATE public.campaigns SET is_active = 'f'; 
+ALTER TABLE public.campaigns ALTER COLUMN is_active SET NOT NULL;
+
 --
 -- TOC entry 203 (class 1259 OID 43118)
 -- Name: campaigns_campaign_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
