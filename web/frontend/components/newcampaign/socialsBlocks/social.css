@@ -1,8 +1,8 @@
 .social-section {
   color: #fff;
   background-color: var(--secondary-text-color);
-  padding: 30px;
-  margin: 25px 10px;
+  /* padding: 30px;
+  margin: 25px 10px; */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -32,19 +32,19 @@
 }
 
 .message-input {
-  margin-top: 30px;
   width: 100%;
 }
 
-.issue-textarea {
-  height: 170px;
-  width: 100%;
+.referral-input {
+  height: 100px;
+  width: 500px;
   border: none;
-  font-size: 25px;
+  font-size: 17px;
   color: #fff;
-  padding: 35px;
-  margin-bottom: 20px;
+  padding: 5px 4px;
   background-color: rgb(42, 40, 40);
+  
+  
 }
 
 @media screen and (max-width: 500px) {
