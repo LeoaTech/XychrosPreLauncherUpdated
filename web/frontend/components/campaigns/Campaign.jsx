@@ -4,15 +4,11 @@ import CampaignBlock from "./CampaignBlock";
 import Pagination from "../ui/Pagination";
 import React, { useState, useEffect, Fragment } from "react";
 import { useStateContext } from "../../contexts/ContextProvider";
-import Spinner from "./Spinner";
-/* Import the useAuthenticatedFetch hook included in the Node app template */
-import { useAuthenticatedFetch, useAppQuery } from "../../hooks";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllCampaigns,
   fetchCampaign,
 } from "../../app/features/campaigns/campaignSlice";
-import useFetchCampaignsData from "../../app/features/constant/fetchCampaignsData";
 
 export default function CampaignsComponent() {
   const { activeMenu, isEdit, setIsEdit } = useStateContext();
@@ -24,24 +20,12 @@ export default function CampaignsComponent() {
   const [error, setError] = useState("");
 
   const handleDelete = (id) => {
-    console.log("idhr aya",id)
 
     let newData = getCampaigns?.filter((cp) => cp.campaign_id !== id);
-    console.log("newData", newData)
     setCampaigns(newData);
   };
 
-  // const data = useFetchCampaignsData("/api/getcampaigns", {
-  //   method: "GET",
-  //   headers: { "Content-Type": "application/json" },
-  // });
-
-  // useEffect(() => {
-  //   if (data) {
-  //     dispatch(fetchCampaign(data));
-  //   }
-  // }, [dispatch, data]);
-
+ 
   const handleEdit = (id) => {
     setIsEdit(true);
     setEditData(getCampaigns?.filter((cp) => cp.id === id));
