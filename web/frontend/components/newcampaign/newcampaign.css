@@ -10,10 +10,9 @@
 
 /*------------------- Navbar ------------------- */
 
-section {
+.newcampaign-section {
   background-color: #1b1a21;
-  padding: 25px;
-  margin-bottom: 20px;
+  padding: 15px;
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -44,11 +43,18 @@ section {
   cursor: pointer;
   font-size: 26px;
   font-weight: 500;
+  margin-top: 20px;
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
+}
+
+.nextBtn {
+  height: 40px;
+  width: 110px;
+  font-size: 23px;
 }
 
 /* Form Sections */
@@ -94,7 +100,7 @@ label {
   border-radius: 12px;
   height: 50px;
   color: white;
-  width: 600px;
+  width: 450px;
   font-size: 23px;
   font-weight: 500;
   -webkit-border-radius: 12px;
@@ -112,6 +118,17 @@ label {
 }
 
 /* Store Social Links inside camapign form Section */
+
+.store-links {
+  padding-left: 40px;
+  padding-right: 40px;
+  margin: 0 40px;
+}
+
+
+.store-links .sub-heading{
+  margin-bottom: 30px;
+}
 
 .campaign-form form .store-social-links {
   display: grid;
@@ -137,14 +154,13 @@ label {
 
 .campaign-form form .social-inputfield {
   height: 20px;
-  width: 400px;
+  width: 270px;
 }
 
 .sub-heading {
   font-size: 24px;
   margin-top: 30px;
   margin-bottom: 10px;
-  margin-left: 15px;
 }
 
 /* Collect Emails */
@@ -152,9 +168,12 @@ label {
 .collect-setup {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
 }
 .collect-settings {
-  margin-left: 20px;
+  padding-left: 40px;
+  margin-left: 40px;
 }
 .collect-settings div {
   display: flex;
@@ -164,7 +183,6 @@ label {
 
 .collect-settings label {
   font-size: 17px;
-
 }
 
 .edit-btn {
@@ -191,15 +209,23 @@ label {
 .basic-form-settings,
 .referrals-settings,
 .rewards-settings {
+  margin: 0 40px;
+  padding: 0 30px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.basic-form-settings h2,
+.referrals-settings h2,
+.rewards-settings h2 {
+  margin-top: 6px;
 }
 
 .title {
   font-weight: 700;
-  font-size: 29px;
+  font-size: 25px;
   margin-bottom: 24px;
   margin-left: 10px;
 }
@@ -210,6 +236,29 @@ label {
   color: #fff;
   font-weight: 700;
   font-size: 27px;
+  cursor: pointer;
+}
+
+/*----------------------- Reward Tier-------------------- */
+
+.rewards-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-bottom: 30px;
+  background-color: transparent;
+}
+
+.reward-card {
+  border-radius: 12px;
+  background-color: #25242d;
+  padding: 25px;
+  margin: 25px 0;
+
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
 }
 
 /*=------------------- Checkboxes Section -----------=  */
@@ -269,9 +318,20 @@ input[type="checkbox"]:checked {
 }
 
 /*-------------------------- Email Section---------------------------------- */
-
+.email-container section {
+  background-color: #ebf0f2;
+  color: #252525;
+  padding: 25px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
 .email-section {
   height: 100%;
+  background-color: #ebf0f2;
 }
 .email-section h2 {
   padding-left: 20px;
@@ -280,28 +340,28 @@ input[type="checkbox"]:checked {
   padding-bottom: 20px;
   font-weight: 700;
 }
-.email-section div {
+.email-section .email-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgb(38, 38, 38);
+  background-color: #ebf0f2;
 }
 
-.email-section div img {
+.email-section .email-content img {
   height: 60px;
   width: 200px;
   margin: 30px 0;
 }
 
-.email-textarea {
+.email-textinput {
   width: 100%;
   border: none;
   font-size: 25px;
-  color: #fff;
+  color: #1a1919;
   padding: 35px;
   margin-bottom: 20px;
-  background-color: rgb(38, 38, 38);
+  background-color: #ebf0f2;
 }
 
 .wrapper {
