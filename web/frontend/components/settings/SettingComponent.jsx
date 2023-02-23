@@ -84,7 +84,7 @@ const SettingComponent = () => {
         {/* Email Draft Section */}
 
         <section>
-          <div className="email-section">
+          <div className="email-settings">
             <h2>Email Draft</h2>
             <div>
               <img src={SideLogo} alt="Shop Logo" />
