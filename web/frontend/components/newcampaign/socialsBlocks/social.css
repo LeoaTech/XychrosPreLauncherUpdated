@@ -32,20 +32,18 @@
   font-weight: 700;
 }
 
-.message-input {
+.referral-link-input {
   width: 100%;
 }
 
 .referral-input {
-  height: 100px;
+  height: 80px;
   width: 500px;
   border: none;
   font-size: 17px;
   color: #fff;
-  padding: 5px 4px;
-  background-color: rgb(42, 40, 40);
-  
-  
+  padding: 8px 8px;
+  background-color: #25242d;
 }
 
 @media screen and (max-width: 500px) {
