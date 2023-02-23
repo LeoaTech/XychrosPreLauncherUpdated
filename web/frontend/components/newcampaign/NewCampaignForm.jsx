@@ -330,15 +330,85 @@ function NewCampaignForm() {
                   ))}
                 </div>
               </div>
-              
             </div>
             <div>
-                <button className="nextBtn">Next</button>
-              </div>
+              <button className="nextBtn">Next</button>
+            </div>
           </>
         )}
       </section>
 
+      {/* Reward Settings */}
+
+      <section className="newcampaign-section">
+        <div
+          className={`card ${expanded[2] ? "expanded" : ""}`}
+          onClick={() => handleExpand(2)}
+        >
+          <div className="rewards-settings">
+            <h2 className="title">Reward Settings</h2>
+            <span className="openBtn" onClick={() => handleExpand(2)}>
+              {expanded[2] ? (
+                <IoIosArrowUp onClick={() => handleExpand(2)} />
+              ) : (
+                <IoIosArrowDown onClick={() => handleExpand(2)} />
+              )}
+            </span>
+          </div>
+        </div>
+
+        {expanded[2] && (
+          <>
+            <div className="rewards-settings-form">
+              <p>
+                Set up the Rewards for your customers here! Select the discount
+                type and then the reward tiers!
+              </p>
+              <p>
+                Note: Discount will not be applicable on Shipping. Each code can
+                be used by a customer only once.
+              </p>
+
+              <div>
+                <h2 className="sub-heading">Discount</h2>
+                <div className="discount-settings">
+                  <div>
+                    <input
+                      className="social-input"
+                      type="radio"
+                      name=""
+                      id=""
+                    />
+                    <label htmlFor="">% off the entire order</label>
+                  </div>
+                  <div>
+                    <input
+                      className="social-input"
+                      type="radio"
+                      name=""
+                      id=""
+                    />{" "}
+                    <label htmlFor="">$ off the entire order</label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rewards-container">
+                {RewardData.map((reward) => (
+                  <div key={reward.id} className="reward-card">
+                    <RewardTier reward={reward} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <button className="nextBtn" onClick={() => handleExpand(0)}>
+                Next
+              </button>
+            </div>
+          </>
+        )}
+      </section>
       <div>
         <button className="saveFormBtn" onClick={handleSaveClick}>
           {isEdit ? "Update" : "Save"}
