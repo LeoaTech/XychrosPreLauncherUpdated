@@ -125,8 +125,7 @@ label {
   margin: 0 40px;
 }
 
-
-.store-links .sub-heading{
+.store-links .sub-heading {
   margin-bottom: 30px;
 }
 
@@ -211,9 +210,9 @@ label {
 .rewards-settings {
   margin: 0 40px;
   padding: 0 30px;
+  margin-top: 15px;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
   cursor: pointer;
 }
 
@@ -237,6 +236,13 @@ label {
   font-weight: 700;
   font-size: 27px;
   cursor: pointer;
+}
+
+.referral-settings-form {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 20px;
 }
 
 /*----------------------- Reward Tier-------------------- */
@@ -440,9 +446,9 @@ input[type="checkbox"]:checked {
 }
 
 .check-input input {
-  height: 28px;
+  height: 20px;
   margin: 10px;
-  width: 25px;
+  width: 20px;
   border-radius: 10px;
   background-color: transparent;
   border: 1px solid var(--primary-color);
@@ -469,10 +475,7 @@ input[type="checkbox"]:checked {
 /* Social Media Integration Sections */
 
 .social-media-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
+  padding: 0 30px;
 }
 
 .social-media-section h1 {
