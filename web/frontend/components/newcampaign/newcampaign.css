@@ -250,7 +250,7 @@ label {
 .rewards-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  column-gap: 50px;
   margin-bottom: 30px;
   background-color: transparent;
 }
@@ -260,13 +260,31 @@ label {
   background-color: #25242d;
   padding: 25px;
   margin: 25px 0;
-
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   -ms-border-radius: 12px;
   -o-border-radius: 12px;
 }
 
+.rewards-settings-form {
+  padding: 0 40px;
+  margin: 40px;
+}
+
+.rewards-settings-form p {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.discount-settings{
+  line-height: 0.9;
+}
+
+.discount-settings div{
+  display: flex;
+  gap:25px
+}
 /*=------------------- Checkboxes Section -----------=  */
 
 .check-fields {
