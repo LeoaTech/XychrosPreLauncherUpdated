@@ -1,0 +1,38 @@
+.reward-title {
+  display: flex;
+  gap: 20px;
+}
+
+.reward-title h2 {
+  font-size: 25px;
+  font-weight: 300;
+  margin-bottom: 30px;
+}
+
+.reward-form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.reward-content .inputfield label {
+  font-size: 18px;
+}
+
+.small-inputfield {
+  height: 60px;
+  width: 60px;
+  padding: 10px;
+  font-size: 28px;
+  font-weight: 700;
+  background-color: #ebf0f2;
+}
+
+.large-field {
+  height: 60px;
+  padding: 10px;
+  font-size: 28px;
+  font-weight: 700;
+  width: 150px !important;
+  background-color: #ebf0f2;
+}
