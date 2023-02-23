@@ -66,7 +66,6 @@ function NewCampaignForm() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [expanded, setExpanded] = useState(Array(6).fill(false));
-  
 
   const [newCampaignData, setNewCampaignData] = useState({
     campaign_name: "",
@@ -78,9 +77,7 @@ function NewCampaignForm() {
     collect_email: false,
   });
 
-
   const handleChange = (e) => {
-
     const { name, value } = e.target;
     setNewCampaignData((prevState) => ({
       ...prevState,
@@ -299,6 +296,46 @@ function NewCampaignForm() {
               </div>
             </form>
           </div>
+        )}
+      </section>
+
+      {/* Referal Settings */}
+
+      <section className="newcampaign-section">
+        <div
+          className={`card ${expanded[1] ? "expanded" : ""}`}
+          onClick={() => handleExpand(1)}
+        >
+          <div className="referrals-settings">
+            <h2 className="title">Refferal Settings</h2>
+            <span className="openBtn" onClick={() => handleExpand(1)}>
+              {expanded[1] ? (
+                <IoIosArrowUp onClick={() => handleExpand(1)} />
+              ) : (
+                <IoIosArrowDown onClick={() => handleExpand(1)} />
+              )}
+            </span>
+          </div>
+        </div>
+
+        {expanded[1] && (
+          <>
+            <div className="referral-settings-form">
+              <div className="social-media-section">
+                <div className="social-links-container">
+                  {integratelinks.map((link) => (
+                    <div className="socialblock" key={link.id}>
+                      <SocialBlock link={link} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+            </div>
+            <div>
+                <button className="nextBtn">Next</button>
+              </div>
+          </>
         )}
       </section>
 
