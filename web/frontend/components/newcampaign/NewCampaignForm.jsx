@@ -564,6 +564,66 @@ function NewCampaignForm() {
           )}
         </section>
 
+        {/* Integration Settings */}
+
+        <section className="newcampaign-section">
+          <div
+            className={`card ${expanded[4] ? "expanded" : ""}`}
+            onClick={() => handleExpand(4)}
+          >
+            <div className="integration-settings">
+              <h2 className="title">Integration Settings</h2>
+              <span className="openBtn" onClick={() => handleExpand(4)}>
+                {expanded[4] ? (
+                  <IoIosArrowUp onClick={() => handleExpand(4)} />
+                ) : (
+                  <IoIosArrowDown onClick={() => handleExpand(4)} />
+                )}
+              </span>
+            </div>
+          </div>
+
+          {expanded[4] && (
+            <>
+              <div className="integration-settings">
+                <div className="check-input">
+                  <input type="checkbox" name="" id="" />
+                  <label htmlFor="">Integrate with Klaviyo</label>
+                </div>
+              </div>
+              <div className="integrate-setting-btn">
+                <div>{renderButton(5)}</div>
+              </div>
+            </>
+          )}
+        </section>
+
+        {/* Template Settings */}
+
+        <section className="newcampaign-section">
+          <div
+            className={`card ${expanded[5] ? "expanded" : ""}`}
+            onClick={() => handleExpand(5)}
+          >
+            <div className="template-settings">
+              <h2 className="title">Template Settings</h2>
+              <span className="openBtn" onClick={() => handleExpand(5)}>
+                {expanded[5] ? (
+                  <IoIosArrowUp onClick={() => handleExpand(5)} />
+                ) : (
+                  <IoIosArrowDown onClick={() => handleExpand(5)} />
+                )}
+              </span>
+            </div>
+          </div>
+
+          {expanded[5] && (
+            <>
+              <div></div>
+            </>
+          )}
+        </section>
+
         <div>
           <button className="saveFormBtn" type="submit">
             {isEdit ? "Update" : "Save"}
