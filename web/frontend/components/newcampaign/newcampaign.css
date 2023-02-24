@@ -319,6 +319,11 @@ input[type="checkbox"]:checked {
   width: 100%;
 }
 
+.referral-nextbtn{
+  display: flex;
+  justify-content: flex-end;
+}
+
 /*----------------------- Reward Tier-------------------- */
 
 .rewards-container {
