@@ -96,6 +96,8 @@ function NewCampaignForm() {
     </div>
   ));
 
+  // Render Next Button on each form
+
   const renderButton = (id) => {
     return (
       <button className="nextBtn" onClick={() => handleNext(id)}>
@@ -103,6 +105,8 @@ function NewCampaignForm() {
       </button>
     );
   };
+
+  // Handle State change events
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -119,18 +123,20 @@ function NewCampaignForm() {
       }));
     }
   };
-
+  // Handle Card Expands and Collapse Events
   const handleExpand = (index) => {
     setExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
     );
   };
+
+  // Handle Next Button event for each
   const handleNext = (index) => {
     setExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
     );
   };
-  // Save & Update Campaign Button
+  // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = (e) => {
     e.preventDefault();
     if (isEdit) {
@@ -139,6 +145,8 @@ function NewCampaignForm() {
       console.log("Basic form settings", newCampaignData);
     }
   };
+
+  // HandleCheckbox events in the basic form settings
 
   function handleCheckboxChange(linkId, isChecked) {
     if (isChecked) {
@@ -346,7 +354,7 @@ function NewCampaignForm() {
                       <label htmlFor="">Email Addresses only</label>
                     </div>
                   </div>
-                  {/* <div>{renderButton(1)}</div> */}
+                  <div>{renderButton(1)}</div>
                 </div>
               </div>
             </div>
@@ -392,6 +400,78 @@ function NewCampaignForm() {
                 </div>
 
                 <div>{renderButton(2)}</div>
+              </div>
+            </>
+          )}
+        </section>
+
+        {/* Reward Settings */}
+
+        <section className="newcampaign-section">
+          <div
+            className={`card ${expanded[2] ? "expanded" : ""}`}
+            onClick={() => handleExpand(2)}
+          >
+            <div className="rewards-settings">
+              <h2 className="title">Reward Settings</h2>
+              <span className="openBtn" onClick={() => handleExpand(2)}>
+                {expanded[2] ? (
+                  <IoIosArrowUp onClick={() => handleExpand(2)} />
+                ) : (
+                  <IoIosArrowDown onClick={() => handleExpand(2)} />
+                )}
+              </span>
+            </div>
+          </div>
+
+          {expanded[2] && (
+            <>
+              <div className="rewards-settings-form">
+                <div className="reward-container">
+                  <p>
+                    Set up the Rewards for your customers here! Select the
+                    discount type and then the reward tiers!
+                  </p>
+                  <p>
+                    Note: Discount will not be applicable on Shipping. Each code
+                    can be used by a customer only once.
+                  </p>
+                  <div className="rewards-settings-container">
+                    <h2 className="sub-heading">Discount</h2>
+                    <div className="discount-settings">
+                      <div>
+                        <input
+                          className="social-radioInput"
+                          type="radio"
+                          name=""
+                          id=""
+                        />
+                        <label htmlFor="">% off the entire order</label>
+                      </div>
+                      <div>
+                        <input
+                          className="social-radioInput"
+                          type="radio"
+                          name=""
+                          id=""
+                        />{" "}
+                        <label htmlFor="">$ off the entire order</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rewards-container">
+                    {RewardData.map((reward) => (
+                      <div key={reward.id} className="reward-card">
+                        <RewardTier reward={reward} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="reward-section">
+                  <div></div>
+                  <div>{renderButton(3)}</div>
+                </div>
               </div>
             </>
           )}
