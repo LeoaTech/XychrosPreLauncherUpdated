@@ -287,13 +287,12 @@ input[type="checkbox"]:checked {
   margin-bottom: 20px;
 }
 
-.referral-container p{
+.referral-container p {
   padding: 0 40px;
   margin: 0 40px;
   font-size: 18px;
   margin-bottom: 20px;
   line-height: 1.6;
-
 }
 /* Social Media Integration Sections */
 
@@ -316,6 +315,65 @@ input[type="checkbox"]:checked {
   column-gap: 25px;
   row-gap: 25px;
   width: 100%;
+}
+
+/*----------------------- Reward Tier-------------------- */
+
+.rewards-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 50px;
+  margin-bottom: 30px;
+  background-color: transparent;
+}
+
+.reward-card {
+  border-radius: 12px;
+  background-color: #25242d;
+  padding: 25px;
+  margin: 25px 0;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+
+.rewards-settings-form p {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.discount-settings {
+  line-height: 0.9;
+}
+
+.discount-settings div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.discount-settings .social-radioInput {
+  height: 20px;
+  width: 30px;
+}
+
+.reward-container {
+  margin: 0 40px;
+  padding: 0 40px;
+}
+
+.reward-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reward-setting-btn {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 /*--------------- Media Queries----------------------- */
