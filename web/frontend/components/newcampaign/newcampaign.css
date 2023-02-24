@@ -57,15 +57,12 @@
   font-size: 23px;
 }
 
-/* Form Sections */
+/* Basic Form Sections */
 .newcampaign-form-heading {
   font-weight: 700;
   font-size: 29px;
   margin-bottom: 24px;
   margin-left: 10px;
-}
-.campaign-form {
-  /* line-height: 20px; */
 }
 
 .basic-settings-form {
@@ -285,9 +282,40 @@ input[type="checkbox"]:checked {
 
 .referral-settings-form {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 20px;
+}
+
+.referral-container p{
+  padding: 0 40px;
+  margin: 0 40px;
+  font-size: 18px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+
+}
+/* Social Media Integration Sections */
+
+.social-media-section {
+  padding: 0 40px;
+  margin: 0 40px;
+}
+
+.social-media-section h1 {
+  font-size: 34px;
+  line-height: 1.6;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.social-links-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* justify-self: center; */
+  column-gap: 25px;
+  row-gap: 25px;
+  width: 100%;
 }
 
 /*--------------- Media Queries----------------------- */
