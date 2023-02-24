@@ -67,7 +67,6 @@ function NewCampaignForm() {
   const [rewardEmail, setRewardEmail] = useState(InitialRewardEmail);
 
   const [expanded, setExpanded] = useState(Array(6).fill(false));
-  const [formStep, setFormStep] = useState([0, 1, 2, 3, 4, 5]);
   const [newCampaignData, setNewCampaignData] = useState({
     campaign_name: "",
     product_link: "",
@@ -472,6 +471,94 @@ function NewCampaignForm() {
                   <div></div>
                   <div>{renderButton(3)}</div>
                 </div>
+              </div>
+            </>
+          )}
+        </section>
+
+        {/* Email Settings */}
+        <section className="newcampaign-section">
+          <div
+            className={`card ${expanded[3] ? "expanded" : ""}`}
+            onClick={() => handleExpand(3)}
+          >
+            <div className="rewards-settings">
+              <h2 className="title">Email Settings</h2>
+              <span className="openBtn" onClick={() => handleExpand(3)}>
+                {expanded[3] ? (
+                  <IoIosArrowUp onClick={() => handleExpand(3)} />
+                ) : (
+                  <IoIosArrowDown onClick={() => handleExpand(3)} />
+                )}
+              </span>
+            </div>
+          </div>
+          {expanded[3] && (
+            <>
+              <div className="email-container">
+                <div className="email-optCheck">
+                  <input className="checkbox-input" type="checkbox" />
+                  <label htmlFor="">
+                    Enable Double Opt in for new sign-ups (This feature requires
+                    Professional Plan or above)
+                  </label>
+                </div>
+                <section>
+                  <div className="email-section">
+                    <h2>
+                      Welcome Email Draft - This email is sent when a customer
+                      signs up{" "}
+                    </h2>
+                    <div className="email-content">
+                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+
+                      <textarea
+                        className="email-textinput"
+                        rows={9}
+                        value={defaultEmail}
+                        onChange={setDefaultEmail}
+                      />
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div className="email-section">
+                    <h2>
+                      Referral Email Draft - This email is sent when a referral
+                      signs up{" "}
+                    </h2>
+                    <div className="email-content">
+                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <textarea
+                        className="email-textinput"
+                        rows={9}
+                        value={referralEmail}
+                        onChange={setReferralEmail}
+                      />
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div className="email-section">
+                    <h2>
+                      Reward Tier Email Draft - This email is sent when a reward
+                      tier is unlocked
+                    </h2>
+                    <div className="email-content">
+                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <textarea
+                        className="email-textinput"
+                        rows={9}
+                        value={rewardEmail}
+                        onChange={setRewardEmail}
+                      />
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div className="email-setting-section">
+                <div></div>
+                <div>{renderButton(4)}</div>
               </div>
             </>
           )}
