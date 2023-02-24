@@ -338,7 +338,6 @@ input[type="checkbox"]:checked {
   -o-border-radius: 12px;
 }
 
-
 .rewards-settings-form p {
   font-size: 20px;
   font-weight: 300;
@@ -374,6 +373,75 @@ input[type="checkbox"]:checked {
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+}
+
+/*-------------------------- Email Section---------------------------------- */
+.email-container {
+  padding: 0 40px;
+  margin: 0 40px;
+}
+
+.email-optCheck {
+  /* margin: 20px 0; */
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.email-optCheck .checkbox-input {
+  height: 30px;
+  width: 30px;
+}
+
+.email-container section {
+  background-color: #ebf0f2;
+  color: #252525;
+  padding: 25px;
+  margin-bottom: 40px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+.email-section {
+  height: 100%;
+  background-color: #ebf0f2;
+}
+.email-section h2 {
+  padding-left: 20px;
+  font-size: 29px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  font-weight: 700;
+}
+.email-section .email-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ebf0f2;
+}
+
+.email-section .email-content img {
+  height: 60px;
+  width: 200px;
+  margin: 30px 0;
+}
+
+.email-textinput {
+  width: 100%;
+  border: none;
+  font-size: 25px;
+  color: #1a1919;
+  padding: 35px;
+  margin-bottom: 20px;
+  background-color: #ebf0f2;
+}
+
+.email-setting-section {
+  display: flex;
+  justify-content: space-between;
 }
 
 /*--------------- Media Queries----------------------- */
