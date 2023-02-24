@@ -249,7 +249,9 @@ input[type="checkbox"]:checked {
 
 .basic-form-settings,
 .referrals-settings,
-.rewards-settings {
+.rewards-settings,
+.integration-settings,
+.template-settings {
   margin: 0 40px;
   padding: 0 30px;
   margin-top: 15px;
@@ -442,6 +444,12 @@ input[type="checkbox"]:checked {
 .email-setting-section {
   display: flex;
   justify-content: space-between;
+}
+
+
+.integrate-setting-btn{
+  display: flex;
+  justify-content: flex-end;
 }
 
 /*--------------- Media Queries----------------------- */
