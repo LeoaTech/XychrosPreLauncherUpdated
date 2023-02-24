@@ -397,7 +397,8 @@ function NewCampaignForm() {
                     </div>
                   </div>
                 </div>
-
+              </div>
+              <div className="referral-nextbtn">
                 <div>{renderButton(2)}</div>
               </div>
             </>
