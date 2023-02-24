@@ -1,8 +1,5 @@
 .social-section {
   color: #fff;
-  /* background-color: var(--secondary-text-color); */
-  /* padding: 30px;
-  margin: 25px 10px; */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -14,7 +11,6 @@
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
   height: 100%;
-  /* margin-bottom: 20px; */
 }
 
 .social-title {
@@ -42,7 +38,7 @@
   border: none;
   font-size: 17px;
   color: #fff;
-  padding: 8px 8px;
+  padding: 8px 17px;
   background-color: #25242d;
 }
 
