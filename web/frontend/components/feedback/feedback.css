@@ -175,8 +175,9 @@
   }
 
   .feedback-form {
-    width: 450px;
+    width: 520px;
     padding: 20px;
+    margin-left: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -201,8 +202,9 @@
   }
 
   .feedback-form {
-    width: 350px;
+    width: 370px;
     padding: 14px;
+    margin: 10px;
     display: flex;
     flex-direction: column;
     justify-content:center;

@@ -2,69 +2,45 @@ import SummaryCard from "../ui/SummaryCard";
 import { Marketing, subscriber, Sale, arrow } from "../../assets/index";
 import CampaignBlock from "./CampaignBlock";
 import Pagination from "../ui/Pagination";
-
 import React, { useState, useEffect, Fragment } from "react";
 import { useStateContext } from "../../contexts/ContextProvider";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllCampaigns,
+  fetchCampaign,
+} from "../../app/features/campaigns/campaignSlice";
 
-/* Import the useAuthenticatedFetch hook included in the Node app template */
-// import { useAuthenticatedFetch, useAppQuery } from '../../hooks';
-
-export default function CampaignsComponent(props) {
-  // const fetch = useAuthenticatedFetch();
-  const { activeMenu,isEdit,setIsEdit } = useStateContext();
-
-  const [getCampaigns, setCampaigns] = useState([
-    {
-      id: 1,
-      product_name: "Product 1",
-      campaign_name: "Campaign 1",
-      product_link: "https://google.com",
-      created_at: "2022-11-12",
-      start_date: "December 12th, 2022",
-      end_date: "January 5th, 2023",
-    },
-    {
-      id: 2,
-      product_name: "Haier dry-Cleaner",
-      campaign_name: "Campaign 2",
-      product_link: "https://google.com",
-      created_at: "2022-11-12",
-      start_date: "December 12th, 2022",
-      end_date: "January 5th, 2023",
-    },
-  ]);
+export default function CampaignsComponent() {
+  const { activeMenu, isEdit, setIsEdit } = useStateContext();
+  const dispatch = useDispatch();
+  const List = useSelector(fetchAllCampaigns);
+  const [getCampaigns, setCampaigns] = useState([...List]);
+  const [editData, setEditData] = useState([]);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [error, setError] = useState("");
 
-  // useEffect(() => {
-  //   fetch('/api/getcampaigns', {
-  //     method: 'GET',
-  //     headers: { 'Content-Type': 'application/json' },
-  //   })
-  //     .then((response) => {
-  //       if (response.ok) return response.json();
-  //       throw new Error('something went wrong while requesting posts');
-  //     })
-  //     .then((myCampaigns) => {
-  //       console.log(myCampaigns);
-  //       setCampaigns(myCampaigns);
-  //       return myCampaigns;
-  //     })
-  //     .catch((err) => {
-  //       setError(err.message);
-  //       return err.message;
-  //     });
-  // }, []);
+  const handleDelete = (id) => {
+
+    let newData = getCampaigns?.filter((cp) => cp.campaign_id !== id);
+    setCampaigns(newData);
+  };
+
+ 
+  const handleEdit = (id) => {
+    setIsEdit(true);
+    setEditData(getCampaigns?.filter((cp) => cp.id === id));
+  };
 
   const pageLimit = 3;
   const dataLimit = 10;
 
-  if (error) return <h1>{error.message}</h1>;
+  if (error) return <h1>{error}</h1>;
 
   return (
     <div className="home-container">
       <div className="summary-blocks">
         <SummaryCard
-          value={getCampaigns.length}
+          value={getCampaigns.length > 0 ? getCampaigns.length : 0}
           title="Campaigns"
           icon={Marketing}
           class="campaign-icon"
@@ -89,17 +65,37 @@ export default function CampaignsComponent(props) {
         />
       </div>
       <div className="campaigns">
-        {getCampaigns.length > 0 ? (
-          <Pagination
-            data={getCampaigns}
-            RenderComponent={CampaignBlock}
-            pageLimit={pageLimit}
-            dataLimit={dataLimit}
-          />
+        {getCampaigns?.length > 0 ? (
+          <>
+            {getCampaigns?.map((campaign) => (
+              <CampaignBlock
+                key={campaign.campaign_id}
+                editData={editData}
+                setEditData={setEditData}
+                data={campaign}
+                deleteModal={deleteModal}
+                setDeleteModal={setDeleteModal}
+                handleDelete={handleDelete}
+                handleEdit={handleEdit}
+              />
+            ))}
+          </>
         ) : (
-          <h1>No Posts to display</h1>
+          <h1 style={{ color: "#fff", fontSize: 29, margin: 20 }}>
+            No Campaigns Data
+          </h1>
         )}
       </div>
     </div>
   );
 }
+
+/*
+
+
+ <Pagination
+            data={getCampaigns}
+            RenderComponent={CampaignBlock}
+            pageLimit={pageLimit}
+            dataLimit={dataLimit}
+          />*/

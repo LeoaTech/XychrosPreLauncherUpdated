@@ -4,7 +4,6 @@ import { readFileSync } from 'fs';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import { Shopify, LATEST_API_VERSION } from '@shopify/shopify-api';
-
 import applyAuthMiddleware from './middleware/auth.js';
 import verifyRequest from './middleware/verify-request.js';
 import { setupGDPRWebHooks } from './gdpr.js';

@@ -2,10 +2,6 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Asul:wght@400;700&family=Open+Sans:wght@400;500;600;700&display=swap");
 
-
-
-
-
 /* Variables */
 :root {
   --sidebar-bg-color: #222124;
@@ -60,7 +56,8 @@
 
 .main__container {
   width: 83%;
-  margin-left: auto;
+  margin-left: 17%;
+  /* margin-left: auto; */
   position: relative;
   clear: both;
   overflow: auto;
@@ -191,15 +188,11 @@
   }
 }
 
-
-
 /* React Datepicker Custom Styles */
 
-
-.react-datepicker{
+.react-datepicker {
   margin-left: 35px;
 }
-
 
 .react-datepicker__triangle {
   margin-left: 68px;
@@ -207,9 +200,8 @@
   width: 0;
 }
 
-.react-datepicker__header{
+.react-datepicker__header {
   background-color: #252424 !important;
-
 }
 ​ .react-datepicker__header:not(.react-datepicker__header--has-time-select) {
   background-color: #252424;

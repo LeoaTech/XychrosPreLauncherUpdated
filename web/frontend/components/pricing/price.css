@@ -17,7 +17,6 @@
 .price-details-container {
   height: 1000px;
   width: 100%;
-  overflow: auto;
 }
 .price-block {
   margin-top: 50px;
@@ -33,7 +32,7 @@
 
 @media only screen and (max-width: 768px) {
   .price-details-container {
-    overflow: visible;
+    /* overflow: auto; */
     padding-left: 0.11%;
   }
   .price-block {
@@ -47,7 +46,8 @@
 @media only screen and (max-width: 500px) {
   .price-details-container {
     padding: 13px;
-    overflow-x: hidden;
+    /* overflow:none; */
+    /* overflow-x: hidden; */
     padding-left: 0.1%;
   }
   .price-block {

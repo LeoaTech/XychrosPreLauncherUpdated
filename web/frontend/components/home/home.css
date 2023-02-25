@@ -3,8 +3,8 @@
   width: 100%;
   /* min-width: calc(100vw - 250px); */
   padding: 15px 40px;
-  /* overflow: auto; */
-  overflow: hidden;
+  overflow: auto;
+  /* overflow: hidden; */
 }
 
 .summary-blocks {
@@ -16,7 +16,7 @@
 
 .single-chart {
   max-width: 88%;
-  margin-left: 1.4%;
+  margin-left: 1.1%;
 }
 
 .dual-charts {
@@ -26,8 +26,8 @@
 }
 
 .dual-charts div.chart {
-  width: 46%;
-  margin: 15px 2%;
+  width: 44%;
+  margin: 15px 1%;
 }
 
 @media screen and (max-width: 1480px) {
@@ -55,7 +55,7 @@
     margin-bottom: 50px;
   }
   .summary-blocks {
-    margin-left: 5px;
+    margin-left: 15px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
@@ -76,7 +76,7 @@
     margin-bottom: 50px;
   }
   .summary-blocks {
-    margin-left: 5px;
+    margin-left: 0px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 13px;
