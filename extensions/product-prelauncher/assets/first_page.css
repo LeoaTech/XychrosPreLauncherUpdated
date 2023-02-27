@@ -4,6 +4,7 @@
   display: flex;
   margin: 0 !important;
   padding: 0 !important;
+  box-sizing: border-box;
 }
 
 .section-layout.horizontal {
@@ -44,10 +45,10 @@
 
 .email-input-product-prelaucher {
   border-radius: 45px;
-  min-height: 60px;
+  min-height: 50px;
   width: 40vw;
   font-size: 20px;
-  padding: 4%;
+  padding: 3%;
   border: none;
   margin-bottom: 10px;
 }
@@ -63,4 +64,27 @@ input[type='email']:focus {
 .submit-button-product-prelaunch {
   border-radius: 45px;
   margin: 10px auto;
+}
+
+@media screen and (max-width: 600px) {
+  .header_text {
+    text-align: center;
+  }
+
+  .email-input-product-prelaucher {
+    width: 100%;
+  }
+
+  input {
+    text-align: center;
+  }
+
+  ::-webkit-input-placeholder {
+    text-align: center;
+  }
+
+  :-moz-placeholder {
+    text-align: center;
+  }
+
 }
