@@ -25,7 +25,6 @@ ChartJS.register(
 
 export default function RadarChart(props) {
   const chartRef  = createRef();
-  console.log(chartRef,"ref");
   // let gradient = chartRef.current.chartInstance.ctx.createLinearGradient
   return <Radar data={props.data} options={props.options} />;
 }

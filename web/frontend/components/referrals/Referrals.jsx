@@ -1,25 +1,22 @@
 import SummaryCard from "../ui/SummaryCard";
 import { Marketing, Sale, subscriber, arrow } from "../../assets/index";
 import ReferralsBlock from "./ReferralsBlock";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./referral.css";
-const Referrals = () => {
-  // const [getReferrals, setReferrals] = useState([
-  //   {
-  //     id: 1010,
-  //     email: "johh.doe@test.com",
-  //     referal_code: "abcd",
-  //     referrer_id: "abcd12",
-  //     created_at: "2022-12-12",
-  //     campaign_id: 1,
-  //   },
-  // ]);
+import { useSelector } from "react-redux";
+import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
 
+const Referrals = () => {
+  // const { getCampaigns } = props;
+  const List = useSelector(fetchAllCampaigns);
+  const [getCampaigns, setCampaigns] = useState([...List]);
+
+  
   return (
     <div className="home-container">
       <div className="summary-blocks">
         <SummaryCard
-          value={1}
+          value={getCampaigns?.length || 0}
           title="Campaigns"
           icon={Marketing}
           className="campaign-icon"

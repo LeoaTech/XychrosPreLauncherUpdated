@@ -11,7 +11,7 @@ const BillingCard = ({ card }) => {
           card.feature.map((feature) => {
             return (
               <>
-                <div className="feature">
+                <div className="feature" key={feature?.id}>
                   <span>
                     <BsCheck2
                       style={{ height: 25, width: 25, color: "#000" }}

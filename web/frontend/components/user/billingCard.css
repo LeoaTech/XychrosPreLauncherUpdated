@@ -1,6 +1,6 @@
 .card-block {
-  height: 300px;
-  width: 370px;
+  height: 400px;
+  width: 350px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -69,7 +69,12 @@
   -o-border-radius: 25px;
 }
 
-
+@media screen and (max-width: 1024px) {
+  .card-block {
+    height: 390px;
+    width: 340px;
+  }
+}
 
 @media screen and (max-width: 500px) {
   .card-block {

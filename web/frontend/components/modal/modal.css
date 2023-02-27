@@ -96,9 +96,9 @@
 }
 
 .referral_detail-table {
-  border: 1px solid rgb(65, 64, 64);
+  border: 1px solid rgb(169, 168, 168);
+  /* padding: 4px; */
   background-color: var(--primary-color);
-  border-top: none;
   height: 400px;
   width: 500px;
   margin-top: 20px;
@@ -113,13 +113,14 @@
 }
 
 .referral_detail_header {
-  /* border-bottom: 1px solid rgb(75, 75, 75); */
+  /* border: 1px solid rgb(75, 75, 75); */
+  /* border-top: none; */
   height: 50px;
   padding: 8px;
 }
 
 .rdt_Table {
-  border: 1px solid #111111;
+  /* border: 1px solid #111111; */
 
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -128,12 +129,14 @@
 }
 
 .rdt_TableCell {
-  border-right: 1px solid rgb(233, 228, 228);
+  border-right: 1px solid rgb(41, 40, 40);
+  border-left: 1px solid rgb(41, 40, 40);
+
 }
 
 .rdt_TableCol {
   /* background-color: #000; */
-  /* border: 1px solid rgb(40, 39, 39); */
+  border: 1px solid rgb(40, 39, 39);
 }
 
 .rdt_TableHeadRow {
@@ -150,30 +153,32 @@
 [data-column-id="date"].rdt_TableCol {
   border-top-right-radius: 10px;
 }
-/* .rdt_TableHeadRow {
+.rdt_TableHeadRow {
   border-top: none;
 }
 .rdt_TableCol,
 .rdt_TableRow {
-  border-top: 1px solid rgb(75, 75, 75)
+  border-top: 1px solid rgb(75, 75, 75);
 }
 
 .rdt_TableHeadRow {
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
-  border-bottom: 1px solid rgb(75, 75, 75)
+  border-bottom: 1px solid rgb(75, 75, 75);
 }
 
 .rdt_TableCell {
-  border-right:1px solid rgb(75, 75, 75)
+  border-right: 1px solid rgb(75, 75, 75);
+  border-left: 1px solid rgb(75, 75, 75);
+
 }
 
 .rdt_TableCol {
-  /* border: 1px solid rgb(128, 127, 127); 
+  border: 1px solid rgb(128, 127, 127);
 
   border-bottom: none;
-  border-top: 1px solid rgb(75, 75, 75)
-} */
+  border-top: 1px solid rgb(75, 75, 75);
+}
 
 /* */
 

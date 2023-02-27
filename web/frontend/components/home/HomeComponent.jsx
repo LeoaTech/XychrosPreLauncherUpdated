@@ -3,20 +3,22 @@ import "./home.css";
 import { Marketing, Sale, subscriber, arrow } from "../../assets/index";
 import Charts from "../ui/Charts";
 import React, { useState, useEffect, Fragment, useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllCampaigns,
+  fetchCampaign,
+} from "../../app/features/campaigns/campaignSlice";
 
 const HomeComponent = () => {
-  const [getCampaigns, setCampaigns] = useState([
-    {
-      id: 1,
-      product_name: "xyz",
-      campaign_name: "abc",
-      product_link: "https://google.com",
-      created_at: "2022-11-12",
-      start_date: "2022-12-12",
-      end_date: "2022-12-23",
-    },
-  ]);
-
+  const dispatch = useDispatch();
+  const List = useSelector(fetchAllCampaigns);
+  const [getCampaigns, setCampaigns] = useState([]);
+  useEffect(() => {
+    if (List.length > 0) {
+      setCampaigns(List);
+    }
+  }, [List]);
+ 
   const LineChartOptions = {
     responsive: true,
     animation: {
@@ -104,7 +106,6 @@ const HomeComponent = () => {
         borderColor: "#A1F6F5",
         backgroundColor: "#A1F6F5",
         fill: "origin",
-
       },
       {
         label: "Campaigns",
@@ -112,7 +113,6 @@ const HomeComponent = () => {
         borderColor: "#F56680",
         backgroundColor: "#F56680",
         fill: "",
-
       },
       {
         label: "Clicks",
@@ -121,11 +121,9 @@ const HomeComponent = () => {
         backgroundColor: "#5447df",
         borderDash: [10, 5],
         fill: "+2",
-
-
       },
     ],
-  };
+  }; 
 
   const DonutChartOptions = {
     responsive: true,
@@ -232,7 +230,7 @@ const HomeComponent = () => {
     <div className="home-container">
       <div className="summary-blocks">
         <SummaryCard
-          value={getCampaigns.length}
+          value={getCampaigns?.length > 0 ? getCampaigns.length : 0}
           title="Campaigns"
           icon={Marketing}
           class="campaign-icon"

@@ -47,14 +47,15 @@
 
 @media only screen and (max-width: 786px) {
   .short-summary-card {
-    width: 120px;
+    width: 100px;
+
     height: 100px;
-    padding: 10px 16px;
+    padding: 10px 10px;
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
     align-items: center;
-    margin: 10px;
+    margin: 10px 14px;
   }
 
   .short-summary-card-value {
@@ -68,6 +69,7 @@
     margin: 10px 0px;
     display: flex;
     padding: 10px 4px;
+    
     justify-content: space-between;
     flex-wrap: wrap;
     align-items: center;

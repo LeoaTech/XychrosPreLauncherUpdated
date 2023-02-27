@@ -41,7 +41,7 @@ const SideBar = () => {
   const links = [
     {
       title: "Home",
-      path: "/home",
+      path: "/",
       icon: <FaHome style={{ color: "#fff", height: 30, width: 30 }} />,
     },
     {
@@ -85,7 +85,7 @@ const SideBar = () => {
             <div className="sidebar_header">
               <MdOutlineClose
                 className="close-menubtn"
-                style={{ height: 30, width: 35 }}
+                style={{ height: 40, width: 40 }}
                 onClick={() => setActiveMenu(false)}
               />
               <img
@@ -94,6 +94,7 @@ const SideBar = () => {
                 alt="Logo"
                 className="sidebar-logo"
               />
+
               {/*  {activeMenu ? (
                 
               ) : (

@@ -122,6 +122,20 @@
   .searchbar {
     width: 100%;
   }
+
+
+  .searchbar input {
+    height: 50px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 2.6rem;
+    font-size: 20px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+  }
   .accordion {
     padding: 10px;
     margin: 5px;

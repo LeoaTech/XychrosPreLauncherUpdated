@@ -33,7 +33,7 @@ const ReferralsBlock = () => {
   React.useEffect(() =>{
     if(deleteModal){
       window.addEventListener("click", () =>{
-        setDeleteModal(fasle);
+        setDeleteModal(false);
       })
     }
   },[deleteModal])

@@ -48,28 +48,36 @@ const UserProfile = () => {
           <div className="form-section">
             <form>
               <div className="form-input-group">
-                <label htmlFor="firstname">First Name</label>
-                <input type="text" name="firstname" id="firstname" />
-                <label htmlFor="email">Contact Email</label>
-                <input type="text" name="email" id="email" />
+                <div className="inputfield">
+                  <label htmlFor="firstname">First Name</label>
+                  <input type="text" name="firstname" id="firstname" />
+                </div>
+                <div className="inputfield">
+                  <label htmlFor="lastname">Last Name</label>
+                  <input
+                    type="text"
+                    name="lastname"
+                    id="lastname"
+                    // value={""}
+                    // onChange={""}
+                  />
+                </div>
               </div>
               <div className="form-input-group">
-                <label htmlFor="lastname">Last Name</label>
-                <input
-                  type="text"
-                  name="lastname"
-                  id="lastname"
-                  // value={""}
-                  // onChange={""}
-                />
+                <div className="inputfield">
+                  <label htmlFor="email">Contact Email</label>
+                  <input type="text" name="email" id="email" />
+                </div>
 
-                <label htmlFor="storelink">Store URL</label>
-                <input
-                  type="text"
-                  name="storelink"
-                  id="storelink"
-                  // sssdd
-                />
+                <div className="inputfield">
+                  <label htmlFor="storelink">Store URL</label>
+                  <input
+                    type="text"
+                    name="storelink"
+                    id="storelink"
+                    // sssdd
+                  />
+                </div>
               </div>
             </form>
           </div>

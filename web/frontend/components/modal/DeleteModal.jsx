@@ -1,10 +1,7 @@
-import { useState, useCallback } from "react";
 import "../modal/delete.css";
-import { AiOutlineClose } from "react-icons/ai";
 
 const DeleteModal = ({ openModal, setDeleteModal, values, handleDelete }) => {
   const handleClose = () => {
-    console.log("Clicked", openModal);
     setDeleteModal((prev) => !prev);
   };
   return openModal ? (
@@ -14,7 +11,7 @@ const DeleteModal = ({ openModal, setDeleteModal, values, handleDelete }) => {
           <h6>Alert </h6>
         </nav>
         <section className="modal__body">
-          <p>{`Are you Sure you want to delete referral ID ${values}? `}</p>
+          <p>{`Are you Sure you want to delete ID ${values}? `}</p>
 
           <div className="action__btn-modal">
             <span
