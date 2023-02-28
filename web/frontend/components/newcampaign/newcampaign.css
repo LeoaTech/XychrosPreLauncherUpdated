@@ -29,7 +29,6 @@
 .nav-title {
   font-weight: 700;
   font-size: 30px;
-  /* font-size: 40px; */
 }
 
 .saveFormBtn,
@@ -196,10 +195,12 @@ label {
 /* Collect Emails */
 
 .collect-setup {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
   margin-bottom: 20px;
+}
+.collect-setup .sub-heading {
+  font-size: 22px;
+  padding: 0 25px;
+  margin: 20px 25px;
 }
 .collect-settings {
   padding-left: 40px;
@@ -210,7 +211,10 @@ label {
   align-items: center;
   gap: 10px;
 }
-
+.basic-settings-section {
+  display: flex;
+  justify-content: flex-end;
+}
 .collect-settings label {
   font-size: 17px;
 }
@@ -319,7 +323,7 @@ input[type="checkbox"]:checked {
   width: 100%;
 }
 
-.referral-nextbtn{
+.referral-nextbtn {
   display: flex;
   justify-content: flex-end;
 }
@@ -451,195 +455,101 @@ input[type="checkbox"]:checked {
   justify-content: space-between;
 }
 
-
-.integrate-setting-btn{
+.integrate-setting-btn {
   display: flex;
   justify-content: flex-end;
 }
 
 /*--------------- Media Queries----------------------- */
 
-@media only screen and (max-width: 1480px) {
-  .new-campaign-container {
-    padding: 5px;
-    margin: 10px;
-  }
+@media screen and (max-width: 1480px) {
+  /* Reward Tier Settings */
 
-  .campaign-form {
-    flex-direction: column;
-    gap: 30px;
-  }
+  /* Social Media Integration Sections */
 
-  .campaign-form .form-group {
-    display: flex;
-    gap: 30px;
-  }
-
-  .form-group {
-    display: flex;
-    justify-content: space-around;
-  }
-
-  label {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 20px;
-    margin: 20px 0;
-    color: rgb(200, 199, 199);
-  }
-
-  /* Input Fields inside the form */
-  .campaign-form .store-links input {
-    width: 440px;
-    font-size: 20px;
-  }
-
-  .icon {
-    right: 50px;
-  }
-}
-
-@media only screen and (max-width: 1287px) {
-  .nav-title {
-    font-weight: 700;
-    font-size: 20px;
-  }
-
-  .campaign-form {
-    flex-direction: column;
-  }
-
-  .campaign-form .form-group {
-    display: flex;
-    gap: 30px;
-  }
-
-  .form-group {
-    flex-direction: column;
-  }
-
-  label {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 20px;
-    margin: 20px 0;
-    color: rgb(200, 199, 199);
-  }
-
-  /* Input Fields inside the form */
-  .campaign-form .store-links input {
-    width: 450px;
-    font-size: 20px;
-  }
-
-  .campaign-form button a:hover {
-    text-decoration: underline;
-  }
-
-  /* Checkboxes Section */
-
-  .check-input {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .check-group input {
-    height: 25px;
-    width: 25px;
-  }
-  /* Settings Form */
-  .settings-form {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
-@media only screen and (max-width: 900px) {
-  .new-campaign-container {
-    padding: 15px 10px;
-    margin: 15px 10px;
-  }
-
-  section {
-    padding: 15px 13px;
-    margin-bottom: 20px;
-  }
-
-  .nav-title {
-    font-weight: 500;
-    font-size: 30px;
-  }
-
-  .campaign-form .store-links input {
-    width: 400px;
-    font-size: 20px;
-  }
-
-  .save-btn {
-    height: 50px;
-    width: 100px;
-  }
-  .icon {
-    right: 10px;
-  }
-
-  .check-group input {
-    height: 25px;
-    margin: 10px;
-    width: 25px;
-    border-radius: 10px;
-    background-color: var(--secondary-text-color);
-    border: 1px solid var(--primary-color);
-  }
-  .check-group label {
-    word-break: keep-all;
-    line-height: 1.18;
+  .social-media-section {
+    padding: 0 30px;
+    margin: 0 30px;
   }
 
   .social-links-container {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    justify-self: center;
-    column-gap: 25px;
-    row-gap: 25px;
-    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1050px) {
   .new-campaign-container {
-    padding: 15px 10px;
-    margin: 15px 10px;
+    padding: 9px;
+    margin: 20px;
+  }
+ 
+
+  .basic-form-settings,
+  .referrals-settings,
+  .rewards-settings,
+  .integration-settings,
+  .template-settings {
+    margin: 0 13px;
+    padding: 0 15px;
+  }
+  
+  .nextBtn {
+    height: 30px;
+    width: 90px;
+    font-size: 20px;
   }
 
-  section {
-    padding: 15px 10px;
+  /* Reward Tier Settings */
+  .referral-container p {
+    padding: 0 18px;
+    margin: 0 20px;
+    word-wrap: break-word;
     margin-bottom: 20px;
   }
+  /* Social Media Integration Sections */
 
-  .campaign-form .store-links input {
-    width: 400px;
+  .social-media-section {
+    padding: 0 8px;
+    margin: 0 5px;
   }
 
-  .nav-title {
-    font-weight: 500;
-    font-size: 30px;
-  }
-
-  .save-btn {
-    height: 50px;
-    width: 80px;
-  }
-
-  .campaign-form .store-links input {
-    width: 380px;
-  }
-
-  .check-fields {
-    margin-left: 10px;
+  .social-links-container {
+    grid-template-columns: repeat(2, 1fr);
+   
   }
 }
+@media only screen and (max-width: 786px) {
+  .new-campaign-container {
+    padding: 5px;
+    margin: 15px;
+  }
+
+  .basic-form-settings,
+  .referrals-settings,
+  .rewards-settings,
+  .integration-settings,
+  .template-settings {
+    margin: 0 7px;
+    padding: 0 5px;
+  }
+
+  /* Reward Tier Settings */
+  .referral-container p {
+    padding: 0 10px;
+    margin: 0 10px;
+    word-wrap: break-word;
+  }
+
+  .social-media-section {
+    padding: 0 5px;
+    margin: 0 4px;
+  }
+
+  .social-links-container {
+    grid-template-columns: repeat(1, 1fr);
+   
+  }
+}
+
 
 @media only screen and (max-width: 500px) {
   .new-campaign-container {
@@ -647,37 +557,21 @@ input[type="checkbox"]:checked {
     margin: 10px 0px;
   }
 
-  .new-campaign-container nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    margin-bottom: 20px;
-  }
-  section {
-    margin-bottom: 20px;
+  
+  /* Reward Tier Settings */
+  .referral-container p {
+    padding: 0 6px;
+    margin: 0 11px;
+    word-break: keep-all;
   }
 
-  .campaign-form .store-links input {
-    width: 320px;
+  .social-media-section {
+    padding: 0 20px;
+    margin: 0 20px;
   }
-
-  .nav-title {
-    font-weight: 500;
-    font-size: 30px;
+  .social-media-section {
+    padding: 0 6px;
+    margin: 0 4px;
   }
-
-  .save-btn {
-    height: 50px;
-    width: 100px;
-  }
-
-  .check-fields {
-    margin-left: 10px;
-  }
-
-  .integration-container {
-    padding: 5px;
-    margin: 5px;
-  }
+ 
 }
