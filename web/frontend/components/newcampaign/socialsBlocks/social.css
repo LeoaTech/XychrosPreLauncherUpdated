@@ -42,9 +42,60 @@
   background-color: #25242d;
 }
 
+@media screen and (max-width: 1480px) {
+  .referral-input {
+    height: 120px;
+    width: 370px;
+  }
+  .social-section {
+    padding: 0 4px;
+    margin: 0px 4px;
+  }
+ 
+  .social-section label {
+    font-size: 19px;
+    line-height: 1.3;
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .referral-input {
+    height: 130px;
+    width: 290px;
+  }
+  .social-section label {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+}
+
+@media screen and (max-width: 786px) {
+  .social-section {
+    padding: 0 5px;
+    margin: 0px 5px;
+  }
+  .social-section label {
+    font-size: 21px;
+  }
+
+  .referral-input {
+    height: 120px;
+    width: 420px;
+  }
+}
+
 @media screen and (max-width: 500px) {
   .social-section {
-    padding: 20px;
-    margin: 10px;
+    padding: 3px 3px;
+    margin: 0px 3px;
+  }
+  .social-section label {
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  .referral-input {
+    height: 120px;
+    width: 300px;
   }
 }
