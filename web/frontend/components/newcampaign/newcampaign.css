@@ -422,6 +422,8 @@ input[type="checkbox"]:checked {
 .email-section h2 {
   padding-left: 20px;
   font-size: 29px;
+  line-height: 1.4;
+
   margin-bottom: 20px;
   padding-bottom: 20px;
   font-weight: 700;
@@ -476,24 +478,21 @@ input[type="checkbox"]:checked {
     grid-template-columns: repeat(2, 1fr);
   }
 
-    /* Reward settings */
+  /* Reward settings */
 
-    .rewards-settings-form p {
-      font-size: 18px;
-    }
-  
-    .reward-container {
-      padding: 0 42px;
-      margin: 0 40px;
-    }
-  
-    .rewards-container {
-      grid-template-columns: repeat(2, 1fr);
-      row-gap: 10px;
-      column-gap: 20px;
-      margin-bottom: 30px;
-      background-color: transparent;
-    }
+  .rewards-settings-form p {
+    font-size: 18px;
+  }
+
+  .reward-container {
+    padding: 0 42px;
+    margin: 0 40px;
+  }
+
+  .rewards-container {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 10px;
+  }
 }
 @media only screen and (max-width: 1050px) {
   .new-campaign-container {
@@ -551,6 +550,38 @@ input[type="checkbox"]:checked {
     row-gap: 10px;
     column-gap: 20px;
   }
+
+  /* Email Settings */
+  .email-container {
+    padding: 0 17px;
+    margin: 0 24px;
+  }
+
+  .email-optCheck label {
+    line-height: 1.3;
+  }
+
+  .email-optCheck .checkbox-input {
+    width: 70px;
+  }
+
+  .email-container section {
+    padding: 19px 8px;
+  }
+  .email-section h2 {
+    padding-left: 12px;
+    line-height: 1.4;
+    font-size: 23px;
+  }
+  .email-textinput {
+    width: 100%;
+    border: none;
+    font-size: 21px;
+    color: #1a1919;
+    padding: 16px;
+    margin-bottom: 20px;
+    background-color: #ebf0f2;
+  }
 }
 @media only screen and (max-width: 786px) {
   .new-campaign-container {
@@ -601,6 +632,34 @@ input[type="checkbox"]:checked {
     margin-bottom: 30px;
     background-color: transparent;
   }
+
+  /* Email Settings */
+  .email-container {
+    padding: 0 10px;
+    margin: 0 10px;
+  }
+
+  .email-optCheck .checkbox-input {
+    width: 70px;
+  }
+
+  .email-container section {
+    padding: 19px 8px;
+  }
+  .email-section h2 {
+    padding-left: 12px;
+    line-height: 1.4;
+    font-size: 23px;
+  }
+  .email-textinput {
+    width: 100%;
+    border: none;
+    font-size: 21px;
+    color: #1a1919;
+    padding: 16px;
+    margin-bottom: 20px;
+    background-color: #ebf0f2;
+  }
 }
 
 @media only screen and (max-width: 500px) {
@@ -642,5 +701,11 @@ input[type="checkbox"]:checked {
     column-gap: 20px;
     margin-bottom: 30px;
     background-color: transparent;
+  }
+
+  /* Email Settings */
+  .email-container {
+    padding: 0 10px;
+    margin: 0 10px;
   }
 }
