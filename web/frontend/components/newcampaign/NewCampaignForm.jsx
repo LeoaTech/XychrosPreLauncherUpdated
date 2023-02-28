@@ -119,6 +119,8 @@ function NewCampaignForm() {
       setNewCampaignData((prevState) => ({
         ...prevState,
         [name]: value,
+        start_date: startDate,
+        end_date: endDate,
       }));
     }
   };
@@ -187,176 +189,182 @@ function NewCampaignForm() {
             </div>
           </div>
           {expanded[0] && (
-            <div className="campaign-form">
-              <div className="input-form-groups">
-                <div className="form-group">
-                  <div className="inputfield">
-                    <label htmlFor="campaign_name">Campaign Name</label>
-                    {isEdit ? (
-                      <input
-                        type="text"
-                        name="campaign_name"
-                        id="campaign_name"
-                        value={campaignById?.campaign_name}
-                        onChange={() => {}}
-                      />
-                    ) : (
-                      <input
-                        type="text"
-                        name="campaign_name"
-                        id="campaign_name"
-                        value={newCampaignData.campaign_name}
-                        onChange={handleChange}
-                      />
-                    )}
-                  </div>
-
-                  <div className="inputfield">
-                    <label htmlFor="product_link">Product Link</label>
-                    {isEdit ? (
-                      <input
-                        type="text"
-                        name="product_link"
-                        id="product_link"
-                        value={campaignById?.product_link}
-                        onChange={() => {}}
-                      />
-                    ) : (
-                      <input
-                        type="text"
-                        name="product_link"
-                        id="product_link"
-                        value={newCampaignData.product_link}
-                        onChange={handleChange}
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className="form-group">
-                  <div className="inputfield">
-                    <label htmlFor="start_date">Start Date</label>
-
-                    {isEdit ? (
-                      <DatePicker
-                        minDate={new Date()}
-                        value={dateStart}
-                        showDisabledMonthNavigation
-                        customInput={<ExampleCustomInput />}
-                        shouldCloseOnSelect={true}
-                        onChange={(date) => setStartDate(date)}
-                      />
-                    ) : (
-                      <DatePicker
-                        name="start_date"
-                        minDate={new Date()}
-                        showDisabledMonthNavigation
-                        customInput={<ExampleCustomInput />}
-                        shouldCloseOnSelect={true}
-                        selected={newCampaignData.start_date}
-                        value={newCampaignData.start_date}
-                        onChange={(date) =>
-                          setNewCampaignData({
-                            ...newCampaignData,
-                            ["start_date"]: date,
-                          })
-                        }
-                      />
-                    )}
-                  </div>
-
-                  <div className="inputfield">
-                    <label htmlFor="end_date">End Date</label>
-                    {isEdit ? (
-                      <DatePicker
-                        value={dateEnd}
-                        minDate={new Date()}
-                        customInput={<ExampleCustomInput />}
-                        showDisabledMonthNavigation
-                        shouldCloseOnSelect={true}
-                        onChange={(date) => setEndDate(date)}
-                      />
-                    ) : (
-                      <DatePicker
-                        name="end_date"
-                        minDate={new Date()}
-                        customInput={<ExampleCustomInput />}
-                        showDisabledMonthNavigation
-                        shouldCloseOnSelect={true}
-                        selected={newCampaignData.end_date}
-                        value={newCampaignData.end_date}
-                        onChange={(date) =>
-                          setNewCampaignData({
-                            ...newCampaignData,
-                            ["end_date"]: date,
-                          })
-                        }
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-              {/* Store's Social Links */}
-              <div className="store-links">
-                <h2 className="sub-heading">
-                  Share Store's Social Media Links
-                </h2>
-                <div className="store-social-links">
-                  {storeLinks.map((link) => (
-                    <div className="social-input-form" key={link.id}>
-                      <input
-                        className="social-input"
-                        type="checkbox"
-                        name={`store_link[${link?.id}]`}
-                        checked={newCampaignData.store_link.includes(link.id)}
-                        onChange={(e) =>
-                          handleCheckboxChange(link.id, e.target.checked)
-                        }
-                      />
-                      <span className="store-social-icons">{link.icon}</span>
-                      <input
-                        className="social-inputfield"
-                        type="text"
-                        name={`store_link[${link?.id}]`}
-                        value={`www.sociallink.com/store-link`}
-                      />
+            <>
+              <div className="campaign-form">
+                <div className="input-form-groups">
+                  <div className="form-group">
+                    <div className="inputfield">
+                      <label htmlFor="campaign_name">Campaign Name</label>
+                      {isEdit ? (
+                        <input
+                          type="text"
+                          name="campaign_name"
+                          id="campaign_name"
+                          value={campaignById?.campaign_name}
+                          onChange={() => {}}
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          name="campaign_name"
+                          id="campaign_name"
+                          value={newCampaignData.campaign_name}
+                          onChange={handleChange}
+                        />
+                      )}
                     </div>
-                  ))}
+
+                    <div className="inputfield">
+                      <label htmlFor="product_link">Product Link</label>
+                      {isEdit ? (
+                        <input
+                          type="text"
+                          name="product_link"
+                          id="product_link"
+                          value={campaignById?.product_link}
+                          onChange={() => {}}
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          name="product_link"
+                          id="product_link"
+                          value={newCampaignData.product_link}
+                          onChange={handleChange}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="inputfield">
+                      <label htmlFor="start_date">Start Date</label>
+
+                      {isEdit ? (
+                        <DatePicker
+                          minDate={new Date()}
+                          value={dateStart}
+                          showDisabledMonthNavigation
+                          customInput={<ExampleCustomInput />}
+                          shouldCloseOnSelect={true}
+                          onChange={(date) => setStartDate(date)}
+                        />
+                      ) : (
+                        <DatePicker
+                          name="start_date"
+                          minDate={new Date()}
+                          showDisabledMonthNavigation
+                          customInput={<ExampleCustomInput />}
+                          shouldCloseOnSelect={true}
+                          selected={newCampaignData.start_date}
+                          value={newCampaignData.start_date}
+                          onChange={(date) =>
+                            setNewCampaignData({
+                              ...newCampaignData,
+                              ["start_date"]: date,
+                            })
+                          }
+                        />
+                      )}
+                    </div>
+
+                    <div className="inputfield">
+                      <label htmlFor="end_date">End Date</label>
+                      {isEdit ? (
+                        <DatePicker
+                          value={dateEnd}
+                          minDate={new Date()}
+                          customInput={<ExampleCustomInput />}
+                          showDisabledMonthNavigation
+                          shouldCloseOnSelect={true}
+                          onChange={(date) => setEndDate(date)}
+                        />
+                      ) : (
+                        <DatePicker
+                          name="end_date"
+                          minDate={new Date()}
+                          customInput={<ExampleCustomInput />}
+                          showDisabledMonthNavigation
+                          shouldCloseOnSelect={true}
+                          selected={newCampaignData.end_date}
+                          value={newCampaignData.end_date}
+                          onChange={(date) =>
+                            setNewCampaignData({
+                              ...newCampaignData,
+                              ["end_date"]: date,
+                            })
+                          }
+                        />
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="collect-setup">
-                  <div className="collect-settings">
+                {/* Store's Social Links */}
+                <div className="store-links">
+                  <h2 className="sub-heading">
+                    Share Store's Social Media Links
+                  </h2>
+                  <div className="store-social-links">
+                    {storeLinks.map((link) => (
+                      <div className="social-input-form" key={link.id}>
+                        <input
+                          className="social-input"
+                          type="checkbox"
+                          name={`store_link[${link?.id}]`}
+                          checked={newCampaignData.store_link.includes(link.id)}
+                          onChange={(e) =>
+                            handleCheckboxChange(link.id, e.target.checked)
+                          }
+                        />
+                        <span className="store-social-icons">{link.icon}</span>
+                        <input
+                          className="social-inputfield"
+                          type="text"
+                          name={`store_link[${link?.id}]`}
+                          value={`www.sociallink.com/store-link`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="collect-setup">
                     <h2 className="sub-heading">Collect</h2>
 
-                    <div>
-                      <input
-                        className="checkbox-input"
-                        type="radio"
-                        name="collect_all"
-                        value="email_number"
-                        checked={newCampaignData.collect_all === "email_number"}
-                        onChange={handleChange}
-                      />
-                      <label htmlFor="">
-                        Email Addresses and Phone Numbers{" "}
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        className="checkbox-input"
-                        type="radio"
-                        name="collect_email"
-                        value="email"
-                        checked={newCampaignData.collect_email === "email"}
-                        onChange={handleChange}
-                      />{" "}
-                      <label htmlFor="">Email Addresses only</label>
+                    <div className="collect-settings">
+                      <div>
+                        <input
+                          className="checkbox-input"
+                          type="radio"
+                          name="collect_all"
+                          value="email_number"
+                          checked={
+                            newCampaignData.collect_all === "email_number"
+                          }
+                          onChange={handleChange}
+                        />
+                        <label htmlFor="">
+                          Email Addresses and Phone Numbers{" "}
+                        </label>
+                      </div>
+                      <div>
+                        <input
+                          className="checkbox-input"
+                          type="radio"
+                          name="collect_email"
+                          value="email"
+                          checked={newCampaignData.collect_email === "email"}
+                          onChange={handleChange}
+                        />{" "}
+                        <label htmlFor="">Email Addresses only</label>
+                      </div>
                     </div>
                   </div>
-                  <div>{renderButton(1)}</div>
                 </div>
               </div>
-            </div>
+              <div className="basic-settings-section">
+                <div>{renderButton(1)}</div>
+              </div>
+            </>
           )}
         </section>
         {/* Referal Settings */}
@@ -383,7 +391,7 @@ function NewCampaignForm() {
                 <div className="referral-container">
                   <p>
                     Select the Social Media channels that you want to allow your
-                    customers to share their referral link with! You can also
+                    customers to share their referral link with!<br/><br/> You can also
                     customise the message that you would want your customers to
                     share!
                   </p>
