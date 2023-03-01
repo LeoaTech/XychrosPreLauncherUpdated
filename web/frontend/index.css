@@ -56,8 +56,7 @@
 
 .main__container {
   width: 83%;
-  margin-left: 17%;
-  /* margin-left: auto; */
+  margin-left: auto;
   position: relative;
   clear: both;
   overflow: auto;
