@@ -133,9 +133,11 @@ function NewCampaignForm() {
 
   // Handle Next Button event for each
   const handleNext = (index) => {
-    setExpanded((prevExpand) =>
-      prevExpand.map((state, i) => (i === index ? !state : false))
-    );
+    setTimeout(() => {
+      setExpanded((prevExpand) =>
+        prevExpand.map((state, i) => (i === index ? !state : false))
+      );
+    }, 1000);
   };
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = (e) => {
@@ -595,10 +597,41 @@ function NewCampaignForm() {
 
           {expanded[4] && (
             <>
-              <div className="integration-settings">
-                <div className="check-input">
-                  <input type="checkbox" name="" id="" />
-                  <label htmlFor="">Integrate with Klaviyo</label>
+              <div className="integration-container">
+                <div className="integration-block-content">
+                  <div className="check-input">
+                    <input type="checkbox" name="" id="" />
+                    <label htmlFor="">Integrate with Klaviyo</label>
+                  </div>
+
+                  <div className="integration-settings-container">
+                    <div className="form-group">
+                      <div className="inputfield">
+                        <label htmlFor="">Private API Key</label>
+                        <input
+                          type="text"
+                          name="private-key"
+                          id="private-key"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <div className="inputfield">
+                        <label htmlFor="">List to Add Users</label>
+
+                        <div className="select-user-input">
+                          <select>
+                            <option value="grapefruit">John Dape</option>
+                            <option value="lime">Janee</option>
+                            <option selected value="coconut">
+                              Mickey Author
+                            </option>
+                            <option value="mango">Laurwes</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="integrate-setting-btn">
@@ -608,37 +641,11 @@ function NewCampaignForm() {
           )}
         </section>
 
-        {/* Template Settings */}
-
-        <section className="newcampaign-section">
-          <div
-            className={`card ${expanded[5] ? "expanded" : ""}`}
-            onClick={() => handleExpand(5)}
-          >
-            <div className="template-settings">
-              <h2 className="title">Template Settings</h2>
-              <span className="openBtn" onClick={() => handleExpand(5)}>
-                {expanded[5] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(5)} />
-                ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(5)} />
-                )}
-              </span>
-            </div>
-          </div>
-
-          {expanded[5] && (
-            <>
-              <div></div>
-            </>
-          )}
-        </section>
-
-        <div>
+        {/* <div>
           <button className="saveFormBtn" type="submit">
             {isEdit ? "Update" : "Save"}
           </button>
-        </div>
+        </div> */}
       </form>
     </div>
   );
