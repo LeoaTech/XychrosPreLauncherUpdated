@@ -328,9 +328,9 @@ function NewCampaignForm() {
                 </div>
                 <div>
                   <div className="collect-setup">
-                    <h2 className="sub-heading">Collect</h2>
-
                     <div className="collect-settings">
+                      <h2 className="sub-heading">Collect</h2>
+
                       <div>
                         <input
                           className="checkbox-input"
@@ -391,9 +391,10 @@ function NewCampaignForm() {
                 <div className="referral-container">
                   <p>
                     Select the Social Media channels that you want to allow your
-                    customers to share their referral link with!<br/><br/> You can also
-                    customise the message that you would want your customers to
-                    share!
+                    customers to share their referral link with!
+                    <br />
+                    <br /> You can also customise the message that you would
+                    want your customers to share!
                   </p>
                   <div className="social-media-section">
                     <div className="social-links-container">
