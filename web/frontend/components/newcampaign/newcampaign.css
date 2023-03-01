@@ -85,7 +85,7 @@ label {
   font-size: 23px;
   font-weight: 500;
   margin: 10px 0;
-  color: rgb(200, 199, 199);
+  color: rgb(245, 239, 239);
 }
 
 /* Input Fields inside the form */
@@ -189,6 +189,7 @@ label {
 .sub-heading {
   font-size: 24px;
   margin-top: 30px;
+  font-weight: 500;
   margin-bottom: 10px;
 }
 
@@ -197,11 +198,7 @@ label {
 .collect-setup {
   margin-bottom: 20px;
 }
-.collect-setup .sub-heading {
-  font-size: 22px;
-  padding: 0 25px;
-  margin: 20px 25px;
-}
+
 .collect-settings {
   padding-left: 40px;
   margin-left: 40px;
@@ -465,7 +462,35 @@ input[type="checkbox"]:checked {
 /*--------------- Media Queries----------------------- */
 
 @media screen and (max-width: 1480px) {
-  /* Reward Tier Settings */
+
+  .new-campaign-container {
+    padding: 9px;
+    margin: 20px;
+  }
+  .store-links{
+    padding: 0 23px;
+  }
+  .store-links .sub-heading {
+    padding: 0 10px;
+    margin: 0 11px;
+    margin-bottom: 30px;
+  }
+  .campaign-form .store-links .store-social-links {
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 20px;
+  }
+
+  .campaign-form .store-links .social-inputfield {
+    height: 40px;
+    width: 100%;
+  }
+
+
+.collect-settings {
+  padding-left: 10px;
+  margin-left: 40px;
+}
+  /* Referral Settings */
 
   /* Social Media Integration Sections */
 
@@ -514,6 +539,43 @@ input[type="checkbox"]:checked {
     width: 90px;
     font-size: 20px;
   }
+
+  /* Basic Form Settings */
+
+  .input-form-groups {
+    margin: 0 15px;
+  }
+
+  .form-group {
+    flex-direction: column;
+  }
+  .campaign-form .input-form-groups input {
+    width: 100%;
+  }
+  .store-links{
+    padding: 0 23px;
+  }
+  .store-links .sub-heading {
+    padding: 0 10px;
+    margin: 0 11px;
+    margin-bottom: 30px;
+  }
+  .campaign-form .store-links .store-social-links {
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 20px;
+  }
+
+  .campaign-form .store-links .social-inputfield {
+    height: 40px;
+    width: 100%;
+  }
+
+
+.collect-settings {
+  padding-left: 10px;
+  margin-left: 40px;
+}
+
 
   /* Reward Tier Settings */
   .referral-container p {
@@ -598,6 +660,44 @@ input[type="checkbox"]:checked {
     padding: 0 5px;
   }
 
+  /* Basic Form Settings */
+
+  .input-form-groups {
+    margin: 0 25px;
+  }
+
+  .form-group {
+    flex-direction: column;
+  }
+  .campaign-form .input-form-groups input {
+    width: 100%;
+  }
+
+
+  .store-links{
+    padding: 0 23px;
+  }
+  .store-links .sub-heading {
+    padding: 0 10px;
+    margin: 0 11px;
+    margin-bottom: 30px;
+  }
+  .campaign-form .store-links .store-social-links {
+    grid-template-columns: repeat(1, 1fr);
+    margin-left: 20px;
+  }
+
+  .campaign-form .store-links .social-inputfield {
+    height: 40px;
+    width: 100%;
+  }
+
+
+.collect-settings {
+  padding-left: 10px;
+  margin-left: 40px;
+}
+  
   /* Reward Tier Settings */
   .referral-container p {
     padding: 0 10px;
@@ -667,6 +767,44 @@ input[type="checkbox"]:checked {
     padding: 10px 0px;
     margin: 10px 0px;
   }
+
+  /* Basic Form Settings */
+  .input-form-groups {
+    margin: 0 25px;
+  }
+
+  .form-group {
+    flex-direction: column;
+  }
+  .campaign-form .input-form-groups input {
+    width: 100%;
+  }
+
+  .store-links {
+    padding: 0 10px;
+  }
+
+  .store-links .sub-heading {
+    padding: 0 11px;
+    margin: 30px 9px;
+    color: #e6dfdf;
+  }
+  .campaign-form .store-links .store-social-links {
+    grid-template-columns: repeat(1, 1fr);
+    margin-left: 20px;
+  }
+
+
+.collect-settings {
+  padding-left: 20px;
+  margin-left: 10px;
+}
+.collect-settings div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 
   /* Referral Settings */
   .referral-container p {
