@@ -641,11 +641,67 @@ function NewCampaignForm() {
           )}
         </section>
 
-        {/* <div>
-          <button className="saveFormBtn" type="submit">
-            {isEdit ? "Update" : "Save"}
-          </button>
-        </div> */}
+        {/* Template Settings */}
+
+        <section className="newcampaign-section">
+          <div
+            className={`card ${expanded[5] ? "expanded" : ""}`}
+            onClick={() => handleExpand(5)}
+          >
+            <div className="template-settings">
+              <h2 className="title">Template Settings</h2>
+              <span className="openBtn" onClick={() => handleExpand(5)}>
+                {expanded[5] ? (
+                  <IoIosArrowUp onClick={() => handleExpand(5)} />
+                ) : (
+                  <IoIosArrowDown onClick={() => handleExpand(5)} />
+                )}
+              </span>
+            </div>
+          </div>
+
+          {expanded[5] && (
+            <>
+              <div className="template-container">
+                <div className="template-content">
+                  <p>Select one of the following specially curated template</p>
+                </div>
+                <div className="templates-block-container">
+                  <div className="template-cards">
+                    {[1, 2, 3].map((item, index) => (
+                      <div key={index} className="template-card-block">
+                        {index === 2 ? (
+                          <h3>
+                            Build a custom template in the Shopify Theme Editor{" "}
+                          </h3>
+                        ) : (
+                          <img
+                            src="https://images.unsplash.com/photo-1677530248563-e6105354fafb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNnx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"
+                            alt="template"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="laststep">
+                  <p>
+                    After the Campaign is created, you will be navigated to your
+                    Shopify Theme Editor to finalize your settings.
+                  </p>
+                </div>
+              </div>
+              <div className="template-end">
+                <div>
+                  <button className="saveFormBtn" type="submit">
+                    {isEdit ? "Update Campaign" : "Create Campaign"}
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </section>
       </form>
     </div>
   );
