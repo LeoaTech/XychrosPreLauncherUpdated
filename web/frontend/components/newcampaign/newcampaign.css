@@ -577,6 +577,35 @@ input[type="checkbox"]:checked {
   align-items: center;
 }
 
+/* CSS for loading overlay */
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.836);
+  z-index: 9999;
+  display: none;
+}
+
+#loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color:#050505;
+ }
+
+#loading-spinner h2{
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.6;
+} 
+
+
+
+
 /*--------------- Media Queries----------------------- */
 
 @media screen and (max-width: 1480px) {
@@ -656,7 +685,6 @@ input[type="checkbox"]:checked {
   .template-card-block h3 {
     font-size: 20px;
     margin: 0 15px;
-   
   }
 }
 @media only screen and (max-width: 1050px) {
@@ -805,10 +833,7 @@ input[type="checkbox"]:checked {
 
   .template-card-block h3 {
     font-size: 18px;
-    
   }
-
-  
 }
 @media only screen and (max-width: 786px) {
   .new-campaign-container {
@@ -937,6 +962,16 @@ input[type="checkbox"]:checked {
   .select-user-input select {
     width: 100%;
   }
+
+
+  /* Animation for Loading screens */
+
+  #loading-spinner h2{
+    font-size: 22px;
+    font-weight: 500;
+    
+  } 
+  
 
   /* Template settings */
 
