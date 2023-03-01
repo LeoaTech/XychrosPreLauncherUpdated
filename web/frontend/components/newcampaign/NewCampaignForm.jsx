@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { SideLogo } from "../../assets/index";
+import { anime, SideLogo } from "../../assets/index";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { integratelinks } from "./socialLinks";
@@ -133,9 +133,25 @@ function NewCampaignForm() {
 
   // Handle Next Button event for each
   const handleNext = (index) => {
-    setExpanded((prevExpand) =>
-      prevExpand.map((state, i) => (i === index ? !state : false))
-    );
+    const loadingOverlay = document.getElementById("loading-overlay");
+
+    if (index === 5) {
+      loadingOverlay.style.display = "block";
+
+      setTimeout(function () {
+        // Hide loading overlay and proceed to next step
+        loadingOverlay.style.display = "none";
+        // Add code here to proceed to next step
+
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => (i === index ? !state : false))
+        );
+      }, 3000);
+    } else {
+      setExpanded((prevExpand) =>
+        prevExpand.map((state, i) => (i === index ? !state : false))
+      );
+    }
   };
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = (e) => {
@@ -701,6 +717,14 @@ function NewCampaignForm() {
           )}
         </section>
       </form>
+
+      {/* Loading overlay  */}
+      <div id="loading-overlay">
+        <div id="loading-spinner">
+          <h2>Setting Up the best templates for your campaigns</h2>
+          <img src={anime} alt="image" />
+        </div>
+      </div>
     </div>
   );
 }
