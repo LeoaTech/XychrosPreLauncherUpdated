@@ -465,6 +465,7 @@ input[type="checkbox"]:checked {
 .integration-settings-container {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 30px;
 }
 
 .integration-container .check-input {
@@ -522,9 +523,10 @@ input[type="checkbox"]:checked {
   margin: 0 40px;
 }
 
-.template-content p, .laststep p{
+.template-content p,
+.laststep p {
   font-size: 20.5px;
-  color:#d9d9d9;
+  color: #d9d9d9;
 }
 
 .template-end {
@@ -560,17 +562,15 @@ input[type="checkbox"]:checked {
   font-weight: 500;
   line-height: 1.6;
   margin: 0 25px;
-
 }
 
 .template-card-block img {
   height: 100%;
   width: 100%;
   border-radius: 12px;
-
 }
 .template-card-block:last-child {
-  background-color:#5447DF;
+  background-color: #5447df;
   display: flex;
   text-align: center;
   justify-content: center;
@@ -633,6 +633,22 @@ input[type="checkbox"]:checked {
   .rewards-container {
     grid-template-columns: repeat(2, 1fr);
     row-gap: 10px;
+  }
+
+
+   /* Integrations Settings */
+   .integration-container {
+    margin: 0 25px;
+    padding: 0 25px;
+  }
+
+  .integration-settings-container {
+    
+    margin: 0 20px;
+  }
+  .integration-settings-container input,
+  .select-user-input select {
+    width: 350px;
   }
 }
 @media only screen and (max-width: 1050px) {
@@ -758,6 +774,22 @@ input[type="checkbox"]:checked {
     margin-bottom: 20px;
     background-color: #ebf0f2;
   }
+
+
+   /* Integrations Settings */
+   .integration-container {
+    margin: 0 20px;
+    padding: 0 20px;
+  }
+
+  .integration-settings-container {
+    flex-direction: column;
+    margin-bottom: 30px;
+  }
+  .integration-settings-container input,
+  .select-user-input select {
+    width:100%
+  }
 }
 @media only screen and (max-width: 786px) {
   .new-campaign-container {
@@ -872,6 +904,20 @@ input[type="checkbox"]:checked {
     margin-bottom: 20px;
     background-color: #ebf0f2;
   }
+   /* Integrations Settings */
+   .integration-container {
+    margin: 0 10px;
+    padding: 0 10px;
+  }
+
+  .integration-settings-container {
+    flex-direction: column;
+    margin: 0 10px;
+  }
+  .integration-settings-container input,
+  .select-user-input select {
+    width: 100%;
+  }
 }
 
 @media only screen and (max-width: 500px) {
@@ -955,5 +1001,20 @@ input[type="checkbox"]:checked {
   .email-container {
     padding: 0 10px;
     margin: 0 10px;
+  }
+
+  /* Integrations Settings */
+  .integration-container {
+    margin: 0 10px;
+    padding: 0 10px;
+  }
+
+  .integration-settings-container {
+    flex-direction: column;
+    margin: 0 10px;
+  }
+  .integration-settings-container input,
+  .select-user-input select {
+    width: 100%;
   }
 }
