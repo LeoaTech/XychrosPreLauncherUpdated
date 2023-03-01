@@ -635,20 +635,28 @@ input[type="checkbox"]:checked {
     row-gap: 10px;
   }
 
-
-   /* Integrations Settings */
-   .integration-container {
+  /* Integrations Settings */
+  .integration-container {
     margin: 0 25px;
     padding: 0 25px;
   }
 
   .integration-settings-container {
-    
     margin: 0 20px;
   }
   .integration-settings-container input,
   .select-user-input select {
     width: 350px;
+  }
+
+  .templates-block-container {
+    overflow: auto;
+    overflow-y: hidden;
+  }
+  .template-card-block h3 {
+    font-size: 20px;
+    margin: 0 15px;
+   
   }
 }
 @media only screen and (max-width: 1050px) {
@@ -775,9 +783,8 @@ input[type="checkbox"]:checked {
     background-color: #ebf0f2;
   }
 
-
-   /* Integrations Settings */
-   .integration-container {
+  /* Integrations Settings */
+  .integration-container {
     margin: 0 20px;
     padding: 0 20px;
   }
@@ -788,8 +795,20 @@ input[type="checkbox"]:checked {
   }
   .integration-settings-container input,
   .select-user-input select {
-    width:100%
+    width: 100%;
   }
+
+  .template-container {
+    margin: 0 15px;
+    padding: 0 20px;
+  }
+
+  .template-card-block h3 {
+    font-size: 18px;
+    
+  }
+
+  
 }
 @media only screen and (max-width: 786px) {
   .new-campaign-container {
@@ -904,8 +923,8 @@ input[type="checkbox"]:checked {
     margin-bottom: 20px;
     background-color: #ebf0f2;
   }
-   /* Integrations Settings */
-   .integration-container {
+  /* Integrations Settings */
+  .integration-container {
     margin: 0 10px;
     padding: 0 10px;
   }
@@ -917,6 +936,22 @@ input[type="checkbox"]:checked {
   .integration-settings-container input,
   .select-user-input select {
     width: 100%;
+  }
+
+  /* Template settings */
+
+  .template-container {
+    padding: 0 15px;
+    margin: 0 15px;
+  }
+
+  .templates-block-container {
+    margin: 18px 5px;
+  }
+
+  .template-cards {
+    overflow: auto;
+    overflow-x: scroll;
   }
 }
 
@@ -1015,6 +1050,35 @@ input[type="checkbox"]:checked {
   }
   .integration-settings-container input,
   .select-user-input select {
+    width: 100%;
+  }
+
+  /* Template Settings */
+  .template-container {
+    padding: 0 7px;
+    margin: 0 4px;
+  }
+
+  .template-content p,
+  .laststep p {
+    margin: 0 10px;
+  }
+
+  .laststep p {
+    margin-bottom: 30px;
+  }
+
+  .templates-block-container {
+    margin: 20px 6px;
+    padding: 5px 10px;
+  }
+
+  .template-cards {
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .template-card-block {
+    height: 200px;
     width: 100%;
   }
 }
