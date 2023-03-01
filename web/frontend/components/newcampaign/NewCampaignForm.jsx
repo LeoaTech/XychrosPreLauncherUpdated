@@ -133,11 +133,9 @@ function NewCampaignForm() {
 
   // Handle Next Button event for each
   const handleNext = (index) => {
-    setTimeout(() => {
-      setExpanded((prevExpand) =>
-        prevExpand.map((state, i) => (i === index ? !state : false))
-      );
-    }, 1000);
+    setExpanded((prevExpand) =>
+      prevExpand.map((state, i) => (i === index ? !state : false))
+    );
   };
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = (e) => {
