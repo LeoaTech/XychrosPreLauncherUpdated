@@ -15,6 +15,7 @@ import { fetchCampaignById } from "../../app/features/campaigns/campaignSlice";
 import { storeLinks } from "./dummySocial";
 import { RewardData } from "./rewardTier/RewardData";
 import RewardTier from "./rewardTier/RewardTier";
+import { useAppQuery, useAuthenticatedFetch } from "../../hooks";
 
 // Default Email Settings
 const InitialDefaultEmail = `
@@ -58,6 +59,27 @@ function NewCampaignForm() {
   let dateStart = new Date(campaignById?.start_date).toLocaleDateString();
   let dateEnd = new Date(campaignById?.end_date).toLocaleDateString();
   const { isEdit, setIsEdit } = useStateContext();
+  const fetch = useAuthenticatedFetch();
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await fetch("/api/2022-10/products.json", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        return response.json();
+      } else {
+        console.log("Failed to get product");
+      }
+    };
+    fetchProducts();
+  }, []);
+  const { data, refetch: refetchProductCount } = useAppQuery({
+    url: "/api/2022-10/products.json",
+  });
+
+  console.log(data, "products list");
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -69,7 +91,7 @@ function NewCampaignForm() {
   const [expanded, setExpanded] = useState(Array(6).fill(false));
   const [newCampaignData, setNewCampaignData] = useState({
     campaign_name: "",
-    product_link: "",
+    product_name: "",
     start_date: startDate,
     end_date: endDate,
     store_link: [],
@@ -146,7 +168,7 @@ function NewCampaignForm() {
         setExpanded((prevExpand) =>
           prevExpand.map((state, i) => (i === index ? !state : false))
         );
-      }, 3000);
+      }, 4000);
     } else {
       setExpanded((prevExpand) =>
         prevExpand.map((state, i) => (i === index ? !state : false))
@@ -197,9 +219,12 @@ function NewCampaignForm() {
               <h2 className="title">Basic Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(0)}>
                 {expanded[0] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(0)} />
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(0)}
+                  />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(0)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(0)} />
                 )}
               </span>
             </div>
@@ -233,21 +258,35 @@ function NewCampaignForm() {
                     <div className="inputfield">
                       <label htmlFor="product_link">Product Link</label>
                       {isEdit ? (
-                        <input
-                          type="text"
-                          name="product_link"
-                          id="product_link"
-                          value={campaignById?.product_link}
-                          onChange={() => {}}
-                        />
+                        <div className="select-products">
+                          <select
+                            name="product_name"
+                            id="product_name"
+                            value={campaignById?.product_name}
+                            onChange={handleChange}
+                          >
+                            {data?.map((item) => {
+                              return (
+                                <option value={item.title}>{item.title}</option>
+                              );
+                            })}
+                          </select>
+                        </div>
                       ) : (
-                        <input
-                          type="text"
-                          name="product_link"
-                          id="product_link"
-                          value={newCampaignData.product_link}
-                          onChange={handleChange}
-                        />
+                        <div className="select-products">
+                          <select
+                            name="product_name"
+                            id="product_name"
+                            value={newCampaignData?.product_name}
+                            onChange={handleChange}
+                          >
+                            {data?.map((item) => {
+                              return (
+                                <option value={item.title}>{item.title}</option>
+                              );
+                            })}
+                          </select>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -393,9 +432,9 @@ function NewCampaignForm() {
               <h2 className="title">Refferal Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(1)}>
                 {expanded[1] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(1)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(1)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(1)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(1)} />
                 )}
               </span>
             </div>
@@ -408,24 +447,19 @@ function NewCampaignForm() {
                   <p>
                     Select the Social Media channels that you want to allow your
                     customers to share their referral link with!
-                    <br />
                     <br /> You can also customise the message that you would
                     want your customers to share!
                   </p>
-                  <div className="social-media-section">
-                    <div className="social-links-container">
-                      {integratelinks.map((link) => (
-                        <div className="socialblock" key={link.id}>
-                          <SocialBlock link={link} />
-                        </div>
-                      ))}
+                </div>
+                <div className="social-links-container">
+                  {integratelinks.map((link) => (
+                    <div className="social_block" key={link.id}>
+                      <SocialBlock link={link} />
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
-              <div className="referral-nextbtn">
-                <div>{renderButton(2)}</div>
-              </div>
+              <div className="referral-nextbtn">{renderButton(2)}</div>
             </>
           )}
         </section>
@@ -441,9 +475,9 @@ function NewCampaignForm() {
               <h2 className="title">Reward Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(2)}>
                 {expanded[2] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(2)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(2)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(2)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(2)} />
                 )}
               </span>
             </div>
@@ -512,9 +546,9 @@ function NewCampaignForm() {
               <h2 className="title">Email Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(3)}>
                 {expanded[3] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(3)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(3)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(3)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(3)} />
                 )}
               </span>
             </div>
@@ -601,9 +635,9 @@ function NewCampaignForm() {
               <h2 className="title">Integration Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(4)}>
                 {expanded[4] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(4)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(4)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(4)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(4)} />
                 )}
               </span>
             </div>
@@ -666,9 +700,9 @@ function NewCampaignForm() {
               <h2 className="title">Template Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(5)}>
                 {expanded[5] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(5)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(5)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(5)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(5)} />
                 )}
               </span>
             </div>
