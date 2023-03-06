@@ -159,7 +159,45 @@ const SettingComponent = () => {
           )}
         </section>
 
-      
+      {/* Referral Settings Section */}
+
+      <section className="global-settings">
+          <div className="referral-settings" onClick={() => handleExpand(1)}>
+            <div className="main-heading">
+              <h2 className="main-title">Referral Settings</h2>
+              <span className="toggle-card-btn" onClick={() => handleExpand(1)}>
+                {currentExpanded[1] ? (
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(1)} />
+                ) : (
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(1)} />
+                )}
+              </span>
+            </div>
+          </div>
+          {currentExpanded[1] && (
+            <>
+              <div className="referral-settings-container">
+                <div className="subheading">
+                  <p>
+                    Select the Social Media channels that you want to allow your
+                    customers to share their referral link with! You can also
+                    customise the message that you would want your customers to
+                    share!
+                  </p>
+                </div>
+
+                <div className="referrals-cards-block">
+                  {integratelinks.map((link) => (
+                    <div className="social_block" key={link.id}>
+                      <SocialBlock link={link} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="toggle-next-btn">{renderButton(2)}</div>
+            </>
+          )}
+        </section>
       </form>
 
       <div className="settings-savebtn">
