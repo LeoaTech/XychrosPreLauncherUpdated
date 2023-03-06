@@ -198,6 +198,74 @@ const SettingComponent = () => {
             </>
           )}
         </section>
+
+
+        {/* Rewards Settings Section */}
+        <section className="global-settings">
+          <div className="reward-settings" onClick={() => handleExpand(2)}>
+            <div className="main-heading">
+              <h2 className="main-title">Rewards Settings</h2>
+              <span className="toggle-card-btn" onClick={() => handleExpand(2)}>
+                {currentExpanded[2] ? (
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(2)} />
+                ) : (
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(2)} />
+                )}
+              </span>
+            </div>
+          </div>
+          {currentExpanded[2] && (
+            <>
+              <div className="reward-setting-container">
+                <div className="subheading">
+                  <p>
+                    Set up the Rewards for your customers here! Select the
+                    discount type and then the reward tiers!
+                  </p>
+                  <p>
+                    {" "}
+                    Note: Discount will not be applicable on Shipping. Each code
+                    can be used by a customer only once.
+                  </p>
+                </div>
+
+                <div className="discount-card-block">
+                  <div className="sub-title">
+                    <h2>Discount</h2>
+                  </div>
+
+                  <div className="discounts_input">
+                    <input
+                      className="social-radioInput"
+                      type="radio"
+                      name=""
+                      id=""
+                    />
+                    <label htmlFor="">% off the entire order</label>
+                  </div>
+                  <div className="discounts_input">
+                    <input
+                      className="social-radioInput"
+                      type="radio"
+                      name=""
+                      id=""
+                    />
+                    <label htmlFor="">$ off the entire order</label>
+                  </div>
+                </div>
+
+                <div className="rewards-tiers-cardblocks">
+                  {RewardData.map((reward) => (
+                    <div key={reward.id} className="reward-card">
+                      <RewardTier reward={reward} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="toggle-next-btn">{renderButton(3)}</div>
+            </>
+          )}
+        </section>
       </form>
 
       <div className="settings-savebtn">
