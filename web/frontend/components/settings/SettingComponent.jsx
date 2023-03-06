@@ -421,6 +421,43 @@ const SettingComponent = () => {
             </>
           )}
         </section>
+
+         {/* Template Settings */}
+
+         <section className="global-settings">
+          <div className="templates-settings" onClick={() => handleExpand(5)}>
+            <div className="main-heading">
+              <h2 className="main-title">Templates Settings</h2>
+              <span className="toggle-card-btn" onClick={() => handleExpand(5)}>
+                {currentExpanded[5] ? (
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(5)} />
+                ) : (
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(5)} />
+                )}
+              </span>
+            </div>
+          </div>
+          {currentExpanded[5] && (
+            <>
+              <div className="templates-container">
+                <div className="subheading">
+                  <p>Select all that best descibe your product(s) </p>
+                </div>
+
+                <div className="templates-blocks-container">
+                  {dummyTeplates.map((template) => (
+                    <div key={template.id} className="template-block">
+                      <div className="check-input">
+                        <input type="checkbox" name="" id="" />
+                        <label htmlFor="">{template.name}</label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </section>
       </form>
 
       <div className="settings-savebtn">
