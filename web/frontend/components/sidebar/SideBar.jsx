@@ -60,13 +60,6 @@ const SideBar = () => {
       icon: <MdSettings style={{ color: "#fff", height: 30, width: 30 }} />,
     },
     {
-      title: "Integrations",
-      path: "/integrations",
-      icon: (
-        <TbFidgetSpinner style={{ color: "#fff", height: 30, width: 30 }} />
-      ),
-    },
-    {
       title: "Support",
       path: "/support",
       icon: (
