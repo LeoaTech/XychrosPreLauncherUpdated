@@ -92,9 +92,15 @@ const SettingComponent = () => {
               <h2 className="main-title">Basic Settings</h2>
               <span className="toggle-card-btn" onClick={() => handleExpand(0)}>
                 {currentExpanded[0] ? (
-                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(0)} />
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(0)}
+                  />
                 ) : (
-                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(0)} />
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(0)}
+                  />
                 )}
               </span>
             </div>
@@ -159,17 +165,23 @@ const SettingComponent = () => {
           )}
         </section>
 
-      {/* Referral Settings Section */}
+        {/* Referral Settings Section */}
 
-      <section className="global-settings">
+        <section className="global-settings">
           <div className="referral-settings" onClick={() => handleExpand(1)}>
             <div className="main-heading">
               <h2 className="main-title">Referral Settings</h2>
               <span className="toggle-card-btn" onClick={() => handleExpand(1)}>
                 {currentExpanded[1] ? (
-                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(1)} />
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(1)}
+                  />
                 ) : (
-                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(1)} />
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(1)}
+                  />
                 )}
               </span>
             </div>
@@ -199,7 +211,6 @@ const SettingComponent = () => {
           )}
         </section>
 
-
         {/* Rewards Settings Section */}
         <section className="global-settings">
           <div className="reward-settings" onClick={() => handleExpand(2)}>
@@ -207,9 +218,15 @@ const SettingComponent = () => {
               <h2 className="main-title">Rewards Settings</h2>
               <span className="toggle-card-btn" onClick={() => handleExpand(2)}>
                 {currentExpanded[2] ? (
-                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(2)} />
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(2)}
+                  />
                 ) : (
-                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(2)} />
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(2)}
+                  />
                 )}
               </span>
             </div>
@@ -263,6 +280,97 @@ const SettingComponent = () => {
                 </div>
               </div>
               <div className="toggle-next-btn">{renderButton(3)}</div>
+            </>
+          )}
+        </section>
+
+        {/* Email Settings Section */}
+        <section className="global-settings">
+          <div
+            className="email-drafts-settings"
+            onClick={() => handleExpand(3)}
+          >
+            <div className="main-heading">
+              <h2 className="main-title">Emails Settings</h2>
+              <span className="toggle-card-btn" onClick={() => handleExpand(3)}>
+                {currentExpanded[3] ? (
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(3)}
+                  />
+                ) : (
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(3)}
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+          {currentExpanded[3] && (
+            <>
+              <div className="email-container">
+                <div className="email-optCheck">
+                  <input className="checkbox-input" type="checkbox" />
+                  <label htmlFor="">
+                    Enable Double Opt in for new sign-ups (This feature requires
+                    Professional Plan or above)
+                  </label>
+                </div>
+                <section>
+                  <div className="email-section">
+                    <h2>
+                      Welcome Email Draft - This email is sent when a customer
+                      signs up{" "}
+                    </h2>
+                    <div className="email-content">
+                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+
+                      <textarea
+                        className="email-textinput"
+                        rows={9}
+                        value={defaultEmail}
+                        onChange={setDefaultEmail}
+                      />
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div className="email-section">
+                    <h2>
+                      Referral Email Draft - This email is sent when a referral
+                      signs up{" "}
+                    </h2>
+                    <div className="email-content">
+                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <textarea
+                        className="email-textinput"
+                        rows={9}
+                        value={referralEmail}
+                        onChange={setReferralEmail}
+                      />
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div className="email-section">
+                    <h2>
+                      Reward Tier Email Draft - This email is sent when a reward
+                      tier is unlocked
+                    </h2>
+                    <div className="email-content">
+                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <textarea
+                        className="email-textinput"
+                        rows={9}
+                        value={rewardEmail}
+                        onChange={setRewardEmail}
+                      />
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div className="toggle-next-btn">{renderButton(4)}</div>
             </>
           )}
         </section>
