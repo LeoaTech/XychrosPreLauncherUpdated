@@ -28,13 +28,17 @@
   font-weight: 700;
 }
 
+.check-input label{
+  font-size: 18px;
+}
+
 .referral-link-input {
   width: 100%;
 }
 
 .referral-input {
   height: 80px;
-  width: 500px;
+  width: 100%;
   border: none;
   font-size: 16px;
   color: #dedddd;
@@ -90,7 +94,7 @@
     margin: 0px 3px;
   }
   .social-section label {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.3;
   }
 
