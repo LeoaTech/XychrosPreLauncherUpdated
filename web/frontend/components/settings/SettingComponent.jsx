@@ -374,6 +374,53 @@ const SettingComponent = () => {
             </>
           )}
         </section>
+
+
+          {/* Integrations Settings */}
+
+          <section className="global-settings">
+          <div
+            className="integration--settings"
+            onClick={() => handleExpand(4)}
+          >
+            <div className="main-heading">
+              <h2 className="main-title">Integrations Settings</h2>
+              <span className="toggle-card-btn" onClick={() => handleExpand(4)}>
+                {currentExpanded[4] ? (
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(4)} />
+                ) : (
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(4)} />
+                )}
+              </span>
+            </div>
+          </div>
+          {currentExpanded[4] && (
+            <>
+              <div className="integrations-container">
+                <div className="integarte__input">
+                  <div className="check-input">
+                    <input type="checkbox" name="" id="" />
+                    <label htmlFor="">Integrate with Klaviyo</label>
+                  </div>
+                </div>
+
+                <div className="integrate-api-input">
+                  <div className="inputfield">
+                    <label htmlFor="">
+                      Private API Key - You can find the Private API Key in your
+                      <Link to="https://www.klaviyo.com/login">
+                        {" "}
+                        Klaviyo Account Settings
+                      </Link>
+                    </label>
+                    <input type="text" name="private-key" id="private-key" />
+                  </div>
+                </div>
+              </div>
+              <div className="toggle-next-btn">{renderButton(5)}</div>
+            </>
+          )}
+        </section>
       </form>
 
       <div className="settings-savebtn">
