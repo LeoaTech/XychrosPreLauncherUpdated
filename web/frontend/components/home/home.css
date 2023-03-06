@@ -15,12 +15,12 @@
 }
 
 .single-chart {
-  max-width: 88%;
+  max-width: 90%;
   margin-left: 1.1%;
 }
 
 .dual-charts {
-  max-width: 95%;
+  max-width: 100%;
   display: flex;
   flex-wrap: wrap;
 }
