@@ -14,6 +14,7 @@
   background-color: #1b1a21;
   padding: 15px;
   border-radius: 10px;
+  margin-bottom: 20px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
@@ -29,6 +30,7 @@
 .nav-title {
   font-weight: 700;
   font-size: 30px;
+  margin: 20px 0;
 }
 
 .saveFormBtn,
@@ -82,7 +84,7 @@
 /* Labels */
 
 label {
-  font-size: 23px;
+  font-size: 21px;
   font-weight: 500;
   margin: 10px 0;
   color: rgb(245, 239, 239);
@@ -94,6 +96,22 @@ label {
   border: none;
   padding: 25px 10px;
   border-radius: 12px;
+  height: 50px;
+  color: white;
+  width: 450px;
+  font-size: 23px;
+  font-weight: 500;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.select-products select {
+  background-color: #25242d;
+  border: none;
+  border-radius: 12px;
+  padding: 0 12px;
   height: 50px;
   color: white;
   width: 450px;
@@ -184,10 +202,11 @@ label {
   border: none;
   color: #fff;
   padding: 10px;
+  line-height: 1.4;
 }
 
 .sub-heading {
-  font-size: 24px;
+  font-size: 20px;
   margin-top: 30px;
   font-weight: 500;
   margin-bottom: 10px;
@@ -286,40 +305,23 @@ input[type="checkbox"]:checked {
 }
 
 .referral-settings-form {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 20px;
+  padding: 20px 40px;
+  margin: 20px 40px;
 }
 
 .referral-container p {
-  padding: 0 40px;
-  margin: 0 40px;
   font-size: 18px;
   margin-bottom: 20px;
   line-height: 1.6;
 }
 /* Social Media Integration Sections */
 
-.social-media-section {
-  padding: 0 40px;
-  margin: 0 40px;
-}
-
-.social-media-section h1 {
-  font-size: 34px;
-  line-height: 1.6;
-  color: white;
-  margin-bottom: 20px;
-}
-
 .social-links-container {
+  margin: 20px 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  /* justify-self: center; */
   column-gap: 25px;
   row-gap: 25px;
-  width: 100%;
 }
 
 .referral-nextbtn {
@@ -392,15 +394,19 @@ input[type="checkbox"]:checked {
 }
 
 .email-optCheck {
-  /* margin: 20px 0; */
+  margin: 20px 0;
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
+.email-optCheck label {
+  font-size: 20px;
+}
+
 .email-optCheck .checkbox-input {
-  height: 30px;
-  width: 30px;
+  height: 20px;
+  width: 20px;
 }
 
 .email-container section {
@@ -420,7 +426,7 @@ input[type="checkbox"]:checked {
 }
 .email-section h2 {
   padding-left: 20px;
-  font-size: 29px;
+  font-size: 24px;
   line-height: 1.4;
 
   margin-bottom: 20px;
@@ -444,7 +450,7 @@ input[type="checkbox"]:checked {
 .email-textinput {
   width: 100%;
   border: none;
-  font-size: 25px;
+  font-size: 20px;
   color: #1a1919;
   padding: 35px;
   margin-bottom: 20px;
@@ -467,7 +473,10 @@ input[type="checkbox"]:checked {
   justify-content: space-between;
   margin-bottom: 30px;
 }
-
+.check-input {
+  display: flex;
+  align-items: center;
+}
 .integration-container .check-input {
   display: flex;
   align-items: center;
@@ -562,12 +571,16 @@ input[type="checkbox"]:checked {
   font-weight: 500;
   line-height: 1.6;
   margin: 0 25px;
+  text-decoration: underline;
+  cursor:pointer;
 }
 
 .template-card-block img {
   height: 100%;
   width: 100%;
   border-radius: 12px;
+  cursor:pointer;
+
 }
 .template-card-block:last-child {
   background-color: #5447df;
@@ -594,17 +607,14 @@ input[type="checkbox"]:checked {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color:#050505;
- }
+  color: #050505;
+}
 
-#loading-spinner h2{
+#loading-spinner h2 {
   font-size: 25px;
   font-weight: 700;
   line-height: 1.6;
-} 
-
-
-
+}
 
 /*--------------- Media Queries----------------------- */
 
@@ -676,6 +686,7 @@ input[type="checkbox"]:checked {
   .integration-settings-container input,
   .select-user-input select {
     width: 350px;
+    font-size: 19px;
   }
 
   .templates-block-container {
@@ -859,7 +870,8 @@ input[type="checkbox"]:checked {
   .form-group {
     flex-direction: column;
   }
-  .campaign-form .input-form-groups input {
+  .campaign-form .input-form-groups input,
+  .campaign-form .input-form-groups select {
     width: 100%;
   }
 
@@ -884,6 +896,13 @@ input[type="checkbox"]:checked {
   .collect-settings {
     padding-left: 10px;
     margin-left: 40px;
+  }
+
+  /* Referral Settings */
+
+  .referral-settings-form {
+    padding: 20px 7px;
+    margin: 20px 4px;
   }
 
   /* Reward Tier Settings */
@@ -937,7 +956,7 @@ input[type="checkbox"]:checked {
   .email-section h2 {
     padding-left: 12px;
     line-height: 1.4;
-    font-size: 23px;
+    font-size: 18px;
   }
   .email-textinput {
     width: 100%;
@@ -963,15 +982,21 @@ input[type="checkbox"]:checked {
     width: 100%;
   }
 
-
   /* Animation for Loading screens */
-
-  #loading-spinner h2{
-    font-size: 22px;
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 20px;
+    transform: translate(-50%, -50%);
+    color: #050505;
+  }
+  #loading-spinner h2 {
+    margin: 20px;
+    font-size: 20px;
+    word-break: keep-all;
     font-weight: 500;
-    
-  } 
-  
+  }
 
   /* Template settings */
 
