@@ -1,102 +1,171 @@
 import React, { useState } from "react";
 import { SideLogo } from "../../assets";
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
+
 import "./setting.css";
-const InitialDefaultEmail = `Hi,
+import { storeLinks } from "../newcampaign/dummySocial";
+import { integratelinks } from "../newcampaign/socialLinks";
+import SocialBlock from "../newcampaign/socialsBlocks/SocialBlock";
+import { RewardData } from "../newcampaign/rewardTier/RewardData";
+import RewardTier from "../newcampaign/rewardTier/RewardTier";
+import { Link } from "react-router-dom";
+import { dummyTeplates } from "./dummyTemplates";
 
-Thank you for subscribing to {campaign.name} for the pre-launch of {product.name}. You can now invite your friends and family to join you in collecting more rewards and points by using {referral.link}.
+// Default Email Settings
+const InitialDefaultEmail = `
+Hi,
 
-So far, {referral.friends_count} friends have joined using your referral link. You can redeem your points by using the discount code {referral.discount_code} at checkout. 
+Thank you for subscribing to {campaign.name} for the pre-launch of {product.name}. You can now invite your friends and family to join you in collecting more rewards and points by using {reward.link}.
+
+So far, {reward.friends_count} friends have joined using your reward link. You can redeem your points by using the discount code {reward.discount_code} at checkout. 
 
 We are excited to have you on board!
 
 {shop.name}`;
+
+const InitialReferralEmail = `
+
+Hi,
+
+Congratulations!! A new referral has signed up at {campaign.name} for the pre-launch of {product.name}. You can now invite more friends and family to join you in collecting more rewards and points by using {referral.link}.
+
+So far, {referral.friends_count} friends have joined using your referral link. 
+
+We are excited to have you on board!
+
+{shop.name}`;
+
+const InitialRewardEmail = `Hi there,
+
+Congratulations!! You have unlocked the Reward Tier {{ reward_tier_number}} at {campaign.name} for the pre-launch of {product.name}. You can invite more friends and family to join you in collecting more rewards and points by using {referral.link}.
+
+So far, {referral.friends_count} friends have joined using your referral link. You can redeem your points by using the discount code {referral.discount_code} at checkout. 
+
+We are super excited to see you winning!!
+
+{shop.name}`;
 const SettingComponent = () => {
   const [defaultEmail, setDefaultEmail] = useState(InitialDefaultEmail);
+  const [referralEmail, setReferralEmail] = useState(InitialReferralEmail);
+  const [rewardEmail, setRewardEmail] = useState(InitialRewardEmail);
+  const [currentExpanded, setCurrentExpanded] = useState(Array(6).fill(false));
 
+  // Next Button
+  const renderButton = (id) => {
+    return (
+      <button className="next-button" onClick={() => handleNext(id)}>
+        Next
+      </button>
+    );
+  };
+
+  // Handle Card Toggle Events
+  const handleExpand = (index) => {
+    setCurrentExpanded((prevExpand) =>
+      prevExpand.map((state, i) => (i === index ? !state : false))
+    );
+  };
+
+  // Handle Next Button event for each
+  const handleNext = (index) => {
+    setCurrentExpanded((prevExpand) =>
+      prevExpand.map((state, i) => (i === index ? !state : false))
+    );
+  };
+
+  // Handle Form Save Settings
+  const handleSubmit = () => {};
+
+  // Handle Form Input Changes
+  const handleonChange = () => {};
   return (
-    <div className="home-container">
-      <div className="settings-container">
-        <nav>
-          <h1 className="nav-title">Global Settings</h1>
-          <button type="submit" className="save-btn">
-            Save
-          </button>
-        </nav>
+    <div className="settings-container">
+      <div className="settings-heading">
+        <h1>Global Settings</h1>
+      </div>
 
-        <p>
-          The global settings apply to all campaigns. These settings can be
-          over-written by changing the Advanced Settings of the individual
-          campaign{" "}
-        </p>
-
-        {/* Settings Form for Email and Campaign */}
-
-        <div className="settings-form">
-          <section className="section1">
-            <h2>Campaign Settings</h2>
-
-            <div className="check-group">
-              <input type="checkbox" name="" id="" />
-              <label htmlFor="">Send emails immediately </label>
-            </div>
-            <div className="check-group">
-              <input type="checkbox" name="" id="" />
-              <label htmlFor="">
-                Use all social media channels for sharing referral links{" "}
-              </label>
-            </div>
-            <div className="check-group">
-              <input type="checkbox" name="" id="" />
-              <label htmlFor="">
-                Reset referral points for every campaign{" "}
-              </label>
-            </div>
-            <div className="check-group">
-              <input type="checkbox" name="" id="" />
-              <label htmlFor="">1 point per referral </label>
-            </div>
-          </section>
-
-          {/* Email Settings */}
-          <section className="section2">
-            <h2>Email Settings</h2>
-
-            <div className="check-group">
-              <input type="checkbox" name="" id="" />
-              <label htmlFor="">Use Xychros email drafts</label>
-            </div>
-            <div className="check-group">
-              <input type="checkbox" name="" id="" />
-              <label htmlFor="">
-                Send emails as soon as someone joins using a referral link
-              </label>
-            </div>
-            <div className="check-group">
-              <input type="checkbox" name="" id="" />
-              <label htmlFor="">
-                Send email from the account email address{" "}
-              </label>
-            </div>
-            <div className="check-group"></div>
-          </section>
-        </div>
-
-        {/* Email Draft Section */}
-
-        <section>
-          <div className="email-settings">
-            <h2>Email Draft</h2>
-            <div>
-              <img src={SideLogo} alt="Shop Logo" />
-              <textarea
-                className="email-textarea"
-                rows={9}
-                value={defaultEmail}
-                onChange={setDefaultEmail}
-              />
+      <form onSubmit={handleSubmit}>
+        {/* Basic Settings Section */}
+        <section className="global-settings">
+          <div className="basic-settings" onClick={() => handleExpand(0)}>
+            <div className="main-heading">
+              <h2 className="main-title">Basic Settings</h2>
+              <span className="toggle-card-btn" onClick={() => handleExpand(0)}>
+                {currentExpanded[0] ? (
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(0)} />
+                ) : (
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(0)} />
+                )}
+              </span>
             </div>
           </div>
+
+          {currentExpanded[0] && (
+            <>
+              <div className="basic-settings-container">
+                <div className="store__links">
+                  <div className="sub-title">
+                    <h2> Share Store's Social Media Links</h2>
+                  </div>
+                  <div className="stores__social_links">
+                    {storeLinks.map((storeLink) => (
+                      <div key={storeLink.id} className="social_card">
+                        <input
+                          className="check_input"
+                          type="checkbox"
+                          name=""
+                        />
+                        <span className="store-social-icons">
+                          {storeLink.icon}
+                        </span>
+                        <input
+                          className="social-text-field"
+                          type="text"
+                          name={"anyaname"}
+                          value={`www.sociallink.com/store-link`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="collect__container">
+                  <div className="sub-title">
+                    <h2>Collect</h2>
+                    <div className="collect__inputs">
+                      <input
+                        className="checkbox-input"
+                        type="radio"
+                        name="collect_all"
+                        value="email_number"
+                      />
+                      <label htmlFor="">
+                        Email Addresses and Phone Numbers{" "}
+                      </label>
+                    </div>
+                    <div className="collect__inputs">
+                      <input
+                        className="checkbox-input"
+                        type="radio"
+                        name="collect_emaill"
+                        value="email"
+                      />
+                      <label htmlFor="">Email Addresses Only </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="toggle-next-btn">{renderButton(1)}</div>
+            </>
+          )}
         </section>
+
+      
+      </form>
+
+      <div className="settings-savebtn">
+        <button className="saveSettingsbtn" type="submit">
+          Save
+        </button>
       </div>
     </div>
   );
