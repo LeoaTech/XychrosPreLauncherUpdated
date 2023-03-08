@@ -1,14 +1,14 @@
-import SummaryCard from "../ui/SummaryCard";
-import { Marketing, subscriber, Sale, arrow } from "../../assets/index";
-import CampaignBlock from "./CampaignBlock";
-import Pagination from "../ui/Pagination";
-import React, { useState, useEffect, Fragment } from "react";
-import { useStateContext } from "../../contexts/ContextProvider";
-import { useDispatch, useSelector } from "react-redux";
+import SummaryCard from '../ui/SummaryCard';
+import { Marketing, subscriber, Sale, arrow } from '../../assets/index';
+import CampaignBlock from './CampaignBlock';
+import Pagination from '../ui/Pagination';
+import React, { useState, useEffect, Fragment } from 'react';
+import { useStateContext } from '../../contexts/ContextProvider';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchAllCampaigns,
   fetchCampaign,
-} from "../../app/features/campaigns/campaignSlice";
+} from '../../app/features/campaigns/campaignSlice';
 
 export default function CampaignsComponent() {
   const { activeMenu, isEdit, setIsEdit } = useStateContext();
@@ -17,15 +17,13 @@ export default function CampaignsComponent() {
   const [getCampaigns, setCampaigns] = useState([...List]);
   const [editData, setEditData] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleDelete = (id) => {
-
     let newData = getCampaigns?.filter((cp) => cp.campaign_id !== id);
     setCampaigns(newData);
   };
 
- 
   const handleEdit = (id) => {
     setIsEdit(true);
     setEditData(getCampaigns?.filter((cp) => cp.id === id));
@@ -37,34 +35,34 @@ export default function CampaignsComponent() {
   if (error) return <h1>{error}</h1>;
 
   return (
-    <div className="home-container">
-      <div className="summary-blocks">
+    <div className='home-container'>
+      <div className='summary-blocks'>
         <SummaryCard
           value={getCampaigns.length > 0 ? getCampaigns.length : 0}
-          title="Campaigns"
+          title='Campaigns'
           icon={Marketing}
-          class="campaign-icon"
+          class='campaign-icon'
         />
         <SummaryCard
-          value="543678"
-          title="Referrals"
+          value='543678'
+          title='Referrals'
           icon={subscriber}
-          class="referral-icon"
+          class='referral-icon'
         />
         <SummaryCard
-          value="$253,467"
-          title="Revenue"
+          value='$253,467'
+          title='Revenue'
           icon={Sale}
-          class="revenue-icon"
+          class='revenue-icon'
         />
         <SummaryCard
-          value="4551678"
-          title="Clicks"
+          value='4551678'
+          title='Clicks'
           icon={arrow}
-          class="clicks-icon"
+          class='clicks-icon'
         />
       </div>
-      <div className="campaigns">
+      <div className='campaigns'>
         {getCampaigns?.length > 0 ? (
           <>
             {getCampaigns?.map((campaign) => (
@@ -81,7 +79,7 @@ export default function CampaignsComponent() {
             ))}
           </>
         ) : (
-          <h1 style={{ color: "#fff", fontSize: 29, margin: 20 }}>
+          <h1 style={{ color: '#fff', fontSize: 29, margin: 20 }}>
             No Campaigns Data
           </h1>
         )}

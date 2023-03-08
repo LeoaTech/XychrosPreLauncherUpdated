@@ -27,8 +27,7 @@ export default function referralsApiEndpoints(app, secret) {
       console.log(req.query);
 
       const userEmail = req.query.email;
-
-      const referrerID = 'd5ItPXbX';
+      const referrerID = req.query.refer;
       const campaignID = 1;
 
       console.log(userEmail);
