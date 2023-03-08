@@ -11,28 +11,26 @@
       do {
         var parent = el.parentNode;
 
-// Collect element children
+        // Collect element children
         for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
           node = parent.childNodes[i];
 
-// Collect only sibling nodes that are elements and not the current element
+          // Collect only sibling nodes that are elements and not the current element
           if (node.nodeType == 1 && node != el) {
             nodes.push(node);
           }
         }
 
-// Go up to parent
+        // Go up to parent
         el = parent;
 
-// Stop when processed the body's child nodes
+        // Stop when processed the body's child nodes
       } while (el.tagName.toLowerCase() != 'body');
 
-// Hide the collected nodes
+      // Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
-      });{% endif %}let image_background = 'https:' + first_page_settings.background;
-    console.log(image_background);
-    document.getElementById('background-image').style.backgroundImage = 'linear-gradient(rgba(0, 0, 0,' + first_page_settings.background_brightness + ' ), rgba(0, 0, 0,' + first_page_settings.background_brightness + ')),url(' + image_background + ')';
+      });{% endif %}let image_background = 'https:' + first_page_settings.background;{% comment %}console.log(image_background);{% endcomment %}document.getElementById('background-image').style.backgroundImage = 'linear-gradient(rgba(0, 0, 0,' + first_page_settings.background_brightness + ' ), rgba(0, 0, 0,' + first_page_settings.background_brightness + ')),url(' + image_background + ')';
 
     var form = document.getElementById('form-submission'),
       actionPath = '',
@@ -42,9 +40,12 @@
       console.log('I came here to test!');
       e.preventDefault();
 
-      formData = new URLSearchParams(new FormData(form)).toString();
+      let urlParams = new URL(window.location.href).searchParams;
+      let referrerID = urlParams.get('refer');
+      formData = new URLSearchParams(new FormData(form)).toString() + '&refer=' + referrerID;
       actionPath = form.getAttribute('action') + '?' + formData;
 
+      console.log(referrerID);
       console.log(formData);
       console.log(actionPath);
 
@@ -58,7 +59,10 @@
 
       console.log(fetchOptions.data);
       const response = fetch(actionPath, fetchOptions);
-      console.log(response);
+      response.then(function(r) {
+        console.log(r);
+      });
+
       return;
     });
   }
@@ -137,7 +141,6 @@
       align-items: center;
     {% endif %}
   }
-
 
   @media screen and (max-width: 600px) {
     .header_text {

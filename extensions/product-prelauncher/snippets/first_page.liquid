@@ -18,10 +18,19 @@
       {% endif %}
       <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
 
-      <form action='/apps/xychros-product-prelauncher/api/getuser' id="form-submission">
-        <input type="email" required id="email" name="email" placeholder="Enter your email" class='email-input-product-prelaucher'/>
+      <form action='/apps/xychrosupdated/api/getuser' id="form-submission">
+        <input
+          type="email"
+          required
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          class='email-input-product-prelaucher' />
 
-        <input type="submit" value="{{ block.settings.button_text }}" class="button submit-button submit-button-product-prelaunch"/>
+        <input
+          type="submit"
+          value="{{ block.settings.button_text }}"
+          class="button submit-button submit-button-product-prelaunch" />
       </form>
       {% if block.settings.layout == 'vertical' %}
       </div>
