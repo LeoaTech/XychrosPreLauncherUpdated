@@ -1,0 +1,17 @@
+export const dummyTeplates = [
+  { id: 1, name: "Clothing" },
+  { id: 2, name: "Jewellery" },
+  { id: 3, name: "Clothing" },
+  { id: 4, name: "Pop Culture" },
+  { id: 5, name: "Audio" },
+  { id: 6, name: "Electronics" },
+  { id: 7, name: "Male" },
+  { id: 8, name: "Female" },
+  { id: 9, name: "Travelling" },
+  { id: 10, name: "Health & Fitness" },
+  { id: 11, name: "Home & Living" },
+  { id: 12, name: "Outdoor" },
+  { id: 13, name: "Mobiles" },
+  { id: 14, name: "Motor Bikes" },
+  { id: 14, name: "Fashion" },
+];

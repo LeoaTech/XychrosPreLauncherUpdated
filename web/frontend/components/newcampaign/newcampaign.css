@@ -14,6 +14,7 @@
   background-color: #1b1a21;
   padding: 15px;
   border-radius: 10px;
+  margin-bottom: 20px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
@@ -29,19 +30,19 @@
 .nav-title {
   font-weight: 700;
   font-size: 30px;
-  /* font-size: 40px; */
+  margin: 20px 0;
 }
 
 .saveFormBtn,
 .nextBtn {
   height: 60px;
-  width: 130px;
+  width: 200px;
   background-color: var(--secondary-color);
   border: none;
   color: white;
   float: right;
   cursor: pointer;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 500;
   margin-top: 20px;
   border-radius: 10px;
@@ -83,10 +84,10 @@
 /* Labels */
 
 label {
-  font-size: 23px;
+  font-size: 21px;
   font-weight: 500;
   margin: 10px 0;
-  color: rgb(200, 199, 199);
+  color: rgb(245, 239, 239);
 }
 
 /* Input Fields inside the form */
@@ -95,6 +96,22 @@ label {
   border: none;
   padding: 25px 10px;
   border-radius: 12px;
+  height: 50px;
+  color: white;
+  width: 450px;
+  font-size: 23px;
+  font-weight: 500;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.select-products select {
+  background-color: #25242d;
+  border: none;
+  border-radius: 12px;
+  padding: 0 12px;
   height: 50px;
   color: white;
   width: 450px;
@@ -185,22 +202,22 @@ label {
   border: none;
   color: #fff;
   padding: 10px;
+  line-height: 1.4;
 }
 
 .sub-heading {
-  font-size: 24px;
+  font-size: 20px;
   margin-top: 30px;
+  font-weight: 500;
   margin-bottom: 10px;
 }
 
 /* Collect Emails */
 
 .collect-setup {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
   margin-bottom: 20px;
 }
+
 .collect-settings {
   padding-left: 40px;
   margin-left: 40px;
@@ -210,7 +227,10 @@ label {
   align-items: center;
   gap: 10px;
 }
-
+.basic-settings-section {
+  display: flex;
+  justify-content: flex-end;
+}
 .collect-settings label {
   font-size: 17px;
 }
@@ -262,7 +282,9 @@ input[type="checkbox"]:checked {
 
 .basic-form-settings h2,
 .referrals-settings h2,
-.rewards-settings h2 {
+.rewards-settings h2,
+.integration-settings h2,
+.template-settings h2 {
   margin-top: 6px;
 }
 
@@ -283,43 +305,26 @@ input[type="checkbox"]:checked {
 }
 
 .referral-settings-form {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 20px;
+  padding: 20px 40px;
+  margin: 20px 40px;
 }
 
 .referral-container p {
-  padding: 0 40px;
-  margin: 0 40px;
   font-size: 18px;
   margin-bottom: 20px;
   line-height: 1.6;
 }
 /* Social Media Integration Sections */
 
-.social-media-section {
-  padding: 0 40px;
-  margin: 0 40px;
-}
-
-.social-media-section h1 {
-  font-size: 34px;
-  line-height: 1.6;
-  color: white;
-  margin-bottom: 20px;
-}
-
 .social-links-container {
+  margin: 20px 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  /* justify-self: center; */
   column-gap: 25px;
   row-gap: 25px;
-  width: 100%;
 }
 
-.referral-nextbtn{
+.referral-nextbtn {
   display: flex;
   justify-content: flex-end;
 }
@@ -389,15 +394,19 @@ input[type="checkbox"]:checked {
 }
 
 .email-optCheck {
-  /* margin: 20px 0; */
+  margin: 20px 0;
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
+.email-optCheck label {
+  font-size: 20px;
+}
+
 .email-optCheck .checkbox-input {
-  height: 30px;
-  width: 30px;
+  height: 20px;
+  width: 20px;
 }
 
 .email-container section {
@@ -417,7 +426,9 @@ input[type="checkbox"]:checked {
 }
 .email-section h2 {
   padding-left: 20px;
-  font-size: 29px;
+  font-size: 24px;
+  line-height: 1.4;
+
   margin-bottom: 20px;
   padding-bottom: 20px;
   font-weight: 700;
@@ -439,7 +450,7 @@ input[type="checkbox"]:checked {
 .email-textinput {
   width: 100%;
   border: none;
-  font-size: 25px;
+  font-size: 20px;
   color: #1a1919;
   padding: 35px;
   margin-bottom: 20px;
@@ -451,193 +462,556 @@ input[type="checkbox"]:checked {
   justify-content: space-between;
 }
 
+/* -----------------Integration Settings-------------------- */
+.integration-container {
+  padding: 0 40px;
+  margin: 0 40px;
+}
 
-.integrate-setting-btn{
+.integration-settings-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+.check-input {
+  display: flex;
+  align-items: center;
+}
+.integration-container .check-input {
+  display: flex;
+  align-items: center;
+}
+
+.check-input input {
+  height: 28px;
+  margin: 10px;
+  width: 25px;
+  border-radius: 10px;
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  padding-left: 15px;
+  text-indent: -15px;
+}
+.integration-settings-container input {
+  background-color: #25242d;
+  border: none;
+  padding: 25px 15px;
+  border-radius: 12px;
+  height: 50px;
+  color: white;
+  width: 500px;
+  font-size: 23px;
+  font-weight: 500;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.select-user-input select {
+  background-color: #25242d;
+  border-radius: 12px;
+  height: 50px;
+  color: white;
+  width: 500px;
+  font-size: 23px;
+  font-weight: 500;
+  padding: 2px 10px;
+  border: none;
+}
+
+.integrate-setting-btn {
   display: flex;
   justify-content: flex-end;
 }
 
+/*------------- Template Settings -------------------- */
+
+.template-container {
+  padding: 0 40px;
+  margin: 0 40px;
+}
+
+.template-content p,
+.laststep p {
+  font-size: 20.5px;
+  color: #d9d9d9;
+}
+
+.template-end {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 30px;
+}
+
+.templates-block-container {
+  margin: 25px 3px;
+  background-color: #d9d9d9;
+  padding: 20px;
+}
+
+.template-cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 25px 0;
+}
+.template-card-block {
+  height: 220px;
+  width: 350px;
+  background-color: #fff;
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+.template-card-block h3 {
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0 25px;
+  text-decoration: underline;
+  cursor:pointer;
+}
+
+.template-card-block img {
+  height: 100%;
+  width: 100%;
+  border-radius: 12px;
+  cursor:pointer;
+
+}
+.template-card-block:last-child {
+  background-color: #5447df;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CSS for loading overlay */
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.836);
+  z-index: 9999;
+  display: none;
+}
+
+#loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #050505;
+}
+
+#loading-spinner h2 {
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
 /*--------------- Media Queries----------------------- */
 
-@media only screen and (max-width: 1480px) {
+@media screen and (max-width: 1480px) {
   .new-campaign-container {
-    padding: 5px;
-    margin: 10px;
+    padding: 9px;
+    margin: 20px;
+  }
+  .store-links {
+    padding: 0 23px;
+  }
+  .store-links .sub-heading {
+    padding: 0 10px;
+    margin: 0 11px;
+    margin-bottom: 30px;
+  }
+  .campaign-form .store-links .store-social-links {
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 20px;
   }
 
-  .campaign-form {
-    flex-direction: column;
-    gap: 30px;
+  .campaign-form .store-links .social-inputfield {
+    height: 40px;
+    width: 100%;
   }
 
-  .campaign-form .form-group {
-    display: flex;
-    gap: 30px;
+  .collect-settings {
+    padding-left: 10px;
+    margin-left: 40px;
   }
+  /* Referral Settings */
 
-  .form-group {
-    display: flex;
-    justify-content: space-around;
-  }
+  /* Social Media Integration Sections */
 
-  label {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 20px;
-    margin: 20px 0;
-    color: rgb(200, 199, 199);
-  }
-
-  /* Input Fields inside the form */
-  .campaign-form .store-links input {
-    width: 440px;
-    font-size: 20px;
-  }
-
-  .icon {
-    right: 50px;
-  }
-}
-
-@media only screen and (max-width: 1287px) {
-  .nav-title {
-    font-weight: 700;
-    font-size: 20px;
-  }
-
-  .campaign-form {
-    flex-direction: column;
-  }
-
-  .campaign-form .form-group {
-    display: flex;
-    gap: 30px;
-  }
-
-  .form-group {
-    flex-direction: column;
-  }
-
-  label {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 20px;
-    margin: 20px 0;
-    color: rgb(200, 199, 199);
-  }
-
-  /* Input Fields inside the form */
-  .campaign-form .store-links input {
-    width: 450px;
-    font-size: 20px;
-  }
-
-  .campaign-form button a:hover {
-    text-decoration: underline;
-  }
-
-  /* Checkboxes Section */
-
-  .check-input {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .check-group input {
-    height: 25px;
-    width: 25px;
-  }
-  /* Settings Form */
-  .settings-form {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
-@media only screen and (max-width: 900px) {
-  .new-campaign-container {
-    padding: 15px 10px;
-    margin: 15px 10px;
-  }
-
-  section {
-    padding: 15px 13px;
-    margin-bottom: 20px;
-  }
-
-  .nav-title {
-    font-weight: 500;
-    font-size: 30px;
-  }
-
-  .campaign-form .store-links input {
-    width: 400px;
-    font-size: 20px;
-  }
-
-  .save-btn {
-    height: 50px;
-    width: 100px;
-  }
-  .icon {
-    right: 10px;
-  }
-
-  .check-group input {
-    height: 25px;
-    margin: 10px;
-    width: 25px;
-    border-radius: 10px;
-    background-color: var(--secondary-text-color);
-    border: 1px solid var(--primary-color);
-  }
-  .check-group label {
-    word-break: keep-all;
-    line-height: 1.18;
+  .social-media-section {
+    padding: 0 30px;
+    margin: 0 30px;
   }
 
   .social-links-container {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    justify-self: center;
-    column-gap: 25px;
-    row-gap: 25px;
-    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Reward settings */
+
+  .rewards-settings-form p {
+    font-size: 18px;
+  }
+
+  .reward-container {
+    padding: 0 42px;
+    margin: 0 40px;
+  }
+
+  .rewards-container {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 10px;
+  }
+
+  /* Integrations Settings */
+  .integration-container {
+    margin: 0 25px;
+    padding: 0 25px;
+  }
+
+  .integration-settings-container {
+    margin: 0 20px;
+  }
+  .integration-settings-container input,
+  .select-user-input select {
+    width: 350px;
+    font-size: 19px;
+  }
+
+  .templates-block-container {
+    overflow: auto;
+    overflow-y: hidden;
+  }
+  .template-card-block h3 {
+    font-size: 20px;
+    margin: 0 15px;
   }
 }
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1050px) {
   .new-campaign-container {
-    padding: 15px 10px;
-    margin: 15px 10px;
+    padding: 9px;
+    margin: 20px;
   }
 
-  section {
-    padding: 15px 10px;
+  .basic-form-settings,
+  .referrals-settings,
+  .rewards-settings,
+  .integration-settings,
+  .template-settings {
+    margin: 0 13px;
+    padding: 0 15px;
+  }
+
+  .nextBtn {
+    height: 30px;
+    width: 90px;
+    font-size: 20px;
+  }
+
+  /* Basic Form Settings */
+
+  .input-form-groups {
+    margin: 0 15px;
+  }
+
+  .form-group {
+    flex-direction: column;
+  }
+  .campaign-form .input-form-groups input {
+    width: 100%;
+  }
+  .store-links {
+    padding: 0 23px;
+  }
+  .store-links .sub-heading {
+    padding: 0 10px;
+    margin: 0 11px;
+    margin-bottom: 30px;
+  }
+  .campaign-form .store-links .store-social-links {
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 20px;
+  }
+
+  .campaign-form .store-links .social-inputfield {
+    height: 40px;
+    width: 100%;
+  }
+
+  .collect-settings {
+    padding-left: 10px;
+    margin-left: 40px;
+  }
+
+  /* Reward Tier Settings */
+  .referral-container p {
+    padding: 0 18px;
+    margin: 0 20px;
+    word-wrap: break-word;
     margin-bottom: 20px;
   }
+  /* Social Media Integration Sections */
 
-  .campaign-form .store-links input {
-    width: 400px;
+  .social-media-section {
+    padding: 0 8px;
+    margin: 0 5px;
   }
 
-  .nav-title {
+  .social-links-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Reward settings */
+
+  .rewards-settings-form p {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+
+  .reward-container {
+    padding: 0 16px;
+    margin: 0 23px;
+  }
+
+  .rewards-container {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 10px;
+    column-gap: 20px;
+  }
+
+  /* Email Settings */
+  .email-container {
+    padding: 0 17px;
+    margin: 0 24px;
+  }
+
+  .email-optCheck label {
+    line-height: 1.3;
+  }
+
+  .email-optCheck .checkbox-input {
+    width: 70px;
+  }
+
+  .email-container section {
+    padding: 19px 8px;
+  }
+  .email-section h2 {
+    padding-left: 12px;
+    line-height: 1.4;
+    font-size: 23px;
+  }
+  .email-textinput {
+    width: 100%;
+    border: none;
+    font-size: 21px;
+    color: #1a1919;
+    padding: 16px;
+    margin-bottom: 20px;
+    background-color: #ebf0f2;
+  }
+
+  /* Integrations Settings */
+  .integration-container {
+    margin: 0 20px;
+    padding: 0 20px;
+  }
+
+  .integration-settings-container {
+    flex-direction: column;
+    margin-bottom: 30px;
+  }
+  .integration-settings-container input,
+  .select-user-input select {
+    width: 100%;
+  }
+
+  .template-container {
+    margin: 0 15px;
+    padding: 0 20px;
+  }
+
+  .template-card-block h3 {
+    font-size: 18px;
+  }
+}
+@media only screen and (max-width: 786px) {
+  .new-campaign-container {
+    padding: 5px;
+    margin: 15px;
+  }
+
+  .basic-form-settings,
+  .referrals-settings,
+  .rewards-settings,
+  .integration-settings,
+  .template-settings {
+    margin: 0 7px;
+    padding: 0 5px;
+  }
+
+  /* Basic Form Settings */
+
+  .input-form-groups {
+    margin: 0 25px;
+  }
+
+  .form-group {
+    flex-direction: column;
+  }
+  .campaign-form .input-form-groups input,
+  .campaign-form .input-form-groups select {
+    width: 100%;
+  }
+
+  .store-links {
+    padding: 0 23px;
+  }
+  .store-links .sub-heading {
+    padding: 0 10px;
+    margin: 0 11px;
+    margin-bottom: 30px;
+  }
+  .campaign-form .store-links .store-social-links {
+    grid-template-columns: repeat(1, 1fr);
+    margin-left: 20px;
+  }
+
+  .campaign-form .store-links .social-inputfield {
+    height: 40px;
+    width: 100%;
+  }
+
+  .collect-settings {
+    padding-left: 10px;
+    margin-left: 40px;
+  }
+
+  /* Referral Settings */
+
+  .referral-settings-form {
+    padding: 20px 7px;
+    margin: 20px 4px;
+  }
+
+  /* Reward Tier Settings */
+  .referral-container p {
+    padding: 0 10px;
+    margin: 0 10px;
+    word-wrap: break-word;
+  }
+
+  .social-media-section {
+    padding: 0 5px;
+    margin: 0 4px;
+  }
+
+  .social-links-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  /* Reward settings */
+
+  .rewards-settings-form p {
+    font-size: 18px;
+  }
+
+  .reward-container {
+    padding: 0 10px;
+    margin: 0 15px;
+  }
+
+  .rewards-container {
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 10px;
+    column-gap: 20px;
+    margin-bottom: 30px;
+    background-color: transparent;
+  }
+
+  /* Email Settings */
+  .email-container {
+    padding: 0 10px;
+    margin: 0 10px;
+  }
+
+  .email-optCheck .checkbox-input {
+    width: 70px;
+  }
+
+  .email-container section {
+    padding: 19px 8px;
+  }
+  .email-section h2 {
+    padding-left: 12px;
+    line-height: 1.4;
+    font-size: 18px;
+  }
+  .email-textinput {
+    width: 100%;
+    border: none;
+    font-size: 21px;
+    color: #1a1919;
+    padding: 16px;
+    margin-bottom: 20px;
+    background-color: #ebf0f2;
+  }
+  /* Integrations Settings */
+  .integration-container {
+    margin: 0 10px;
+    padding: 0 10px;
+  }
+
+  .integration-settings-container {
+    flex-direction: column;
+    margin: 0 10px;
+  }
+  .integration-settings-container input,
+  .select-user-input select {
+    width: 100%;
+  }
+
+  /* Animation for Loading screens */
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 20px;
+    transform: translate(-50%, -50%);
+    color: #050505;
+  }
+  #loading-spinner h2 {
+    margin: 20px;
+    font-size: 20px;
+    word-break: keep-all;
     font-weight: 500;
-    font-size: 30px;
   }
 
-  .save-btn {
-    height: 50px;
-    width: 80px;
+  /* Template settings */
+
+  .template-container {
+    padding: 0 15px;
+    margin: 0 15px;
   }
 
-  .campaign-form .store-links input {
-    width: 380px;
+  .templates-block-container {
+    margin: 18px 5px;
   }
 
-  .check-fields {
-    margin-left: 10px;
+  .template-cards {
+    overflow: auto;
+    overflow-x: scroll;
   }
 }
 
@@ -647,37 +1021,124 @@ input[type="checkbox"]:checked {
     margin: 10px 0px;
   }
 
-  .new-campaign-container nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    margin-bottom: 20px;
-  }
-  section {
-    margin-bottom: 20px;
+  /* Basic Form Settings */
+  .input-form-groups {
+    margin: 0 25px;
   }
 
-  .campaign-form .store-links input {
-    width: 320px;
+  .form-group {
+    flex-direction: column;
+  }
+  .campaign-form .input-form-groups input {
+    width: 100%;
   }
 
-  .nav-title {
-    font-weight: 500;
-    font-size: 30px;
+  .store-links {
+    padding: 0 10px;
   }
 
-  .save-btn {
-    height: 50px;
-    width: 100px;
+  .store-links .sub-heading {
+    padding: 0 11px;
+    margin: 30px 9px;
+    color: #e6dfdf;
+  }
+  .campaign-form .store-links .store-social-links {
+    grid-template-columns: repeat(1, 1fr);
+    margin-left: 20px;
   }
 
-  .check-fields {
+  .collect-settings {
+    padding-left: 20px;
     margin-left: 10px;
   }
+  .collect-settings div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
+  /* Referral Settings */
+  .referral-container p {
+    padding: 0 6px;
+    margin: 0 11px;
+    word-break: keep-all;
+  }
+
+  .social-media-section {
+    padding: 0 20px;
+    margin: 0 20px;
+  }
+  .social-media-section {
+    padding: 0 6px;
+    margin: 0 4px;
+  }
+
+  /* Reward settings */
+
+  .rewards-settings-form p {
+    font-size: 18px;
+  }
+
+  .reward-container {
+    padding: 0 10px;
+    margin: 0 15px;
+  }
+
+  .rewards-container {
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 10px;
+    column-gap: 20px;
+    margin-bottom: 30px;
+    background-color: transparent;
+  }
+
+  /* Email Settings */
+  .email-container {
+    padding: 0 10px;
+    margin: 0 10px;
+  }
+
+  /* Integrations Settings */
   .integration-container {
-    padding: 5px;
-    margin: 5px;
+    margin: 0 10px;
+    padding: 0 10px;
+  }
+
+  .integration-settings-container {
+    flex-direction: column;
+    margin: 0 10px;
+  }
+  .integration-settings-container input,
+  .select-user-input select {
+    width: 100%;
+  }
+
+  /* Template Settings */
+  .template-container {
+    padding: 0 7px;
+    margin: 0 4px;
+  }
+
+  .template-content p,
+  .laststep p {
+    margin: 0 10px;
+  }
+
+  .laststep p {
+    margin-bottom: 30px;
+  }
+
+  .templates-block-container {
+    margin: 20px 6px;
+    padding: 5px 10px;
+  }
+
+  .template-cards {
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .template-card-block {
+    height: 200px;
+    width: 100%;
   }
 }

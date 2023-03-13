@@ -40,10 +40,7 @@ export default function App() {
                   label: "Settings",
                   destination: "/settings",
                 },
-                {
-                  label: "Integrations",
-                  destination: "/integrations",
-                },
+
                 {
                   label: "Support",
                   destination: "/support",
