@@ -18,7 +18,7 @@ const HomeComponent = () => {
       setCampaigns(List);
     }
   }, [List]);
- 
+
   const LineChartOptions = {
     responsive: true,
     animation: {
@@ -101,29 +101,30 @@ const HomeComponent = () => {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
       {
-        label: "Referrals",
-        data: [11, 73, 56, 32, 45, 9, 112],
-        borderColor: "#A1F6F5",
-        backgroundColor: "#A1F6F5",
-        fill: "origin",
-      },
-      {
-        label: "Campaigns",
-        data: [-21, 34, 61, -38, 45, 87, 12],
-        borderColor: "#F56680",
-        backgroundColor: "#F56680",
-        fill: "",
-      },
-      {
         label: "Clicks",
-        data: [45, -23, 89, 23, 110, 34, 65],
+        data: [11, 73, 56, 32, 45, 9, 112],
         borderColor: "#5447df",
         backgroundColor: "#5447df",
         borderDash: [10, 5],
-        fill: "+2",
+        fill:""
+      },
+
+      {
+        label: "Campaigns",
+        data: [45, -23, 89, 23, 110, 34, 65],
+        borderColor: "#E0777D",
+        backgroundColor: "#E0777D",
+        fill:"+2"
+      },
+      {
+        label: "Referrals",
+        data: [21, 34, 61, 38, 45, 87, 12],
+        borderColor: "#A1F6F5",
+        backgroundColor: "#A1F6F5",
+        fill:"origin"
       },
     ],
-  }; 
+  };
 
   const DonutChartOptions = {
     responsive: true,
@@ -208,20 +209,20 @@ const HomeComponent = () => {
       {
         label: "Referrals",
         data: [1, 3, 56, 78, 55, 23, 98],
-        borderColor: "#A1F6F5",
-        backgroundColor: "#A1F6F5",
+        borderColor: "rgba(161, 246, 245, 0.7)",
+        backgroundColor: "rgba(161, 246, 245, 0.6)",
       },
       {
         label: "Revenue",
         data: [11, 53, 26, 38, 43, 67, 23],
-        borderColor: "#F56680",
-        backgroundColor: "#F56680",
+        borderColor: "rgba(245, 102, 128, 0.8)",
+        backgroundColor: "rgba(245, 102, 128, 0.5)",
       },
       {
         label: "Clicks",
         data: [86, 78, 65, 59, 65, 99],
-        borderColor: "#5447df",
-        backgroundColor: "#5447df",
+        borderColor: "rgba(84, 71, 223, 0.7)",
+        backgroundColor: "rgba(84, 71, 223, 0.4)",
       },
     ],
   };
@@ -261,7 +262,7 @@ const HomeComponent = () => {
           type="line"
           header="Total Revenue"
           value="$253467"
-          subheader="Last 30 days Data"
+          subheader="Last 7 months Data"
           LineChartOptions={LineChartOptions}
           LineChartData={LineChartData}
         />
