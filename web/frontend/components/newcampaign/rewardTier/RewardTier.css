@@ -15,6 +15,12 @@
   margin-bottom: 20px;
 }
 
+
+.reward-form .inputfield{
+  display: flex;
+  flex-direction: column;
+}
+
 .reward-content .inputfield label {
   font-size: 18px;
 }
@@ -35,4 +41,79 @@
   font-weight: 700;
   width: 150px !important;
   background-color: #ebf0f2;
+}
+
+@media screen and (max-width: 1480px) {
+  
+  .small-inputfield {
+    height: 55px;
+    width: 140px;
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .large-field {
+   
+    font-size: 23px;
+    width: 140px !important;
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .reward-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .reward-form .inputfield {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .small-inputfield {
+    height: 55px;
+    width: 130px;
+    font-size: 23px;
+    font-weight: 700;
+  }
+  .large-field {
+   
+    font-size: 23px;
+    width: 130px !important;
+  }
+}
+
+@media screen and (max-width: 786px) {
+  .reward-form {
+    display: flex;
+  }
+
+  .reward-form .inputfield {
+    display: flex;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .reward-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .reward-form .inputfield {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .small-inputfield {
+    height: 55px;
+    padding: 13px;
+    background-color: #e4e4e4;
+  }
 }

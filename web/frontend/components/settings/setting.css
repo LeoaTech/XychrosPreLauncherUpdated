@@ -1,49 +1,48 @@
+/* Settings Page  */
+
 .settings-container {
   color: var(--primary-color);
-  margin-top: 15px;
-  width: 100%;
-  /* min-width: calc(100vw - 250px); */
-  padding: 15px 20px;
-  /* overflow: auto; */
+  padding: 25px;
+  margin: 25px;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* Navbar */
+/* Header Title */
 
-section {
-  background-color: var(--secondary-text-color);
-  padding: 35px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
-}
-.settings-container nav {
+.settings-heading {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.nav-title {
-  font-weight: 700;
+.settings-heading h1 {
   font-size: 30px;
+  font-weight: 700;
 }
 
-.save-btn {
-  height: 60px;
-  width: 130px;
+/* Settings Save button */
+
+.settings-savebtn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.saveSettingsbtn,
+.next-button {
+  height: 50px;
+  width: 100px;
   background-color: var(--secondary-color);
   border: none;
   color: white;
+  float: right;
   cursor: pointer;
-  font-size: 26px;
+  font-size: 25px;
   font-weight: 500;
+  margin-top: 20px;
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -51,228 +50,316 @@ section {
   -o-border-radius: 10px;
 }
 
-.settings-container p {
-  font-size: 17px;
+.next-button {
+  height: 40px;
+  font-size: 19px;
 }
 
-/* Labels */
-
-label {
-  font-size: 23px;
-  font-weight: 500;
-  margin: 20px 0;
-  color: rgb(200, 199, 199);
-}
-
-/* Checkboxes Section */
-
-.check-fields {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-bottom: 20px;
-  margin-left: 20px;
-}
-
-.check-group {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.check-group input {
-  height: 28px;
-  margin: 10px;
-  width: 25px;
+.global-settings {
+  background-color: #1b1a21;
+  padding: 18px;
   border-radius: 10px;
-  background-color: var(--secondary-text-color);
-  border: 1px solid var(--primary-color);
-  padding-left: 15px;
-  text-indent: -15px;
-}
-
-input[type="checkbox"]:checked {
-  accent-color: var(--secondary-text-color);
-  border: 1px solid var(--primary-color);
-}
-
-/* Settings Preference */
-.settings-form {
-  display: flex;
-  gap: 3px;
-}
-
-section .section1,
-section .section2 {
-  padding: 30px;
-  margin: 20px 5px;
-  width: 100%;
-  margin-bottom: 35px;
-}
-
-.section1 h2,
-.section2 h2 {
   margin-bottom: 20px;
-  font-size: 29px;
-  font-weight: 700;
-  margin-left: 15px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }
-.email-settings {
-  height: 100%;
-  /* background-color: #ebf0f2; */
 
+.basic-settings,
+.referral-settings,
+.reward-settings,
+.email-drafts-settings,
+.integration--settings,
+.templates-settings {
+  margin: 0 40px;
+  padding: 0 40px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
 }
-.email-settings h2 {
-  padding-left: 20px;
-  font-size: 29px;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  font-weight: 700;
-}
-.email-settings div {
+
+/* Card Heading */
+.main-heading {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  background-color: rgb(38, 38, 38);
 }
 
-.email-settings div img {
-  height: 60px;
-  width: 200px;
-  margin: 30px 0;
+.main-title {
+  font-size: 22px;
+  font-weight: 700;
 }
 
-.email-textarea {
+.toggle-card-btn {
+  font-weight: 700;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.toggle-next-btn {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Basic Settings Card Block */
+
+.store__links,
+.collect__container {
+  margin: 20px 40px;
+  padding: 10px 40px;
+}
+
+.sub-title {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.stores__social_links {
+  margin: 10px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 20px;
+  column-gap: 20px;
+}
+
+.social_card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.check_input {
+  height: 25px;
+  width: 25px;
+  background-color: #333232 !important;
+  cursor: pointer;
+}
+.social-text-field {
+  height: 35px;
   width: 100%;
-  overflow-y: hidden;
   border: none;
-  font-size: 25px;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 19px;
+  background-color: #25242d;
   color: #fff;
-  padding: 35px;
-  margin-bottom: 20px;
-  background-color: rgb(38, 38, 38);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
 }
 
-/* Media Queries */
+.collect__inputs {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-@media only screen and (max-width: 1490px) {
-  .settings-container {
-    padding: 5px;
-    margin: 10px;
+.checkbox-input {
+  height: 20px;
+  width: 25px;
+}
+
+.collect__inputs label {
+  font-size: 19px;
+}
+
+/* Global Referral Settings */
+
+.referral-settings-container {
+  margin: 20px 40px;
+  padding: 20px 40px;
+}
+
+.subheading p {
+  font-size: 18px;
+  color: #dfd5d5;
+}
+
+.referrals-cards-block {
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 25px;
+  row-gap: 20px;
+}
+
+/* Global settings for Rewards Tiers */
+
+.reward-setting-container {
+  margin: 20px 40px;
+  padding: 20px 40px;
+}
+
+.discount-card-block {
+  margin: 20px 0;
+  margin-bottom: 30px;
+}
+
+.discounts_input {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.social-radioInput {
+  height: 20px;
+  width: 18px;
+}
+
+.rewards-tiers-cardblocks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 20px;
+  column-gap: 30px;
+}
+
+/* Global Integration Settings */
+
+.integrations-container {
+  margin: 20px 40px;
+  padding: 20px 40px;
+}
+
+.integrate-api-input {
+  margin: 20px 0;
+}
+.inputfield label {
+  font-size: 18px;
+}
+
+.inputfield label a {
+  color: var(--secondary-color);
+}
+
+.integrate-api-input .inputfield input {
+  width: 400px;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 19px;
+  background-color: #25242d;
+  color: #fff;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+/* Templates Global Settings */
+
+.templates-container {
+  margin: 20px 40px;
+  padding: 20px 40px;
+}
+
+.templates-blocks-container {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ---------------------- Media  Queries  ---------------------------- */
+
+@media screen and (max-width: 1280px) {
+  .stores__social_links {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
-@media only screen and (max-width: 900px) {
+
+@media screen and (max-width: 1050px) {
+  .basic-settings,
+  .referral-settings,
+  .reward-settings,
+  .email-drafts-settings,
+  .integration--settings,
+  .templates-settings {
+    margin: 0 15px;
+    padding: 0 13px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .store__links,
+  .collect__container {
+    margin: 20px 15px;
+    padding: 10px 13px;
+  }
+
+  .stores__social_links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (max-width: 768px) {
+  .basic-settings,
+  .referral-settings,
+  .reward-settings,
+  .email-drafts-settings,
+  .integration--settings,
+  .templates-settings {
+    margin: 0 10px;
+    padding: 0 9px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .store__links,
+  .collect__container,
+  .reward-setting-container,
+  .integrations-container {
+    margin: 20px 15px;
+    padding: 10px 13px;
+  }
+
+  .stores__social_links,
+  .referrals-cards-block,
+  .rewards-tiers-cardblocks {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media screen and (max-width: 500px) {
   .settings-container {
-    padding: 15px 10px;
-    margin: 15px 10px;
+    padding: 10px;
+    margin: 11px;
   }
 
-  section {
-    padding: 15px 13px;
-    margin-bottom: 20px;
+  .global-settings {
+    padding: 10px;
   }
 
-  .nav-title {
+  .sub-title{
     font-weight: 700;
-    font-size: 30px;
   }
 
-  .save-btn {
-    height: 50px;
-    width: 100px;
+  .store__links,
+  .collect__container,
+  .referral-settings-container,
+  .templates-container {
+    margin: 20px 10px;
+    padding: 10px 11px;
   }
 
-  .check-fields .check-group {
-    margin-left: 20px;
+  .stores__social_links {
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 26px;
   }
 
-  .check-group input {
-    height: 25px;
-    margin: 10px;
-    width: 25px;
-    border-radius: 10px;
-    background-color: var(--secondary-text-color);
-    border: 1px solid var(--primary-color);
-  }
-}
-@media only screen and (max-width: 768px) {
-  .settings-container {
-    padding: 15px 27px;
-    margin: 15px 5px;
+  .referrals-cards-block {
+    margin: 5px 0;
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 20px;
   }
 
-  section {
-    padding: 15px 10px;
-    margin-bottom: 20px;
+  .integrate-api-input .inputfield input {
+    width: 100%;
   }
 
-  .nav-title {
-    font-weight: 500;
-    font-size: 30px;
-  }
+  .templates-blocks-container {
+    grid-template-columns: repeat(2 1fr);
 
-  .save-btn {
-    height: 50px;
-    width: 100px;
-  }
-
-  .check-fields {
-    margin-left: 10px;
-  }
-}
-
-@media only screen and (max-width: 500px) {
-  .settings-container {
-    padding: 10px 5px;
-    margin: 10px 0px;
-  }
-
-  .settings-container nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    margin-bottom: 20px;
-  }
-  section {
-    /* padding: 5px 4px; */
-    margin-bottom: 20px;
-  }
-
-  .campaign-form form input {
-    width: 300px;
-  }
-
-  .nav-title {
-    font-weight: 500;
-    font-size: 30px;
-  }
-
-  .save-btn {
-    height: 50px;
-    width: 100px;
-  }
-
-  .check-fields {
-    margin-left: 10px;
-  }
-
-  .check-group label {
-    font-size: 23px;
-    font-weight: 300;
-    margin: 20px 0;
-    line-break: loose;
-    color: rgb(200, 199, 199);
-    line-height: 30px;
-  }
-
-  .check-group {
-    display: block;
-  }
-
-  .check-group input {
-    height: 25px;
-    width: 25px;
   }
 }

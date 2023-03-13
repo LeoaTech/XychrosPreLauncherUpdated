@@ -119,6 +119,23 @@ export async function createServer(
   //   res.status(200).send(countData);
   // });
 
+  app.get('/api/2022-10/products.json', async (req, res) => {
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get('use-online-tokens')
+    );
+    const { Product } = await import(
+      `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
+    );
+
+    const countData = await Product.all({ session });
+    console.log(countData);
+
+    res.status(200).send(countData);
+  });
+
+
   // app.get('/api/products/create', async (req, res) => {
   //   const session = await Shopify.Utils.loadCurrentSession(
   //     req,

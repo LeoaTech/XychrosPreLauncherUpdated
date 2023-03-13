@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { SideLogo } from "../../assets/index";
+import { anime, SideLogo } from "../../assets/index";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { integratelinks } from "./socialLinks";
@@ -15,6 +15,7 @@ import { fetchCampaignById } from "../../app/features/campaigns/campaignSlice";
 import { storeLinks } from "./dummySocial";
 import { RewardData } from "./rewardTier/RewardData";
 import RewardTier from "./rewardTier/RewardTier";
+import { useAppQuery, useAuthenticatedFetch } from "../../hooks";
 
 // Default Email Settings
 const InitialDefaultEmail = `
@@ -58,6 +59,27 @@ function NewCampaignForm() {
   let dateStart = new Date(campaignById?.start_date).toLocaleDateString();
   let dateEnd = new Date(campaignById?.end_date).toLocaleDateString();
   const { isEdit, setIsEdit } = useStateContext();
+  const fetch = useAuthenticatedFetch();
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await fetch("/api/2022-10/products.json", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        return response.json();
+      } else {
+        console.log("Failed to get product");
+      }
+    };
+    fetchProducts();
+  }, []);
+  const { data, refetch: refetchProductCount } = useAppQuery({
+    url: "/api/2022-10/products.json",
+  });
+
+  console.log(data, "products list");
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -69,7 +91,7 @@ function NewCampaignForm() {
   const [expanded, setExpanded] = useState(Array(6).fill(false));
   const [newCampaignData, setNewCampaignData] = useState({
     campaign_name: "",
-    product_link: "",
+    product_name: "",
     start_date: startDate,
     end_date: endDate,
     store_link: [],
@@ -119,6 +141,8 @@ function NewCampaignForm() {
       setNewCampaignData((prevState) => ({
         ...prevState,
         [name]: value,
+        start_date: startDate,
+        end_date: endDate,
       }));
     }
   };
@@ -131,9 +155,25 @@ function NewCampaignForm() {
 
   // Handle Next Button event for each
   const handleNext = (index) => {
-    setExpanded((prevExpand) =>
-      prevExpand.map((state, i) => (i === index ? !state : false))
-    );
+    const loadingOverlay = document.getElementById("loading-overlay");
+
+    if (index === 5) {
+      loadingOverlay.style.display = "block";
+
+      setTimeout(function () {
+        // Hide loading overlay and proceed to next step
+        loadingOverlay.style.display = "none";
+        // Add code here to proceed to next step
+
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => (i === index ? !state : false))
+        );
+      }, 4000);
+    } else {
+      setExpanded((prevExpand) =>
+        prevExpand.map((state, i) => (i === index ? !state : false))
+      );
+    }
   };
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = (e) => {
@@ -179,184 +219,207 @@ function NewCampaignForm() {
               <h2 className="title">Basic Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(0)}>
                 {expanded[0] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(0)} />
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(0)}
+                  />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(0)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(0)} />
                 )}
               </span>
             </div>
           </div>
           {expanded[0] && (
-            <div className="campaign-form">
-              <div className="input-form-groups">
-                <div className="form-group">
-                  <div className="inputfield">
-                    <label htmlFor="campaign_name">Campaign Name</label>
-                    {isEdit ? (
-                      <input
-                        type="text"
-                        name="campaign_name"
-                        id="campaign_name"
-                        value={campaignById?.campaign_name}
-                        onChange={() => {}}
-                      />
-                    ) : (
-                      <input
-                        type="text"
-                        name="campaign_name"
-                        id="campaign_name"
-                        value={newCampaignData.campaign_name}
-                        onChange={handleChange}
-                      />
-                    )}
-                  </div>
+            <>
+              <div className="campaign-form">
+                <div className="input-form-groups">
+                  <div className="form-group">
+                    <div className="inputfield">
+                      <label htmlFor="campaign_name">Campaign Name</label>
+                      {isEdit ? (
+                        <input
+                          type="text"
+                          name="campaign_name"
+                          id="campaign_name"
+                          value={campaignById?.campaign_name}
+                          onChange={() => {}}
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          name="campaign_name"
+                          id="campaign_name"
+                          value={newCampaignData.campaign_name}
+                          onChange={handleChange}
+                        />
+                      )}
+                    </div>
 
-                  <div className="inputfield">
-                    <label htmlFor="product_link">Product Link</label>
-                    {isEdit ? (
-                      <input
-                        type="text"
-                        name="product_link"
-                        id="product_link"
-                        value={campaignById?.product_link}
-                        onChange={() => {}}
-                      />
-                    ) : (
-                      <input
-                        type="text"
-                        name="product_link"
-                        id="product_link"
-                        value={newCampaignData.product_link}
-                        onChange={handleChange}
-                      />
-                    )}
+                    <div className="inputfield">
+                      <label htmlFor="product_link">Product Link</label>
+                      {isEdit ? (
+                        <div className="select-products">
+                          <select
+                            name="product_name"
+                            id="product_name"
+                            value={campaignById?.product_name}
+                            onChange={handleChange}
+                          >
+                            {data?.map((item) => {
+                              return (
+                                <option value={item.title}>{item.title}</option>
+                              );
+                            })}
+                          </select>
+                        </div>
+                      ) : (
+                        <div className="select-products">
+                          <select
+                            name="product_name"
+                            id="product_name"
+                            value={newCampaignData?.product_name}
+                            onChange={handleChange}
+                          >
+                            {data?.map((item) => {
+                              return (
+                                <option value={item.title}>{item.title}</option>
+                              );
+                            })}
+                          </select>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="inputfield">
+                      <label htmlFor="start_date">Start Date</label>
+
+                      {isEdit ? (
+                        <DatePicker
+                          minDate={new Date()}
+                          value={dateStart}
+                          showDisabledMonthNavigation
+                          customInput={<ExampleCustomInput />}
+                          shouldCloseOnSelect={true}
+                          onChange={(date) => setStartDate(date)}
+                        />
+                      ) : (
+                        <DatePicker
+                          name="start_date"
+                          minDate={new Date()}
+                          showDisabledMonthNavigation
+                          customInput={<ExampleCustomInput />}
+                          shouldCloseOnSelect={true}
+                          selected={newCampaignData.start_date}
+                          value={newCampaignData.start_date}
+                          onChange={(date) =>
+                            setNewCampaignData({
+                              ...newCampaignData,
+                              ["start_date"]: date,
+                            })
+                          }
+                        />
+                      )}
+                    </div>
+
+                    <div className="inputfield">
+                      <label htmlFor="end_date">End Date</label>
+                      {isEdit ? (
+                        <DatePicker
+                          value={dateEnd}
+                          minDate={new Date()}
+                          customInput={<ExampleCustomInput />}
+                          showDisabledMonthNavigation
+                          shouldCloseOnSelect={true}
+                          onChange={(date) => setEndDate(date)}
+                        />
+                      ) : (
+                        <DatePicker
+                          name="end_date"
+                          minDate={new Date()}
+                          customInput={<ExampleCustomInput />}
+                          showDisabledMonthNavigation
+                          shouldCloseOnSelect={true}
+                          selected={newCampaignData.end_date}
+                          value={newCampaignData.end_date}
+                          onChange={(date) =>
+                            setNewCampaignData({
+                              ...newCampaignData,
+                              ["end_date"]: date,
+                            })
+                          }
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="form-group">
-                  <div className="inputfield">
-                    <label htmlFor="start_date">Start Date</label>
-
-                    {isEdit ? (
-                      <DatePicker
-                        minDate={new Date()}
-                        value={dateStart}
-                        showDisabledMonthNavigation
-                        customInput={<ExampleCustomInput />}
-                        shouldCloseOnSelect={true}
-                        onChange={(date) => setStartDate(date)}
-                      />
-                    ) : (
-                      <DatePicker
-                        name="start_date"
-                        minDate={new Date()}
-                        showDisabledMonthNavigation
-                        customInput={<ExampleCustomInput />}
-                        shouldCloseOnSelect={true}
-                        selected={newCampaignData.start_date}
-                        value={newCampaignData.start_date}
-                        onChange={(date) =>
-                          setNewCampaignData({
-                            ...newCampaignData,
-                            ["start_date"]: date,
-                          })
-                        }
-                      />
-                    )}
+                {/* Store's Social Links */}
+                <div className="store-links">
+                  <h2 className="sub-heading">
+                    Share Store's Social Media Links
+                  </h2>
+                  <div className="store-social-links">
+                    {storeLinks.map((link) => (
+                      <div className="social-input-form" key={link.id}>
+                        <input
+                          className="social-input"
+                          type="checkbox"
+                          name={`store_link[${link?.id}]`}
+                          checked={newCampaignData.store_link.includes(link.id)}
+                          onChange={(e) =>
+                            handleCheckboxChange(link.id, e.target.checked)
+                          }
+                        />
+                        <span className="store-social-icons">{link.icon}</span>
+                        <input
+                          className="social-inputfield"
+                          type="text"
+                          name={`store_link[${link?.id}]`}
+                          value={`www.sociallink.com/store-link`}
+                        />
+                      </div>
+                    ))}
                   </div>
+                </div>
+                <div>
+                  <div className="collect-setup">
+                    <div className="collect-settings">
+                      <h2 className="sub-heading">Collect</h2>
 
-                  <div className="inputfield">
-                    <label htmlFor="end_date">End Date</label>
-                    {isEdit ? (
-                      <DatePicker
-                        value={dateEnd}
-                        minDate={new Date()}
-                        customInput={<ExampleCustomInput />}
-                        showDisabledMonthNavigation
-                        shouldCloseOnSelect={true}
-                        onChange={(date) => setEndDate(date)}
-                      />
-                    ) : (
-                      <DatePicker
-                        name="end_date"
-                        minDate={new Date()}
-                        customInput={<ExampleCustomInput />}
-                        showDisabledMonthNavigation
-                        shouldCloseOnSelect={true}
-                        selected={newCampaignData.end_date}
-                        value={newCampaignData.end_date}
-                        onChange={(date) =>
-                          setNewCampaignData({
-                            ...newCampaignData,
-                            ["end_date"]: date,
-                          })
-                        }
-                      />
-                    )}
+                      <div>
+                        <input
+                          className="checkbox-input"
+                          type="radio"
+                          name="collect_all"
+                          value="email_number"
+                          checked={
+                            newCampaignData.collect_all === "email_number"
+                          }
+                          onChange={handleChange}
+                        />
+                        <label htmlFor="">
+                          Email Addresses and Phone Numbers{" "}
+                        </label>
+                      </div>
+                      <div>
+                        <input
+                          className="checkbox-input"
+                          type="radio"
+                          name="collect_email"
+                          value="email"
+                          checked={newCampaignData.collect_email === "email"}
+                          onChange={handleChange}
+                        />{" "}
+                        <label htmlFor="">Email Addresses only</label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              {/* Store's Social Links */}
-              <div className="store-links">
-                <h2 className="sub-heading">
-                  Share Store's Social Media Links
-                </h2>
-                <div className="store-social-links">
-                  {storeLinks.map((link) => (
-                    <div className="social-input-form" key={link.id}>
-                      <input
-                        className="social-input"
-                        type="checkbox"
-                        name={`store_link[${link?.id}]`}
-                        checked={newCampaignData.store_link.includes(link.id)}
-                        onChange={(e) =>
-                          handleCheckboxChange(link.id, e.target.checked)
-                        }
-                      />
-                      <span className="store-social-icons">{link.icon}</span>
-                      <input
-                        className="social-inputfield"
-                        type="text"
-                        name={`store_link[${link?.id}]`}
-                        value={`www.sociallink.com/store-link`}
-                      />
-                    </div>
-                  ))}
-                </div>
+              <div className="basic-settings-section">
+                <div>{renderButton(1)}</div>
               </div>
-              <div>
-                <div className="collect-setup">
-                  <div className="collect-settings">
-                    <h2 className="sub-heading">Collect</h2>
-
-                    <div>
-                      <input
-                        className="checkbox-input"
-                        type="radio"
-                        name="collect_all"
-                        value="email_number"
-                        checked={newCampaignData.collect_all === "email_number"}
-                        onChange={handleChange}
-                      />
-                      <label htmlFor="">
-                        Email Addresses and Phone Numbers{" "}
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        className="checkbox-input"
-                        type="radio"
-                        name="collect_email"
-                        value="email"
-                        checked={newCampaignData.collect_email === "email"}
-                        onChange={handleChange}
-                      />{" "}
-                      <label htmlFor="">Email Addresses only</label>
-                    </div>
-                  </div>
-                  <div>{renderButton(1)}</div>
-                </div>
-              </div>
-            </div>
+            </>
           )}
         </section>
         {/* Referal Settings */}
@@ -369,9 +432,9 @@ function NewCampaignForm() {
               <h2 className="title">Refferal Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(1)}>
                 {expanded[1] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(1)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(1)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(1)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(1)} />
                 )}
               </span>
             </div>
@@ -383,24 +446,20 @@ function NewCampaignForm() {
                 <div className="referral-container">
                   <p>
                     Select the Social Media channels that you want to allow your
-                    customers to share their referral link with! You can also
-                    customise the message that you would want your customers to
-                    share!
+                    customers to share their referral link with!
+                    <br /> You can also customise the message that you would
+                    want your customers to share!
                   </p>
-                  <div className="social-media-section">
-                    <div className="social-links-container">
-                      {integratelinks.map((link) => (
-                        <div className="socialblock" key={link.id}>
-                          <SocialBlock link={link} />
-                        </div>
-                      ))}
+                </div>
+                <div className="social-links-container">
+                  {integratelinks.map((link) => (
+                    <div className="social_block" key={link.id}>
+                      <SocialBlock link={link} />
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
-              <div className="referral-nextbtn">
-                <div>{renderButton(2)}</div>
-              </div>
+              <div className="referral-nextbtn">{renderButton(2)}</div>
             </>
           )}
         </section>
@@ -416,9 +475,9 @@ function NewCampaignForm() {
               <h2 className="title">Reward Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(2)}>
                 {expanded[2] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(2)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(2)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(2)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(2)} />
                 )}
               </span>
             </div>
@@ -487,9 +546,9 @@ function NewCampaignForm() {
               <h2 className="title">Email Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(3)}>
                 {expanded[3] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(3)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(3)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(3)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(3)} />
                 )}
               </span>
             </div>
@@ -576,9 +635,9 @@ function NewCampaignForm() {
               <h2 className="title">Integration Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(4)}>
                 {expanded[4] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(4)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(4)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(4)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(4)} />
                 )}
               </span>
             </div>
@@ -586,10 +645,41 @@ function NewCampaignForm() {
 
           {expanded[4] && (
             <>
-              <div className="integration-settings">
-                <div className="check-input">
-                  <input type="checkbox" name="" id="" />
-                  <label htmlFor="">Integrate with Klaviyo</label>
+              <div className="integration-container">
+                <div className="integration-block-content">
+                  <div className="check-input">
+                    <input type="checkbox" name="" id="" />
+                    <label htmlFor="">Integrate with Klaviyo</label>
+                  </div>
+
+                  <div className="integration-settings-container">
+                    <div className="form-group">
+                      <div className="inputfield">
+                        <label htmlFor="">Private API Key</label>
+                        <input
+                          type="text"
+                          name="private-key"
+                          id="private-key"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <div className="inputfield">
+                        <label htmlFor="">List to Add Users</label>
+
+                        <div className="select-user-input">
+                          <select>
+                            <option value="grapefruit">John Dape</option>
+                            <option value="lime">Janee</option>
+                            <option selected value="coconut">
+                              Mickey Author
+                            </option>
+                            <option value="mango">Laurwes</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="integrate-setting-btn">
@@ -610,9 +700,9 @@ function NewCampaignForm() {
               <h2 className="title">Template Settings</h2>
               <span className="openBtn" onClick={() => handleExpand(5)}>
                 {expanded[5] ? (
-                  <IoIosArrowUp onClick={() => handleExpand(5)} />
+                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}}  onClick={() => handleExpand(5)} />
                 ) : (
-                  <IoIosArrowDown onClick={() => handleExpand(5)} />
+                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(5)} />
                 )}
               </span>
             </div>
@@ -620,17 +710,55 @@ function NewCampaignForm() {
 
           {expanded[5] && (
             <>
-              <div></div>
+              <div className="template-container">
+                <div className="template-content">
+                  <p>Select one of the following specially curated template</p>
+                </div>
+                <div className="templates-block-container">
+                  <div className="template-cards">
+                    {[1, 2, 3].map((item, index) => (
+                      <div key={index} className="template-card-block">
+                        {index === 2 ? (
+                          <h3>
+                            Build a custom template in the Shopify Theme Editor{" "}
+                          </h3>
+                        ) : (
+                          <img
+                            src="https://images.unsplash.com/photo-1677530248563-e6105354fafb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNnx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"
+                            alt="template"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="laststep">
+                  <p>
+                    After the Campaign is created, you will be navigated to your
+                    Shopify Theme Editor to finalize your settings.
+                  </p>
+                </div>
+              </div>
+              <div className="template-end">
+                <div>
+                  <button className="saveFormBtn" type="submit">
+                    {isEdit ? "Update Campaign" : "Create Campaign"}
+                  </button>
+                </div>
+              </div>
             </>
           )}
         </section>
-
-        <div>
-          <button className="saveFormBtn" type="submit">
-            {isEdit ? "Update" : "Save"}
-          </button>
-        </div>
       </form>
+
+      {/* Loading overlay  */}
+      <div id="loading-overlay">
+        <div id="loading-spinner">
+          <h2>Setting Up the best templates for your campaigns</h2>
+          <img src={anime} alt="image" />
+        </div>
+      </div>
     </div>
   );
 }
