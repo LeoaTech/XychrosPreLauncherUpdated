@@ -596,6 +596,70 @@ const SettingComponent = () => {
           )}
         </section>
 
+        {/* Template Settings */}
+
+        <section className="global-settings">
+          <div className="templates-settings" onClick={() => handleExpand(5)}>
+            <div className="main-heading">
+              <h2 className="main-title">Templates Settings</h2>
+              <span className="toggle-card-btn" onClick={() => handleExpand(5)}>
+                {currentExpanded[5] ? (
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(5)}
+                  />
+                ) : (
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(5)}
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+          {currentExpanded[5] && (
+            <>
+              <div className="templates-container">
+                <div className="subheading">
+                  <p>Select all that best descibe your product(s) </p>
+                </div>
+
+                <div className="templates-blocks-container">
+                  {dummyTeplates.map((template) => (
+                    <div key={template.id} className="template-block">
+                      <div className="check-input">
+                        <input
+                          type="checkbox"
+                          name="templates"
+                          checked={settingsData?.templates}
+                          onChange={
+                            handleCheckboxChange
+
+                            // (e) => {
+                            // if (e.target.checked) {
+                            //   // concatenate the template name with comma separator
+                            //   template += `${template.name}, `;
+                            // } else {
+                            //   // remove the template name from the string
+                            //   template = template.replace(
+                            //     `${template.name}, `,
+                            //     " "
+                            //   );
+
+                            // }
+                            // }
+                          }
+                        />
+                        <label htmlFor="templates">{template.name}</label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </section>
+
         <div className="settings-savebtn">
           <button className="saveSettingsbtn" type="submit">
             Save
