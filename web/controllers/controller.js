@@ -3,6 +3,51 @@ import { v4 as uuidv4 } from "uuid";
 import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
 import emailValidator from "deep-email-validator";
 import { sendemail } from "../utils/sendEmail.js";
+
+export const get_store_referrals = async (req, res, next) => {
+  try {
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
+    const { id } = session;
+    const data = await pool.query(
+      "SELECT referrals.email,referrals.referral_code,campaign_settings.name,referrals.created_at FROM campaign_settings INNER JOIN referrals ON campaign_settings.campaign_id = referrals.campaign_id AND campaign_settings.shop_id=$1",
+      [id]
+    );
+    let data_ = [];
+    let number = 1;
+    for (let i = 0; i < data.rowCount; i++) {
+      const user_referrals = await pool.query(
+        "SELECT * FROM referrals WHERE referrer_id=$1",
+        [data.rows[i].referral_code]
+      );
+      data_.push({
+        email: data.rows[i].email,
+        referral_code: data.rows[i].referral_code,
+        total_friends: user_referrals.rowCount,
+        campaign_name: data.rows[i].name,
+        created_at: data.rows[i].created_at,
+        id: number,
+      });
+      number += 1;
+    }
+    if (data.rows.length > 0) {
+      return res.status(200).json({
+        success: true,
+        total_referrals: data_.length,
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        total_referrals: data_.length,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
+  }
+};
+
 export const check_email = async (req, res, next) => {
   try {
     const { email, campaign_id } = req.body;

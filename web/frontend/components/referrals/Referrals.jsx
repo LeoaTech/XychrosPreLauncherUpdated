@@ -5,13 +5,26 @@ import React, { useEffect, useState } from "react";
 import "./referral.css";
 import { useSelector } from "react-redux";
 import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
+import { useAuthenticatedFetch } from "../../hooks/useAuthenticatedFetch";
 
 const Referrals = () => {
   // const { getCampaigns } = props;
   const List = useSelector(fetchAllCampaigns);
+  const [totalReferrals, setTotalReferrals] = React.useState(0);
+  const authenticated_fetch = useAuthenticatedFetch();
   const [getCampaigns, setCampaigns] = useState([...List]);
 
   
+  const get_referrals = async () => {
+    const response = await authenticated_fetch("/api/get_store_referrals");
+    const data = await response.json();
+    setTotalReferrals(data.total_referrals);
+    console.log(data);
+  };
+  React.useEffect(() => {
+    get_referrals();
+  }, []);
+
   return (
     <div className="home-container">
       <div className="summary-blocks">
@@ -23,6 +36,7 @@ const Referrals = () => {
         />
         <SummaryCard
           value="543678"
+          value={totalReferrals}
           title="Referrals"
           icon={subscriber}
           class="referral-icon"
