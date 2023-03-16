@@ -123,6 +123,49 @@
   right: 15rem;
 }
 
+/* flip diagonal */
+
+.section-layout.flip {
+  flex-direction: column;
+  position: relative;
+}
+
+.flip-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  clip-path:polygon(99% 0, 100% -1.9%, 100% 100%, 0 100%);
+}
+
+.flip-lower-triangular {
+  height: 100vh;
+  width: 98.9vw;
+}
+
+.flip-lower-triangular .subheader_text {
+  position: absolute;
+  bottom: 7.5rem;
+  right: 5rem;
+}
+
+.flip-lower-triangular .header_text {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 5rem;
+}
+
+.flip-lower-triangular .tag-line {
+  position: absolute;
+  top: 25rem;
+  left: 11.5rem;
+}
+
+.flip-lower-triangular .first-page-form {
+  position: absolute;
+  top: 31rem;
+  left: 12rem;
+}
+
 #form-submission {
   display: flex;
   flex-direction: column;
