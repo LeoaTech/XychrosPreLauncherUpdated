@@ -56,6 +56,34 @@
     </div>
   {% endif %}
 
+  {% if block.settings.layout == 'flip-horizontal' %}
+    <div class="text-layout flip-one-fourth">
+      <div class="spaced">
+        <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
+        <form
+          action='/apps/xychrosupdated/api/getuser'
+          id="form-submission"
+          class="first-page-form">
+          <input
+            type="email"
+            required
+            id="email"
+            name="email"
+            placeholder="{{ block.settings.email_text }}"
+            class='email-input-product-prelaucher' />
+          <input
+            type="submit"
+            value="{{ block.settings.button_text }}"
+            class="button submit-button submit-button-product-prelaunch" />
+        </form>
+      </div>
+    </div>
+    <div id='background-image' class="img-layout flip-three-fourth">
+      <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+      <div class="header_text">{{ block.settings.header_text }}</div>
+    </div>
+  {% endif %}
+
       <div class="hidden">this div is hidden</div>
 
       <div class="spaced">
