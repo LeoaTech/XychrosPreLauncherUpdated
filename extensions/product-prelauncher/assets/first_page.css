@@ -23,15 +23,22 @@
   flex-direction: column;
 }
 
+/* horizontal layout */
+
+.section-layout.horizontal {
+  flex-direction: column;
 }
 
 .three-fourth {
-  min-width: 100vw;
+  min-width: 98.9vw;
   min-height: 60vh;
 }
 
 .one-fourth {
-  min-width: 100vw;
+  min-width: 98.9vw;
+  min-height: 40vh;
+}
+
   min-height: 40vh;
 }
 
