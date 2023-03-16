@@ -6,6 +6,10 @@ import { sendemail } from "../utils/sendEmail.js";
 export const check_email = async (req, res, next) => {
   try {
     const { email, campaign_id } = req.body;
+    let { code } = req.body;
+    if (code) {
+      code = code.split("=")[1];
+    }
     if (!email) {
       return res
         .status(400)
@@ -51,6 +55,7 @@ export const check_email = async (req, res, next) => {
             "INSERT INTO referrals (email,campaign_id) VALUES($1,$2)",
             [email, campaign_id]
           );
+          await get_user(code, email);
           return res.status(200).json({
             success: true,
             message: "Your ip has been added again",
@@ -65,6 +70,7 @@ export const check_email = async (req, res, next) => {
           "INSERT INTO referrals (email,campaign_id) VALUES($1,$2)",
           [email, campaign_id]
         );
+        await get_user(code, email);
         return res.status(200).json({
           success: true,
           message: "Your ip has been added successfully",
@@ -76,5 +82,21 @@ export const check_email = async (req, res, next) => {
     return res
       .status(500)
       .json({ success: false, message: "Something went wrong" });
+  }
+};
+const get_user = async (code, email) => {
+  if (code) {
+    const get_user = await pool.query(
+      "SELECT * FROM referrals WHERE referral_code=$1",
+      [code]
+    );
+    if (get_user.rows.length > 0) {
+      let reference_email = get_user.rows[0].email;
+      let reference_code = get_user.rows[0].referral_code;
+      await pool.query("UPDATE referrals SET referrer_id=$1 WHERE (email=$2)", [
+        reference_code,
+        email,
+      ]);
+    }
   }
 };
