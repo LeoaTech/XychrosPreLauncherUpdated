@@ -80,6 +80,49 @@
   flex-direction: row;
 }
 
+/* diagonal layout */
+
+.section-layout.diagonal {
+  flex-direction: column;
+  position: relative;
+}
+
+.diagonal-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  clip-path:polygon(0 0, 100% 0, 100% 0, 0 100%);
+}
+
+.lower-triangular {
+  height: 100vh;
+  width: 98.9vw;
+}
+
+.lower-triangular .subheader_text {
+  position: absolute;
+  top: 10rem;
+  left: 3.5rem;
+}
+
+.lower-triangular .header_text {
+  position: absolute;
+  top: 15rem;
+  left: 5rem;
+}
+
+.lower-triangular .tag-line {
+  position: absolute;
+  bottom: 20rem;
+  right: 16rem;
+}
+
+.lower-triangular .first-page-form {
+  position: absolute;
+  bottom: 7rem;
+  right: 15rem;
+}
+
 #form-submission {
   display: flex;
   flex-direction: column;
