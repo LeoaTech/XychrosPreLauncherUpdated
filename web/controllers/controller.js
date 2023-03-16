@@ -26,6 +26,51 @@ export const check_email = async (req, res, next) => {
         .status(200)
         .json({ success: true, message: "You are logged in" });
     } else {
+      let ip_address =
+        req.headers["x-forwarded-for"] || req.socket.remoteAddress || null;
+      ip_address = ip_address.split(",")[0];
+      let data = await pool.query(
+        "SELECT * FROM ip_addresses WHERE address=$1",
+        [ip_address]
+      );
+      let count = 1;
+      if (data.rows.length > 0) {
+        count = data.rows[0].count;
+        if (count >= 2) {
+          return res.status(400).json({
+            success: false,
+            message: "You have already requested 2 times",
+          });
+        } else {
+          count = count + 1;
+          await pool.query(
+            `UPDATE ip_addresses SET count=$1 WHERE (address=$2)`,
+            [count, ip_address]
+          );
+          await pool.query(
+            "INSERT INTO referrals (email,campaign_id) VALUES($1,$2)",
+            [email, campaign_id]
+          );
+          return res.status(200).json({
+            success: true,
+            message: "Your ip has been added again",
+          });
+        }
+      } else {
+        data = await pool.query(
+          "INSERT INTO ip_addresses (address,count,campaign_id) VALUES($1,$2,$3)",
+          [ip_address, count, campaign_id]
+        );
+        await pool.query(
+          "INSERT INTO referrals (email,campaign_id) VALUES($1,$2)",
+          [email, campaign_id]
+        );
+        return res.status(200).json({
+          success: true,
+          message: "Your ip has been added successfully",
+        });
+      }
+    }
   } catch (error) {
     console.log(error);
     return res
