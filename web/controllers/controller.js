@@ -123,3 +123,26 @@ export const get_user_referral_code = async (req, res, next) => {
   }
 };
 
+export const get_referrals = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    console.log(req.query);
+    const data = await pool.query("SELECT * FROM referrals WHERE email=$1", [
+      email,
+    ]);
+    const data_ = await pool.query(
+      "SELECT * FROM referrals WHERE referrer_id=$1",
+      [data.rows[0].referral_code]
+    );
+    if (data_.rows.length > 0) {
+      return res.status(200).json({ success: true, message: data_.rows });
+    } else {
+      return res.status(200).json({ success: true, message: [] });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
+  }
+};
+
