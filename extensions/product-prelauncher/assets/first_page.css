@@ -74,6 +74,12 @@
   text-align: center;
 }
 
+/* flip vertical */
+
+.section-layout.flip-vertical {
+  flex-direction: row;
+}
+
 #form-submission {
   display: flex;
   flex-direction: column;
