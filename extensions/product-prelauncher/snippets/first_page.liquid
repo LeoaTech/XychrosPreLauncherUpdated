@@ -1,4 +1,6 @@
 <div class="section-layout {{ block.settings.layout }}">
+  <div id="snackbar">You have already signed up</div>
+  <div id="snackbar2">Email is not valid</div>
   <div id='background-image' class="img-layout {% if block.settings.layout == 'horizontal' %}three-fourth{% else %}half{% endif %}">
     {% if block.settings.layout == 'horizontal' %}
       <div class="subheader_text">{{ block.settings.subheader_text }}</div>
@@ -18,7 +20,10 @@
       {% endif %}
       <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
 
-      <form action='/apps/xychrosupdated/api/getuser' id="form-submission">
+      <form
+        action='/apps/xychros_backend_new/api/getuser'
+        id="form-submission"
+        method="post">
         <input
           type="email"
           required
@@ -30,10 +35,15 @@
         <input
           type="submit"
           value="{{ block.settings.button_text }}"
-          class="button submit-button submit-button-product-prelaunch" />
+          class="button submit-button submit-button-product-prelaunch"
+          id="submit-btn" />
       </form>
       {% if block.settings.layout == 'vertical' %}
       </div>
     {% endif %}
   </div>
+  <script
+    type="module"
+    src="{{ 'authenticate_email.js' | asset_url }}"
+    defer></script>
 </div>
