@@ -70,8 +70,8 @@
 
 <style>
   .section-layout {
-    font-size: {{ block.settings.base_font_size }}
-    ;
+    font-size: {{ block.settings.base_font_size }};
+    font-family: {{ block.settings.font_family }};
   }
 
   .submit-button {
@@ -88,6 +88,7 @@
 
   .subheader_text {
     color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 1.3}}px;
     font-weight: 400;
     padding: 0 3%;
     text-align: center;
@@ -95,9 +96,9 @@
 
   .header_text {
     color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size|times: 2}}px;
     font-weight: 400;
-    padding: 0 3%;
-    font-family: 'Lalezar';
+    padding: 0 2%;
     text-align: center;
   }
 
@@ -207,6 +208,11 @@
         "max": 1,
         "step": 0.1,
         "default": 0
+      }, {
+        "type": "font_picker",
+        "id": "font_family",
+        "label": "Font Family",
+        "default": "helvetica_n4"
       }, {
         "label": "Text Base Font Size",
         "id": "base_font_size",
