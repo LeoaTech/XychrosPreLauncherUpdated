@@ -529,6 +529,73 @@ const SettingComponent = () => {
           )}
         </section>
 
+        {/* Integrations Settings */}
+
+        <section className="global-settings">
+          <div
+            className="integration--settings"
+            onClick={() => handleExpand(4)}
+          >
+            <div className="main-heading">
+              <h2 className="main-title">Integrations Settings</h2>
+              <span className="toggle-card-btn" onClick={() => handleExpand(4)}>
+                {currentExpanded[4] ? (
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(4)}
+                  />
+                ) : (
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(4)}
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+          {currentExpanded[4] && (
+            <>
+              <div className="integrations-container">
+                <div className="integarte__input">
+                  <div className="check-input">
+                    <input
+                      type="checkbox"
+                      name="klaviyo_Integration"
+                      id="klaviyo_Integration"
+                      checked={settingsData?.klaviyo_Integration}
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="klaviyo_Integration">
+                      Integrate with Klaviyo
+                    </label>
+                  </div>
+                </div>
+
+                <div className="integrate-api-input">
+                  <div className="inputfield">
+                    <label htmlFor="klaviyo_api_key">
+                      Private API Key - You can find the Private API Key in your
+                      <a href="https://www.klaviyo.com/login" target="_blank">
+                        {" "}
+                        Klaviyo Account Settings
+                      </a>
+                    </label>
+                    <input
+                      type="text"
+                      name="klaviyo_api_key"
+                      id="klaviyo_api_key"
+                      placeholder="Enter API Key"
+                      value={settingsData?.klaviyo_api_key}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="toggle-next-btn">{renderButton(5)}</div>
+            </>
+          )}
+        </section>
+
         <div className="settings-savebtn">
           <button className="saveSettingsbtn" type="submit">
             Save
