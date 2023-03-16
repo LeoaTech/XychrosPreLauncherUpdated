@@ -13,12 +13,23 @@
   },
   "dependencies": {
     "@shopify/app": "^3.20.1",
+    "@shopify/app-bridge": "^3.7.2",
+    "@shopify/app-bridge-react": "^3.7.2",
+    "@shopify/app-bridge-utils": "^3.5.1",
     "@shopify/cli": "^3.20.1",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "crypto": "^1.0.1",
+    "deep-email-validator": "^0.1.21",
+    "dotenv": "^16.0.3",
+    "express-session": "^1.17.3",
+    "nodemailer": "^6.9.1",
     "pg": "^8.8.0",
-    "query-string": "^7.1.1"
+    "pm2": "^5.2.2",
+    "query-string": "^7.1.1",
+    "shopify": "^0.1.0",
+    "uuid": "^9.0.0",
+    "uuidv4": "^6.2.13"
   },
   "author": "sughr"
 }

@@ -84,6 +84,7 @@ export const check_email = async (req, res, next) => {
       .json({ success: false, message: "Something went wrong" });
   }
 };
+
 const get_user = async (code, email) => {
   if (code) {
     const get_user = await pool.query(
@@ -100,3 +101,25 @@ const get_user = async (code, email) => {
     }
   }
 };
+
+export const get_user_referral_code = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const data = await pool.query("SELECT * FROM referrals WHERE email=$1", [
+      email,
+    ]);
+    if (data.rows.length > 0) {
+      const code = data.rows[0].referral_code;
+      return res.status(200).json({ success: true, message: code });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
+  }
+};
+
