@@ -55,8 +55,14 @@
   min-height: 60vh;
 }
 
+/* vertical layout */
+
+.section-layout.vertical {
+  flex-direction: row;
+}
+
 .half {
-  min-width: 50vw;
+  min-width: 49vw;
   min-height: 100vh;
 }
 
