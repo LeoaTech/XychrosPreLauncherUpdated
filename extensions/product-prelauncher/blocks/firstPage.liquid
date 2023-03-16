@@ -76,10 +76,9 @@
 
   .submit-button {
     font-size: 1em;
-    color: {{ block.settings.button_font_color }}
-    ;
-    background: {{ block.settings.button_color }}
-    ;
+    color: {{ block.settings.accent_color }};
+    background: {{ block.settings.main_color }};
+    border: 1px solid{{ block.settings.accent_color}};
   }
 
   .product-prelaunch {
@@ -87,20 +86,15 @@
     width: 100vw;
   }
 
-  .header_text {
-    color: {{ block.settings.header_color }}
-    ;
-    font-size: 4.5em;
+  .subheader_text {
+    color: {{ block.settings.accent_color }};
     font-weight: 400;
-    padding: 0 2%;
-    font-family: 'Lalezar';
+    padding: 0 3%;
     text-align: center;
   }
 
-  .subheader_text {
-    color: {{ block.settings.subheader_color }}
-    ;
-    font-size: 2.5em;
+  .header_text {
+    color: {{ block.settings.accent_color }};
     font-weight: 400;
     padding: 0 3%;
     font-family: 'Lalezar';
@@ -108,17 +102,15 @@
   }
 
   .tag-line {
-    color: {{ block.settings.cta_tag_color }}
-    ;
-    font-size: 1.5em;
+    color: {{ block.settings.accent_color }};
     font-weight: 600;
     margin-bottom: 1em;
     padding: 0 2%;
+    text-align: center;
   }
 
   .text-layout {
-    background-color: {{ block.settings.bg_color }}
-    ;
+    background-color: {{ block.settings.main_color }};
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -167,24 +159,30 @@
     "class": "product-prelaunch",
     "settings": [
       {
-        "type": "product",
-        "id": "product",
-        "label": "Product"
-      },
-      {
         "type": "checkbox",
         "id": "show_header_footer",
         "label": "Show Header & Footer",
         "default": true
       },
       {
-        "label": "Background Color",
-        "id": "bg_color",
+        "type": "color_background",
+        "id": "background_color",
+        "label": "Background",
+        "default": "linear-gradient(#ffffff, #000000)"
+      },
+      {
+        "label": "Main Color",
+        "id": "main_color",
         "type": "color",
         "default": "#000000"
       },
       {
-        "type": "radio",
+        "label": "Accent Color",
+        "id": "accent_color",
+        "type": "color",
+        "default": "#ffffff"
+      }, {
+        "type": "select",
         "id": "layout",
         "label": "Layout",
         "options": [
@@ -224,20 +222,10 @@
         "type": "text",
         "default": "We are soon opening our doors to serve you"
       }, {
-        "label": "Header Color",
-        "id": "header_color",
-        "type": "color",
-        "default": "#000000"
-      }, {
         "label": "Pre Header",
         "id": "subheader_text",
         "type": "text",
         "default": "Enter SubHeader"
-      }, {
-        "label": "Sub Header Color",
-        "id": "subheader_color",
-        "type": "color",
-        "default": "#000000"
       }, {
         "type": "select",
         "id": "text_layout",
@@ -261,25 +249,15 @@
         "type": "text",
         "default": "We are soon opening our doors to serve you"
       }, {
-        "label": "Tag Line Text Color",
-        "id": "cta_tag_color",
-        "type": "color",
-        "default": "#000000"
+        "label": "Email Text",
+        "id": "email_text",
+        "type": "text",
+        "default": "Enter your email here"
       }, {
         "label": "Button Text",
         "id": "button_text",
         "type": "text",
         "default": "Enter"
-      }, {
-        "label": "Button Color",
-        "id": "button_color",
-        "type": "color",
-        "default": "#000000"
-      }, {
-        "label": "Button Font Color",
-        "id": "button_font_color",
-        "type": "color",
-        "default": "#fff"
       }, {
         "type": "page",
         "id": "page",
