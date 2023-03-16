@@ -7,12 +7,22 @@
   box-sizing: border-box;
 }
 
-.section-layout.horizontal {
+/* none */
+
+.section-layout.none {
   flex-direction: column;
 }
 
-.section-layout.vertical {
-  flex-direction: row;
+.none-parent-container {
+  min-width: 98.9vw;
+  min-height: 100vh;
+}
+
+.none {
+  display: flex;
+  flex-direction: column;
+}
+
 }
 
 .three-fourth {

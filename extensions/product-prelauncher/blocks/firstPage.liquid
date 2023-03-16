@@ -135,7 +135,19 @@
     {% endif %}
   }
 
-  @media screen and (max-width: 600px) {
+  .none-layout {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: {{ block.settings.main_color }};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 98.9vw;
+  }
+
     .header_text {
       font-size: 2.5rem;
     }
@@ -217,7 +229,7 @@
             "label": "Flip Transfer Diagonal"
           }
         ],
-        "default": "horizontal"
+        "default": "none"
       }, {
         "label": "Background Image",
         "id": "background",
