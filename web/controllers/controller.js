@@ -25,7 +25,7 @@ export const check_email = async (req, res, next) => {
       return res
         .status(200)
         .json({ success: true, message: "You are logged in" });
-    }
+    } else {
   } catch (error) {
     console.log(error);
     return res
