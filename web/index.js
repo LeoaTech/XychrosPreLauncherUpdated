@@ -25,9 +25,7 @@ const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
 // const DB_PATH = `${process.cwd()}/database.sqlite`;
 
-const db_pass = "pakistan@715";
-
-const DB_PATH = `postgres://postgres:${db_pass}@localhost:5432/xychros_backend_new`;
+const DB_PATH = 'postgres://postgres:postgres@localhost:5432/prelauncher';
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
