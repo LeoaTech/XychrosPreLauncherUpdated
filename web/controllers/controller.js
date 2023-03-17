@@ -2,35 +2,7 @@ import { pool } from "../config/db.js";
 import { v4 as uuidv4 } from "uuid";
 import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
 import emailValidator from "deep-email-validator";
-import { sendemail } from "../utils/sendEmail.js";
-
-export const get_store_campaigns = async (req, res, next) => {
-  try {
-    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
-    const { shop } = session;
-    const data = await pool.query(
-      "SELECT * FROM campaign_settings WHERE shop_name=$1",
-      [shop]
-    );
-    if (data.rows.length > 0) {
-      return res.status(200).json({
-        success: true,
-        message: data.rows,
-        total_campaigns: data.rowCount,
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: data.rows,
-        total_campaigns: data.rowCount,
-      });
-    }
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: "Something went wrong" });
-  }
-};
+// import { sendemail } from "../utils/sendEmail.js";
 
 export const get_store_referrals = async (req, res, next) => {
   try {
