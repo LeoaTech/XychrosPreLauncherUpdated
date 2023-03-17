@@ -12,6 +12,7 @@ export const referralColumns = [
   {
     name: "Referral Email",
     selector: "referral_email",
+    selector: "email",
     sortable: true,
     headerClassName: "datatable__header",
     style: {
@@ -29,6 +30,8 @@ export const referralColumns = [
   {
     name: "Points Collected",
     selector: "points",
+    name: "Campaign Name",
+    selector: "campaign_name",
     sortable: true,
     style: {
       textAlign: "center",
@@ -40,6 +43,7 @@ export const referralColumns = [
   {
     name: "Friends Joined",
     selector: "friends_joined",
+    selector: "total_friends",
     sortable: true,
     style: {
       textAlign: "center",
@@ -63,6 +67,7 @@ export const modalColumns = [
   {
     name: "Email",
     selector: "referral_email",
+    selector: "email",
     sortable: true,
     style: {
       fontSize: 15,
@@ -72,6 +77,7 @@ export const modalColumns = [
   {
     name: "Date of Joining",
     selector: "date",
+    selector: "created_at",
     sortable: true,
     id: "date",
     defaultValue: new Date(),
