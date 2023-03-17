@@ -209,6 +209,51 @@
   right: 10rem;
 }
 
+/* flip-transfer-diagonal layout */
+
+.section-layout.flip-transfer-diagonal {
+  flex-direction: column;
+  position: relative;
+}
+
+.flip-transfer-diagonal-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  clip-path:polygon(0 0, 0 0, 100% 0, 100% 100%);
+}
+
+.flip-transfer-lower-triangular {
+  height: 100vh;
+  width: 98.9vw;
+}
+
+.flip-transfer-lower-triangular .subheader_text {
+  position: absolute;
+  top: 11rem;
+  right: 3rem;
+}
+
+.flip-transfer-lower-triangular .header_text {
+  position: absolute;
+  top: 15rem;
+  right: 4rem;
+}
+
+.flip-transfer-lower-triangular .tag-line {
+  position: absolute;
+  bottom: 18rem;
+  left: 10rem;
+}
+
+.flip-transfer-lower-triangular .first-page-form {
+  position: absolute;
+  bottom: 6rem;
+  left: 10rem;
+}
+
+/* general settings for desktop */
+
 #form-submission {
   display: flex;
   flex-direction: column;
