@@ -7,26 +7,62 @@
   box-sizing: border-box;
 }
 
+/* none */
+
+.section-layout.none {
+  flex-direction: column;
+}
+
+.none-parent-container {
+  min-width: 98.9vw;
+  min-height: 100vh;
+}
+
+.none {
+  display: flex;
+  flex-direction: column;
+}
+
+/* horizontal layout */
+
 .section-layout.horizontal {
   flex-direction: column;
 }
+
+.three-fourth {
+  min-width: 98.9vw;
+  min-height: 60vh;
+}
+
+.one-fourth {
+  min-width: 98.9vw;
+  min-height: 40vh;
+}
+
+/* flip horizontal */
+
+.section-layout.flip-horizontal{
+  flex-direction: column;
+}
+
+.flip-three-fourth {
+  min-width: 98.9vw;
+  min-height: 40vh;
+}
+
+.flip-one-fourth {
+  min-width: 98.9vw;
+  min-height: 60vh;
+}
+
+/* vertical layout */
 
 .section-layout.vertical {
   flex-direction: row;
 }
 
-.three-fourth {
-  min-width: 100vw;
-  min-height: 60vh;
-}
-
-.one-fourth {
-  min-width: 100vw;
-  min-height: 40vh;
-}
-
 .half {
-  min-width: 50vw;
+  min-width: 49vw;
   min-height: 100vh;
 }
 
@@ -37,6 +73,186 @@
 .spaced {
   text-align: center;
 }
+
+/* flip vertical */
+
+.section-layout.flip-vertical {
+  flex-direction: row;
+}
+
+/* diagonal layout */
+
+.section-layout.diagonal {
+  flex-direction: column;
+  position: relative;
+}
+
+.diagonal-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  clip-path:polygon(0 0, 100% 0, 100% 0, 0 100%);
+}
+
+.lower-triangular {
+  height: 100vh;
+  width: 98.9vw;
+}
+
+.lower-triangular .subheader_text {
+  position: absolute;
+  top: 10rem;
+  left: 3.5rem;
+}
+
+.lower-triangular .header_text {
+  position: absolute;
+  top: 15rem;
+  left: 5rem;
+}
+
+.lower-triangular .tag-line {
+  position: absolute;
+  bottom: 20rem;
+  right: 16rem;
+}
+
+.lower-triangular .first-page-form {
+  position: absolute;
+  bottom: 7rem;
+  right: 15rem;
+}
+
+/* flip diagonal */
+
+.section-layout.flip {
+  flex-direction: column;
+  position: relative;
+}
+
+.flip-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  clip-path:polygon(99% 0, 100% -1.9%, 100% 100%, 0 100%);
+}
+
+.flip-lower-triangular {
+  height: 100vh;
+  width: 98.9vw;
+}
+
+.flip-lower-triangular .subheader_text {
+  position: absolute;
+  bottom: 7.5rem;
+  right: 5rem;
+}
+
+.flip-lower-triangular .header_text {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 5rem;
+}
+
+.flip-lower-triangular .tag-line {
+  position: absolute;
+  top: 25rem;
+  left: 11.5rem;
+}
+
+.flip-lower-triangular .first-page-form {
+  position: absolute;
+  top: 31rem;
+  left: 12rem;
+}
+
+/* trans-diagonal layout */
+
+.section-layout.transfer-diagonal {
+  flex-direction: column;
+  position: relative;
+}
+
+.transfer-diagonal-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  clip-path:polygon(0 0, 0 0, 100% 100%, 0 100%);
+}
+
+.transfer-lower-triangular {
+  height: 100vh;
+  width: 98.9vw;
+}
+
+.transfer-lower-triangular .subheader_text {
+  position: absolute;
+  bottom: 11rem;
+  left: 3rem;
+}
+
+.transfer-lower-triangular .header_text {
+  position: absolute;
+  bottom: 5rem;
+  left: 4rem;
+}
+
+.transfer-lower-triangular .tag-line {
+  position: absolute;
+  top: 13rem;
+  right: 10rem;
+}
+
+.transfer-lower-triangular .first-page-form {
+  position: absolute;
+  top: 20rem;
+  right: 10rem;
+}
+
+/* flip-transfer-diagonal layout */
+
+.section-layout.flip-transfer-diagonal {
+  flex-direction: column;
+  position: relative;
+}
+
+.flip-transfer-diagonal-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  clip-path:polygon(0 0, 0 0, 100% 0, 100% 100%);
+}
+
+.flip-transfer-lower-triangular {
+  height: 100vh;
+  width: 98.9vw;
+}
+
+.flip-transfer-lower-triangular .subheader_text {
+  position: absolute;
+  top: 11rem;
+  right: 3rem;
+}
+
+.flip-transfer-lower-triangular .header_text {
+  position: absolute;
+  top: 15rem;
+  right: 4rem;
+}
+
+.flip-transfer-lower-triangular .tag-line {
+  position: absolute;
+  bottom: 18rem;
+  left: 10rem;
+}
+
+.flip-transfer-lower-triangular .first-page-form {
+  position: absolute;
+  bottom: 6rem;
+  left: 10rem;
+}
+
+/* general settings for desktop */
 
 #form-submission {
   display: flex;
@@ -66,7 +282,96 @@ input[type='email']:focus {
   margin: 10px auto;
 }
 
-@media screen and (max-width: 600px) {
+/* mobile view for all layout types - horizontal */
+
+@media screen and (max-width: 667px) {
+
+  /* horizontal */
+  .section-layout.horizontal {
+    flex-direction: column;
+  }
+
+  /* vertical */
+
+  .section-layout.vertical {
+    flex-direction: column;
+  }
+
+  .half {
+    min-width: 100vw;
+    min-height: 60vh;
+  }
+
+  .spaced-evenly {
+    justify-content: unset !important;
+    min-width: 100vw !important;
+    min-height: 40vh !important;
+  }
+
+  /* diagonal */
+
+  .section-layout.diagonal {
+    flex-direction: column;
+  }
+
+  .diagonal-background {
+    min-width: 50vw;
+    min-height: 60vh;
+    position: unset !important;
+    height: unset !important;
+    width: unset !important;
+    clip-path: unset !important;
+  }
+
+  .lower-triangular {
+    min-width: 50vw !important;
+    min-height: 40vh !important;
+    height: unset !important;
+    width: unset !important;
+  }
+
+  .lower-triangular .subheader_text {
+    top: 5rem;
+    left: 0;
+    right: 0;
+  }
+
+  .lower-triangular .header_text {
+    top: 8rem;
+    left: 0;
+    right: 0;
+  }
+
+  .lower-triangular .tag-line {
+    bottom: 10rem;
+    left: 0;
+    right: 0;
+  }
+
+  .lower-triangular .first-page-form {
+    bottom: 5rem;
+    left: 0;
+    right: 0;
+  }
+
+  /* flip */
+
+  .section-layout.flip {
+    flex-direction: column;
+  }
+
+  .flip-background {
+    min-width: 100vw;
+    min-height: 60vh;
+  }
+
+  .flip-lower-triangular {
+    min-width: 100vw;
+    min-height: 40vh;
+  }
+
+  /* general */
+
   .header_text {
     text-align: center;
   }
@@ -86,5 +391,4 @@ input[type='email']:focus {
   :-moz-placeholder {
     text-align: center;
   }
-
 }

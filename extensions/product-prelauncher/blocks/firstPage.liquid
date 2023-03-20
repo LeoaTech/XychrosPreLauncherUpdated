@@ -70,16 +70,15 @@
 
 <style>
   .section-layout {
-    font-size: {{ block.settings.base_font_size }}
-    ;
+    font-size: {{ block.settings.base_font_size }};
+    font-family: {{ block.settings.font_family }};
   }
 
   .submit-button {
     font-size: 1em;
-    color: {{ block.settings.button_font_color }}
-    ;
-    background: {{ block.settings.button_color }}
-    ;
+    color: {{ block.settings.accent_color }};
+    background: {{ block.settings.main_color }};
+    border: 1px solid{{ block.settings.accent_color}};
   }
 
   .product-prelaunch {
@@ -87,38 +86,32 @@
     width: 100vw;
   }
 
-  .header_text {
-    color: {{ block.settings.header_color }}
-    ;
-    font-size: 4.5em;
+  .subheader_text {
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 1.3}}px;
     font-weight: 400;
-    padding: 0 2%;
-    font-family: 'Lalezar';
+    padding: 0 3%;
     text-align: center;
   }
 
-  .subheader_text {
-    color: {{ block.settings.subheader_color }}
-    ;
-    font-size: 2.5em;
+  .header_text {
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size|times: 2}}px;
     font-weight: 400;
-    padding: 0 3%;
-    font-family: 'Lalezar';
+    padding: 0 2%;
     text-align: center;
   }
 
   .tag-line {
-    color: {{ block.settings.cta_tag_color }}
-    ;
-    font-size: 1.5em;
+    color: {{ block.settings.accent_color }};
     font-weight: 600;
     margin-bottom: 1em;
     padding: 0 2%;
+    text-align: center;
   }
 
   .text-layout {
-    background-color: {{ block.settings.bg_color }}
-    ;
+    background-color: {{ block.settings.main_color }};
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -142,7 +135,19 @@
     {% endif %}
   }
 
-  @media screen and (max-width: 600px) {
+  .none-layout {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: {{ block.settings.main_color }};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 98.9vw;
+  }
+
     .header_text {
       font-size: 2.5rem;
     }
@@ -167,36 +172,64 @@
     "class": "product-prelaunch",
     "settings": [
       {
-        "type": "product",
-        "id": "product",
-        "label": "Product"
-      },
-      {
         "type": "checkbox",
         "id": "show_header_footer",
         "label": "Show Header & Footer",
         "default": true
       },
       {
-        "label": "Background Color",
-        "id": "bg_color",
+        "type": "color_background",
+        "id": "background_color",
+        "label": "Background",
+        "default": "linear-gradient(#ffffff, #000000)"
+      },
+      {
+        "label": "Main Color",
+        "id": "main_color",
         "type": "color",
         "default": "#000000"
       },
       {
-        "type": "radio",
+        "label": "Accent Color",
+        "id": "accent_color",
+        "type": "color",
+        "default": "#ffffff"
+      }, {
+        "type": "select",
         "id": "layout",
-        "label": "Layout",
+        "label": "Screen Divider",
         "options": [
           {
+            "value": "none",
+            "label": "None"
+          },
+          {
             "value": "horizontal",
-            "label": "Top-Bottom "
+            "label": "Horizontal"
+          }, {
+            "value": "flip-horizontal",
+            "label": "Flip Horizontal"
           }, {
             "value": "vertical",
-            "label": "Left-Right"
+            "label": "Vertical"
+          }, {
+            "value": "flip-vertical",
+            "label": "Flip Vertical"
+          }, {
+            "value": "diagonal",
+            "label": "Diagonal"
+          }, {
+            "value": "flip-diagonal",
+            "label": "Flip Diagonal"
+          }, {
+            "value": "transfer-diagonal",
+            "label": "Transfer Diagonal"
+          }, {
+            "value": "flip-transfer-diagonal",
+            "label": "Flip Transfer Diagonal"
           }
         ],
-        "default": "horizontal"
+        "default": "none"
       }, {
         "label": "Background Image",
         "id": "background",
@@ -209,6 +242,11 @@
         "max": 1,
         "step": 0.1,
         "default": 0
+      }, {
+        "type": "font_picker",
+        "id": "font_family",
+        "label": "Font Family",
+        "default": "helvetica_n4"
       }, {
         "label": "Text Base Font Size",
         "id": "base_font_size",
@@ -224,20 +262,10 @@
         "type": "text",
         "default": "We are soon opening our doors to serve you"
       }, {
-        "label": "Header Color",
-        "id": "header_color",
-        "type": "color",
-        "default": "#000000"
-      }, {
         "label": "Pre Header",
         "id": "subheader_text",
         "type": "text",
         "default": "Enter SubHeader"
-      }, {
-        "label": "Sub Header Color",
-        "id": "subheader_color",
-        "type": "color",
-        "default": "#000000"
       }, {
         "type": "select",
         "id": "text_layout",
@@ -261,25 +289,15 @@
         "type": "text",
         "default": "We are soon opening our doors to serve you"
       }, {
-        "label": "Tag Line Text Color",
-        "id": "cta_tag_color",
-        "type": "color",
-        "default": "#000000"
+        "label": "Email Placeholder Text",
+        "type": "text",
+        "id": "email_text",
+        "default": "Enter your email"
       }, {
         "label": "Button Text",
         "id": "button_text",
         "type": "text",
         "default": "Enter"
-      }, {
-        "label": "Button Color",
-        "id": "button_color",
-        "type": "color",
-        "default": "#000000"
-      }, {
-        "label": "Button Font Color",
-        "id": "button_font_color",
-        "type": "color",
-        "default": "#fff"
       }, {
         "type": "page",
         "id": "page",

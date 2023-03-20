@@ -1,9 +1,8 @@
-import {
-  SideBar,
-  Header,
-  Settings,
-  MainPage,
-} from "../components/index";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchSettings } from "../app/features/settings/settingsSlice";
+import { SideBar, Header, Settings, MainPage } from "../components/index";
+import useFetchSettings from "../constant/fetchGlobalSettings";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
@@ -11,6 +10,19 @@ import "../index.css";
 const SettingsPage = () => {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
+  const dispatch = useDispatch();
+  const data = useFetchSettings("/api/updatesettings", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  console.log(data, "Settings page");
+
+  useEffect(() => {
+    if (data.length >0 ) {
+      dispatch(fetchSettings(data[0]));
+    }
+  }, [dispatch, data]);
   return (
     <div className="app">
       {activeMenu ? (
@@ -32,7 +44,11 @@ const SettingsPage = () => {
           </MainPage>
         </div>
       ) : (
-        <div className={darkTheme ? "main__container full" : "main__container dark"}>
+        <div
+          className={
+            darkTheme ? "main__container full" : "main__container dark"
+          }
+        >
           <MainPage>
             <div className="header">
               <Header />
@@ -45,5 +61,4 @@ const SettingsPage = () => {
   );
 };
 
-
-export default SettingsPage
+export default SettingsPage;

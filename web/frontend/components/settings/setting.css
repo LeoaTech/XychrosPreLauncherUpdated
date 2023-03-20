@@ -22,6 +22,7 @@
 .settings-heading h1 {
   font-size: 30px;
   font-weight: 700;
+  margin-bottom: 30px;
 }
 
 /* Settings Save button */
@@ -51,13 +52,12 @@
 }
 
 .next-button {
-  height: 40px;
   font-size: 19px;
 }
 
 .global-settings {
   background-color: #1b1a21;
-  padding: 18px;
+  padding: 22px;
   border-radius: 10px;
   margin-bottom: 20px;
   -webkit-border-radius: 10px;
@@ -87,7 +87,7 @@
 }
 
 .main-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
 }
 
@@ -140,15 +140,21 @@
   height: 35px;
   width: 100%;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   padding: 20px;
   font-size: 19px;
   background-color: #25242d;
   color: #fff;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+
+.error-message{
+  color:red;
+  
 }
 
 .collect__inputs {
@@ -268,6 +274,13 @@
   .stores__social_links {
     grid-template-columns: repeat(2, 1fr);
   }
+  .referrals-cards-block {
+    column-gap: 15px;
+    row-gap: 10px;
+  }
+  .rewards-tiers-cardblocks {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
 @media screen and (max-width: 1050px) {
@@ -284,12 +297,24 @@
   }
 
   .store__links,
-  .collect__container {
+  .collect__container,
+  .reward-setting-container,
+  .referral-settings-container,
+  .integrations-container,
+  .templates-container {
     margin: 20px 15px;
     padding: 10px 13px;
   }
-
+  .subheading p {
+    line-height: 1.4;
+  }
   .stores__social_links {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .integrate-api-input .inputfield input {
+    width: 100%;
+  }
+  .templates-blocks-container {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -309,6 +334,7 @@
   .store__links,
   .collect__container,
   .reward-setting-container,
+  .referral-settings-container,
   .integrations-container {
     margin: 20px 15px;
     padding: 10px 13px;
@@ -331,7 +357,9 @@
     padding: 10px;
   }
 
-  .sub-title{
+  .sub-title {
+    font-size: 18.5px;
+    margin-bottom: 23px;
     font-weight: 700;
   }
 
@@ -359,7 +387,7 @@
   }
 
   .templates-blocks-container {
-    grid-template-columns: repeat(2 1fr);
-
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 10px;
   }
 }
