@@ -1,53 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SideLogo } from "../../assets";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
-
 import "./setting.css";
 import { storeLinks } from "../newcampaign/dummySocial";
 import { integratelinks } from "../newcampaign/socialLinks";
-import SocialBlock from "../newcampaign/socialsBlocks/SocialBlock";
 import { RewardData } from "../newcampaign/rewardTier/RewardData";
-import RewardTier from "../newcampaign/rewardTier/RewardTier";
-import { Link } from "react-router-dom";
 import { dummyTeplates } from "./dummyTemplates";
+import { useAuthenticatedFetch } from "../../hooks";
+import { useSelector } from "react-redux";
+import { fetchAllSettings } from "../../app/features/settings/settingsSlice";
 
-// Default Email Settings
-const InitialDefaultEmail = `
-Hi,
-
-Thank you for subscribing to {campaign.name} for the pre-launch of {product.name}. You can now invite your friends and family to join you in collecting more rewards and points by using {reward.link}.
-
-So far, {reward.friends_count} friends have joined using your reward link. You can redeem your points by using the discount code {reward.discount_code} at checkout. 
-
-We are excited to have you on board!
-
-{shop.name}`;
-
-const InitialReferralEmail = `
-
-Hi,
-
-Congratulations!! A new referral has signed up at {campaign.name} for the pre-launch of {product.name}. You can now invite more friends and family to join you in collecting more rewards and points by using {referral.link}.
-
-So far, {referral.friends_count} friends have joined using your referral link. 
-
-We are excited to have you on board!
-
-{shop.name}`;
-
-const InitialRewardEmail = `Hi there,
-
-Congratulations!! You have unlocked the Reward Tier {{ reward_tier_number}} at {campaign.name} for the pre-launch of {product.name}. You can invite more friends and family to join you in collecting more rewards and points by using {referral.link}.
-
-So far, {referral.friends_count} friends have joined using your referral link. You can redeem your points by using the discount code {referral.discount_code} at checkout. 
-
-We are super excited to see you winning!!
-
-{shop.name}`;
 const SettingComponent = () => {
-  const [defaultEmail, setDefaultEmail] = useState(InitialDefaultEmail);
-  const [referralEmail, setReferralEmail] = useState(InitialReferralEmail);
-  const [rewardEmail, setRewardEmail] = useState(InitialRewardEmail);
+  const defaultSettings = useSelector(fetchAllSettings);
+  const [settingsData, setSettingsData] = useState();
+  const fetch = useAuthenticatedFetch();
+
+  // Get Default Settings Data
+  useEffect(() => {
+    if (defaultSettings) {
+      setSettingsData(defaultSettings);
+    }
+  }, []);
+
   const [currentExpanded, setCurrentExpanded] = useState(Array(6).fill(false));
 
   // Next Button
@@ -73,11 +47,49 @@ const SettingComponent = () => {
     );
   };
 
+  // Update Global Settings for the Shop
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch("/api/updatesettings", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(settingsData),
+    });
+  };
+
   // Handle Form Save Settings
-  const handleSubmit = () => {};
 
   // Handle Form Input Changes
-  const handleonChange = () => {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setSettingsData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  // Handling Checkboxes Changes
+  function handleCheckboxChange(e) {
+    const { name, checked } = e.target;
+
+    setSettingsData({ ...settingsData, [name]: checked });
+  }
+  function handleRadioChange(event) {
+    const { name, value } = event.target;
+
+    const isSelected = value === "phone";
+
+    // Update the state with the new value
+    setSettingsData((prevSettingsData) => ({
+      ...prevSettingsData,
+      [name]: isSelected,
+      discount_type: value,
+    }));
+  }
+
   return (
     <div className="settings-container">
       <div className="settings-heading">
@@ -115,21 +127,34 @@ const SettingComponent = () => {
                   </div>
                   <div className="stores__social_links">
                     {storeLinks.map((storeLink) => (
-                      <div key={storeLink.id} className="social_card">
-                        <input
-                          className="check_input"
-                          type="checkbox"
-                          name=""
-                        />
-                        <span className="store-social-icons">
-                          {storeLink.icon}
-                        </span>
-                        <input
-                          className="social-text-field"
-                          type="text"
-                          name={"anyaname"}
-                          value={`www.sociallink.com/store-link`}
-                        />
+                      <div>
+                        <div key={storeLink.id} className="social_card">
+                          <input
+                            className="check_input"
+                            type="checkbox"
+                            name={`show_${storeLink?.name}`}
+                            checked={settingsData[`show_${storeLink?.name}`]}
+                            onChange={handleCheckboxChange}
+                          />
+                          <span className="store-social-icons">
+                            {storeLink.icon}
+                          </span>
+                          <input
+                            className="social-text-field"
+                            type="text"
+                            name={`${storeLink?.name}`}
+                            value={settingsData[`${storeLink?.name}`]}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div>
+                          {settingsData[`show_${storeLink?.name}`] === true &&
+                            settingsData[`${storeLink?.name}`] === "" && (
+                              <p className="error-message">
+                                Please Fill the Input field also{" "}
+                              </p>
+                            )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -141,10 +166,12 @@ const SettingComponent = () => {
                       <input
                         className="checkbox-input"
                         type="radio"
-                        name="collect_all"
-                        value="email_number"
+                        name="collect_phone"
+                        value="phone"
+                        checked={settingsData?.collect_phone}
+                        onChange={handleRadioChange}
                       />
-                      <label htmlFor="">
+                      <label htmlFor="collect_phone">
                         Email Addresses and Phone Numbers{" "}
                       </label>
                     </div>
@@ -152,10 +179,14 @@ const SettingComponent = () => {
                       <input
                         className="checkbox-input"
                         type="radio"
-                        name="collect_emaill"
+                        name="collect_email"
                         value="email"
+                        checked={settingsData?.collect_email}
+                        onChange={handleRadioChange}
                       />
-                      <label htmlFor="">Email Addresses Only </label>
+                      <label htmlFor="collect_email">
+                        Email Addresses Only{" "}
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -201,7 +232,36 @@ const SettingComponent = () => {
                 <div className="referrals-cards-block">
                   {integratelinks.map((link) => (
                     <div className="social_block" key={link.id}>
-                      <SocialBlock link={link} />
+                      <div className="social-section">
+                        <div className="social-title">
+                          <span className="social-icons">{link.icon}</span>
+                        </div>
+
+                        <div className="check-input">
+                          <input
+                            type="checkbox"
+                            name={`share_${link.title}_referral`}
+                            id={`share_${link.title}_referral`}
+                            checked={
+                              settingsData[`share_${link.title}_referral`]
+                            }
+                            onChange={handleCheckboxChange}
+                          />
+                          <label htmlFor={`share_${link.title}_referral`}>
+                            {link.desc}
+                          </label>
+                        </div>
+
+                        <div className="referral-link-input">
+                          <textarea
+                            className="referral-input"
+                            rows={4}
+                            name={`share_${link.title}_message`}
+                            value={settingsData[`share_${link.title}_message`]}
+                            onChange={handleChange}
+                          />
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -210,7 +270,6 @@ const SettingComponent = () => {
             </>
           )}
         </section>
-
         {/* Rewards Settings Section */}
         <section className="global-settings">
           <div className="reward-settings" onClick={() => handleExpand(2)}>
@@ -255,26 +314,88 @@ const SettingComponent = () => {
                     <input
                       className="social-radioInput"
                       type="radio"
-                      name=""
-                      id=""
+                      name="discount_type"
+                      value="percent"
+                      checked={settingsData?.discount_type === "percent"}
+                      onChange={handleRadioChange}
                     />
-                    <label htmlFor="">% off the entire order</label>
+                    <label htmlFor="discount_type">
+                      % off the entire order
+                    </label>
                   </div>
                   <div className="discounts_input">
                     <input
                       className="social-radioInput"
                       type="radio"
-                      name=""
-                      id=""
+                      name="discount_type"
+                      value="amount"
+                      checked={settingsData?.discount_type === "amount"}
+                      onChange={handleRadioChange}
                     />
-                    <label htmlFor="">$ off the entire order</label>
+                    <label htmlFor="discount_type">
+                      $ off the entire order
+                    </label>
                   </div>
                 </div>
 
                 <div className="rewards-tiers-cardblocks">
                   {RewardData.map((reward) => (
                     <div key={reward.id} className="reward-card">
-                      <RewardTier reward={reward} />
+                      <div classname="reward-tier-card">
+                        <div className="reward-title">
+                          <h2>{reward.title}</h2>
+                          <span>
+                            {" "}
+                            {reward.is_required === true && "(Required)"}
+                          </span>
+                        </div>
+                        <div className="reward-content">
+                          <div className="reward-form">
+                            <div className="inputfield">
+                              <label htmlFor={`reward_${reward?.id}_tier`}>
+                                No of Referrals
+                              </label>
+                              <input
+                                className="small-inputfield"
+                                type="number"
+                                name={`reward_${reward?.id}_tier`}
+                                value={
+                                  settingsData[`reward_${reward?.id}_tier`]
+                                }
+                                onChange={handleChange}
+                              />
+                            </div>
+                            <div className="inputfield">
+                              <label htmlFor={`reward_${reward?.id}_discount`}>
+                                Discount
+                              </label>
+                              <input
+                                className="small-inputfield"
+                                type="number"
+                                name={`reward_${reward?.id}_discount`}
+                                value={
+                                  settingsData[`reward_${reward?.id}_discount`]
+                                }
+                                onChange={handleChange}
+                              />
+                            </div>
+                            <div className="inputfield">
+                              <label htmlFor={`reward_${reward?.id}_code`}>
+                                Discount Code
+                              </label>
+                              <input
+                                className="large-field"
+                                type="text"
+                                name={`reward_${reward?.id}_code`}
+                                value={
+                                  settingsData[`reward_${reward?.id}_code`]
+                                }
+                                onChange={handleChange}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -311,12 +432,38 @@ const SettingComponent = () => {
             <>
               <div className="email-container">
                 <div className="email-optCheck">
-                  <input className="checkbox-input" type="checkbox" />
-                  <label htmlFor="">
+                  <input
+                    className="checkbox-input"
+                    type="checkbox"
+                    name="double_opt_in"
+                    id="double_opt_in"
+                    checked={settingsData?.double_opt_in}
+                    onChange={handleCheckboxChange}
+                  />
+                  <label htmlFor="double_opt_in">
                     Enable Double Opt in for new sign-ups (This feature requires
                     Professional Plan or above)
                   </label>
                 </div>
+
+                <section>
+                  <div className="email-section">
+                    <h2>Email Settings - Double Opt-in Email </h2>
+                    <div className="email-content">
+                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+
+                      <textarea
+                        className="email-textinput"
+                        type="text"
+                        rows={9}
+                        value={settingsData?.double_opt_in_email}
+                        name="double_opt_in_email"
+                        id="double_opt_in_email"
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                </section>
                 <section>
                   <div className="email-section">
                     <h2>
@@ -328,9 +475,12 @@ const SettingComponent = () => {
 
                       <textarea
                         className="email-textinput"
+                        type="text"
                         rows={9}
-                        value={defaultEmail}
-                        onChange={setDefaultEmail}
+                        value={settingsData?.welcome_email}
+                        name="welcome_email"
+                        id="welcome_email"
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -346,8 +496,10 @@ const SettingComponent = () => {
                       <textarea
                         className="email-textinput"
                         rows={9}
-                        value={referralEmail}
-                        onChange={setReferralEmail}
+                        type="text"
+                        name="referral_email"
+                        value={settingsData?.referral_email}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -363,8 +515,10 @@ const SettingComponent = () => {
                       <textarea
                         className="email-textinput"
                         rows={9}
-                        value={rewardEmail}
-                        onChange={setRewardEmail}
+                        type="text"
+                        name="reward_email"
+                        value={settingsData?.reward_email}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -375,10 +529,9 @@ const SettingComponent = () => {
           )}
         </section>
 
+        {/* Integrations Settings */}
 
-          {/* Integrations Settings */}
-
-          <section className="global-settings">
+        <section className="global-settings">
           <div
             className="integration--settings"
             onClick={() => handleExpand(4)}
@@ -387,9 +540,15 @@ const SettingComponent = () => {
               <h2 className="main-title">Integrations Settings</h2>
               <span className="toggle-card-btn" onClick={() => handleExpand(4)}>
                 {currentExpanded[4] ? (
-                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(4)} />
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(4)}
+                  />
                 ) : (
-                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(4)} />
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(4)}
+                  />
                 )}
               </span>
             </div>
@@ -399,21 +558,36 @@ const SettingComponent = () => {
               <div className="integrations-container">
                 <div className="integarte__input">
                   <div className="check-input">
-                    <input type="checkbox" name="" id="" />
-                    <label htmlFor="">Integrate with Klaviyo</label>
+                    <input
+                      type="checkbox"
+                      name="klaviyo_Integration"
+                      id="klaviyo_Integration"
+                      checked={settingsData?.klaviyo_Integration}
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="klaviyo_Integration">
+                      Integrate with Klaviyo
+                    </label>
                   </div>
                 </div>
 
                 <div className="integrate-api-input">
                   <div className="inputfield">
-                    <label htmlFor="">
+                    <label htmlFor="klaviyo_api_key">
                       Private API Key - You can find the Private API Key in your
-                      <Link to="https://www.klaviyo.com/login">
+                      <a href="https://www.klaviyo.com/login" target="_blank">
                         {" "}
                         Klaviyo Account Settings
-                      </Link>
+                      </a>
                     </label>
-                    <input type="text" name="private-key" id="private-key" />
+                    <input
+                      type="text"
+                      name="klaviyo_api_key"
+                      id="klaviyo_api_key"
+                      placeholder="Enter API Key"
+                      value={settingsData?.klaviyo_api_key}
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
               </div>
@@ -422,17 +596,23 @@ const SettingComponent = () => {
           )}
         </section>
 
-         {/* Template Settings */}
+        {/* Template Settings */}
 
-         <section className="global-settings">
+        <section className="global-settings">
           <div className="templates-settings" onClick={() => handleExpand(5)}>
             <div className="main-heading">
               <h2 className="main-title">Templates Settings</h2>
               <span className="toggle-card-btn" onClick={() => handleExpand(5)}>
                 {currentExpanded[5] ? (
-                  <IoIosArrowUp style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(5)} />
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(5)}
+                  />
                 ) : (
-                  <IoIosArrowDown style={{strokeWidth: "70", fill:"#fff"}} onClick={() => handleExpand(5)} />
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(5)}
+                  />
                 )}
               </span>
             </div>
@@ -448,8 +628,29 @@ const SettingComponent = () => {
                   {dummyTeplates.map((template) => (
                     <div key={template.id} className="template-block">
                       <div className="check-input">
-                        <input type="checkbox" name="" id="" />
-                        <label htmlFor="">{template.name}</label>
+                        <input
+                          type="checkbox"
+                          name="templates"
+                          checked={settingsData?.templates}
+                          onChange={
+                            handleCheckboxChange
+
+                            // (e) => {
+                            // if (e.target.checked) {
+                            //   // concatenate the template name with comma separator
+                            //   template += `${template.name}, `;
+                            // } else {
+                            //   // remove the template name from the string
+                            //   template = template.replace(
+                            //     `${template.name}, `,
+                            //     " "
+                            //   );
+
+                            // }
+                            // }
+                          }
+                        />
+                        <label htmlFor="templates">{template.name}</label>
                       </div>
                     </div>
                   ))}
@@ -458,13 +659,13 @@ const SettingComponent = () => {
             </>
           )}
         </section>
-      </form>
 
-      <div className="settings-savebtn">
-        <button className="saveSettingsbtn" type="submit">
-          Save
-        </button>
-      </div>
+        <div className="settings-savebtn">
+          <button className="saveSettingsbtn" type="submit">
+            Save
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
