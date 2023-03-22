@@ -1,6 +1,5 @@
 <script>
   let first_page_settings = {{ block.settings | json }};
-  console.log(first_page_settings);
   window.onload = (e) => {
 
     var el = document.querySelector('.product-prelaunch');
@@ -30,54 +29,75 @@
       // Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
-      });{% endif %}let image_background = 'https:' + first_page_settings.background;{% comment %}console.log(image_background);{% endcomment %}document.getElementById('background-image').style.backgroundImage = 'linear-gradient(rgba(0, 0, 0,' + first_page_settings.background_brightness + ' ), rgba(0, 0, 0,' + first_page_settings.background_brightness + ')),url(' + image_background + ')';
+      });{% endif %}let image_background = 'https:' + first_page_settings.background;
+    document.getElementById('background-image').style.backgroundImage = 'linear-gradient(rgba(0, 0, 0,' + first_page_settings.background_brightness + ' ), rgba(0, 0, 0,' + first_page_settings.background_brightness + ')),url(' + image_background + ')';
+
+    let urlredirect = window.location.href;
+    urlredirect = urlredirect.split('/pages')[0];
 
     var form = document.getElementById('form-submission'),
       actionPath = '',
       formData = null;
 
-    form.addEventListener('submit', (e) => {
-      console.log('I came here to test!');
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       let urlParams = new URL(window.location.href).searchParams;
       let referrerID = urlParams.get('refer');
-      formData = new URLSearchParams(new FormData(form)).toString() + '&refer=' + referrerID;
+      formData = new URLSearchParams(new FormData(form)).toString() + '&refer=' + referrerID + '&campaign=' + first_page_settings.campaign_name;
       actionPath = form.getAttribute('action') + '?' + formData;
-
-      console.log(referrerID);
-      console.log(formData);
-      console.log(actionPath);
 
       const fetchOptions = {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
         },
-        data: formData
+        data: formData,
+        redirect: 'follow'
       };
 
-      console.log(fetchOptions.data);
-      const response = fetch(actionPath, fetchOptions);
-      response.then(function(r) {
-        console.log(r);
-      });
+      const response = await fetch(actionPath, fetchOptions);
+
+      const data = await response.json();
+
+      console.log(response.status);
+
+      if (response.status == '400') {
+        showSnackbar("snackbar");
+      } else if (response.status == '307') {
+        window.location.href = urlredirect + '/pages/' + first_page_settings.page + '?referralCode=' + data.referral;
+      } else {
+        showSnackbar("snackbar2");
+      }
 
       return;
     });
+
+    function showSnackbar(id) {
+      var snackBar = document.getElementById(id);
+
+      snackBar.className = "show-bar";
+      setTimeout(function() {
+        snackBar.className = snackBar.className.replace("show-bar", "");
+      }, 5000);
+    }
   }
 </script>
 
 <style>
   .section-layout {
-    font-size: {{ block.settings.base_font_size }};
-    font-family: {{ block.settings.font_family }};
+    font-size: {{ block.settings.base_font_size }}
+    ;
+    font-family: {{ block.settings.font_family }}
+    ;
   }
 
   .submit-button {
     font-size: 1em;
-    color: {{ block.settings.accent_color }};
-    background: {{ block.settings.main_color }};
+    color: {{ block.settings.accent_color }}
+    ;
+    background: {{ block.settings.main_color }}
+    ;
     border: 1px solid{{ block.settings.accent_color}};
   }
 
@@ -87,23 +107,28 @@
   }
 
   .subheader_text {
-    color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size | times: 1.3}}px;
+    color: {{ block.settings.accent_color }}
+    ;
+    font-size: {{ block.settings.base_font_size | times: 1.3}}
+    px;
     font-weight: 400;
     padding: 0 3%;
     text-align: center;
   }
 
   .header_text {
-    color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size|times: 2}}px;
+    color: {{ block.settings.accent_color }}
+    ;
+    font-size: {{ block.settings.base_font_size|times: 2}}
+    px;
     font-weight: 400;
     padding: 0 2%;
     text-align: center;
   }
 
   .tag-line {
-    color: {{ block.settings.accent_color }};
+    color: {{ block.settings.accent_color }}
+    ;
     font-weight: 600;
     margin-bottom: 1em;
     padding: 0 2%;
@@ -111,7 +136,8 @@
   }
 
   .text-layout {
-    background-color: {{ block.settings.main_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -139,7 +165,8 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-color: {{ block.settings.main_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -148,17 +175,17 @@
     width: 98.9vw;
   }
 
-    .header_text {
-      font-size: 2.5rem;
-    }
-    .subheader_text {
-      font-size: 2rem;
-    }
-
-    .tag-line {
-      font-size: 2.7rem;
-    }
+  .header_text {
+    font-size: 2.5rem;
   }
+  .subheader_text {
+    font-size: 2rem;
+  }
+
+  .tag-line {
+    font-size: 2.7rem;
+  }
+}
 </style>
 
 {% render "first_page" %}
@@ -206,10 +233,12 @@
           {
             "value": "horizontal",
             "label": "Horizontal"
-          }, {
+          },
+          {
             "value": "flip-horizontal",
             "label": "Flip Horizontal"
-          }, {
+          },
+          {
             "value": "vertical",
             "label": "Vertical"
           }, {
