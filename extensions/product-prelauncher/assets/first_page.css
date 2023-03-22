@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lalezar&family=Lato&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lalezar&family=Lato&display=swap");
 
 .section-layout {
   display: flex;
@@ -273,7 +273,7 @@
   box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.4);
 }
 
-input[type='email']:focus {
+input[type="email"]:focus {
   box-shadow: none;
 }
 

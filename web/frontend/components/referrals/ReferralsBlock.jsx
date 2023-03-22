@@ -6,12 +6,15 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { ShowModal, DeleteModal } from "../modal/index";
 import DataTable from "react-data-table-component";
 import {customStyles} from "./customStyles"
+import { useAuthenticatedFetch } from "../../hooks/useAuthenticatedFetch";
 
 const ReferralsBlock = () => {
   const [openModal, setOpenModal] = React.useState(false);
   const [modalData, setModalData] = React.useState();
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [data, setData] = React.useState(referralRows);
+  const [store_referrals, setStoreReferrals] = React.useState([]);
+  const authenticated_fetch = useAuthenticatedFetch();
 
   // Delete Action Function for Delete a row from the table
   const handleDelete = (id) => {
@@ -23,9 +26,15 @@ const ReferralsBlock = () => {
   React.useEffect(() =>{
     if(openModal || deleteModal){
       document.body.style.opacity="0.5 !important"; 
+  React.useEffect(() => {
+    if (openModal || deleteModal) {
+      document.body.style.opacity = "0.5 !important";
+    } else {
+      document.body.style.opacity = "1 !important";
     }
     else{
       document.body.style.opacity="1 !important"; 
+  }, [openModal, deleteModal]);
 
     }
   },[openModal, deleteModal])
@@ -33,20 +42,30 @@ const ReferralsBlock = () => {
   React.useEffect(() =>{
     if(deleteModal){
       window.addEventListener("click", () =>{
+  React.useEffect(() => {
+    if (deleteModal) {
+      window.addEventListener("click", () => {
         setDeleteModal(false);
       })
+      });
     }
   },[deleteModal])
 
+  }, [deleteModal]);
 
   React.useEffect(() =>{
     if(openModal){
+  React.useEffect(() => {
+    if (openModal) {
       setDeleteModal(false);
+    } else if (DeleteModal) {
+      setOpenModal(false);
     }
     else if(DeleteModal){
       setOpenModal(false)
     }
   })
+  });
 
   // Actions column on table to view and delete data
   const actionColumns = [
@@ -80,6 +99,17 @@ const ReferralsBlock = () => {
       },
     },
   ];
+
+  React.useEffect(() => {
+    const get_data = async () => {
+      const response = await authenticated_fetch("/api/get_store_referrals");
+      const data = await response.json();
+      setStoreReferrals(data.message);
+      setModalData(data.message);
+      console.log(data);
+    };
+    get_data();
+  }, []);
   return (
     <>
       <div className="datatable">
@@ -87,6 +117,7 @@ const ReferralsBlock = () => {
           customStyles={customStyles}
           columns={referralColumns.concat(actionColumns)}
           data={data}
+          data={store_referrals}
           pagination
           highlightOnHover
         />

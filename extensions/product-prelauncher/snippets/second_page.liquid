@@ -13,10 +13,24 @@
           id="code"
           disabled
           type="text"
-          value="3245hjkjhgfdsfghgffd"
+          value=""
           class="referral-link-inp" />
         <button class="copy-link-btn" onclick="copyToClipboard()">Copy Link</button>
         <div id="snackbar">Copied to clipboard</div>
+        <script>
+          async function copyToClipboard() {
+            let user_referral_code = await get_referral_code();
+            var copyCode = document.getElementById("code");
+            copyCode.select();
+            copyCode.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(`https://xychros-backend-test-store.myshopify.com/pages/test?code=${user_referral_code}`);
+            var x = document.getElementById("snackbar");
+            x.className = "show";
+            setTimeout(function() {
+              x.className = x.className.replace("show", "");
+            }, 2000);
+          }
+        </script>
       </div>
 
 
@@ -64,14 +78,8 @@
         </a>
       </div>
     </div>
-
     <div class="gift-layout full">
-      <div class="some-text">0 friends have joined! Invite friends to Join</div>
-      {% comment %} <div class="friend-count">
-      <p>5</p>
-      <p>10</p>
-      <p>15</p>
-      </div> {% endcomment %}
+      <div class="some-text" id="count_referrals">0 friends have joined! Invite friends to Join</div>
       <div class="timeline-group">
         <div class="timeline-headers">
           <div>Friends Joined</div>
@@ -88,12 +96,12 @@
                   onmouseenter="mouseenter(this)"
                   onmouseleave="mouseleave(this)">6<div class="timeline-item-detail" style="display: none;">Invite 6 friends to unlock this reward!</div>
                 </div>
+
                 <div
                   class="timeline-item-name"
                   onmouseenter="mouseenterproduct(this)"
-                  onmouseleave="mouseleaveproduct(this)">
-                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  onmouseleave="mouseleaveproduct(this)">{{ block.settings.icon | image_url: width: 50 | image_tag }}
+
                   <div class="timeline-contain" style="display: none;">
                     <span>{{ p.title }}</span>
                     <span>{{ p.featured_image | image_url: width: 50 | image_tag }}</span>
@@ -122,10 +130,12 @@
       </div>
       <div class="spaced some-text">0 friends have joined! Invite friends to Join</div>
       <div class="vertical-timeline-headers">
-        <div>Friends Joined</div>
+        <div>
+          <h3>Friends Joined</h3>
+          <div id="referral_rows"></div>
+        </div>
         <div>Rewards</div>
       </div>
-
       <div class="spaced vertical-timeline">
         <div class="vertical-timeline-progress">&nbsp;</div>
         <div class="vertical-timeline-items">
@@ -143,9 +153,8 @@
                 <div
                   class="vertical-timeline-item-name"
                   onmouseenter="mouseenterproduct(this)"
-                  onmouseleave="mouseleaveproduct(this)">
-                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  onmouseleave="mouseleaveproduct(this)">{{ block.settings.icon | image_url: width: 50 | image_tag }}
+
                   <div class="vertical-timeline-contain" style="display: none;">
                     <span>{{ p.title }}</span>
                     <span>{{ p.featured_image | image_url: width: 50 | image_tag }}</span>
@@ -162,3 +171,72 @@
   <div class="footer_text {% if block.settings.layout == 'vertical' %}right-side{% endif %}">
     {{ block.settings.footer_text }}</div>
 </div>
+<script>
+  let link = encodeURI(window.location.href);
+  let subject = 'Subject';
+  let message = 'Hello there!';
+  subject = encodeURIComponent(subject);
+  encodedMessage = encodeURIComponent(message);
+  const email = document.querySelector('.email');
+  email.href = `mailto:?&subject=${'subject of email'}&body=${encodedMessage}`;
+  const twitter = document.querySelector('.twitter');
+  twitter.href = `https://twitter.com/share?url=${encodedMessage}`;
+  const whatsapp = document.querySelector('.whatsapp');
+  whatsapp.href = `https://wa.me/?text=${encodedMessage}`;
+  function copyMessage() {
+    let text = 'hi there this is to be copied...';
+    navigator.clipboard.writeText(text);
+    setTimeout(() => {
+      const fb = document.querySelector('.facebook');
+      fb.href = 'https://www.facebook.com/';
+      const instagram = document.querySelector('.instagram');
+      instagram.href = "https://instagram.com/";
+      const snapchat = document.querySelector('.snapchat');
+      snapchat.href = "https://accounts.snapchat.com/accounts/login";
+      const tiktok = document.querySelector('.tiktok');
+      tiktok.href = "https://www.tiktok.com/en/";
+    }, 500)
+  }
+  function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+  const get_referral_code = async () => {
+    const url = "/apps/xychros_backend_new/api/get_code/";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(
+        {email: getCookie("email")}
+      )
+    });
+    const data = await response.json();
+    if (response.status == 200) {
+      return data.message;
+    }
+  };
+</script>
+<script>
+  async function fillCopyCodeInput() {
+    let user_referral_code = await get_referral_code();
+    var copyCode = document.getElementById("code");
+    copyCode.value = `https://xychros-backend-test-store.myshopify.com/pages/test?code=${user_referral_code}`;
+  }
+  fillCopyCodeInput();
+</script>
+<script
+  type="module"
+  src="{{ 'get_referrals.js' | asset_url }}"
+  defer></script>
