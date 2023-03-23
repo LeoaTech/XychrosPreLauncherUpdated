@@ -716,15 +716,517 @@ input[type='tel']:focus {
   }
 }
 
+/* ============================== CSS styles for tablets ==================================== */
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+  /* general settings for tablet view */
+
+  .email-input-product-prelaucher {
+    width: 60%;
+  }
+
+  .phone-input-product-prelaucher {
+    width: 60%;
+  }
+
   input {
-    text-align: center;
+    text-align: left;
   }
 
   ::-webkit-input-placeholder {
-    text-align: center;
+    text-align: left;
   }
 
   :-moz-placeholder {
-    text-align: center;
+    text-align: left;
+  }
+
+  /* vertical layout */
+
+  .vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  /* flip vertical layout */
+
+  .flip-vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .flip-vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  /* diagonal layout */
+
+  .lower-triangular .subheader_text {
+    top: 4rem;
+    left: -0.8rem;
+  }
+
+  .lower-triangular .header_text {
+    top: 7rem;
+    left: 0;
+  }
+
+  .lower-triangular .tag-line {
+    bottom: 19rem;
+    right: 2.5rem;
+  }
+
+  .lower-triangular .first-page-form {
+    bottom: 1rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip-diagonal layout */
+
+  .flip-lower-triangular .subheader_text {
+    bottom: 5rem;
+    left: unset;
+    right: 0;
+  }
+
+  .flip-lower-triangular .header_text {
+    bottom: 0;
+    left: unset;
+    right: 0;
+  }
+
+  .flip-lower-triangular .tag-line {
+    bottom: unset;
+    top: 16rem;
+    left: 3rem;
+    right: unset;
+  }
+
+  .flip-lower-triangular .first-page-form {
+    bottom: unset;
+    top: 22rem;
+    left: 3rem;
+    right: 0;
+    width: 60% !important;
+  }
+
+  .flip-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* traverse diagonal layout */
+
+  .transfer-lower-triangular .subheader_text {
+    bottom: 10rem;
+    left: 0.2rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .header_text {
+    bottom: 5rem;
+    left: 1rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .tag-line {
+    top: 5rem;
+    right: 3rem;
+  }
+
+  .transfer-lower-triangular .first-page-form {
+    top: 12rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip traverse diagonal layout */
+
+  .flip-transfer-lower-triangular .subheader_text {
+    top: 5rem;
+    right: 0;
+  }
+
+  .flip-transfer-lower-triangular .header_text {
+    top: 8.5rem;
+    right: 0;
+  }
+
+  .flip-transfer-lower-triangular .tag-line {
+    bottom: 19rem;
+    left: 2.5rem;
+  }
+
+  .flip-transfer-lower-triangular .first-page-form {
+    bottom: 0;
+    left: 3rem;
+    width: 60%;
+  }
+
+  .flip-transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
   }
 }
+
+/* =============================== CSS rules for desktops and laptops ================================ */
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+  /* vertical layout */
+
+  .vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  /* flip vertical layout */
+
+  .flip-vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .flip-vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  /* diagonal layout */
+
+  .lower-triangular .subheader_text {
+    top: 8rem;
+    left: 0;
+  }
+
+  .lower-triangular .header_text {
+    top: 12rem;
+    left: 1rem;
+  }
+
+  .lower-triangular .tag-line {
+    bottom: 19rem;
+    right: 6.5rem;
+  }
+
+  .lower-triangular .first-page-form {
+    bottom: 1rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip-diagonal layout */
+
+  .flip-lower-triangular .subheader_text {
+    bottom: 5.5rem;
+    left: unset;
+    right: 0.5rem;
+  }
+
+  .flip-lower-triangular .header_text {
+    bottom: 1rem;
+    left: unset;
+    right: 1rem;
+  }
+
+  .flip-lower-triangular .tag-line {
+    bottom: unset;
+    top: 16rem;
+    left: 6.5rem;
+    right: unset;
+  }
+
+  .flip-lower-triangular .first-page-form {
+    bottom: unset;
+    top: 22.5rem;
+    left: 3rem;
+    right: 0;
+    width: 60% !important;
+  }
+
+  .flip-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* traverse diagonal layout */
+
+  .transfer-lower-triangular .subheader_text {
+    bottom: 10rem;
+    left: 0.2rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .header_text {
+    bottom: 5rem;
+    left: 1rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .tag-line {
+    top: 5rem;
+    right: 6.5rem;
+  }
+
+  .transfer-lower-triangular .first-page-form {
+    top: 12rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip traverse diagonal layout */
+
+  .flip-transfer-lower-triangular .subheader_text {
+    top: 5rem;
+    right: 0;
+  }
+
+  .flip-transfer-lower-triangular .header_text {
+    top: 8.5rem;
+    right: 1rem;
+  }
+
+  .flip-transfer-lower-triangular .tag-line {
+    bottom: 19rem;
+    left: 8rem;
+  }
+
+  .flip-transfer-lower-triangular .first-page-form {
+    bottom: 0;
+    left: 3rem;
+    width: 60%;
+  }
+
+  .flip-transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+}
+
+/* ======================== CSS rules for large desktops and high-resolution displays ==================== */
+
+@media only screen and (min-width: 1200px) {
+
+  /* vertical layout */
+  .vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  /* flip vertical layout */
+  .flip-vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .flip-vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  /* diagonal layout */
+  .lower-triangular .subheader_text {
+    top: 8rem;
+    left: 0;
+  }
+
+  .lower-triangular .header_text {
+    top: 13rem;
+    left: 1.2rem;
+  }
+
+  .lower-triangular .tag-line {
+    bottom: 19rem;
+    right: 6.5rem;
+  }
+
+  .lower-triangular .first-page-form {
+    bottom: 1rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip-diagonal layout */
+
+  .flip-lower-triangular .subheader_text {
+    bottom: 6.5rem;
+    left: unset;
+    right: 0.5rem;
+  }
+
+  .flip-lower-triangular .header_text {
+    bottom: 1rem;
+    left: unset;
+    right: 1rem;
+  }
+
+  .flip-lower-triangular .tag-line {
+    bottom: unset;
+    top: 19rem;
+    left: 6.5rem;
+    right: unset;
+  }
+
+  .flip-lower-triangular .first-page-form {
+    bottom: unset;
+    top: 28rem;
+    left: 3rem;
+    right: 0;
+    width: 60% !important;
+  }
+
+  .flip-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* traverse diagonal layout */
+
+  .transfer-lower-triangular .subheader_text {
+    bottom: 10rem;
+    left: 0.2rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .header_text {
+    bottom: 5rem;
+    left: 1.5rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .tag-line {
+    top: 5rem;
+    right: 6.5rem;
+  }
+
+  .transfer-lower-triangular .first-page-form {
+    top: 15rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip traverse diagonal layout */
+
+  .flip-transfer-lower-triangular .subheader_text {
+    top: 5rem;
+    right: 0;
+  }
+
+  .flip-transfer-lower-triangular .header_text {
+    top: 9rem;
+    right: 1rem;
+  }
+
+  .flip-transfer-lower-triangular .tag-line {
+    bottom: 19rem;
+    left: 8rem;
+  }
+
+  .flip-transfer-lower-triangular .first-page-form {
+    bottom: 0;
+    left: 3rem;
+    width: 60%;
+  }
+
+  .flip-transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+}
+

@@ -2,38 +2,46 @@
   let first_page_settings = {{ block.settings | json }};
   console.log(first_page_settings);
   window.onload = (e) => {
-
     var el = document.querySelector('.product-prelaunch');
     el.parentElement.style.padding = '0';
-    el.parentElement.style.margin = '0';{% if block.settings.show_header_footer == false %}var node,
-        nodes = [];
-
+    el.parentElement.style.margin = '0';
+    {% if block.settings.show_header_footer == false %}
+      var node,
+      nodes = [];
+      
       do {
-        var parent = el.parentNode;
+          var parent = el.parentNode;
 
-        // Collect element children
-        for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
-          node = parent.childNodes[i];
+          // Collect element children
+          for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
+            node = parent.childNodes[i];
 
-          // Collect only sibling nodes that are elements and not the current element
-          if (node.nodeType == 1 && node != el) {
-            nodes.push(node);
+            // Collect only sibling nodes that are elements and not the current element
+            if (node.nodeType == 1 && node != el) {
+              nodes.push(node);
+            }
           }
-        }
 
-        // Go up to parent
-        el = parent;
-
-        // Stop when processed the body's child nodes
-      } while (el.tagName.toLowerCase() != 'body');
+          // Go up to parent
+          el = parent;
+          
+          // Stop when processed the body's child nodes
+        } while (el.tagName.toLowerCase() != 'body');
+        
+        // Hide the collected nodes
+        nodes.forEach(function(node) {
+          node.style.display = 'none';
+        });
+        
+    {% endif %}
 
     let image_background = 'https:' + first_page_settings.background;
     console.log(image_background);
     document.getElementById('background-image').style.backgroundImage = first_page_settings.background_color  + ',url(' + image_background + ')';
 
     var form = document.getElementById('form-submission'),
-      actionPath = '',
-      formData = null;
+    actionPath = '',
+    formData = null;
 
     form.addEventListener('submit', (e) => {
       console.log('I came here to test!');
@@ -150,6 +158,34 @@
       font-size: {{ block.settings.base_font_size|times: 0.75}}px;
     }
   }
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
+    .header_text {
+      font-size: {{ block.settings.base_font_size|times: 1.3}}px;
+    }
+    .subheader_text {
+      font-size: {{ block.settings.base_font_size}}px;
+    }
+    .tag-line {
+      font-size: {{ block.settings.base_font_size|times: 0.9}}px;
+    }
+  }
+  @media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .header_text {
+      font-size: {{ block.settings.base_font_size|times: 1.5}}px;
+    }
+    .subheader_text {
+      font-size: {{ block.settings.base_font_size|times: 1.2}}px;
+    }
+    .tag-line {
+      font-size: {{ block.settings.base_font_size|times: 1}}px;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    .header_text {
+      font-size: {{ block.settings.base_font_size|times: 2}}px;
+    }
+    .subheader_text {
+      font-size: {{ block.settings.base_font_size|times: 1.8}}px;
     }
     .tag-line {
       font-size: {{ block.settings.base_font_size|times: 1.5}}px;
