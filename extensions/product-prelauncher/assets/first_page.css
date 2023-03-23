@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lalezar&family=Lato&display=swap');
 
+/* ================ general settings ================== */
+
 .section-layout {
   display: flex;
   margin: 0 !important;
@@ -7,7 +9,59 @@
   box-sizing: border-box;
 }
 
-/* none */
+.tag-line {
+  width: 100%;
+}
+
+#form-submission {
+  display: flex;
+  flex-direction: column;
+}
+
+.email-input-product-prelaucher {
+  border-radius: 4px;
+  min-height: 50px;
+  width: 50%;
+  font-size: 20px;
+  padding: 1.5%;
+  border: none;
+  margin: 8px auto;
+}
+
+.email-input-product-prelaucher:hover {
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .4);
+}
+
+input[type='email']:focus {
+  box-shadow: none;
+  outline: none !important;
+}
+
+.phone-input-product-prelaucher {
+  border-radius: 4px;
+  min-height: 50px;
+  width: 50%;
+  font-size: 20px;
+  padding: 1.5%;
+  border: none;
+  margin: 0 auto;
+}
+
+.phone-input-product-prelaucher:hover {
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .4);
+}
+
+input[type='tel']:focus {
+  box-shadow: none;
+  outline: none !important;
+}
+
+.submit-button-product-prelaunch {
+  border-radius: 4px;
+  margin: 10px auto;
+}
+
+/* none layout */
 
 .section-layout.none {
   flex-direction: column;
