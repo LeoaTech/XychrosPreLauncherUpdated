@@ -27,10 +27,9 @@
         // Stop when processed the body's child nodes
       } while (el.tagName.toLowerCase() != 'body');
 
-      // Hide the collected nodes
-      nodes.forEach(function(node) {
-        node.style.display = 'none';
-      });{% endif %}let image_background = 'https:' + first_page_settings.background;{% comment %}console.log(image_background);{% endcomment %}document.getElementById('background-image').style.backgroundImage = 'linear-gradient(rgba(0, 0, 0,' + first_page_settings.background_brightness + ' ), rgba(0, 0, 0,' + first_page_settings.background_brightness + ')),url(' + image_background + ')';
+    let image_background = 'https:' + first_page_settings.background;
+    console.log(image_background);
+    document.getElementById('background-image').style.backgroundImage = first_page_settings.background_color  + ',url(' + image_background + ')';
 
     var form = document.getElementById('form-submission'),
       actionPath = '',
@@ -134,20 +133,16 @@
       align-items: center;
     {% endif %}
   }
-
   .none-layout {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-color: {{ block.settings.main_color }};
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    width: 98.9vw;
   }
-
     .header_text {
       font-size: 2.5rem;
     }
@@ -176,20 +171,17 @@
         "id": "show_header_footer",
         "label": "Show Header & Footer",
         "default": true
-      },
-      {
+      }, {
         "type": "color_background",
         "id": "background_color",
-        "label": "Background",
+        "label": "Background Overlay",
         "default": "linear-gradient(#ffffff, #000000)"
-      },
-      {
+      }, {
         "label": "Main Color",
         "id": "main_color",
         "type": "color",
         "default": "#000000"
-      },
-      {
+      }, {
         "label": "Accent Color",
         "id": "accent_color",
         "type": "color",
@@ -223,10 +215,10 @@
             "label": "Flip Diagonal"
           }, {
             "value": "transfer-diagonal",
-            "label": "Transfer Diagonal"
+            "label": "Traverse Diagonal"
           }, {
             "value": "flip-transfer-diagonal",
-            "label": "Flip Transfer Diagonal"
+            "label": "Flip Traverse Diagonal"
           }
         ],
         "default": "none"
