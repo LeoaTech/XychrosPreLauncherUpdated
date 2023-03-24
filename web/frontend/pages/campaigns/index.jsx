@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllCampaigns,
+  fetchCampaign,
   fetchCampaignsData,
   getCampaignsError,
   getCampaignsStatus,
 } from "../../app/features/campaigns/campaignSlice";
 import { SideBar, Header, Campaign, MainPage } from "../../components/index";
+import useFetchCampaignsData from "../../constant/fetchCampaignsData";
 import { useStateContext } from "../../contexts/ContextProvider";
 import { useThemeContext } from "../../contexts/ThemeContext";
 import { useAuthenticatedFetch } from "../../hooks";
@@ -16,6 +18,17 @@ const Campaigns = () => {
   const { darkTheme } = useThemeContext();
   const fetch = useAuthenticatedFetch();
   const dispatch = useDispatch();
+
+  const campaigns = useFetchCampaignsData("/api/getcampaigns", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  useEffect(() => {
+    if (campaigns.length) {
+      dispatch(fetchCampaign(campaigns));
+    }
+  }, [campaigns, dispatch]);
 
   return (
     <div className="app">
