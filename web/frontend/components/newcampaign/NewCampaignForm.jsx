@@ -645,6 +645,104 @@ function NewCampaignForm() {
             </>
           )}
         </section>
+
+
+        {/* Referal Settings */}
+        <section className="newcampaign-settings">
+          <div className="referrals-settings" onClick={() => handleExpand(1)}>
+            <div className="card-header">
+              <h2 className="card-title">Referral Settings</h2>
+              <span className="toggle-btn" onClick={() => handleExpand(1)}>
+                {expanded[1] ? (
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(1)}
+                  />
+                ) : (
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(1)}
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+
+          {expanded[1] && (
+            <>
+              <div className="referral-settings-form">
+                <div className="referral-container">
+                  <p>
+                    Select the Social Media channels that you want to allow your
+                    customers to share their referral link with!
+                    <br /> You can also customise the message that you would
+                    want your customers to share!
+                  </p>
+                </div>
+                <div className="social-links-container">
+                  {integratelinks.map((link) => (
+                    <div className="social_block" key={link.id}>
+                      <div className="social-section">
+                        <div className="social-title">
+                          <span className="social-icons">{link.icon}</span>
+                        </div>
+
+                        <div className="check-input">
+                          {isEdit ? (
+                            <input
+                              type="checkbox"
+                              name={`share_${link?.title}_referral`}
+                              id={`share_${link.title}_referral`}
+                              checked={
+                                editCampaignData[`share_${link.title}_referral`]
+                              }
+                              onChange={handleCheckboxChange}
+                            />
+                          ) : (
+                            <input
+                              type="checkbox"
+                              name={`share_${link?.title}_referral`}
+                              id={`share_${link.title}_referral`}
+                              checked={
+                                newCampaignData[`share_${link.title}_referral`]
+                              }
+                              onChange={handleCheckboxChange}
+                            />
+                          )}{" "}
+                          <label htmlFor="">{link.desc}</label>
+                        </div>
+
+                        <div className="referral-link-input">
+                          {isEdit ? (
+                            <textarea
+                              className="referral-input"
+                              rows={4}
+                              value={
+                                editCampaignData[`share_${link?.title}_message`]
+                              }
+                              onChange={handleChange}
+                            />
+                          ) : (
+                            <textarea
+                              className="referral-input"
+                              rows={4}
+                              value={
+                                newCampaignData[`share_${link?.title}_message`]
+                              }
+                              onChange={handleChange}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="referral-nextbtn">{renderButton(2)}</div>
+            </>
+          )}
+        </section>
+
       </form>
 
       {/* Loading overlay  */}
