@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { settings, SideLogo } from "../../assets";
+import { settings, xychrosLogo } from "../../assets";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import "./setting.css";
 import { storeLinks } from "../newcampaign/dummySocial";
@@ -20,7 +20,7 @@ const SettingComponent = () => {
     if (defaultSettings) {
       setSettingsData(defaultSettings);
     }
-  }, []);
+  }, [defaultSettings]);
 
   const [currentExpanded, setCurrentExpanded] = useState(Array(6).fill(false));
 
@@ -83,12 +83,9 @@ const SettingComponent = () => {
     // Update the state with the new value
     setSettingsData((prevSettingsData) => ({
       ...prevSettingsData,
-      [name]: value === "phone"  ,
+      [name]: value === "phone",
       discount_type: value,
-     
     }));
-
-
   }
 
   console.log("Settings", settingsData);
@@ -453,7 +450,11 @@ const SettingComponent = () => {
                   <div className="email-section">
                     <h2>Email Settings - Double Opt-in Email </h2>
                     <div className="email-content">
-                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
 
                       <textarea
                         className="email-textinput"
@@ -474,7 +475,11 @@ const SettingComponent = () => {
                       signs up{" "}
                     </h2>
                     <div className="email-content">
-                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
 
                       <textarea
                         className="email-textinput"
@@ -495,7 +500,11 @@ const SettingComponent = () => {
                       signs up{" "}
                     </h2>
                     <div className="email-content">
-                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
                       <textarea
                         className="email-textinput"
                         rows={9}
@@ -514,7 +523,11 @@ const SettingComponent = () => {
                       tier is unlocked
                     </h2>
                     <div className="email-content">
-                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
                       <textarea
                         className="email-textinput"
                         rows={9}
