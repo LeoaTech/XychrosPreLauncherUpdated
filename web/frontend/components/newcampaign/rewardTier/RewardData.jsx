@@ -17,5 +17,7 @@ export const RewardData = [
   {
     id: 4,
     title: "Reward Tier 4",
+    is_required: false,
+
   },
 ];
