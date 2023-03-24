@@ -944,6 +944,198 @@ function NewCampaignForm() {
             </>
           )}
         </section>
+
+        {/* Email Settings */}
+        <section className="newcampaign-settings">
+          <div className="emails-settings" onClick={() => handleExpand(3)}>
+            <div className="card-header">
+              <h2 className="card-title">Email Settings</h2>
+              <span className="toggle-btn" onClick={() => handleExpand(3)}>
+                {expanded[3] ? (
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(3)}
+                  />
+                ) : (
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(3)}
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+          {expanded[3] && (
+            <>
+              <div className="email-container">
+                <div className="email-optCheck">
+                  {isEdit ? (
+                    <input
+                      className="checkbox-input"
+                      type="checkbox"
+                      name="double_opt_in"
+                      id="double_opt_in"
+                      checked={editCampaignData?.double_opt_in}
+                      onChange={handleCheckboxChange}
+                    />
+                  ) : (
+                    <input
+                      className="checkbox-input"
+                      type="checkbox"
+                      name="double_opt_in"
+                      id="double_opt_in"
+                      checked={newCampaignData?.double_opt_in}
+                      onChange={handleCheckboxChange}
+                    />
+                  )}
+                  <label htmlFor="double_opt_in">
+                    Enable Double Opt in for new sign-ups (This feature requires
+                    Professional Plan or above)
+                  </label>
+                </div>
+                <section>
+                  <div className="email-section">
+                    <h2>Email Settings - Double Opt-in Email </h2>
+                    <div className="email-content">
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
+
+                      {isEdit ? (
+                        <textarea
+                          className="email-textinput"
+                          type="text"
+                          rows={9}
+                          value={editCampaignData?.double_opt_in_email}
+                          name="double_opt_in_email"
+                          id="double_opt_in_email"
+                          onChange={handleChange}
+                        />
+                      ) : (
+                        <textarea
+                          className="email-textinput"
+                          type="text"
+                          rows={9}
+                          value={newCampaignData?.double_opt_in_email}
+                          name="double_opt_in_email"
+                          id="double_opt_in_email"
+                          onChange={handleChange}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div className="email-section">
+                    <h2>
+                      Welcome Email Draft - This email is sent when a customer
+                      signs up{" "}
+                    </h2>
+                    <div className="email-content">
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
+
+                      {isEdit ? (
+                        <textarea
+                          className="email-textinput"
+                          rows={9}
+                          value={editCampaignData?.welcome_email}
+                          name="welcome_email"
+                          id="welcome_email"
+                          onChange={handleChange}
+                        />
+                      ) : (
+                        <textarea
+                          className="email-textinput"
+                          rows={9}
+                          value={newCampaignData?.welcome_email}
+                          name="welcome_email"
+                          id="welcome_email"
+                          onChange={handleChange}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div className="email-section">
+                    <h2>
+                      Referral Email Draft - This email is sent when a referral
+                      signs up{" "}
+                    </h2>
+                    <div className="email-content">
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
+
+                      {isEdit ? (
+                        <textarea
+                          className="email-textinput"
+                          rows={9}
+                          name="referral_email"
+                          value={editCampaignData?.referral_email}
+                          onChange={handleChange}
+                        />
+                      ) : (
+                        <textarea
+                          className="email-textinput"
+                          rows={9}
+                          name="referral_email"
+                          value={newCampaignData?.referral_email}
+                          onChange={handleChange}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div className="email-section">
+                    <h2>
+                      Reward Tier Email Draft - This email is sent when a reward
+                      tier is unlocked
+                    </h2>
+                    <div className="email-content">
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
+
+                      {isEdit ? (
+                        <textarea
+                          className="email-textinput"
+                          rows={9}
+                          name="reward_email"
+                          value={editCampaignData?.reward_email}
+                          onChange={handleChange}
+                        />
+                      ) : (
+                        <textarea
+                          className="email-textinput"
+                          rows={9}
+                          name="reward_email"
+                          value={newCampaignData?.reward_email}
+                          onChange={handleChange}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div className="email-setting-section">
+                <div></div>
+                <div>{renderButton(4)}</div>
+              </div>
+            </>
+          )}
+        </section>
       </form>
 
       {/* Loading overlay  */}
