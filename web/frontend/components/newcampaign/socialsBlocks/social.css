@@ -43,7 +43,12 @@
   font-size: 16px;
   color: #dedddd;
   padding: 8px 17px;
+  border-radius: 12px;
   background-color: #25242d;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
 }
 
 @media screen and (max-width: 1480px) {

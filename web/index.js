@@ -13,7 +13,8 @@ import { AppInstallations } from './app_installations.js';
 import cors from 'cors';
 import campaignApiEndpoints from './middleware/campaign-api.js';
 import referralsApiEndpoints from './middleware/referrals.js';
-
+import globalSettingsApiEndPoint from './middleware/global-settings-api.js';
+import bodyParser from 'body-parser';
 const USE_ONLINE_TOKENS = false;
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -135,7 +136,6 @@ export async function createServer(
     res.status(200).send(countData);
   });
 
-
   // app.get('/api/products/create', async (req, res) => {
   //   const session = await Shopify.Utils.loadCurrentSession(
   //     req,
@@ -159,9 +159,16 @@ export async function createServer(
   // attribute, as a result of the express.json() middleware
   app.use(cors());
   app.use(express.json());
+  app.use(bodyParser.json());
+  app.use(
+    bodyParser.urlencoded({
+      extended: true,
+    })
+  );
 
   campaignApiEndpoints(app);
   referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
+  globalSettingsApiEndPoint(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);

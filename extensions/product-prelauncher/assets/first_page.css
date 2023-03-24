@@ -96,7 +96,7 @@ input[type='tel']:focus {
 
 /* flip horizontal layout */
 
-.section-layout.flip-horizontal{
+.section-layout.flip-horizontal {
   flex-direction: column;
 }
 
@@ -180,7 +180,7 @@ input[type='tel']:focus {
   position: absolute;
   height: 100%;
   width: 100%;
-  clip-path:polygon(0 0, 100% 0, 100% 0, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 0, 0 100%);
 }
 
 .lower-triangular {
@@ -233,7 +233,9 @@ input[type='tel']:focus {
   position: absolute;
   height: 100%;
   width: 100%;
+
   clip-path:polygon(100% 0, 100% 0, 100% 100%, 0 100%);
+
 }
 
 .flip-lower-triangular {
@@ -286,7 +288,7 @@ input[type='tel']:focus {
   position: absolute;
   height: 100%;
   width: 100%;
-  clip-path:polygon(0 0, 0 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 0 0, 100% 100%, 0 100%);
 }
 
 .transfer-lower-triangular {
@@ -339,7 +341,7 @@ input[type='tel']:focus {
   position: absolute;
   height: 100%;
   width: 100%;
-  clip-path:polygon(0 0, 0 0, 100% 0, 100% 100%);
+  clip-path: polygon(0 0, 0 0, 100% 0, 100% 100%);
 }
 
 .flip-transfer-lower-triangular {
@@ -381,7 +383,14 @@ input[type='tel']:focus {
   width: 80%;
 }
 
+/*
+.email-input-product-prelaucher:hover {
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.4);
+}
+*/
+
 /* =============================== CSS styles for mobile devices =========================== */ 
+
 
 @media screen and (max-width: 767px) {
 
@@ -390,6 +399,7 @@ input[type='tel']:focus {
   .email-input-product-prelaucher {
     width: 95%;
   }
+
 
   .phone-input-product-prelaucher {
     width: 95%;
@@ -411,6 +421,7 @@ input[type='tel']:focus {
 
   .section-layout.flip-horizontal {
     flex-direction: column-reverse;
+
   }
 
   /* vertical layout */
@@ -710,6 +721,103 @@ input[type='tel']:focus {
   .flip-transfer-diagonal .email-input-product-prelaucher{
     width: 95%;
   }
+}
+
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -125px; /* Divide value of min-width by 2 */
+  background-color: #333; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 2px; /* Rounded borders */
+  padding: 16px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the snackbar */
+  bottom: 30px; /* 30px from the bottom */
+}
+
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar2 {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -125px; /* Divide value of min-width by 2 */
+  background-color: #333; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 2px; /* Rounded borders */
+  padding: 16px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the snackbar */
+  bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show-bar {
+  visibility: visible; /* Show the snackbar */
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar2.show-bar {
+  visibility: visible; /* Show the snackbar */
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
 
   .flip-transfer-diagonal .phone-input-product-prelaucher{
     width: 95%;
@@ -1229,4 +1337,3 @@ input[type='tel']:focus {
     margin: 8px 0 !important;
   }
 }
-

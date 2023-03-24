@@ -15,8 +15,7 @@
   margin-bottom: 20px;
 }
 
-
-.reward-form .inputfield{
+.reward-form .inputfield {
   display: flex;
   flex-direction: column;
 }
@@ -27,24 +26,33 @@
 
 .small-inputfield {
   height: 60px;
-  width: 60px;
+  width: 75px;
   padding: 10px;
+  border-radius: 10px;
   font-size: 28px;
   font-weight: 700;
   background-color: #ebf0f2;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }
 
 .large-field {
   height: 60px;
   padding: 10px;
   font-size: 28px;
+  border-radius: 10px;
   font-weight: 700;
   width: 150px !important;
   background-color: #ebf0f2;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
 }
 
 @media screen and (max-width: 1480px) {
-  
   .small-inputfield {
     height: 55px;
     width: 140px;
@@ -52,7 +60,6 @@
     font-weight: 700;
   }
   .large-field {
-   
     font-size: 23px;
     width: 140px !important;
   }
@@ -80,7 +87,6 @@
     font-weight: 700;
   }
   .large-field {
-   
     font-size: 23px;
     width: 130px !important;
   }
