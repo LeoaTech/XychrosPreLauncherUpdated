@@ -646,7 +646,6 @@ function NewCampaignForm() {
           )}
         </section>
 
-
         {/* Referal Settings */}
         <section className="newcampaign-settings">
           <div className="referrals-settings" onClick={() => handleExpand(1)}>
@@ -743,6 +742,208 @@ function NewCampaignForm() {
           )}
         </section>
 
+        {/* Reward Settings */}
+
+        <section className="newcampaign-settings">
+          <div className="rewards-settings" onClick={() => handleExpand(2)}>
+            <div className="card-header">
+              <h2 className="card-title">Reward Settings</h2>
+              <span className="toggle-btn" onClick={() => handleExpand(2)}>
+                {expanded[2] ? (
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(2)}
+                  />
+                ) : (
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(2)}
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+
+          {expanded[2] && (
+            <>
+              <div className="rewards-settings-form">
+                <p>
+                  Set up the Rewards for your customers here! Select the
+                  discount type and then the reward tiers!
+                </p>
+                <p>
+                  Note: Discount will not be applicable on Shipping. Each code
+                  can be used by a customer only once.
+                </p>
+                <div className="rewards-settings-container">
+                  <h2 className="sub-heading">Discount {"*"}</h2>
+                  <div className="discount-settings">
+                    <div>
+                      {isEdit ? (
+                        <input
+                          className="social-radioInput"
+                          type="radio"
+                          name="discount_type"
+                          value="percent"
+                          required
+                          checked={
+                            editCampaignData?.discount_type === "percent"
+                          }
+                          onChange={handleRadioChange}
+                        />
+                      ) : (
+                        <input
+                          className="social-radioInput"
+                          type="radio"
+                          required
+                          name="discount_type"
+                          value="percent"
+                          checked={newCampaignData?.discount_type === "percent"}
+                          onChange={handleRadioChange}
+                        />
+                      )}
+
+                      <label htmlFor="">% off the entire order</label>
+                    </div>
+                    <div>
+                      {isEdit ? (
+                        <input
+                          className="social-radioInput"
+                          type="radio"
+                          name="discount_type"
+                          value="amount"
+                          required
+                          checked={editCampaignData?.discount_type === "amount"}
+                          onChange={handleRadioChange}
+                        />
+                      ) : (
+                        <input
+                          className="social-radioInput"
+                          type="radio"
+                          name="discount_type"
+                          value="amount"
+                          required
+                          checked={newCampaignData?.discount_type === "amount"}
+                          onChange={handleRadioChange}
+                        />
+                      )}{" "}
+                      <label htmlFor="">$ off the entire order</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rewards-container">
+                  {RewardData.map((reward) => (
+                    <div key={reward.id} className="reward-card">
+                      <div classname="reward-tier-card">
+                        <div className="reward-title">
+                          <h2>{reward.title}</h2>
+                          <span>
+                            {" "}
+                            {reward.is_required === true && "(Required)"}
+                          </span>
+                        </div>
+                        <div className="reward-content">
+                          <div className="reward-form">
+                            <div className="inputfield">
+                              <label htmlFor={`reward_${reward?.id}_tier`}>
+                                No of Referrals
+                              </label>
+                              {isEdit ? (
+                                <input
+                                  className="small-inputfield"
+                                  type="number"
+                                  required={is_required}
+                                  name={`reward_${reward?.id}_tier`}
+                                  value={
+                                    editCampaignData[
+                                      `reward_${reward?.id}_tier`
+                                    ]
+                                  }
+                                  onChange={handleChange}
+                                />
+                              ) : (
+                                <input
+                                  className="small-inputfield"
+                                  type="number"
+                                  name={`reward_${reward?.id}_tier`}
+                                  value={
+                                    newCampaignData[`reward_${reward?.id}_tier`]
+                                  }
+                                  onChange={handleChange}
+                                />
+                              )}
+                            </div>
+                            <div className="inputfield">
+                              <label htmlFor={`reward_${reward?.id}_discount`}>
+                                Discount
+                              </label>
+                              {isEdit ? (
+                                <input
+                                  className="small-inputfield"
+                                  type="number"
+                                  name={`reward_${reward?.id}_discount`}
+                                  value={
+                                    editCampaignData[
+                                      `reward_${reward?.id}_discount`
+                                    ]
+                                  }
+                                  onChange={handleChange}
+                                />
+                              ) : (
+                                <input
+                                  className="small-inputfield"
+                                  type="number"
+                                  name={`reward_${reward?.id}_discount`}
+                                  value={
+                                    newCampaignData[
+                                      `reward_${reward?.id}_discount`
+                                    ]
+                                  }
+                                  onChange={handleChange}
+                                />
+                              )}
+                            </div>
+                            <div className="inputfield">
+                              <label htmlFor={`reward_${reward?.id}_code`}>
+                                Discount Code
+                              </label>
+                              {isEdit ? (
+                                <input
+                                  className="large-field"
+                                  type="text"
+                                  name={`reward_${reward?.id}_code`}
+                                  value={
+                                    editCampaignData[
+                                      `reward_${reward?.id}_code`
+                                    ]
+                                  }
+                                  onChange={handleChange}
+                                />
+                              ) : (
+                                <input
+                                  className="large-field"
+                                  type="text"
+                                  name={`reward_${reward?.id}_code`}
+                                  value={
+                                    newCampaignData[`reward_${reward?.id}_code`]
+                                  }
+                                  onChange={handleChange}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="reward-section">{renderButton(3)}</div>
+            </>
+          )}
+        </section>
       </form>
 
       {/* Loading overlay  */}
