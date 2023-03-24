@@ -46,10 +46,10 @@
   font-weight: 700;
   width: 150px !important;
   background-color: #ebf0f2;
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  -ms-border-radius: 8px;
-  -o-border-radius: 8px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }
 
 @media screen and (max-width: 1480px) {
@@ -71,6 +71,7 @@
     flex-direction: column;
     justify-content: space-between;
     margin-bottom: 10px;
+    gap:10px;
   }
 
   .reward-form .inputfield {
