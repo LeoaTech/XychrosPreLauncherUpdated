@@ -1136,6 +1136,177 @@ function NewCampaignForm() {
             </>
           )}
         </section>
+
+        {/* Integration Settings */}
+
+        <section className="newcampaign-settings">
+          <div className="integration-settings" onClick={() => handleExpand(4)}>
+            <div className="card-header">
+              <h2 className="card-title">Integration Settings</h2>
+              <span className="toggle-btn" onClick={() => handleExpand(4)}>
+                {expanded[4] ? (
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(4)}
+                  />
+                ) : (
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(4)}
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+
+          {expanded[4] && (
+            <>
+              <div className="integration-container">
+                <div className="integration-block-content">
+                  <div className="check-input">
+                    {isEdit ? (
+                      <input
+                        type="checkbox"
+                        name="klaviyo_integration"
+                        checked={editCampaignData?.klaviyo_integration}
+                        onChange={handleCheckboxChange}
+                      />
+                    ) : (
+                      <input
+                        type="checkbox"
+                        name="klaviyo_integration"
+                        checked={newCampaignData?.klaviyo_integration}
+                        onChange={handleCheckboxChange}
+                      />
+                    )}
+                    <label htmlFor="klaviyo_integration">
+                      Integrate with Klaviyo
+                    </label>
+                  </div>
+
+                  <div className="integration-settings-container">
+                    <div className="form-group">
+                      <div className="inputfield">
+                        <label htmlFor="klaviyo_api_key">Private API Key</label>
+                        {isEdit ? (
+                          <input
+                            type="text"
+                            name="klaviyo_api_key"
+                            id="klaviyo_api_key"
+                            placeholder="Enter API Key"
+                            value={editCampaignData?.klaviyo_api_key}
+                            onChange={handleChange}
+                          />
+                        ) : (
+                          <input
+                            type="text"
+                            name="klaviyo_api_key"
+                            id="klaviyo_api_key"
+                            placeholder="Enter API Key"
+                            value={newCampaignData?.klaviyo_api_key}
+                            onChange={handleChange}
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <div className="inputfield">
+                        <label htmlFor="">List to Add Users</label>
+
+                        <div className="select-user-input">
+                          <select>
+                            <option value="john">John Dape</option>
+                            <option value="janee">Janee</option>
+                            <option selected value="Mickey">
+                              Mickey Author
+                            </option>
+                            <option value="Laurwes">Laurwes</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="integrate-setting-btn">{renderButton(5)}</div>
+            </>
+          )}
+        </section>
+
+        {/* Template Settings */}
+
+        <section className="newcampaign-settings">
+          <div className="template-settings" onClick={() => handleExpand(5)}>
+            <div className="card-header">
+              <h2 className="card-title">Template Settings</h2>
+              <span className="toggle-btn" onClick={() => handleExpand(5)}>
+                {expanded[5] ? (
+                  <IoIosArrowUp
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(5)}
+                  />
+                ) : (
+                  <IoIosArrowDown
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                    onClick={() => handleExpand(5)}
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+
+          {expanded[5] && (
+            <>
+              <div className="template-container">
+                <div className="template-content">
+                  <p>Select one of the following specially curated template</p>
+                </div>
+                <div className="templates-block-container">
+                  <div className="template-cards">
+                    {[1, 2, 3].map((item, index) => (
+                      <div
+                        key={index}
+                        className="template-card-block"
+                        id="template"
+                      >
+                        {index === 2 ? (
+                          <h3>
+                            Build a custom template in the Shopify Theme Editor{" "}
+                          </h3>
+                        ) : (
+                          <img
+                            src="https://images.unsplash.com/photo-1677530248563-e6105354fafb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNnx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"
+                            alt="template"
+                            onClick={(e) =>
+                              setNewCampaignData({
+                                ...newCampaignData,
+                                template_id: index,
+                              })
+                            }
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="laststep">
+                  <p>
+                    After the Campaign is created, you will be navigated to your
+                    Shopify Theme Editor to finalize your settings.
+                  </p>
+                </div>
+              </div>
+              <div className="template-end">
+                <div>
+                  <button className="saveFormBtn" type="submit">
+                    {isEdit ? "Update Campaign" : "Create Campaign"}
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </section>
       </form>
 
       {/* Loading overlay  */}
