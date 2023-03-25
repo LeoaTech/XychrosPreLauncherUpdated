@@ -2,7 +2,6 @@ import { pool } from "../config/db.js";
 import { v4 as uuidv4 } from "uuid";
 import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
 import emailValidator from "deep-email-validator";
-// import { sendemail } from "../utils/sendEmail.js";
 import { sendemail } from "../utils/sendEmail.js";
 import {
   replace_welcome_email_text,
@@ -57,11 +56,6 @@ export const get_store_referrals = async (req, res, next) => {
 
 export const check_email = async (req, res, next) => {
   try {
-    const { email, campaign_id } = req.body;
-    let { code } = req.body;
-    if (code) {
-      code = code.split("=")[1];
-    }
     const { shop, email, refer } = req.query;
     let campaign_id = 1;
     let code = refer;
@@ -86,9 +80,6 @@ export const check_email = async (req, res, next) => {
       [campaign_id]
     );
     if (check_email.rows.length > 0) {
-      return res
-        .status(200)
-        .json({ success: true, message: "You are logged in" });
       return res.status(200).json({
         success: true,
         message: "You are logged in",
@@ -120,7 +111,6 @@ export const check_email = async (req, res, next) => {
             "INSERT INTO referrals (email,campaign_id) VALUES($1,$2)",
             [email, campaign_id]
           );
-          await get_user(code, email);
           data = await pool.query("SELECT * FROM referrals WHERE email=$1", [
             email,
           ]);
@@ -148,7 +138,6 @@ export const check_email = async (req, res, next) => {
           "INSERT INTO referrals (email,campaign_id) VALUES($1,$2)",
           [email, campaign_id]
         );
-        await get_user(code, email);
         data = await pool.query("SELECT * FROM referrals WHERE email=$1", [
           email,
         ]);
@@ -176,7 +165,6 @@ export const check_email = async (req, res, next) => {
   }
 };
 
-const get_user = async (code, email) => {
 const get_user = async (code, email, campaign, shop) => {
   if (code) {
     const get_user = await pool.query(
@@ -184,10 +172,7 @@ const get_user = async (code, email, campaign, shop) => {
       [code]
     );
     if (get_user.rows.length > 0) {
-      let reference_email = get_user.rows[0].email;
-      let reference_code = get_user.rows[0].referral_code;
       await pool.query("UPDATE referrals SET referrer_id=$1 WHERE (email=$2)", [
-        reference_code,
         code,
         email,
       ]);
@@ -269,10 +254,6 @@ const get_user = async (code, email, campaign, shop) => {
 
 export const get_user_referral_code = async (req, res, next) => {
   try {
-    const { email } = req.body;
-    const data = await pool.query("SELECT * FROM referrals WHERE email=$1", [
-      email,
-    ]);
     const { referral_code } = req.body;
     const data = await pool.query(
       "SELECT * FROM referrals WHERE referral_code=$1",
@@ -295,11 +276,6 @@ export const get_user_referral_code = async (req, res, next) => {
 
 export const get_referrals = async (req, res, next) => {
   try {
-    const { email } = req.body;
-    console.log(req.query);
-    const data = await pool.query("SELECT * FROM referrals WHERE email=$1", [
-      email,
-    ]);
     const { referral_code } = req.body;
     const data = await pool.query(
       "SELECT * FROM referrals WHERE referral_code=$1",

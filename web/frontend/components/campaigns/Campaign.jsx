@@ -57,7 +57,6 @@ export default function CampaignsComponent() {
           class='campaign-icon'
         />
         <SummaryCard
-          value='543678'
           title='Referrals'
           value={totalReferrals}
           icon={subscriber}
