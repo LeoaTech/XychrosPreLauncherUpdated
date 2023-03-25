@@ -35,7 +35,6 @@ const Referrals = () => {
           className="campaign-icon"
         />
         <SummaryCard
-          value="543678"
           value={totalReferrals}
           title="Referrals"
           icon={subscriber}
