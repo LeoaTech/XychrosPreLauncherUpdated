@@ -48,7 +48,6 @@
       e.preventDefault();
 
       let urlParams = new URL(window.location.href).searchParams;
-      let referrerID = urlParams.get('refer');
       let referrerID = urlParams.get('code');
       formData = new URLSearchParams(new FormData(form)).toString() + '&refer=' + referrerID + '&campaign=' + first_page_settings.campaign_name;
       actionPath = form.getAttribute('action') + '?' + formData;
@@ -66,25 +65,17 @@
 
       const data = await response.json();
 
-      console.log(response.status);
-
-      if (response.status == '400') {
       if (response.status == 200) {
-        email.value = "";
         window.location.href = `https://xychros-backend-test-store.myshopify.com/pages/second-page?referralCode=${
           data.referral_code
         }`;
       } else if (response.status == 400) {
         showSnackbar("snackbar");
-      } else if (response.status == '307') {
-        window.location.href = urlredirect + '/pages/' + first_page_settings.page + '?referralCode=' + data.referral;
-      } else {
       } else if (response.status == 404) {
         showSnackbar("snackbar2");
       } else if (response.status == 500) {
         showSnackbar("snackbar3");
       }
-
       return;
     });
 
