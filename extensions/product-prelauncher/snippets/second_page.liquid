@@ -212,6 +212,8 @@
     return "";
   }
   const get_referral_code = async () => {
+    let urlParams = new URL(window.location.href).searchParams;
+    let user_email = urlParams.get("referralCode");
     const url = "/apps/xychros_backend_new/api/get_code/";
     const response = await fetch(url, {
       method: "POST",
@@ -220,6 +222,7 @@
       },
       body: JSON.stringify(
         {email: getCookie("email")}
+        {referral_code: user_email}
       )
     });
     const data = await response.json();

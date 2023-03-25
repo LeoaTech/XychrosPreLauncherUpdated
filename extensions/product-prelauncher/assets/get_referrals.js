@@ -1,5 +1,7 @@
 let count_referrals = document.getElementById("count_referrals");
 let referral_div = document.getElementById("referral_rows");
+let urlParams = new URL(window.location.href).searchParams;
+let user_code = urlParams.get("referralCode");
 function getCookie(cname) {
   let name = cname + "=";
   let ca = document.cookie.split(";");
@@ -22,6 +24,7 @@ const get_referrals = async () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email: getCookie("email") }),
+    body: JSON.stringify({ referral_code: user_code }),
   });
   const data = await response.json();
   if (response.status == 200) {
@@ -36,3 +39,4 @@ const get_referrals = async () => {
 };
 
 get_referrals();
+
