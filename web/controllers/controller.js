@@ -6,6 +6,7 @@ import emailValidator from "deep-email-validator";
 import { sendemail } from "../utils/sendEmail.js";
 import {
   replace_welcome_email_text,
+  replace_reward_email_text,
 } from "../utils/replace_email_text.js";
 
 export const get_store_referrals = async (req, res, next) => {
