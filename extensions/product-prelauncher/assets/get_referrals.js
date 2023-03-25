@@ -23,7 +23,6 @@ const get_referrals = async () => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email: getCookie("email") }),
     body: JSON.stringify({ referral_code: user_code }),
   });
   const data = await response.json();
