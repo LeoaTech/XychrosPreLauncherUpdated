@@ -23,48 +23,28 @@ const ReferralsBlock = () => {
     console.log(delVal);
   };
 
-  React.useEffect(() =>{
-    if(openModal || deleteModal){
-      document.body.style.opacity="0.5 !important"; 
   React.useEffect(() => {
     if (openModal || deleteModal) {
       document.body.style.opacity = "0.5 !important";
     } else {
       document.body.style.opacity = "1 !important";
     }
-    else{
-      document.body.style.opacity="1 !important"; 
   }, [openModal, deleteModal]);
 
-    }
-  },[openModal, deleteModal])
-
-  React.useEffect(() =>{
-    if(deleteModal){
-      window.addEventListener("click", () =>{
   React.useEffect(() => {
     if (deleteModal) {
       window.addEventListener("click", () => {
         setDeleteModal(false);
-      })
       });
     }
   },[deleteModal])
 
-  }, [deleteModal]);
-
-  React.useEffect(() =>{
-    if(openModal){
   React.useEffect(() => {
     if (openModal) {
       setDeleteModal(false);
     } else if (DeleteModal) {
       setOpenModal(false);
     }
-    else if(DeleteModal){
-      setOpenModal(false)
-    }
-  })
   });
 
   // Actions column on table to view and delete data
@@ -116,7 +96,6 @@ const ReferralsBlock = () => {
         <DataTable
           customStyles={customStyles}
           columns={referralColumns.concat(actionColumns)}
-          data={data}
           data={store_referrals}
           pagination
           highlightOnHover
