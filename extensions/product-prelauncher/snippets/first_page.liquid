@@ -2,6 +2,7 @@
 
   <div id="snackbar">You have already signed up either from this email address or from the same IP</div>
   <div id="snackbar2">Email is not valid</div>
+  <div id="snackbar3">Something went wrong</div>
 
   {% if block.settings.layout == 'none' %}
     <div id='background-image' class="none-layout none-parent-container">
@@ -11,7 +12,7 @@
         <div class="spaced">
           <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
           <form
-            action='/apps/xychrosupdated/api/getuser'
+            action='/apps/xychros_backend_new/api/check_email/'
             id="form-submission"
             class="first-page-form">
             <input
@@ -47,7 +48,7 @@
       <div class="spaced">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
-          action='/apps/xychrosupdated/api/getuser'
+          action='/apps/xychros_backend_new/api/check_email/'
           id="form-submission"
           class="first-page-form">
           <input
@@ -78,7 +79,7 @@
       <div class="spaced">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
-          action='/apps/xychrosupdated/api/getuser'
+          action='/apps/xychros_backend_new/api/check_email/'
           id="form-submission"
           class="first-page-form">
           <input
@@ -120,7 +121,7 @@
       <div class="spaced vertical-mobile-two">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
-          action='/apps/xychrosupdated/api/getuser'
+          action='/apps/xychros_backend_new/api/check_email/'
           id="form-submission"
           class="first-page-form">
           <input
@@ -155,7 +156,7 @@
       <div class="spaced flip-vertical-mobile-two">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
-          action='/apps/xychrosupdated/api/getuser'
+          action='/apps/xychros_backend_new/api/check_email/'
           id="form-submission"
           class="first-page-form">
           <input
@@ -196,7 +197,7 @@
       <div class="spaced">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
-          action='/apps/xychrosupdated/api/getuser'
+          action='/apps/xychros_backend_new/api/check_email/'
           id="form-submission"
           class="first-page-form">
           <input
@@ -220,6 +221,7 @@
         </form>
       </div>
     </div>
+
   {% endif %}
 
   {% if block.settings.layout == 'flip-diagonal' %}
@@ -234,7 +236,7 @@
       <div class="spaced">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
-          action='/apps/xychrosupdated/api/getuser'
+          action='/apps/xychros_backend_new/api/check_email/'
           id="form-submission"
           class="first-page-form">
           <input
@@ -272,7 +274,7 @@
       <div class="spaced">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
-          action='/apps/xychrosupdated/api/getuser'
+          action='/apps/xychros_backend_new/api/check_email/'
           id="form-submission"
           class="first-page-form">
           <input
@@ -310,7 +312,7 @@
       <div class="spaced">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
-          action='/apps/xychrosupdated/api/getuser'
+          action='/apps/xychros_backend_new/api/check_email/'
           id="form-submission"
           class="first-page-form">
           <input
@@ -335,4 +337,6 @@
       </div>
     </div>
   {% endif %}
+
 </div>
+

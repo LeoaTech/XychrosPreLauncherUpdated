@@ -9,10 +9,13 @@ import {
   fetchAllCampaigns,
   fetchCampaign,
 } from '../../app/features/campaigns/campaignSlice';
+import { useAuthenticatedFetch } from "../../hooks/useAuthenticatedFetch";
 
 export default function CampaignsComponent() {
   const { activeMenu, isEdit, setIsEdit } = useStateContext();
   const dispatch = useDispatch();
+  const [totalReferrals, setTotalReferrals] = React.useState(0);
+  const authenticated_fetch = useAuthenticatedFetch();
   const List = useSelector(fetchAllCampaigns);
   const [getCampaigns, setCampaigns] = useState([...List]);
   const [editData, setEditData] = useState([]);
@@ -32,6 +35,16 @@ export default function CampaignsComponent() {
   const pageLimit = 3;
   const dataLimit = 10;
 
+  const get_referrals = async () => {
+    const response = await authenticated_fetch("/api/get_store_referrals");
+    const data = await response.json();
+    setTotalReferrals(data.total_referrals);
+    console.log(data);
+  };
+  React.useEffect(() => {
+    get_referrals();
+  }, []);
+
   if (error) return <h1>{error}</h1>;
 
   return (
@@ -44,8 +57,8 @@ export default function CampaignsComponent() {
           class='campaign-icon'
         />
         <SummaryCard
-          value='543678'
           title='Referrals'
+          value={totalReferrals}
           icon={subscriber}
           class='referral-icon'
         />
