@@ -1,0 +1,87 @@
+.modal {
+  position: fixed;
+  inset: 0; /* inset sets all 4 values (top right bottom left) much like how we set padding, margin etc., */
+  background-color: rgb(37 37 37 / 44%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  z-index: 999;
+  padding: 40px 20px 20px;
+}
+
+.delete-modal-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 270px;
+  line-height: normal;
+  border: 1px solid #282828;
+  box-shadow: 24;
+  background-color: var(--primary-color);
+  border-radius: 15px;
+  border-top: none;
+  padding: 4;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+}
+
+.modal__nav h6 {
+  text-align: center;
+  margin-left: 10px;
+}
+
+.modal__body {
+  margin: 10px;
+  font-size: 18px;
+}
+
+.action__btn_modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+  cursor: pointer;
+}
+
+.cancel__btn {
+  border: 1px solid rgb(100, 100, 101);
+  padding: 8px;
+  margin: 10px;
+  height: 48px;
+  width: 130px;
+  font-size: 20px;
+  border-radius: 12px;
+  cursor:pointer;
+  background-color: var(--secondary-color);
+  text-align: center;
+  color: #ffffff;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+/* .delete__btn:hover,
+  .close__btn:hover {
+    background-color: #fbfafa;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+  } */
+
+@media screen and (max-width: 786px) {
+  .delete-modal-container {
+    width: 380px;
+    height: 250px;
+  }
+}
