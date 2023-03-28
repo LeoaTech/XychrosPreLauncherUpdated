@@ -28,6 +28,9 @@ function NewCampaignForm() {
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const campaignName = useSelector(fetchCampaignByName);
+  const globalSettings = useSelector(fetchAllSettings);
+  const productsList = useSelector(fetchAllProducts);
 
   const { isEdit, setIsEdit } = useStateContext();
   const { campaignsid } = useParams();
@@ -36,22 +39,22 @@ function NewCampaignForm() {
   const campaignById = useSelector((state) =>
     fetchCampaignById(state, Number(campaignsid))
   );
+  const [productsData, setProductsData] = useState([]);
 
-  const campaignName = useSelector(fetchCampaignByName);
-  const globalSettings = useSelector(fetchAllSettings);
-  const productsData = useSelector(fetchAllProducts);
   const [editCampaignData, setEditCampaignData] = useState();
 
   useEffect(() => {
     if (campaignById) {
       setEditCampaignData(campaignById);
     }
+  }, [campaignById]);
 
-    if (globalSettings && productsData) {
-      console.log("render");
-    }
-  }, [globalSettings, productsData]);
+  useEffect(() => {
+    setProductsData(productsList);
+  }, [productsList]);
 
+
+  // Get new Date with 6 days difference
   let today = new Date();
   let getNextDate = new Date();
   getNextDate.setDate(today.getDate() + 6);
@@ -156,7 +159,11 @@ function NewCampaignForm() {
   // Handle Next Button event for each
   const handleNext = (index) => {
     const loadingOverlay = document.getElementById("loading-overlay");
-    if (index === 1 && isEdit? editCampaignData.name !== "": newCampaignData.name !== "") {
+    if (
+      index === 1 && isEdit
+        ? editCampaignData.name !== ""
+        : newCampaignData.name !== ""
+    ) {
       if (
         isEdit
           ? campaignName.includes(editCampaignData?.name)
@@ -265,7 +272,6 @@ function NewCampaignForm() {
       }));
     }
   }
-  console.log(newCampaignData, "Edit campaign form");
 
   return (
     <div className="new-campaign-container">
