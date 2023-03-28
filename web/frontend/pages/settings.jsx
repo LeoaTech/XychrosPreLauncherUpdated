@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllSettings,
-  fetchGlobalSettings,
   fetchSettings,
 } from "../app/features/settings/settingsSlice";
 import { SideBar, Header, Settings, MainPage } from "../components/index";
@@ -25,10 +24,10 @@ const SettingsPage = () => {
 
 
   useEffect(() => {
-    if (data.length > 0 && !settingsExists) {
+    if (data.length > 0) {
       dispatch(fetchSettings(data[0]));
     }
-  }, [dispatch, data]);
+  }, [dispatch]);
   return (
     <div className="app">
       {activeMenu ? (
