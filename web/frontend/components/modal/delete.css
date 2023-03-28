@@ -1,7 +1,7 @@
 .modal {
   position: fixed;
   inset: 0; /* inset sets all 4 values (top right bottom left) much like how we set padding, margin etc., */
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgb(37 37 37 / 44%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,9 +18,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 500px;
-  height: 250px;
+  height: 270px;
   line-height: normal;
-  border: 1px solid #95a5a6;
+  border: 1px solid #282828;
   box-shadow: 24;
   background-color: var(--primary-color);
   border-radius: 15px;
@@ -48,7 +48,6 @@
 
 .action__btn-modal {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 2.5rem;
   margin-top: 25px;
@@ -58,20 +57,21 @@
 
 .delete__btn,
 .close__btn {
-  border: 1px solid rgb(135, 135, 135);
-  padding: 5px;
+  border: 1px solid rgb(28, 22, 35);
+  padding: 11px;
   margin: 10px;
-  height: 40px;
+  height: 48px;
   width: 130px;
-  font-size: 18px;
-  border-radius: 10px;
+  font-size: 20px;
+  border-radius: 12px;
+  cursor: pointer;
   background-color: var(--secondary-color);
   text-align: center;
-  color: #fff;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
+  color: #ffffff;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
 }
 
 /* .delete__btn:hover,
