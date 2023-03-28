@@ -5,33 +5,30 @@
   let product_list = {{ block.settings.product_list | json }};
 
   window.onload = (e) => {
-
     var el = document.querySelector('.product-prelaunch-second-page');
     el.parentElement.style.padding = '0';
     el.parentElement.style.margin = '0';
     if (second_page_settings.show_header_footer == false) {
       var node,
-        nodes = [];
-
+      nodes = [];
+      
       do {
         var parent = el.parentNode;
-
         // Collect element children
         for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
           node = parent.childNodes[i];
-
           // Collect only sibling nodes that are elements and not the current element
           if (node.nodeType == 1 && node != el) {
             nodes.push(node);
           }
         }
-
+        
         // Go up to parent
         el = parent;
-
+        
         // Stop when processed the body's child nodes
       } while (el.tagName.toLowerCase() != 'body');
-
+      
       // Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
@@ -40,7 +37,7 @@
 
     let second_image_background = 'https:' + second_page_settings.background;
     console.log(second_image_background);
-    document.getElementById('second-background-image').style.backgroundImage = 'linear-gradient(rgba(0, 0, 0,' + second_page_settings.background_brightness + ' ), rgba(0, 0, 0,' + second_page_settings.background_brightness + ')),url(' + second_image_background + ')';
+    document.getElementById('second-background-image').style.backgroundImage = second_page_settings.background_color + ',url(' + second_image_background + ')';
   }
 </script>
 
@@ -162,7 +159,11 @@
         "label": "Show Header & Footer",
         "default": true
       }, {
-        "type": "radio",
+        "type": "color_background",
+        "id": "background_color",
+        "label": "Background Overlay",
+        "default": "linear-gradient(#ffffff, #000000)"
+      }, 
         "id": "layout",
         "label": "Layout",
         "options": [
