@@ -41,13 +41,12 @@ function NewCampaignForm() {
   const globalSettings = useSelector(fetchAllSettings);
   const productsData = useSelector(fetchAllProducts);
   const [editCampaignData, setEditCampaignData] = useState();
-  console.log(productsData)
   useEffect(() => {
     if (campaignById) {
       setEditCampaignData(campaignById);
     }
 
-    if (globalSettings && productsData.length>0) {
+    if (globalSettings && productsData.length > 0) {
       console.log("render");
     }
   }, [globalSettings, productsData]);
@@ -156,7 +155,11 @@ function NewCampaignForm() {
   // Handle Next Button event for each
   const handleNext = (index) => {
     const loadingOverlay = document.getElementById("loading-overlay");
-    if (index === 1 && isEdit? editCampaignData.name !== "": newCampaignData.name !== "") {
+    if (
+      index === 1 && isEdit
+        ? editCampaignData.name !== ""
+        : newCampaignData.name !== ""
+    ) {
       if (
         isEdit
           ? campaignName.includes(editCampaignData?.name)
