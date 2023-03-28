@@ -46,47 +46,35 @@
     display: block !important;
     width: 100vw;
   }
-
-  .announcement {
-    background-color: {{ block.settings.announcement_bg_color }};
-    color: {{ block.settings.announcement_color }};
-    font-size: {{ block.settings.announcement_font_size }}px;
-    font-weight: 800;
-    position: absolute;
-    top: 0;
-    width: 100vw;
-  }
-
   .preheader_text {
-    color: {{ block.settings.preheader_color }};
-    font-size: {{ block.settings.preheader_font_size }}px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.9}}px;
     font-weight: 800;
     padding: 0 2%;
   }
-
   .header_text {
-    color: {{ block.settings.header_color }};
-    font-size: {{ block.settings.header_font_size }}px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size|times: 1.3}}px;
     font-weight: 800;
     padding: 0 2%;
   }
-
   .subheader_text {
-    color: {{ block.settings.subheader_color }};
-    font-size: {{ block.settings.subheader_font_size }}px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.8}}px;
     font-weight: 500;
     padding: 0 2%;
   }
-
-  .footer_text {
-    color: {{ block.settings.footer_color }};
-    font-size: {{ block.settings.footer_font_size }}px;
-    font-weight: 400;
-    position: absolute;
-    bottom: 0;
-    left: 48vw;
+  .referral-link-inp {
+    background-color: #D9D9D9;
   }
-
+  input[value] {
+    color: {{ block.settings.accent_color }};
+  }
+  .copy-link-btn{
+    border: 1px solid {{ block.settings.accent_color }};
+    background-color: {{ block.settings.main_color }};
+    color: {{ block.settings.accent_color }};
+  }
   .img-layout {
     background-position: center;
     background-repeat: no-repeat;
@@ -104,14 +92,41 @@
       align-items: center;
     {% endif %}
   }
-
   .gift-layout {
-    background-color: {{ block.settings.bg_color }}
-    ;
+    background-color: {{ block.settings.main_color }};
   }
-
+  .friends-joined {
+    color: {{ block.settings.accent_color }};
+  }
+  .timeline-headers {
+    color: {{ block.settings.main_color }};
+  }
+  .vertical-timeline-headers {
+    color: {{ block.settings.main_color }};
+  }
+  .reward-target {
+    border: 1px solid {{ block.settings.accent_color }};
+    background-color: {{ block.settings.main_color }};
+    color: {{ block.settings.accent_color }};
+  }
+  .vertical-reward-target {
+    border: 1px solid {{ block.settings.accent_color }};
+    background-color: {{ block.settings.main_color }};
+    color: {{ block.settings.accent_color }};
+  }
+  .referral-count-achieved {
+    background-color: {{ block.settings.accent_color }};
+    color: {{ block.settings.main_color }};
+  }
+  .vertical-referral-count-achieved {
+    background-color: {{ block.settings.accent_color }};
+    color: {{ block.settings.main_color }};
+  }
+  .reward-item-detail span {
+    color: {{ block.settings.accent_color }};
+  }
   svg > path {
-    fill: {{ block.settings.header_color }} !important;
+    fill: {{ block.settings.main_color }} !important;
   }
 </style>
 
@@ -127,33 +142,6 @@
     "javascript": "second-page.js",
     "settings": [
       {
-        "label": "Announcement Background Color",
-        "id": "announcement_bg_color",
-        "type": "color",
-        "default": "#000000"
-      },
-      {
-        "label": "Announcement Text",
-        "id": "announcement_text",
-        "type": "text",
-        "default": "This is announcement section"
-      },
-      {
-        "label": "Announcement Text Color",
-        "id": "announcement_color",
-        "type": "color",
-        "default": "#000000"
-      },
-      {
-        "label": "Announcement Font Size",
-        "id": "announcement_font_size",
-        "type": "range",
-        "min": 10,
-        "max": 14,
-        "step": 1,
-        "unit": "px",
-        "default": 12
-      }, {
         "type": "checkbox",
         "id": "show_header_footer",
         "label": "Show Header & Footer",
@@ -163,6 +151,17 @@
         "id": "background_color",
         "label": "Background Overlay",
         "default": "linear-gradient(#ffffff, #000000)"
+      }, 
+      {
+        "label": "Main Color",
+        "id": "main_color",
+        "type": "color",
+        "default": "#000000"
+      }, {
+        "label": "Accent Color",
+        "id": "accent_color",
+        "type": "color",
+        "default": "#ffffff"
       }, 
         "id": "layout",
         "label": "Layout",
@@ -181,75 +180,29 @@
         "id": "background",
         "type": "image_picker"
       }, {
-        "label": "Image Overlay",
-        "id": "background_brightness",
-        "type": "range",
-        "min": 0,
-        "max": 1,
-        "step": 0.1,
-        "default": 0
-      }, {
-        "label": "Background Color",
-        "id": "bg_color",
-        "type": "color",
-        "default": "#fff"
-      }, {
         "label": "Pre-Header",
         "id": "preheader_text",
         "type": "text",
         "default": "This is PreHeader Text"
-      }, {
-        "label": "Pre-Header Color",
-        "id": "preheader_color",
-        "type": "color",
-        "default": "#000000"
-      }, {
-        "label": "Pre-Header Font Size",
-        "id": "preheader_font_size",
-        "type": "range",
-        "min": 12,
-        "max": 16,
-        "step": 1,
-        "unit": "px",
-        "default": 14
       }, {
         "label": "Header",
         "id": "header_text",
         "type": "text",
         "default": "This is Header Text"
       }, {
-        "label": "Header Color",
-        "id": "header_color",
-        "type": "color",
-        "default": "#000000"
-      }, {
-        "label": "Header Font Size",
-        "id": "header_font_size",
-        "type": "range",
-        "min": 12,
-        "max": 24,
-        "step": 1,
-        "unit": "px",
-        "default": 20
-      }, {
         "label": "Sub Header",
         "id": "subheader_text",
         "type": "text",
         "default": "This is SubHeader Text"
       }, {
-        "label": "Sub Header Color",
-        "id": "subheader_color",
-        "type": "color",
-        "default": "#000000"
-      }, {
-        "label": "Sub Header Font Size",
-        "id": "subheader_font_size",
+        "label": "Text Base Font Size",
+        "id": "base_font_size",
         "type": "range",
-        "min": 10,
-        "max": 20,
+        "min": 16,
+        "max": 32,
         "step": 1,
         "unit": "px",
-        "default": 14
+        "default": 24
       }, {
         "type": "select",
         "id": "text_layout",
@@ -267,11 +220,6 @@
           }
         ],
         "default": "center"
-      }, {
-        "type": "product_list",
-        "id": "product_list",
-        "label": "Prize Products",
-        "limit": 5
       }, {
         "label": "Select Referral Icon",
         "id": "icon_dropdown",
