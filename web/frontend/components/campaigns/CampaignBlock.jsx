@@ -4,42 +4,56 @@ import { IconContext } from "react-icons";
 import { FaEdit, FaHourglassEnd } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { DeleteModal } from "../modal/index";
-
 import "./CampaignBlock.css";
 import { Link } from "react-router-dom";
-import { useStateContext } from "../../contexts/ContextProvider";
 import { useState } from "react";
 import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
+import AlertInfoModal from "../modal/AlertInfoModal";
 
 export default function CampaignBlock({
   data,
   handleDelete,
   handleEdit,
-  
   setDeleteModal,
   deleteModal,
+  deleteId,
+  setDeleteId,
 }) {
   // Campaign Card Block Data Properties
-  const {
-    campaign_id,
-    campaign_name,
-    product_name,
-    product_link,
-    is_active,
-    start_date,
-    end_date,
-  } = data;
+  const { campaign_id, name, product, start_date, end_date } = data;
+  const [alertModal, setAlertModal] = useState(false);
 
-  const { activeMenu, isEdit, setIsEdit } = useStateContext();
   let startDate = new Date(start_date).toLocaleDateString();
   let endDate = new Date(end_date).toLocaleDateString();
-  const [isToggled, setIsToggled] = useState(is_active);
+  const [deleteEndData, setDeleteEndDate] = useState(null);
+  const [isToggled, setIsToggled] = useState(product === "" ? false : true);
+
+  
+
+  function checkAndDeleteCampaign(campaignDate) {
+    // Convert the campaign date string to a Date object
+    const campaignDateObj = new Date(campaignDate);
+
+    // Get the current date
+    const now = new Date();
+    // Check if the campaign date has expired
+    if (campaignDateObj < now && !isToggled) {
+      setDeleteModal(true);
+      // Your code to delete the campaign here
+    } else if (isToggled) {
+      // Info Alert Display
+      setAlertModal(true);
+    } else if (campaignDateObj > now) {
+      setAlertModal(true);
+    }
+  }
+
   return (
     <>
       <div className="campaign-block">
         <div className="campaign-details">
           <div className="camapign-block-name">
-            {campaign_name}
+            {name}
             <span>
               <ToggleSwitch
                 rounded={true}
@@ -49,8 +63,8 @@ export default function CampaignBlock({
             </span>
           </div>
 
-          <Link to={product_link} className="campaign-block-product-name">
-            {product_name}
+          <Link to={product} className="campaign-block-product-name">
+            {product}
           </Link>
 
           <div className="campaign-block-duration">
@@ -102,8 +116,11 @@ export default function CampaignBlock({
             >
               <div className="icon-image">
                 <RiDeleteBin6Line
-                  // disabled={is_active ? true : false}
-                  onClick={() => handleDelete(campaign_id)}
+                  onClick={() => {
+                    setDeleteId(campaign_id);
+                    setDeleteEndDate(endDate);
+                    checkAndDeleteCampaign(deleteEndData);
+                  }}
                   style={{ height: "30px", width: "30px", color: "red" }}
                 />
                 <div>
@@ -114,14 +131,26 @@ export default function CampaignBlock({
           </div>
         </div>
       </div>
-      {/* <div>
+      <div>
         <DeleteModal
-          values={id}
+          values={deleteId}
+          expiryDate={deleteEndData}
+          isToggled={isToggled}
           openModal={deleteModal}
           setDeleteModal={setDeleteModal}
           handleDelete={handleDelete}
         />
-      </div> */}
+      </div>
+      <div>
+        <AlertInfoModal
+          values={deleteId}
+          expiryDate={deleteEndData}
+          isToggled={isToggled}
+          openModal={alertModal}
+          setAlertModal={setAlertModal}
+          handleDelete={handleDelete}
+        />
+      </div>
     </>
   );
 }
