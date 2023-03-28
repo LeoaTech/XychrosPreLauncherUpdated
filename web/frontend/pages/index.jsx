@@ -20,7 +20,6 @@ export default function HomePage() {
   const { activeMenu, setGetProducts } = useStateContext();
   const { darkTheme, lightTheme } = useThemeContext();
   const dispatch = useDispatch();
-  console.log(getCampaignsList, "anything i get from contexthook");
   const campaigns = useFetchCampaignsData("/api/getcampaigns", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
