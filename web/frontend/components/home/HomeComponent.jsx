@@ -6,15 +6,15 @@ import React, { useState, useEffect, Fragment, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllCampaigns,
-  fetchCampaign,
 } from "../../app/features/campaigns/campaignSlice";
+import CountUp from "react-countup";
 
 const HomeComponent = () => {
-  const dispatch = useDispatch();
   const List = useSelector(fetchAllCampaigns);
   const [getCampaigns, setCampaigns] = useState([]);
+
   useEffect(() => {
-    if (List.length > 0) {
+    if (List) {
       setCampaigns(List);
     }
   }, [List]);
@@ -106,7 +106,7 @@ const HomeComponent = () => {
         borderColor: "#5447df",
         backgroundColor: "#5447df",
         borderDash: [10, 5],
-        fill:""
+        fill: "",
       },
 
       {
@@ -114,14 +114,14 @@ const HomeComponent = () => {
         data: [45, -23, 89, 23, 110, 34, 65],
         borderColor: "#E0777D",
         backgroundColor: "#E0777D",
-        fill:"+2"
+        fill: "+2",
       },
       {
         label: "Referrals",
         data: [21, 34, 61, 38, 45, 87, 12],
         borderColor: "#A1F6F5",
         backgroundColor: "#A1F6F5",
-        fill:"origin"
+        fill: "origin",
       },
     ],
   };
@@ -231,7 +231,7 @@ const HomeComponent = () => {
     <div className="home-container">
       <div className="summary-blocks">
         <SummaryCard
-          value={getCampaigns?.length > 0 ? getCampaigns.length : 0}
+          value={<CountUp start={0} end={getCampaigns.length} duration={1.4} />}
           title="Campaigns"
           icon={Marketing}
           class="campaign-icon"
