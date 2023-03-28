@@ -1,9 +1,4 @@
 <div class="section-layout {{ block.settings.layout }}">
-  <div class="announcement">{{ block.settings.announcement_text }}</div>
-  {% case block.settings.layout %}
-    {% comment %}Start of Horizontal layout{% endcomment %}
-    {% when 'horizontal' %}
-    <div id='second-background-image' class="img-layout full">
       <div class="preheader_text">{{ block.settings.preheader_text }}</div>
       <div class="header_text">{{ block.settings.header_text }}</div>
       <div class="subheader_text">{{ block.settings.subheader_text }}</div>
@@ -20,6 +15,22 @@
       </div>
 
 
+  {% comment %}Start of Horizontal layout{% endcomment %}
+  {% if block.settings.layout == 'horizontal' %}
+    <div id='second-background-image' class="img-layout full">
+      <div class="preheader_text">{{ block.settings.preheader_text }}</div>
+      <div class="header_text">{{ block.settings.header_text }}</div>
+      <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+      <div id="referral-link" class="refferal-container">
+        <input
+          id="code"
+          disabled
+          type="text"
+          value="3245hjkjhgfdsfghgffd"
+          class="referral-link-inp" />
+        <button class="copy-link-btn" onclick="copyToClipboard()">Copy Link</button>
+        <div id="snackbar">Copied to clipboard</div>
+      </div>
       <div class="socials">
         {% comment %} Email {% endcomment %}
         <a class="email" target="_blank">
@@ -64,14 +75,8 @@
         </a>
       </div>
     </div>
-
     <div class="gift-layout full">
-      <div class="some-text">0 friends have joined! Invite friends to Join</div>
-      {% comment %} <div class="friend-count">
-      <p>5</p>
-      <p>10</p>
-      <p>15</p>
-      </div> {% endcomment %}
+      <div class="friends-joined">0 friends have joined! Invite friends to Join</div>
       <div class="timeline-group">
         <div class="timeline-headers">
           <div>Friends Joined</div>
@@ -80,35 +85,48 @@
         <div class="timeline">
           <div class="timeline-progress">&nbsp;</div>
           <div class="timeline-items">
-            {% assign products = block.settings.product_list %}
-            {% for p in products %}
-              <div class="timeline-item-block">
-                <div
-                  class="timeline-item"
-                  onmouseenter="mouseenter(this)"
-                  onmouseleave="mouseleave(this)">6<div class="timeline-item-detail" style="display: none;">Invite 6 friends to unlock this reward!</div>
-                </div>
-                <div
-                  class="timeline-item-name"
-                  onmouseenter="mouseenterproduct(this)"
-                  onmouseleave="mouseleaveproduct(this)">
+            <div class="timeline-item-block">
+              <div class="reward-targets">
+                <div class="reward-target">5</div>
+                <div class="reward-target">10</div>
+                <div class="reward-target">15</div>
+                <div class="reward-target">20</div>
+              </div>
+              <div
+                class="referral-count-achieved"
+                onmouseenter="mouseenter(this)"
+                onmouseleave="mouseleave(this)">6<div class="referral-count-detail" style="display: none;">Invite 6 more friends to unlock next reward!</div>
+              </div>
+              <div class="rewards">
+                <div class="reward-item-detail">
                   {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
                   {{ imageDropdown | asset_url | img_tag }}
-                  <div class="timeline-contain" style="display: none;">
-                    <span>{{ p.title }}</span>
-                    <span>{{ p.featured_image | image_url: width: 50 | image_tag }}</span>
-                  </div>
+                  <span>Gift Card $20</span>
+                </div>
+                <div class="reward-item-detail">
+                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                  {{ imageDropdown | asset_url | img_tag }}
+                  <span>Gift Card $50</span>
+                </div>
+                <div class="reward-item-detail">
+                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                  {{ imageDropdown | asset_url | img_tag }}
+                  <span>Gift Card $70</span>
+                </div>
+                <div class="reward-item-detail">
+                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                  {{ imageDropdown | asset_url | img_tag }}
+                  <span>Gift Card $100</span>
                 </div>
               </div>
-            {% endfor %}
+            </div>
           </div>
         </div>
       </div>
     </div>
+  {% endif %}
+  {% comment %}End of Horizontal layout{% endcomment %}
 
-    {% comment %}End of Horizontal layout{% endcomment %}
-    {% comment %}Start of Vertical layout{% endcomment %}
-    {% when 'vertical' %}
     <div id='second-background-image' class="img-layout half">
       <div class="hidden">this div is hidden</div>
     </div>
