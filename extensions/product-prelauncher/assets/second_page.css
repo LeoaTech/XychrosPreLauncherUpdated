@@ -228,35 +228,75 @@ input[type='text']:focus {
   color: #ccc;
 } */
 
+/* ============================== vertical layout =============================== */
+
+.section-layout.vertical {
+  flex-direction: row;
 }
 
-.friend-count {
-  display: flex;
-  justify-content: space-around;
-  width: 70%;
+.half {
+  min-width: 50vw;
+  min-height: 100vh;
 }
 
-.friend-count p {
-  background-color: #000;
-  color: white;
-  display: inline;
-  border-radius: 5rem;
-  width: 32px;
-  height: 32px;
-  padding: 0.2rem;
+.spaced-evenly {
+  justify-content: space-evenly;
+  padding: 40px 0;
+}
+
+.vertical.spaced {
+  width: 100%;
+}
+
+.spaced {
   text-align: center;
 }
 
+.vertical .refferal-container {
+  width: 100%;
+}
+
+.vertical .referral-link-inp {
+  width: 80%;
+}
+
+.vertical .copy-link-btn {
+  right: 5rem;
+}
+
+.vertical .socials {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0 10%;
+  justify-content: space-around;
+}
+
+.vertical .friends-joined {
+  padding-bottom: 0;
+  margin: 2vh 0;
+}
+
+.vertical-timeline-headers {
+  font-weight: 600;
+  font-size: 20px;
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+  position: relative;
+}
+
 .vertical-timeline {
-  /* margin: 0 0 50px; */
   width: 5px;
-  height: 50%;
+  height: 45%;
   background-color: #ccc;
+  margin: 0 0 0 5rem;
 }
 
 .vertical-timeline-progress {
   width: 100%;
   background-color: #011936;
+  height: 25%;
 }
 
 .vertical-timeline-items {
@@ -269,22 +309,97 @@ input[type='text']:focus {
   align-items: flex-end;
 }
 
-.vertical-timeline-item {
+.vertical-timeline-item-block {
   position: relative;
-  background-color: #011936;
-  width: 50px;
-  height: 50px;
-  border-radius: 45px;
-  color: #ccc;
 }
 
-.vertical-timeline-contain {
+.vertical .vertical-reward-targets {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  right: 25vh;
+  gap: 1.8rem;
+  top: -10vh;
+}
+
+.vertical-reward-target {
+  width: 40px;
+  height: 40px;
+  border-radius: 45px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 1.2rem;
+}
+
+.vertical-referral-count-achieved {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 45px;
+  left: -1.5vh;
+  top: -2vh;
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 34px;
+}
+
+.vertical-referral-count-detail {
+  position: absolute;
+  top: -52px;
+  left: 10px;
+  transform: translateX(-50%);
+  background-color: #011936;
+  width: 170px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: center;
+  color: #fff;
+  font-size: 10px;
+  height: 50px;
+  font-weight: normal;
+  line-height: 22px;
+}
+
+.vertical-timeline-item-name {
+  position: relative;
+  top: -3vh;
+  left: 24vw;
+}
+
+.vertical .vertical-rewards {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 14.5vh;
+  bottom: 8vh;
+  gap: 1.2rem;
+}
+
+.vertical-reward-item-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vertical-reward-item-detail img {
+  width: 55px;
+  height: 55px;
+}
+
+.vertical-reward-item-detail span {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* .vertical-timeline-contain {
   position: absolute;
   top: -75px;
   left: 200%;
   transform: translateX(-50%);
   background-color: #011936;
-  /* width: 100px; */
+  width: 100px;
   margin: 10px;
   padding: 5px 10px;
   border-radius: 15px;
@@ -295,70 +410,9 @@ input[type='text']:focus {
 .vertical-timeline-item .vertical-timeline-contain {
   color: #fff;
   background-color: #011936;
-}
+} */
 
-.vertical-timeline-item-name {
-  position: relative;
-  top: -3vh;
-  left: 24vw;
-}
 
-.vertical-timeline-item-block {
-  position: relative;
-  left: -12vw;
-}
-
-.right-side {
-  left: 73vw !important;
-}
-
-.vertical .sometext {
-  padding-bottom: 0;
-}
-
-.vertical-timeline-headers {
-  font-weight: 600;
-  font-size: 20px;
-  display: flex;
-  width: 60%;
-  justify-content: space-between;
-  position: relative;
-  bottom: -50px;
-}
-
-.vertical-timeline-item-detail {
-  position: absolute;
-  top: -75px;
-  transform: translateX(-50%);
-  background-color: #011936;
-  width: 200px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  text-align: center;
-}
-
-.vertical-timeline-item .vertical-timeline-item-detail {
-  color: #fff;
-  background-color: #011936;
-}
-
-.vertical.spaced {
-  width: 100%;
-}
-
-.refferal-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background: #fff;
-  min-height: 55px;
-  width: 40vw;
-  padding: 0 5px;
-  border-radius: 5rem;
-  border: none;
-  margin-bottom: 10px;
-}
 
 .refferal-container:hover {
   box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .4);
