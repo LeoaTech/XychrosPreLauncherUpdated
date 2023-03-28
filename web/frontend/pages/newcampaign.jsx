@@ -1,22 +1,13 @@
 import React, { useEffect, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchAllProducts,
-  fetchProductsData,
-  getProductsStatus,
-} from "../app/features/productSlice";
-import {
-  fetchAllSettings,
-  fetchGlobalSettings,
-  getSettingsStatus,
-} from "../app/features/settings/settingsSlice";
+import { fetchProducts } from "../app/features/productSlice";
+import { fetchSettings } from "../app/features/settings/settingsSlice";
 import {
   SideBar,
   Header,
   MainPage,
   NewCampaignForm,
 } from "../components/index";
-import Spinner from "../components/ui/Spinner";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import useFetchAllProducts from "../constant/fetchProducts";
 import { useStateContext } from "../contexts/ContextProvider";
@@ -29,31 +20,28 @@ const NewCampaign = () => {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
   const dispatch = useDispatch();
-  // let data = useFetchAllProducts("/api/2022-10/products.json", {
-  //   method: "GET",
-  //   headers: { "Content-Type": "application/json" },
-  // });
+  let productsList = useFetchAllProducts("/api/2022-10/products.json", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
 
-  // const settingsData = useFetchSettings("/api/updatesettings", {
-  //   method: "GET",
-  //   headers: { "Content-Type": "application/json" },
-  // });
+  const settingsData = useFetchSettings("/api/updatesettings", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
 
   useEffect(() => {
-    if (getSettingsStatus === false) {
-      dispatch(fetchGlobalSettings());
+    if (settingsData) {
+      dispatch(fetchSettings(settingsData));
     }
   }, [dispatch]);
-  const srfdata = useSelector(fetchAllSettings)
-  console.log(srfdata);
-  
+
   useEffect(() => {
-    if (getProductsStatus) {
-      dispatch(fetchProductsData());
+    if (productsList) {
+      dispatch(fetchProducts(productsList));
     }
   }, [dispatch]);
-  const mydata = useSelector(fetchAllProducts)
-  console.log(mydata);
+
   return (
     <div className="app">
       {activeMenu ? (
