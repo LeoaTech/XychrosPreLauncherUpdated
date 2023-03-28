@@ -13,52 +13,55 @@ import { useParams } from "react-router-dom";
 import "./socialsBlocks/social.css";
 import "./rewardTier/RewardTier.css";
 import {
-  fetchCampaign,
+  updateCampaign,
   fetchCampaignById,
   fetchCampaignByName,
+  addNewCampaign,
 } from "../../app/features/campaigns/campaignSlice";
 import { storeLinks } from "./dummySocial";
 import { RewardData } from "./rewardTier/RewardData";
 import { useAuthenticatedFetch } from "../../hooks";
 import { fetchAllSettings } from "../../app/features/settings/settingsSlice";
 import { fetchAllProducts } from "../../app/features/productSlice";
-import useFetchCampaignsData from "../../constant/fetchCampaignsData";
 
 function NewCampaignForm() {
+  const fetch = useAuthenticatedFetch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { isEdit, setIsEdit } = useStateContext();
-  // For Editing Form Data
   const { campaignsid } = useParams();
+
+  // Get A Single Campaign with ID
   const campaignById = useSelector((state) =>
-    fetchCampaignById(state, +campaignsid)
+    fetchCampaignById(state, Number(campaignsid))
   );
+
   const campaignName = useSelector(fetchCampaignByName);
   const globalSettings = useSelector(fetchAllSettings);
-  const productsList = useSelector(fetchAllProducts);
+  const productsData = useSelector(fetchAllProducts);
   const [editCampaignData, setEditCampaignData] = useState();
-  const [productsData, setProductsData] = useState();
+
   useEffect(() => {
     if (campaignById) {
       setEditCampaignData(campaignById);
     }
-  }, [campaignById]);
 
-  useEffect(() => {
-    setProductsData(productsList);
-  }, [productsList]);
-
-  const fetch = useAuthenticatedFetch();
+    if (globalSettings && productsData) {
+      console.log("render");
+    }
+  }, [globalSettings, productsData]);
 
   let today = new Date();
-  let nextWeekDate = new Date();
-  nextWeekDate.setDate(today.getDate() + 6);
+  let getNextDate = new Date();
+  getNextDate.setDate(today.getDate() + 6);
 
-  const navigate = useNavigate();
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(nextWeekDate);
+  const [endDate, setEndDate] = useState(getNextDate);
   const [errorMsg, setErrorMsg] = useState(false);
   const [errorName, setErrorName] = useState(false);
-  const [expanded, setExpanded] = useState(Array(6).fill(false));
 
+  const [expanded, setExpanded] = useState(Array(6).fill(false));
   const [newCampaignData, setNewCampaignData] = useState({
     collect_phone: globalSettings?.collect_phone,
     discord_link: globalSettings?.discord_link,
@@ -113,7 +116,7 @@ function NewCampaignForm() {
     tiktok_link: globalSettings?.tiktok_link,
     twitter_link: globalSettings?.twitter_link,
     welcome_email: globalSettings?.welcome_email,
-    template_id: 3,
+    template_id: null,
     discount_type: globalSettings?.discount_type,
   });
 
@@ -126,7 +129,6 @@ function NewCampaignForm() {
         />
       </div>
       <input
-        id="datepicker"
         value={value}
         className="example-custom-input"
         onChange={onChange}
@@ -135,47 +137,7 @@ function NewCampaignForm() {
     </div>
   ));
 
-  const validateForm = () => {
-    const requiredFields = document.querySelectorAll(
-      "input[required], select[required]",
-      "#datepicker"
-    );
-
-    let isFormValid = true;
-
-    requiredFields.forEach((field) => {
-      if (!field.value) {
-        isFormValid = false;
-        field.classList.add("error");
-        const errorMessage = document.createElement("span");
-        errorMessage.classList.add("error-message");
-        errorMessage.innerHTML = "This field is required";
-        field.parentNode.insertBefore(errorMessage, field.nextSibling);
-      } else {
-        // setErrorMsg(false);
-        field.classList.remove("error");
-        const errorMessage = field.parentNode.querySelector(".error-message");
-        if (errorMessage) {
-          errorMessage.parentNode.removeChild(errorMessage);
-        }
-      }
-    });
-
-    // Validation for Date INPUT field
-
-    // var datepickerInput = document.getElementById("datepicker");
-
-    // if (!datepickerInput.value) {
-    //   isFormValid = false;
-    //   setErrorMsg(true);
-    // } else {
-    //   setErrorMsg(false);
-    // }
-
-    return isFormValid;
-  };
   // Render Next Button on each form
-
   const renderButton = (id) => {
     return (
       <button className="nextBtn" onClick={() => handleNext(id)}>
@@ -193,32 +155,24 @@ function NewCampaignForm() {
 
   // Handle Next Button event for each
   const handleNext = (index) => {
-    // validateForm()
     const loadingOverlay = document.getElementById("loading-overlay");
-    if (index === 1) {
-      if (validateForm() === true)
-        if (
-          newCampaignData.name !== "" &&
-          campaignName.includes(newCampaignData?.name)
-        ) {
-          setErrorMsg(true);
-          setErrorName(true);
-          setExpanded((prevExpand) =>
-            prevExpand.map((state, i) => i === index - 1 && true)
-          );
-        } else {
-          setErrorMsg(false);
-          setErrorName(false);
-          setExpanded((prevExpand) =>
-            prevExpand.map((state, i) => (i === index ? !state : false))
-          );
-        }
-    } else if (index === 5) {
-      setExpanded((prevExpand) =>
-        prevExpand.map((state, i) => (i === index ? !state : false))
-      );
+    if (index === 1 && isEdit? editCampaignData.name !== "": newCampaignData.name !== "") {
+      if (
+        isEdit
+          ? campaignName.includes(editCampaignData?.name)
+          : campaignName.includes(newCampaignData?.name)
+      ) {
+        setErrorName(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      } else {
+        setErrorName(false);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => (i === index ? !state : false))
+        );
+      }
     } else {
-      // validateForm()
       setExpanded((prevExpand) =>
         prevExpand.map((state, i) => (i === index ? !state : false))
       );
@@ -238,19 +192,17 @@ function NewCampaignForm() {
       setNewCampaignData((prevState) => ({
         ...prevState,
         [name]: value,
-        start_date: startDate,
-        end_date: endDate,
+        // start_date: startDate,
+        // end_date: endDate,
       }));
     }
   };
-
-  // To get Updated Campaigns
 
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
 
-    // Editing Camapign
+    // Editing Camapign Form
     if (isEdit) {
       await fetch(`/api/campaignsettings/${campaignsid}`, {
         method: "PUT",
@@ -260,10 +212,12 @@ function NewCampaignForm() {
         body: JSON.stringify(editCampaignData),
       })
         .then((res) => res.json())
+        .then((data) => dispatch(updateCampaign(data)))
         .catch((err) => console.log(err));
       setIsEdit(false);
+      navigate("/campaigns");
     }
-    // Adding New Campaign
+    // Adding new Campaign Form
     else {
       await fetch("/api/campaignsettings", {
         method: "POST",
@@ -273,12 +227,11 @@ function NewCampaignForm() {
         body: JSON.stringify(newCampaignData),
       })
         .then((res) => res.json())
-        .then((data) => console.log(data))
+        .then((data) => dispatch(addNewCampaign(data)))
         .catch((err) => console.log(err));
+      console.log("form sent");
+      navigate("/campaigns");
     }
-    handleNext(5);
-
-    navigate("/campaigns", { replace: true });
   };
 
   // HandleCheckbox events in the basic form settings
@@ -312,7 +265,7 @@ function NewCampaignForm() {
       }));
     }
   }
-  console.log(editCampaignData, "Edit campaign form");
+  console.log(newCampaignData, "Edit campaign form");
 
   return (
     <div className="new-campaign-container">
@@ -346,14 +299,13 @@ function NewCampaignForm() {
                 <div className="input-form-groups">
                   <div className="form-group">
                     <div className="inputfield">
-                      <label htmlFor="name">Campaign Name {"*"}</label>
+                      <label htmlFor="name">Campaign Name</label>
                       {isEdit ? (
                         <>
                           <input
                             type="text"
                             name="name"
                             id="name"
-                            required
                             value={editCampaignData?.name}
                             onChange={handleChange}
                           />{" "}
@@ -369,7 +321,6 @@ function NewCampaignForm() {
                             type="text"
                             name="name"
                             id="name"
-                            required
                             value={newCampaignData?.name}
                             onChange={handleChange}
                           />
@@ -383,13 +334,12 @@ function NewCampaignForm() {
                     </div>
 
                     <div className="inputfield">
-                      <label htmlFor="product_link">Product Link {"*"}</label>
+                      <label htmlFor="product_link">Product Link</label>
                       {isEdit ? (
                         <div className="select-products">
                           <select
                             name="product"
                             id="product"
-                            required
                             value={editCampaignData?.product}
                             onChange={handleChange}
                           >
@@ -397,9 +347,7 @@ function NewCampaignForm() {
                             <option>Select</option>;
                             {productsData?.map((item) => {
                               return (
-                                <option key={item?.id} value={item.title}>
-                                  {item.title}
-                                </option>
+                                <option value={item.title}>{item.title}</option>
                               );
                             })}
                           </select>
@@ -409,7 +357,6 @@ function NewCampaignForm() {
                           <select
                             name="product"
                             id="product"
-                            required
                             value={newCampaignData?.product}
                             onChange={handleChange}
                           >
@@ -417,9 +364,7 @@ function NewCampaignForm() {
                             <option>Select</option>;
                             {productsData?.map((item) => {
                               return (
-                                <option key={item?.id} value={item.title}>
-                                  {item.title}
-                                </option>
+                                <option value={item.title}>{item.title}</option>
                               );
                             })}
                           </select>
@@ -429,16 +374,14 @@ function NewCampaignForm() {
                   </div>
                   <div className="form-group">
                     <div className="inputfield">
-                      <label htmlFor="start_date">Start Date {"*"}</label>
+                      <label htmlFor="start_date">Start Date</label>
 
                       {isEdit ? (
                         <DatePicker
-                          id="datepicker"
                           minDate={new Date()}
                           showDisabledMonthNavigation
                           customInput={<ExampleCustomInput />}
                           shouldCloseOnSelect={true}
-                          required
                           selected={
                             editCampaignData?.start_date
                               ? new Date(editCampaignData.start_date)
@@ -458,14 +401,11 @@ function NewCampaignForm() {
                         />
                       ) : (
                         <DatePicker
-                          id="datepicker"
                           name="start_date"
                           minDate={new Date()}
-                          required
                           showDisabledMonthNavigation
                           customInput={<ExampleCustomInput />}
                           shouldCloseOnSelect={true}
-                          selectedStart
                           selected={newCampaignData?.start_date}
                           value={newCampaignData?.start_date}
                           onChange={(date) =>
@@ -476,24 +416,16 @@ function NewCampaignForm() {
                           }
                         />
                       )}
-                      {errorMsg && (
-                        <p className="error-message">
-                          "Please Select a vlaid Start Date "
-                        </p>
-                      )}
                     </div>
 
                     <div className="inputfield">
-                      <label htmlFor="end_date">End Date {"*"}</label>
+                      <label htmlFor="end_date">End Date</label>
                       {isEdit ? (
                         <DatePicker
-                          id="datepicker"
                           minDate={new Date()}
-                          required
                           customInput={<ExampleCustomInput />}
                           showDisabledMonthNavigation
                           shouldCloseOnSelect={true}
-                          selectsEnd
                           selected={
                             editCampaignData?.end_date
                               ? new Date(editCampaignData.end_date)
@@ -513,10 +445,8 @@ function NewCampaignForm() {
                         />
                       ) : (
                         <DatePicker
-                          id="datepicker"
                           name="end_date"
                           minDate={new Date()}
-                          required
                           customInput={<ExampleCustomInput />}
                           showDisabledMonthNavigation
                           shouldCloseOnSelect={true}
@@ -529,11 +459,6 @@ function NewCampaignForm() {
                             }))
                           }
                         />
-                      )}
-                      {errorMsg && (
-                        <p className="error-message">
-                          "Please Select a vlaid End Date "
-                        </p>
                       )}
                     </div>
                   </div>
@@ -776,7 +701,7 @@ function NewCampaignForm() {
                   can be used by a customer only once.
                 </p>
                 <div className="rewards-settings-container">
-                  <h2 className="sub-heading">Discount {"*"}</h2>
+                  <h2 className="sub-heading">Discount</h2>
                   <div className="discount-settings">
                     <div>
                       {isEdit ? (
@@ -785,7 +710,6 @@ function NewCampaignForm() {
                           type="radio"
                           name="discount_type"
                           value="percent"
-                          required
                           checked={
                             editCampaignData?.discount_type === "percent"
                           }
@@ -795,14 +719,12 @@ function NewCampaignForm() {
                         <input
                           className="social-radioInput"
                           type="radio"
-                          required
                           name="discount_type"
                           value="percent"
                           checked={newCampaignData?.discount_type === "percent"}
                           onChange={handleRadioChange}
                         />
                       )}
-
                       <label htmlFor="">% off the entire order</label>
                     </div>
                     <div>
@@ -812,7 +734,6 @@ function NewCampaignForm() {
                           type="radio"
                           name="discount_type"
                           value="amount"
-                          required
                           checked={editCampaignData?.discount_type === "amount"}
                           onChange={handleRadioChange}
                         />
@@ -822,7 +743,6 @@ function NewCampaignForm() {
                           type="radio"
                           name="discount_type"
                           value="amount"
-                          required
                           checked={newCampaignData?.discount_type === "amount"}
                           onChange={handleRadioChange}
                         />
@@ -853,7 +773,6 @@ function NewCampaignForm() {
                                 <input
                                   className="small-inputfield"
                                   type="number"
-                                  required={is_required}
                                   name={`reward_${reward?.id}_tier`}
                                   value={
                                     editCampaignData[
@@ -1264,11 +1183,7 @@ function NewCampaignForm() {
                 <div className="templates-block-container">
                   <div className="template-cards">
                     {[1, 2, 3].map((item, index) => (
-                      <div
-                        key={index}
-                        className="template-card-block"
-                        id="template"
-                      >
+                      <div key={index} className="template-card-block">
                         {index === 2 ? (
                           <h3>
                             Build a custom template in the Shopify Theme Editor{" "}
