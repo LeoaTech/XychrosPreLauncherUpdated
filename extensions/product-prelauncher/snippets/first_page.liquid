@@ -22,6 +22,13 @@
               placeholder="{{ block.settings.email_text }}"
               class='email-input-product-prelaucher' />
             <input
+              type="tel"
+              required
+              id="phone"
+              name="phone"
+              placeholder="{{ block.settings.phone_text }}"
+              class='phone-input-product-prelaucher' />
+            <input
               type="submit"
               value="{{ block.settings.button_text }}"
               class="button submit-button submit-button-product-prelaunch" />
@@ -51,6 +58,13 @@
             placeholder="{{ block.settings.email_text }}"
             class='email-input-product-prelaucher' />
           <input
+            type="tel"
+            required
+            id="phone"
+            name="phone"
+            placeholder="{{ block.settings.phone_text }}"
+            class='phone-input-product-prelaucher' />
+          <input
             type="submit"
             value="{{ block.settings.button_text }}"
             class="button submit-button submit-button-product-prelaunch" />
@@ -75,6 +89,13 @@
             placeholder="{{ block.settings.email_text }}"
             class='email-input-product-prelaucher' />
           <input
+            type="tel"
+            required
+            id="phone"
+            name="phone"
+            placeholder="{{ block.settings.phone_text }}"
+            class='phone-input-product-prelaucher' />
+          <input
             type="submit"
             value="{{ block.settings.button_text }}"
             class="button submit-button submit-button-product-prelaunch" />
@@ -91,12 +112,12 @@
     <div id='background-image' class="img-layout half">
       <div class="hidden">this div is hidden</div>
     </div>
-    <div class="text-layout half spaced-evenly">
-      <div class="spaced">
+    <div class="text-layout spaced-evenly">
+      <div class="spaced vertical-mobile">
         <div class="subheader_text">{{ block.settings.subheader_text }}</div>
         <div class="header_text">{{ block.settings.header_text }}</div>
       </div>
-      <div class="spaced">
+      <div class="spaced vertical-mobile-two">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
           action='/apps/xychrosupdated/api/getuser'
@@ -109,6 +130,13 @@
             name="email"
             placeholder="{{ block.settings.email_text }}"
             class='email-input-product-prelaucher' />
+          <input
+            type="tel"
+            required
+            id="phone"
+            name="phone"
+            placeholder="{{ block.settings.phone_text }}"
+            class='phone-input-product-prelaucher' />
           <input
             type="submit"
             value="{{ block.settings.button_text }}"
@@ -119,12 +147,12 @@
   {% endif %}
 
   {% if block.settings.layout == 'flip-vertical' %}
-    <div class="text-layout half spaced-evenly">
-      <div class="spaced">
+    <div class="text-layout flip-spaced-evenly">
+      <div class="spaced flip-vertical-mobile">
         <div class="subheader_text">{{ block.settings.subheader_text }}</div>
         <div class="header_text">{{ block.settings.header_text }}</div>
       </div>
-      <div class="spaced">
+      <div class="spaced flip-vertical-mobile-two">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
           action='/apps/xychrosupdated/api/getuser'
@@ -138,13 +166,20 @@
             placeholder="{{ block.settings.email_text }}"
             class='email-input-product-prelaucher' />
           <input
+            type="tel"
+            required
+            id="phone"
+            name="phone"
+            placeholder="{{ block.settings.phone_text }}"
+            class='phone-input-product-prelaucher' />
+          <input
             type="submit"
             value="{{ block.settings.button_text }}"
             class="button submit-button submit-button-product-prelaunch" />
         </form>
       </div>
     </div>
-    <div id='background-image' class="img-layout half">
+    <div id='background-image' class="img-layout flip-half">
       <div class="hidden">this div is hidden</div>
     </div>
   {% endif %}
@@ -171,6 +206,13 @@
             name="email"
             placeholder="{{ block.settings.email_text }}"
             class='email-input-product-prelaucher' />
+          <input
+            type="tel"
+            required
+            id="phone"
+            name="phone"
+            placeholder="{{ block.settings.phone_text }}"
+            class='phone-input-product-prelaucher' />
           <input
             type="submit"
             value="{{ block.settings.button_text }}"
@@ -203,6 +245,13 @@
             placeholder="{{ block.settings.email_text }}"
             class='email-input-product-prelaucher' />
           <input
+            type="tel"
+            required
+            id="phone"
+            name="phone"
+            placeholder="{{ block.settings.phone_text }}"
+            class='phone-input-product-prelaucher' />
+          <input
             type="submit"
             value="{{ block.settings.button_text }}"
             class="button submit-button submit-button-product-prelaunch" />
@@ -233,6 +282,13 @@
             name="email"
             placeholder="{{ block.settings.email_text }}"
             class='email-input-product-prelaucher' />
+          <input
+            type="tel"
+            required
+            id="phone"
+            name="phone"
+            placeholder="{{ block.settings.phone_text }}"
+            class='phone-input-product-prelaucher' />
           <input
             type="submit"
             value="{{ block.settings.button_text }}"
@@ -265,6 +321,13 @@
             placeholder="{{ block.settings.email_text }}"
             class='email-input-product-prelaucher' />
           <input
+            type="tel"
+            required
+            id="phone"
+            name="phone"
+            placeholder="{{ block.settings.phone_text }}"
+            class='phone-input-product-prelaucher' />
+          <input
             type="submit"
             value="{{ block.settings.button_text }}"
             class="button submit-button submit-button-product-prelaunch" />
@@ -272,5 +335,4 @@
       </div>
     </div>
   {% endif %}
-
 </div>
