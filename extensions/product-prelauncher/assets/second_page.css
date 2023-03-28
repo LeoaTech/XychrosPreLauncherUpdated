@@ -97,6 +97,16 @@ input[type='text']:focus {
   margin: 5vh 0;
 }
 
+/* ============================== none horizontal =============================== */
+
+.section-layout.nonehorizontal {
+  flex-direction: column;
+}
+
+.none-full {
+  width: 100vw;
+  height: 100vh;
+}
 /* ============================== horizontal layout ============================== */
 
 .section-layout.horizontal {
