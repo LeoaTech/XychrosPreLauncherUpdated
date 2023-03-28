@@ -226,6 +226,131 @@ const admin_apis = async (accessToken) => {
             console.error(error);
         }
     };
+
+    // update template1 with second page handle
+
+    const updateFirstPageTemplate = async (templateSuffix, pagehandle) => {
+        const body = {
+            "sections": {
+                "16782598035f2c71dc": {
+                    "type": "apps",
+                    "blocks": {
+                        "1f56808c-7911-47a3-b9bd-a3d30ae5a1d9": {
+                            "type": "shopify:\/\/apps\/updated-xychros-app\/blocks\/firstPage\/990d48eb-16d0-4af0-b902-f323ed2bbfab",
+                            "settings": {
+                                "show_header_footer": true,
+                                "background_color": "linear-gradient(137deg, rgba(0, 0, 0, 0) 100%, rgba(167, 144, 140, 0) 100%)",
+                                "main_color": "#ffffff",
+                                "accent_color": "#000000",
+                                "layout": "none",
+                                "background": "shopify:\/\/shop_images\/nature2.png",
+                                "header_text": "Designing the Future",
+                                "subheader_text": "",
+                                "cta_tag_text": "",
+                                "email_text": "Email",
+                                "phone_text": "Phone Number",
+                                "button_text": "Take me too!",
+                                "base_font_size": 24,
+                                "text_layout": "center",
+                                "page": `${pagehandle}`
+                            }
+                        }
+                    },
+                    "block_order": [
+                        "1f56808c-7911-47a3-b9bd-a3d30ae5a1d9"
+                    ],
+                    "settings": {
+                    }
+                }
+            },
+            "order": [
+                "16782598035f2c71dc"
+            ]
+        }
+        try {
+            const response = await fetch(`https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`, {
+                method: 'PUT',
+                headers,
+                body: JSON.stringify({
+                    asset: {
+                        key: `templates/page.${templateSuffix}.json`,
+                        value: JSON.stringify(body),
+                    },
+                }),
+            });
+            const data = await response.json();
+            console.log("Updated template with page handle");
+            if (!response.ok) {
+                throw new Error(`Failed to update page template: ${data.errors}`);
+            }
+            return data;
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    // update template2 with first page handle
+
+    const updateSecondPageTemplate = async (templateSuffix, pagehandle) => {
+        const body = {
+            "sections": {
+                "16798296089bba316e": {
+                    "type": "apps",
+                    "blocks": {
+                        "7efbe0eb-f9b3-4f16-af27-f262dbcc5fbc": {
+                            "type": "shopify:\/\/apps\/updated-xychros-app\/blocks\/secondPage\/990d48eb-16d0-4af0-b902-f323ed2bbfab",
+                            "settings": {
+                                "show_header_footer": true,
+                                "background_color": "linear-gradient(137deg, rgba(0, 0, 0, 0) 100%, rgba(167, 144, 140, 0) 100%)",
+                                "main_color": "#ffffff",
+                                "accent_color": "#000000",
+                                "layout": "nonehorizontal",
+                                "background": "shopify:\/\/shop_images\/nature2.png",
+                                "preheader_text": "",
+                                "header_text": "Your Product",
+                                "subheader_text": "Share your unique link via email, Facebook or Twitter and earn goodies for each friend who signs up!",
+                                "base_font_size": 24,
+                                "text_layout": "center",
+                                "icon_dropdown": "image-9",
+                                "page": `${pagehandle}`
+                            }
+                        }
+                    },
+                    "block_order": [
+                        "7efbe0eb-f9b3-4f16-af27-f262dbcc5fbc"
+                    ],
+                    "settings": {
+                    }
+                }
+            },
+            "order": [
+                "16798296089bba316e"
+            ]
+        }
+        try {
+            const response = await fetch(`https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`, {
+                method: 'PUT',
+                headers,
+                body: JSON.stringify({
+                    asset: {
+                        key: `templates/page.${templateSuffix}.json`,
+                        value: JSON.stringify(body),
+                    },
+                }),
+            });
+            const data = await response.json();
+            console.log("Updated template with page handle");
+            if (!response.ok) {
+                throw new Error(`Failed to update page template: ${data.errors}`);
+            }
+            return data;
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+
     // ==== open shopify theme editor-pending ====
 
 
@@ -241,6 +366,10 @@ const admin_apis = async (accessToken) => {
     const firstpage = await createFirstPage(templateSuffix1);
     const secondpage = await createSecondPage(templateSuffix2);
 
+    // update templates with page handles
+
+    await updateFirstPageTemplate(templateSuffix1, secondpage);
+    await updateSecondPageTemplate(templateSuffix2, firstpage);
 }
 
 // --------------------------------------- TEMPLATE API ------------------------------------
