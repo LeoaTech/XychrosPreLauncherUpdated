@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  fetchAllCampaigns,
   fetchCampaign,
 } from "../app/features/campaigns/campaignSlice";
 import useFetchCampaignsData from "../constant/fetchCampaignsData";
@@ -9,16 +8,14 @@ import { SideBar, Header, HomeComponent, MainPage } from "../components/index";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
-import { useSelector } from "react-redux";
 import { fetchProducts } from "../app/features/productSlice";
 import useFetchAllProducts from "../constant/fetchProducts";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import { fetchSettings } from "../app/features/settings/settingsSlice";
 
 export default function HomePage() {
-  const getCampaignsList = useSelector(fetchAllCampaigns);
   const { activeMenu, setGetProducts } = useStateContext();
-  const { darkTheme, lightTheme } = useThemeContext();
+  const { darkTheme } = useThemeContext();
   const dispatch = useDispatch();
   const campaigns = useFetchCampaignsData("/api/getcampaigns", {
     method: "GET",
