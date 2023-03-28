@@ -116,7 +116,7 @@ function NewCampaignForm() {
     tiktok_link: globalSettings?.tiktok_link,
     twitter_link: globalSettings?.twitter_link,
     welcome_email: globalSettings?.welcome_email,
-    template_id: null,
+    template_id: 2,
     discount_type: globalSettings?.discount_type,
   });
 
