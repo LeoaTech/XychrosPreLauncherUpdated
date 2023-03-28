@@ -4,6 +4,7 @@ const DeleteModal = ({ openModal, setDeleteModal, values, handleDelete }) => {
   const handleClose = () => {
     setDeleteModal((prev) => !prev);
   };
+
   return openModal ? (
     <div className="modal">
       <div className="delete-modal-container">
@@ -14,7 +15,7 @@ const DeleteModal = ({ openModal, setDeleteModal, values, handleDelete }) => {
           <p>{`Are you Sure you want to delete ID ${values}? `}</p>
 
           <div className="action__btn-modal">
-            <span
+            <button
               className="delete__btn"
               onClick={() => {
                 handleDelete(values);
@@ -22,10 +23,10 @@ const DeleteModal = ({ openModal, setDeleteModal, values, handleDelete }) => {
               }}
             >
               OK
-            </span>
-            <span className="close__btn" onClick={handleClose}>
+            </button>
+            <button className="close__btn" onClick={handleClose}>
               Cancel
-            </span>
+            </button>
           </div>
         </section>
       </div>

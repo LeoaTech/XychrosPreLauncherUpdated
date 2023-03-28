@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useAuthenticatedFetch } from "../hooks";
 
 const useFetchSettings = (url) => {
@@ -13,7 +14,7 @@ const useFetchSettings = (url) => {
           throw new Error("something went wrong while requesting posts");
         })
         .then((globalSettings) => {
-          // console.log(globalSettings);
+          
           setData(globalSettings);
           return globalSettings;
         })

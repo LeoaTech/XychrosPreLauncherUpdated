@@ -1,16 +1,47 @@
+import React, { useEffect, Suspense } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../app/features/productSlice";
+import { fetchSettings } from "../app/features/settings/settingsSlice";
 import {
   SideBar,
   Header,
-  NewCampaignForm,
   MainPage,
+  NewCampaignForm,
 } from "../components/index";
+import useFetchSettings from "../constant/fetchGlobalSettings";
+import useFetchAllProducts from "../constant/fetchProducts";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 
+// const NewCampaignForm = React.lazy(() => import("../components/index"));
+
 const NewCampaign = () => {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
+  const dispatch = useDispatch();
+  let productsList = useFetchAllProducts("/api/2022-10/products.json", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const settingsData = useFetchSettings("/api/updatesettings", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  useEffect(() => {
+    if (settingsData) {
+      dispatch(fetchSettings(settingsData));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (productsList) {
+      dispatch(fetchProducts(productsList));
+    }
+  }, [dispatch]);
+
   return (
     <div className="app">
       {activeMenu ? (
@@ -23,21 +54,45 @@ const NewCampaign = () => {
         </div>
       )}
       {activeMenu ? (
-        <div className={darkTheme ? "main__container " : "main__container dark"}>
+        <div
+          className={darkTheme ? "main__container " : "main__container dark"}
+        >
           <MainPage>
             <div className="header">
               <Header />
             </div>
+
+            {/* <React.Suspense fallback={<Spinner size="large" />}> */}
             <NewCampaignForm />
+            {/* </React.Suspense> */}
           </MainPage>
         </div>
       ) : (
-        <div className={darkTheme ? "main__container full" : "main__container dark"}>
+        <div
+          className={
+            darkTheme ? "main__container full" : "main__container dark"
+          }
+        >
           <MainPage>
             <div className="header">
               <Header />
             </div>
-            <NewCampaignForm />
+            {settingsData.length > 0 && data !== undefined ? (
+              <NewCampaignForm />
+            ) : (
+              <h1
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100vh",
+                  fontSize: 12,
+                  color: "#fff",
+                }}
+              >
+                Loading...
+              </h1>
+            )}
           </MainPage>
         </div>
       )}

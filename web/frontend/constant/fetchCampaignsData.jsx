@@ -13,7 +13,6 @@ const useFetchCampaignsData = (url) => {
           throw new Error("something went wrong while requesting posts");
         })
         .then((myCampaigns) => {
-          // console.log(myCampaigns);
           setData(myCampaigns);
           return myCampaigns;
         })

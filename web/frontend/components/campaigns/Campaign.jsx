@@ -6,40 +6,63 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { useStateContext } from '../../contexts/ContextProvider';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  deleteCampaign,
   fetchAllCampaigns,
   fetchCampaign,
-} from '../../app/features/campaigns/campaignSlice';
+  removeCampaign,
+} from "../../app/features/campaigns/campaignSlice";
+import CountUp from "react-countup";
+import { useAuthenticatedFetch } from "../../hooks";
+import useFetchCampaignsData from "../../constant/fetchCampaignsData";
+import { useNavigate } from "react-router-dom";
+
 
 export default function CampaignsComponent() {
-  const { activeMenu, isEdit, setIsEdit } = useStateContext();
+  const { setIsEdit } = useStateContext();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const List = useSelector(fetchAllCampaigns);
-  const [getCampaigns, setCampaigns] = useState([...List]);
+  const [getCampaigns, setCampaigns] = useState([]);
+
+  useEffect(() => {
+    console.log(List)
+    setCampaigns(List);
+  }, [List,dispatch]);
+
+ 
+
+
   const [editData, setEditData] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [error, setError] = useState('');
+  const [deleteId, setDeleteId] = useState(null);
 
-  const handleDelete = (id) => {
-    let newData = getCampaigns?.filter((cp) => cp.campaign_id !== id);
-    setCampaigns(newData);
+  const fetch = useAuthenticatedFetch();
+
+  const handleDelete = async (id) => {
+    setDeleteId(id)
+    await fetch(`/api/campaignsettings/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => dispatch(removeCampaign(data[0])))
+      .catch((err) => console.log(err));
   };
+
+  
 
   const handleEdit = (id) => {
     setIsEdit(true);
-    setEditData(getCampaigns?.filter((cp) => cp.id === id));
   };
-
-  const pageLimit = 3;
-  const dataLimit = 10;
-
-  if (error) return <h1>{error}</h1>;
 
   return (
     <div className='home-container'>
       <div className='summary-blocks'>
         <SummaryCard
-          value={getCampaigns.length > 0 ? getCampaigns.length : 0}
-          title='Campaigns'
+          value={getCampaigns?.length}
+          title="Campaigns"
           icon={Marketing}
           class='campaign-icon'
         />
@@ -66,20 +89,33 @@ export default function CampaignsComponent() {
         {getCampaigns?.length > 0 ? (
           <>
             {getCampaigns?.map((campaign) => (
-              <CampaignBlock
-                key={campaign.campaign_id}
-                editData={editData}
-                setEditData={setEditData}
-                data={campaign}
-                deleteModal={deleteModal}
-                setDeleteModal={setDeleteModal}
-                handleDelete={handleDelete}
-                handleEdit={handleEdit}
-              />
+              <>
+                <CampaignBlock
+                  key={campaign?.campaign_id}
+                  setEditData={setEditData}
+                  data={campaign}
+                  deleteId={deleteId}
+                  setDeleteId={setDeleteId}
+                  deleteModal={deleteModal}
+                  setDeleteModal={setDeleteModal}
+                  handleDelete={handleDelete}
+                  handleEdit={handleEdit}
+                />
+              </>
             ))}
           </>
         ) : (
-          <h1 style={{ color: '#fff', fontSize: 29, margin: 20 }}>
+          <h1
+            style={{
+              color: "#fff",
+              fontSize: 29,
+              margin: 20,
+              height: "50vh",
+              display: "Flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             No Campaigns Data
           </h1>
         )}
@@ -89,8 +125,6 @@ export default function CampaignsComponent() {
 }
 
 /*
-
-
  <Pagination
             data={getCampaigns}
             RenderComponent={CampaignBlock}
