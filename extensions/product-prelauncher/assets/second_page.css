@@ -107,6 +107,83 @@ input[type='text']:focus {
   width: 100vw;
   height: 100vh;
 }
+
+/* ============================== none vertical =============================== */
+
+.section-layout.nonevertical {
+  flex-direction: column;
+}
+
+.nonevertical .img-layout {
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.none-half {
+  width: 60vw;
+  height: 100vh;
+}
+
+.nonevertical .refferal-container {
+  width: 100%;
+}
+
+.nonevertical .referral-link-inp {
+  width: 80%;
+}
+
+.nonevertical .copy-link-btn {
+  right: 5rem;
+}
+
+.nonevertical .socials {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0 10%;
+  justify-content: space-around;
+}
+
+.nonevertical .friends-joined {
+  padding-bottom: 0;
+  margin: 2vh 0;
+}
+
+.nonevertical .vertical-reward-targets {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  right: 28vh;
+  gap: 1.8rem;
+  top: -10vh;
+}
+
+.nonevertical .vertical-rewards {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 17vh;
+  bottom: 8vh;
+  gap: 1.2rem;
+}
+
+.nonevertical .vertical-referral-count-detail {
+  position: absolute;
+  top: -35px;
+  left: 9px;
+  transform: translateX(-50%);
+  background-color: #011936;
+  width: 227px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: left;
+  color: #fff;
+  font-size: 10px;
+  height: 35px;
+  font-weight: normal;
+  line-height: 22px;
+}
+
 /* ============================== horizontal layout ============================== */
 
 .section-layout.horizontal {
