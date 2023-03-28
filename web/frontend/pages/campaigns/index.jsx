@@ -1,12 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchAllCampaigns,
-  fetchCampaign,
-  fetchCampaignsData,
-  getCampaignsError,
-  getCampaignsStatus,
-} from "../../app/features/campaigns/campaignSlice";
+import { fetchCampaign } from "../../app/features/campaigns/campaignSlice";
 import { SideBar, Header, Campaign, MainPage } from "../../components/index";
 import useFetchCampaignsData from "../../constant/fetchCampaignsData";
 import { useStateContext } from "../../contexts/ContextProvider";
