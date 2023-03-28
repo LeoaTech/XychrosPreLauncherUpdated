@@ -123,6 +123,9 @@ function NewCampaignForm() {
     discount_type: globalSettings?.discount_type,
   });
 
+  // authenticated fetch
+  const authenticated_fetch = useAuthenticatedFetch();
+
   const ExampleCustomInput = forwardRef(({ value, onClick, onChange }, ref) => (
     <div className="wrapper">
       <div className="icon">
@@ -236,7 +239,8 @@ function NewCampaignForm() {
         .then((res) => res.json())
         .then((data) => dispatch(addNewCampaign(data)))
         .catch((err) => console.log(err));
-      console.log("form sent");
+      await authenticated_fetch("/api/create_template");
+      console.log("template created");
       navigate("/campaigns");
     }
   };
