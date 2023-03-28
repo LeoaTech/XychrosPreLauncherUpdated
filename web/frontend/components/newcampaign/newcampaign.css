@@ -87,7 +87,7 @@
 }
 
 .basic-form-settings,
-.campaign-form, .referrals-settings,
+.referrals-settings,
 .rewards-settings,
 .emails-settings,
 .integration-settings,
@@ -98,14 +98,12 @@
   margin-bottom: 5px;
   cursor: pointer;
 }
-.input-form-groups,
+.campaignform,
 .store-links,
 .collect-setup {
   margin: 20px 40px;
   padding: 20px 40px;
 }
-
-
 input:required {
   border: 2px solid rgb(237, 132, 132);
 }
@@ -127,10 +125,10 @@ input:required {
   gap: 30px;
 }
 
-/* .input-form-groups {
-  margin: 20px 2px;
-  padding: 20px 2px;
-} */
+.input-form-groups {
+  margin: 20px 0;
+  padding: 20px 0;
+}
 
 .error-message {
   font-size: 20px;
@@ -140,7 +138,6 @@ input:required {
 .form-group {
   display: flex;
   justify-content: space-around;
-  width: 100%;
 }
 
 /* Labels */
@@ -153,14 +150,14 @@ label {
 }
 
 /* Input Fields inside the form */
-.campaign-form .input-form-groups .form-group input {
+.campaign-form .input-form-groups input {
   background-color: #25242d;
   border: none;
   padding: 25px 10px;
   border-radius: 15px;
   height: 60px;
   color: white;
-  width: 520px;
+  width: 620px;
   font-size: 22px;
   font-weight: 500;
   -webkit-border-radius: 15px;
@@ -177,16 +174,17 @@ label {
   width: 100%;
 }
 
-.campaign-form .input-form-groups .form-group .select-products select,
-.campaign-form .input-form-groups .form-group .select-user-input select {
+.select-products select,
+.select-user-input select {
   display: block;
   padding: 12px 16px;
+
   background-color: #25242d;
   border: none;
   border-radius: 15px;
   height: 60px;
   color: white;
-  width: 520px;
+  width: 620px;
   font-size: 22px;
   font-weight: 500;
   appearance: none;
@@ -278,7 +276,7 @@ label {
 
 .campaign-form .store-links .social-inputfield {
   height: 30px;
-  width: 100%;
+  width: 270px;
   background-color: #25242d;
   border: none;
   color: #fff;
@@ -298,6 +296,16 @@ label {
   margin-bottom: 10px;
 }
 
+/* Collect Emails */
+
+.collect-setup {
+  /* margin-bottom: 20px; */
+}
+
+.collect-settings {
+  /* padding-left: 40px; */
+  /* margin-left: 40px; */
+}
 .collect-settings div {
   display: flex;
   align-items: center;
@@ -655,9 +663,7 @@ input[type="checkbox"]:checked {
     margin: 20px;
   }
 
-  .campaign-form .input-form-groups input,
-  .select-products select,
-  .select-user-input select {
+  .campaign-form .input-form-groups input, .select-products select,.select-user-input select  {
     width: 400px;
   }
 
@@ -670,10 +676,7 @@ input[type="checkbox"]:checked {
     grid-template-columns: repeat(2, 1fr);
     margin-left: 20px;
   }
-  .input-form-groups {
-    margin: 20px;
-    padding: 20px;
-  }
+
   .campaign-form .store-links .social-inputfield {
     height: 40px;
     width: 100%;
