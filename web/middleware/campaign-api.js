@@ -7,11 +7,6 @@ const pool = new Pool({
   connectionString: "postgres://postgres:postgres@localhost:5432/prelaunchdb",
 });
 
-// pool.connect((err, result) => {
-//   if (err) throw err;
-//   console.log("Connected");
-// });
-
 export default function campaignApiEndpoints(app) {
   //read all campaign
 
@@ -161,7 +156,6 @@ export default function campaignApiEndpoints(app) {
         ]
       );
 
-      console.log("data", campaigns);
       res.json(campaigns.rows);
     } catch (err) {
       console.error(err.message);
@@ -355,9 +349,7 @@ export default function campaignApiEndpoints(app) {
           session?.id,
         ]
       );
-
       
-      console.log(campaigns.rowCount);
       res.send(campaigns.rows);
     } catch (err) {
       console.error(err.message);
@@ -375,9 +367,10 @@ export default function campaignApiEndpoints(app) {
       );
       const { campaign_id } = req.params;
       const campaigns = await pool.query(
-        `DELETE FROM campaign_settings WHERE campaign_id =$1 AND shop_id= $2 Returning*`,
+        `DELETE FROM campaign_settings WHERE campaign_id =$1 AND shop_id= $2 RETURNING campaign_id`,
         [campaign_id, session?.id]
       );
+     
 
       res.send(campaigns?.rows);
     } catch (err) {
