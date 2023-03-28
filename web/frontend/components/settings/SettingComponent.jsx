@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SideLogo } from "../../assets";
+import { settings, xychrosLogo } from "../../assets";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import "./setting.css";
 import { storeLinks } from "../newcampaign/dummySocial";
@@ -20,7 +20,7 @@ const SettingComponent = () => {
     if (defaultSettings) {
       setSettingsData(defaultSettings);
     }
-  }, []);
+  }, [defaultSettings]);
 
   const [currentExpanded, setCurrentExpanded] = useState(Array(6).fill(false));
 
@@ -77,18 +77,18 @@ const SettingComponent = () => {
 
     setSettingsData({ ...settingsData, [name]: checked });
   }
+
   function handleRadioChange(event) {
     const { name, value } = event.target;
-
-    const isSelected = value === "phone";
-
     // Update the state with the new value
     setSettingsData((prevSettingsData) => ({
       ...prevSettingsData,
-      [name]: isSelected,
+      [name]: value === "phone",
       discount_type: value,
     }));
   }
+
+  console.log("Settings", settingsData);
 
   return (
     <div className="settings-container">
@@ -168,7 +168,7 @@ const SettingComponent = () => {
                         type="radio"
                         name="collect_phone"
                         value="phone"
-                        checked={settingsData?.collect_phone}
+                        checked={settingsData?.collect_phone === true}
                         onChange={handleRadioChange}
                       />
                       <label htmlFor="collect_phone">
@@ -179,12 +179,12 @@ const SettingComponent = () => {
                       <input
                         className="checkbox-input"
                         type="radio"
-                        name="collect_email"
+                        name="collect_phone"
                         value="email"
-                        checked={settingsData?.collect_email}
+                        checked={settingsData?.collect_phone === false}
                         onChange={handleRadioChange}
                       />
-                      <label htmlFor="collect_email">
+                      <label htmlFor="collect_phone">
                         Email Addresses Only{" "}
                       </label>
                     </div>
@@ -450,7 +450,11 @@ const SettingComponent = () => {
                   <div className="email-section">
                     <h2>Email Settings - Double Opt-in Email </h2>
                     <div className="email-content">
-                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
 
                       <textarea
                         className="email-textinput"
@@ -471,7 +475,11 @@ const SettingComponent = () => {
                       signs up{" "}
                     </h2>
                     <div className="email-content">
-                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
 
                       <textarea
                         className="email-textinput"
@@ -492,7 +500,11 @@ const SettingComponent = () => {
                       signs up{" "}
                     </h2>
                     <div className="email-content">
-                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
                       <textarea
                         className="email-textinput"
                         rows={9}
@@ -511,7 +523,11 @@ const SettingComponent = () => {
                       tier is unlocked
                     </h2>
                     <div className="email-content">
-                      {/* <img src={SideLogo} alt="Shop Logo" /> */}
+                      <img
+                        src={xychrosLogo}
+                        alt="Shop Logo"
+                        className="shop-logo"
+                      />
                       <textarea
                         className="email-textinput"
                         rows={9}

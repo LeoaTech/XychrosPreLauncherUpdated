@@ -1,6 +1,9 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchSettings } from "../app/features/settings/settingsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllSettings,
+  fetchSettings,
+} from "../app/features/settings/settingsSlice";
 import { SideBar, Header, Settings, MainPage } from "../components/index";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import { useStateContext } from "../contexts/ContextProvider";
@@ -11,18 +14,20 @@ const SettingsPage = () => {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
   const dispatch = useDispatch();
+  
   const data = useFetchSettings("/api/updatesettings", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
 
-  console.log(data, "Settings page");
+  const settingsExists = useSelector(fetchAllSettings)
+
 
   useEffect(() => {
-    if (data.length >0 ) {
+    if (data.length > 0) {
       dispatch(fetchSettings(data[0]));
     }
-  }, [dispatch, data]);
+  }, [dispatch]);
   return (
     <div className="app">
       {activeMenu ? (

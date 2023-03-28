@@ -16,5 +16,5 @@ export const settingsSlice = createSlice({
 
 export const fetchAllSettings = (state) => state.settings.settings;
 
-export const { fetchSettings} = settingsSlice.actions;
+export const { fetchSettings } = settingsSlice.actions;
 export default settingsSlice.reducer;

@@ -2,8 +2,8 @@
 
 .settings-container {
   color: var(--primary-color);
-  padding: 25px;
-  margin: 25px;
+  padding: 5px 25px;
+  margin:5px 25px;
 
   display: flex;
   flex-direction: column;
@@ -22,7 +22,8 @@
 .settings-heading h1 {
   font-size: 30px;
   font-weight: 700;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 /* Settings Save button */
