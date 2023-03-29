@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lalezar&family=Lato&display=swap');
 
+/* general settings */
+
 .section-layout {
   display: flex;
   margin: 0 !important;
@@ -7,309 +9,36 @@
   box-sizing: border-box;
 }
 
-.section-layout.horizontal {
-  flex-direction: column;
-}
-
-.section-layout.vertical {
-  flex-direction: row;
-}
-
-.full {
-  width: 100%;
-  height: 50%;
-}
-
-.half {
-  min-width: 50%;
-  min-height: 100%;
-}
-
-.announcement {
-  height: 40px;
-  text-align: center;
-  padding: 2px;
-  z-index: 20;
-}
-
-.gift-layout {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.spaced-evenly {
-  justify-content: space-evenly !important;
-  padding: 40px 0;
-}
-
-.spaced {
-  text-align: center;
-}
-
-.timeline {
-  margin: 12vh 0 5vh 10vw;
-  height: 5px;
-  width: 100%;
-  background-color: #ccc;
-}
-
-.timeline-progress {
-  height: 100%;
-  background-color: #011936;
-}
-
-.timeline-items {
-  margin-left: -5px;
-  margin-right: -5px;
-  margin-top: -12px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.timeline-item {
-  position: relative;
-  top: -8vh;
-  background-color: #011936;
-  width: 50px;
-  height: 50px;
-  border-radius: 45px;
-  color: #ccc;
-  text-align: center;
-  font-size: 26px;
-  font-weight: 600;
-}
-
-.timeline-contain {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #011936;
-  width: 100px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  text-align: center;
-  color: #ccc;
-}
-
-.timeline-item-name {
-  position: absolute;
-  bottom: 15vh;
-  /* left: -18%;
-  padding: 25px 0px;
-  text-align: center; */
-}
-
-.timeline-group {
-  width: 70%;
-  display: flex;
-}
-
-.some-text {
-  font-size: 24px;
-  font-weight: 600;
-  margin: 5vh 0;
-}
-
-.timeline-headers {
-  position: absolute;
-  left: 6vw;
-  margin-top: 5vh;
-}
-
-.timeline-headers div {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 20px 0;
-}
-
-.timeline-item-detail {
-  position: absolute;
-  top: -80px;
-  left: 30px;
-  transform: translateX(-50%);
-  background-color: #011936;
-  width: 200px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 400;
-}
-
-.friend-count {
-  display: flex;
-  justify-content: space-around;
-  width: 70%;
-}
-
-.friend-count p {
-  background-color: #000;
-  color: white;
-  display: inline;
-  border-radius: 5rem;
-  width: 32px;
-  height: 32px;
-  padding: 0.2rem;
-  text-align: center;
-}
-
-.vertical-timeline {
-  /* margin: 0 0 50px; */
-  width: 5px;
-  height: 50%;
-  background-color: #ccc;
-}
-
-.vertical-timeline-progress {
-  width: 100%;
-  background-color: #011936;
-}
-
-.vertical-timeline-items {
-  margin-left: -5px;
-  margin-right: -5px;
-  margin-top: -12px;
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-}
-
-.vertical-timeline-item {
-  position: relative;
-  background-color: #011936;
-  width: 50px;
-  height: 50px;
-  border-radius: 45px;
-  color: #ccc;
-}
-
-.vertical-timeline-contain {
-  position: absolute;
-  top: -75px;
-  left: 200%;
-  transform: translateX(-50%);
-  background-color: #011936;
-  /* width: 100px; */
-  margin: 10px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  text-align: center;
-  color: #ccc;
-}
-
-.vertical-timeline-item .vertical-timeline-contain {
-  color: #fff;
-  background-color: #011936;
-}
-
-.vertical-timeline-item-name {
-  position: relative;
-  top: -3vh;
-  left: 24vw;
-}
-
-.vertical-timeline-item-block {
-  position: relative;
-  left: -12vw;
-}
-
-.right-side {
-  left: 73vw !important;
-}
-
-.vertical .sometext {
-  padding-bottom: 0;
-}
-
-.vertical-timeline-headers {
-  font-weight: 600;
-  font-size: 20px;
-  display: flex;
-  width: 60%;
-  justify-content: space-between;
-  position: relative;
-  bottom: -50px;
-}
-
-.vertical-timeline-item-detail {
-  position: absolute;
-  top: -75px;
-  transform: translateX(-50%);
-  background-color: #011936;
-  width: 200px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  text-align: center;
-}
-
-.vertical-timeline-item .vertical-timeline-item-detail {
-  color: #fff;
-  background-color: #011936;
-}
-
-.vertical.spaced {
-  width: 100%;
-}
-
 .refferal-container {
   position: relative;
   display: flex;
   align-items: center;
-  overflow: hidden;
-  background: #fff;
-  min-height: 55px;
-  width: 40vw;
-  padding: 0 5px;
-  border-radius: 5rem;
-  border: none;
-  margin-bottom: 10px;
-}
-
-.refferal-container:hover {
-  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .4);
+  width: 50%;
 }
 
 .referral-link-inp {
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    border: 1px solid #000;
-    font-size: 15px;
-    border-radius: 5rem;
-    padding: 1.2rem;
+  border-radius: 4px;
+  min-height: 50px;
+  width: 100%;
+  font-size: 20px;
+  padding: 1.5%;
+  border: none;
+  margin: 8px auto;
 }
 
 input[type='text']:focus {
-  border: none;
+  outline: none;
   box-shadow: none;
 }
 
-
-input[value] {
-  color: #4A3B2A;
-}
-
-@media screen and (max-width: 600px) {
-  .refferal-container {
-    width: 80%;
-    height: 100%;
-    margin: 2%;
-  }
-}
-
 .copy-link-btn {
-  color: white;
-  background: #4A3B2A;
-  border-radius: 5rem;
-  border: none;
+  border-radius: 4px;
   position: absolute;
   right: 0;
   cursor: pointer;
-  height: 100%;
-  width: 25%;
+  min-height: 50px;
+  width: 20%;
+  padding: 1.5%;
 }
 
 #snackbar {
@@ -333,6 +62,874 @@ input[value] {
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
+
+.socials {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.socials a > svg {
+  padding: 1.4rem;
+  width: 50px;
+  cursor: pointer;
+  height: 50px;
+}
+
+.gift-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.none-gift-layout {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.friends-joined {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 5vh 0;
+}
+
+/* ============================== none horizontal =============================== */
+
+.section-layout.nonehorizontal {
+  flex-direction: column;
+}
+
+.none-full {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* ============================== none vertical =============================== */
+
+.section-layout.nonevertical {
+  flex-direction: column;
+}
+
+.nonevertical .img-layout {
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.none-half {
+  width: 60vw;
+  height: 100vh;
+}
+
+.nonevertical .refferal-container {
+  width: 100%;
+}
+
+.nonevertical .referral-link-inp {
+  width: 80%;
+}
+
+.nonevertical .copy-link-btn {
+  right: 5rem;
+}
+
+.nonevertical .socials {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0 10%;
+  justify-content: space-around;
+}
+
+.nonevertical .friends-joined {
+  padding-bottom: 0;
+  margin: 2vh 0;
+}
+
+.nonevertical .vertical-reward-targets {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  right: 28vh;
+  gap: 1.8rem;
+  top: -10vh;
+}
+
+.nonevertical .vertical-rewards {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 17vh;
+  bottom: 8vh;
+  gap: 1.2rem;
+}
+
+.nonevertical .vertical-referral-count-detail {
+  position: absolute;
+  top: -35px;
+  left: 9px;
+  transform: translateX(-50%);
+  background-color: #011936;
+  width: 227px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: left;
+  color: #fff;
+  font-size: 10px;
+  height: 35px;
+  font-weight: normal;
+  line-height: 22px;
+}
+
+/* ============================== horizontal layout ============================== */
+
+.section-layout.horizontal {
+  flex-direction: column;
+}
+
+.full {
+  width: 100vw;
+  height: 50vh;
+}
+
+.timeline-group {
+  width: 90%;
+  display: flex;
+}
+
+.timeline-headers {
+  margin: 2vh 2vh;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.timeline-headers div {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 40px 0;
+}
+
+.timeline {
+  margin: 10vh 0 0 0;
+  height: 5px;
+  width: 95%;
+  background-color: #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-progress {
+  height: 100%;
+  background-color: #011936;
+  width: 18%;
+}
+
+.timeline-items {
+  margin-top: -65px;
+}
+
+.timeline-item-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.reward-targets {
+  display: flex;
+  justify-content: space-around;
+}
+
+.reward-target {
+  width: 40px;
+  height: 40px;
+  border-radius: 45px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.referral-count-achieved {
+  position: relative;
+  top: 1vh;
+  left: 16vh;
+  width: 35px;
+  height: 35px;
+  border-radius: 45px;
+  font-weight: 600;
+  font-size: 20px;
+  text-align: center;
+  line-height: 34px;
+}
+
+.referral-count-detail {
+  position: absolute;
+  top: -56px;
+  left: 15px;
+  background-color: #011936;
+  color: #fff;
+  transform: translateX(-50%);
+  width: 130px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 10px;
+  height: 54px;
+  font-weight: normal;
+  line-height: 22px;
+}
+
+.rewards {
+  display: flex;
+  justify-content: space-around;
+}
+
+.reward-item-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reward-item-detail img {
+  width: 55px;
+  height: 55px;
+}
+
+.reward-item-detail span {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* .reward-contain {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #011936;
+  width: 100px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: center;
+  color: #ccc;
+} */
+
+/* ============================== vertical layout =============================== */
+
+.section-layout.vertical {
+  flex-direction: row;
+}
+
+.half {
+  min-width: 50vw;
+  min-height: 100vh;
+}
+
+.spaced-evenly {
+  justify-content: space-evenly;
+  padding: 40px 0;
+}
+
+.vertical.spaced {
+  width: 100%;
+}
+
+.spaced {
+  text-align: center;
+}
+
+.vertical .refferal-container {
+  width: 100%;
+}
+
+.vertical .referral-link-inp {
+  width: 80%;
+}
+
+.vertical .copy-link-btn {
+  right: 5rem;
+}
+
+.vertical .socials {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0 10%;
+  justify-content: space-around;
+}
+
+.vertical .friends-joined {
+  padding-bottom: 0;
+  margin: 2vh 0;
+}
+
+.vertical-timeline-headers {
+  font-weight: 600;
+  font-size: 20px;
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+  position: relative;
+}
+
+.vertical-timeline {
+  width: 5px;
+  height: 45%;
+  background-color: #ccc;
+  margin: 0 0 0 5rem;
+}
+
+.vertical-timeline-progress {
+  width: 100%;
+  background-color: #011936;
+  height: 25%;
+}
+
+.vertical-timeline-items {
+  margin-left: -5px;
+  margin-right: -5px;
+  margin-top: -12px;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.vertical-timeline-item-block {
+  position: relative;
+}
+
+.vertical .vertical-reward-targets {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  right: 25vh;
+  gap: 1.8rem;
+  top: -10vh;
+}
+
+.vertical-reward-target {
+  width: 40px;
+  height: 40px;
+  border-radius: 45px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 1.2rem;
+}
+
+.vertical-referral-count-achieved {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 45px;
+  left: -1.5vh;
+  top: -2vh;
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 34px;
+}
+
+.vertical-referral-count-detail {
+  position: absolute;
+  top: -52px;
+  left: 10px;
+  transform: translateX(-50%);
+  background-color: #011936;
+  width: 170px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: center;
+  color: #fff;
+  font-size: 10px;
+  height: 50px;
+  font-weight: normal;
+  line-height: 22px;
+}
+
+.vertical-timeline-item-name {
+  position: relative;
+  top: -3vh;
+  left: 24vw;
+}
+
+.vertical .vertical-rewards {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 14.5vh;
+  bottom: 8vh;
+  gap: 1.2rem;
+}
+
+.vertical-reward-item-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vertical-reward-item-detail img {
+  width: 55px;
+  height: 55px;
+}
+
+.vertical-reward-item-detail span {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* .vertical-timeline-contain {
+  position: absolute;
+  top: -75px;
+  left: 200%;
+  transform: translateX(-50%);
+  background-color: #011936;
+  width: 100px;
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: center;
+  color: #ccc;
+}
+
+.vertical-timeline-item .vertical-timeline-contain {
+  color: #fff;
+  background-color: #011936;
+} */
+
+
+/* ============================= CSS Styles for Mobile Devices =============================== */
+
+@media screen and (max-width: 767px) {
+  
+  .refferal-container {
+    width: 95%;
+  }
+  
+  .socials {
+    width: 85%;
+    justify-content: space-between;
+  }
+  
+  .socials a > svg {
+    padding: unset;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .friends-joined {
+    font-size: 15px;
+    margin: 4.5vh 0;
+  }
+  
+  /* none-horizontal and horizontal */
+
+  .horizontal .full {
+    height: 60vh;
+  }
+
+  .timeline-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .timeline-headers {
+    position: unset;
+    margin: 0 2vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 5rem;
+    width: 95%;
+  }
+
+  .timeline {
+    margin: -30px 0px 30px 54vw;
+    height: 250px;
+    width: 5px;
+  }
+
+  .timeline-progress {
+    height: 25%;
+    width: 100%;
+  }
+  
+  .timeline-item-block {
+    position: relative;
+  }
+
+  .reward-targets {
+    flex-direction: column;
+    position: absolute;
+    top: 3vh;
+    left: -21vh;
+    gap: 2rem;
+  }
+
+  .referral-count-achieved {
+    position: absolute;
+    top: 7vh;
+    left: -2.2vh;
+  }
+
+  .referral-count-detail {
+    top: -50px;
+    width: 145px;
+    height: 50px;
+  }
+
+  .rewards {
+    flex-direction: column;
+    position: absolute;
+    top: 2vh;
+    right: -20vh;
+    gap: 1rem;
+  }
+
+  .reward-item-detail span {
+    display: none;
+  }
+
+  .reward-item-detail img {
+    width: 50px;
+    height: 50px;
+  }
+
+  /* none-vertical and vertical */
+
+  .spaced-evenly {
+    justify-content: unset;
+    padding: unset;
+  }
+
+  .half {
+    width: 100vw;
+  }
+
+  .none-half {
+    width: 100vw;
+  }
+
+  .vertical .refferal-container {
+    width: 95%;
+    margin: auto;
+  }
+
+  .nonevertical .refferal-container {
+    width: 95%;
+    margin: auto;
+  }
+
+  .vertical .referral-link-inp {
+    width: 100%;
+  }
+
+  .nonevertical .referral-link-inp {
+    width: 100%;
+  }
+
+  .vertical .copy-link-btn {
+    right: 0;
+    width: 25%;
+  }
+
+  .nonevertical .copy-link-btn {
+    right: 0;
+    width: 25%;
+  }
+
+  .vertical-timeline-headers {
+    width: unset;
+    justify-content: unset;
+    gap: 12rem;
+  }
+
+  .vertical-reward-item-detail img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .vertical-reward-targets {
+    right: 23vh;
+    top: -14vh;
+  }
+
+  .nonevertical .vertical-reward-targets {
+    right: 24vh;
+    gap: 2rem;
+    top: -13vh;
+  }
+
+  .vertical-referral-count-achieved {
+    top: -8vh;
+  }
+
+  .vertical .vertical-referral-count-detail {
+    top: -52px;
+    left: 8px;
+    width: 174px;
+    text-align: center;
+    height: 50px;
+  }
+
+  .nonevertical .vertical-referral-count-achieved {
+    top: -6vh;
+  }
+
+  .vertical .vertical-referral-count-detail {
+    top: -44px;
+    left: 12px;
+    width: 174px;
+    text-align: center;
+    height: 50px;
+  }
+  
+  .vertical-rewards {
+    left: 13vh;
+    bottom: 13vh;
+    gap: 2rem;
+  }
+
+  .nonevertical .vertical-rewards {
+    left: 13vh;
+    bottom: 12vh;
+    gap: 2.2rem;
+  }
+
+  /* vertical mobile */
+
+  .vertical .vertical.spaced {
+    width: 100%;
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 15rem;
+  }
+
+  .vertical .friends-joined {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 40rem;
+  }
+
+  .vertical .vertical-timeline-headers {
+    position: absolute;
+    right: 0;
+    left: 3rem;
+    top: 45rem;
+  }
+
+  .vertical .vertical-timeline {
+    width: 5px;
+    height: 45%;
+    background-color: #ccc;
+    margin: 0 0 0 5rem;
+    position: absolute;
+    right: 0;
+    left: 16rem;
+    top: 46rem;
+  }
+
+  .vertical .vertical-reward-targets {
+    right: 21vh;
+    top: -14vh;
+    gap: 1.3rem;
+  }
+
+  .vertical .vertical-rewards {
+    left: 15vh;
+    bottom: 12vh;
+    gap: 1.2rem;
+  }
+}
+
+/* ============================== CSS styles for tablets ==================================== */
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+  /* none horizontal and horizontal  */
+
+  .refferal-container {
+    width: 60%;
+  }
+
+  .timeline-group {
+    width: 95%;
+  }
+
+  .timeline-headers {
+    width: 25%;
+  }
+
+  .timeline {
+    width: 95%;
+  }
+
+  .referral-count-achieved {
+    left: 10vh;
+  }
+
+  .reward-targets {
+    gap: 5.8rem;
+  }
+
+  .rewards {
+    gap: 6rem;
+  }
+
+  /* none-vertical and vertical */
+
+  .vertical .referral-link-inp {
+    width: 90%;
+  }
+
+  .vertical .copy-link-btn {
+    right: 2rem;
+  }
+
+  .nonevertical .copy-link-btn {
+    right: 4rem;
+  }
+
+  .vertical .friends-joined {
+    font-size: 20px;
+  }
+
+  .nonevertical .friends-joined {
+    font-size: 22px;
+  }
+
+  .vertical .vertical-timeline-headers {
+    width: 85%;
+  }
+
+  .nonevertical .vertical-timeline-headers {
+    width: 85%;
+  }
+
+  .vertical-reward-item-detail img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .nonevertical .vertical-reward-targets {
+    right: 27vh;
+    top: -10vh;
+    gap: 1rem;
+  }
+
+  .vertical .vertical-reward-targets {
+    right: 22vh;
+    top: -9vh;
+    gap: 0.8rem;
+  }
+
+  .vertical-referral-count-achieved {
+    top: -2vh;
+  }
+
+  .nonevertical .vertical-referral-count-achieved {
+    top: -4vh;
+  }
+
+  .nonevertical .vertical-rewards {
+    left: 17vh;
+    bottom: 9vh;
+  }
+
+  .vertical .vertical-rewards {
+    left: 13vh;
+    bottom: 8vh;
+  }
+
+  .nonevertical .vertical-referral-count-detail {
+    top: -35px;
+    left: 9px;
+    width: 227px;
+    height: 35px;
+  }
+}
+
+/* ======================== CSS rules for large desktops and high-resolution displays ==================== */
+
+@media only screen and (min-width: 1200px) {
+
+  .socials a > svg {
+    width: 55px;
+    height: 55px;
+  }
+
+  /* none-horizontal and horizontal */
+
+  .referral-count-achieved {
+    top: 0.5vh;
+    left: 30vh;
+  }
+
+  .horizontal .referral-count-achieved {
+    top: 0.5vh;
+    left: 30vh;
+  }
+
+  .nonehorizontal .referral-count-achieved {
+    top: 0.5vh;
+    left: 18.5vh;
+  }
+
+  .timeline-group {
+    width: 80%;
+  }
+
+  /* none-vertical and vertical */
+
+  .nonevertical .vertical-timeline-headers {
+    width: 65%;
+  }
+
+  .vertical-reward-item-detail img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .vertical .vertical-reward-targets {
+    right: 30vh;
+    gap: 2.8rem;
+    top: -8vh;
+  }
+
+  .nonevertical .vertical-reward-targets {
+    right: 34vh;
+    gap: 2.8rem;
+    top: -8vh;
+  }
+
+  .vertical-referral-count-achieved {
+    left: -1.2vh;
+    top: -1vh;
+  }
+
+  .nonevertical .vertical-referral-count-achieved {
+    left: -1.2vh;
+    top: -2vh;
+  }
+
+  .vertical .vertical-rewards {
+    left: 21vh;
+    bottom: 8vh;
+    gap: 2.2rem;
+  }
+
+  .nonevertical .vertical-rewards {
+    left: 25vh;
+    bottom: 8vh;
+    gap: 2.2rem;
+  }
+}
+
+/* =========================== animations =========================== */
 
 @-webkit-keyframes fadein {
   from {
@@ -380,16 +977,4 @@ input[value] {
     bottom: 0;
     opacity: 0;
   }
-}
-
-.socials {
-  display: flex;
-  flex-direction: row;
-}
-
-.socials a>svg {
-  padding: 1rem;
-  width: 3.8rem;
-  cursor: pointer;
-  fill: #4A3B2A;
 }
