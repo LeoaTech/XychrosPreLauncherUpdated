@@ -13,6 +13,7 @@ import { AppInstallations } from './app_installations.js';
 import cors from 'cors';
 import campaignApiEndpoints from './middleware/campaign-api.js';
 import referralsApiEndpoints from './middleware/referrals.js';
+import create_template from './middleware/create_template.js';
 import globalSettingsApiEndPoint from './middleware/global-settings-api.js';
 import bodyParser from 'body-parser';
 const USE_ONLINE_TOKENS = false;
@@ -168,6 +169,9 @@ export async function createServer(
 
   campaignApiEndpoints(app);
   referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
+
+  // template api
+  create_template(app);
   globalSettingsApiEndPoint(app);
 
   app.use((req, res, next) => {
