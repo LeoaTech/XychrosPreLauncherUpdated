@@ -14,7 +14,6 @@ import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 
-// const NewCampaignForm = React.lazy(() => import("../components/index"));
 
 const NewCampaign = () => {
   const { activeMenu } = useStateContext();
@@ -37,10 +36,10 @@ const NewCampaign = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (productsList) {
+    if (productsList.length>0) {
       dispatch(fetchProducts(productsList));
     }
-  }, [dispatch]);
+  }, [dispatch,productsList]);
 
   return (
     <div className="app">

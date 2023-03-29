@@ -1,6 +1,6 @@
 // @ts-check
-import { join } from 'path';
 import { readFileSync } from 'fs';
+import { join } from "path";
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import { Shopify, LATEST_API_VERSION } from '@shopify/shopify-api';
@@ -16,6 +16,10 @@ import referralsApiEndpoints from './middleware/referrals.js';
 import create_template from './middleware/create_template.js';
 import globalSettingsApiEndPoint from './middleware/global-settings-api.js';
 import bodyParser from 'body-parser';
+import templatesApiEndpoints from "./middleware/templates_api.js";
+
+
+
 const USE_ONLINE_TOKENS = false;
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -132,7 +136,7 @@ export async function createServer(
     );
 
     const countData = await Product.all({ session });
-    console.log(countData);
+    // console.log(countData);
 
     res.status(200).send(countData);
   });
@@ -173,6 +177,8 @@ export async function createServer(
   // template api
   create_template(app);
   globalSettingsApiEndPoint(app);
+
+  templatesApiEndpoints(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
