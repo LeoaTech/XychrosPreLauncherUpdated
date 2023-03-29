@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { useAppQuery, useAuthenticatedFetch } from "../hooks";
+import { useAuthenticatedFetch } from "../hooks";
 
-const useFetchAllProducts = (url) => {
+const useFetchTemplates = (url) => {
   const [data, setData] = useState([]);
   const fetchData = useAuthenticatedFetch();
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchTemplate = async () => {
       await fetchData(url)
         .then((response) => {
           if (response.ok) return response.json();
-          throw new Error("something went wrong while requesting products");
+          throw new Error("something went wrong while requesting templates");
         })
-        .then((products) => {
-          setData(products);
-          return products;
+        .then((templates) => {
+          setData(templates);
+          return templates;
         })
         .catch((err) => {
           console.log(err);
           return err;
         });
     };
-    fetchProducts();
+    fetchTemplate();
   }, [url]);
 
   return data;
 };
 
-export default useFetchAllProducts;
+export default useFetchTemplates;

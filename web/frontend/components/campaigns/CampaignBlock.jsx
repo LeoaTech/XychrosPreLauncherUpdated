@@ -28,8 +28,6 @@ export default function CampaignBlock({
   const [deleteEndData, setDeleteEndDate] = useState(null);
   const [isToggled, setIsToggled] = useState(product === "" ? false : true);
 
-  
-
   function checkAndDeleteCampaign(campaignDate) {
     // Convert the campaign date string to a Date object
     const campaignDateObj = new Date(campaignDate);
@@ -39,7 +37,8 @@ export default function CampaignBlock({
     // Check if the campaign date has expired
     if (campaignDateObj < now && !isToggled) {
       setDeleteModal(true);
-      // Your code to delete the campaign here
+    } else if (!isToggled) {
+      setDeleteModal(true);     //uncomment this line to test Delete modal behavior
     } else if (isToggled) {
       // Info Alert Display
       setAlertModal(true);

@@ -14,7 +14,6 @@ const useFetchSettings = (url) => {
           throw new Error("something went wrong while requesting posts");
         })
         .then((globalSettings) => {
-          
           setData(globalSettings);
           return globalSettings;
         })

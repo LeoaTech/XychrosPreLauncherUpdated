@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 
 const initialState = {
   campaigns: [],
@@ -12,9 +12,9 @@ export const campaignSlice = createSlice({
   initialState: initialState,
   reducers: {
     removeCampaign: (state, action) => {
-      const { campaign_id } = action.payload;
+      console.log(action.payload);
       let deleteItem = state.campaigns.find(
-        (campaign) => campaign.id !== campaign_id
+        (campaign) => campaign.id === action.payload.campaign_id
       );
       let getIndex = state.campaigns.indexOf(deleteItem);
       state.campaigns.splice(getIndex, 1);
