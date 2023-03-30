@@ -4,14 +4,18 @@ import queryString from 'query-string';
 import crypto from 'crypto';
 //import { db } from '../prelauncherDB.js';
 import emailValidator from 'deep-email-validator';
-import NewPool from 'pg';
-const { Pool } = NewPool;
-const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
-});
+import { pool } from '../config/db.js';
+
+import { sendemail } from './sendEmails.js';
+import {
+  replace_welcome_email_text,
+  replace_referral_email_text,
+  replace_reward_email_text,
+} from '../helpers/emailText.js';
 
 export default function referralsApiEndpoints(app, secret) {
   // endpoint to get users for Shopify Customers
+  // Landing page API
   app.post('/api/getuser', async (req, res) => {
     console.log('In the data API block');
     try {
@@ -51,7 +55,7 @@ export default function referralsApiEndpoints(app, secret) {
           .json({ success: false, message: 'Please provide a valid email' });
       }
 
-      // get referral code and number of referrals
+      // get referral code
 
       const users = await pool.query(
         `SELECT referral_code FROM referrals where email='${userEmail}' and campaign_id=${campaignID}`
@@ -165,7 +169,34 @@ export default function referralsApiEndpoints(app, secret) {
     }
   });
 
+  // get customer information for Shopify FrontEnd
+  app.post('/api/get_referrals', async (req, res, next) => {
+    try {
+      const { referral_code } = req.body;
+      const data = await pool.query(
+        'SELECT * FROM referrals WHERE referral_code=$1',
+        [referral_code]
+      );
+      const data_ = await pool.query(
+        'SELECT * FROM referrals WHERE referrer_id=$1',
+        [data.rows[0].referral_code]
+      );
+      if (data_.rows.length > 0) {
+        return res.status(200).json({ success: true, message: data_.rows });
+      } else {
+        return res.status(200).json({ success: true, message: [] });
+      }
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ success: false, message: 'Something went wrong' });
+    }
+  });
+
+  // Rewards Page API
+
   // get referrals for Merchant dashboard
+
   // get users
 
   //get all users
