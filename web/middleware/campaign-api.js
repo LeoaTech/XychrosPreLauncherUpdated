@@ -1,26 +1,31 @@
-import { Shopify } from "@shopify/shopify-api";
+import { Shopify } from '@shopify/shopify-api';
 
 //import { db } from '../prelauncherDB.js';
-import NewPool from "pg";
-const { Pool } = NewPool;
-const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelaunchdb",
-});
+import { pool } from '../config/db.js';
+
+// pool.connect((err, result) => {
+//   if (err) throw err;
+//   console.log("Connected");
+// });
 
 export default function campaignApiEndpoints(app) {
   //read all campaign
 
-  app.get("/api/getcampaigns", async (req, res) => {
+  app.get('/api/getcampaigns', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
 
       const campaigns = await pool.query(
-        "select * from campaign_settings where shop_id = $1 ",
+
+        'select * from campaign_settings where shop_id = $1 ',
         [session?.id]
+
+      //  "select * from campaign_settings where shop_id = $1 ",
+      //  [session?.shop]
       );
       res.json(campaigns.rows);
     } catch (err) {
@@ -30,12 +35,12 @@ export default function campaignApiEndpoints(app) {
   //get one campaign
 
   //create campaign
-  app.post("/api/campaignsettings", async (req, res) => {
+  app.post('/api/campaignsettings', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
       const {
         collect_phone,
@@ -152,10 +157,9 @@ export default function campaignApiEndpoints(app) {
           welcome_email,
           template_id,
           discount_type,
-          session?.id,
+          session?.shop,
         ]
       );
-
       res.json(campaigns.rows);
     } catch (err) {
       console.error(err.message);
@@ -164,12 +168,12 @@ export default function campaignApiEndpoints(app) {
 
   //update campaign
 
-  app.put("/api/campaignsettings/:campaign_id", async (req, res) => {
+  app.put('/api/campaignsettings/:campaign_id', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
       const { campaign_id } = req.params;
       const {
@@ -346,10 +350,10 @@ export default function campaignApiEndpoints(app) {
           template_id,
           discount_type,
           campaign_id,
-          session?.id,
+          session?.shop,
         ]
       );
-      
+
       res.send(campaigns.rows);
     } catch (err) {
       console.error(err.message);
@@ -358,19 +362,18 @@ export default function campaignApiEndpoints(app) {
 
   //delete campaign
 
-  app.delete("/api/campaignsettings/:campaign_id", async (req, res) => {
+  app.delete('/api/campaignsettings/:campaign_id', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
       const { campaign_id } = req.params;
       const campaigns = await pool.query(
         `DELETE FROM campaign_settings WHERE campaign_id =$1 AND shop_id= $2 RETURNING campaign_id`,
-        [campaign_id, session?.id]
+        [campaign_id, session?.shop]
       );
-     
 
       res.send(campaigns?.rows);
     } catch (err) {

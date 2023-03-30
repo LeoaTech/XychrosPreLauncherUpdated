@@ -13,3 +13,5 @@ export { default as SideLogo } from "./sidebarlogo.png";
 export { default as Logo } from "./logoicon.png";
 export { default as anime } from "./animegirl.gif";
 export { default as profile } from "./avatar.jpeg";
+export { default as template1 } from "./temp1.png";
+export { default as template2 } from "./temp2.png";

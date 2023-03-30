@@ -2,33 +2,47 @@
   let second_page_settings = {{ block.settings | json }};
   console.log(second_page_settings);
 
-  let product_list = {{ block.settings.product_list | json }};
+  let urlParams = new URL(window.location.href).searchParams;
+  let user_code = urlParams.get('referralCode');
+  console.log(user_code);
 
   window.onload = (e) => {
+    var copyCode = document.getElementById('code');
+
+    let urlredirect = window.location.href;
+    urlredirect = urlredirect.split('/pages')[0];
+    urlredirect = urlredirect + '/pages/' + second_page_settings.page + '?refer=' + user_code;
+    console.log(urlredirect);
+
+    copyCode.value = urlredirect;
+    copyCode.innerHTML = urlredirect;
+
     var el = document.querySelector('.product-prelaunch-second-page');
     el.parentElement.style.padding = '0';
     el.parentElement.style.margin = '0';
     if (second_page_settings.show_header_footer == false) {
       var node,
-      nodes = [];
-      
+        nodes = [];
+
       do {
         var parent = el.parentNode;
+
         // Collect element children
         for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
           node = parent.childNodes[i];
+
           // Collect only sibling nodes that are elements and not the current element
           if (node.nodeType == 1 && node != el) {
             nodes.push(node);
           }
         }
-        
+
         // Go up to parent
         el = parent;
-        
+
         // Stop when processed the body's child nodes
       } while (el.tagName.toLowerCase() != 'body');
-      
+
       // Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
@@ -47,20 +61,26 @@
     width: 100vw;
   }
   .preheader_text {
-    color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size | times: 0.9}}px;
+    color: {{ block.settings.accent_color }}
+    ;
+    font-size: {{ block.settings.base_font_size | times: 0.9}}
+    px;
     font-weight: 800;
     padding: 0 2%;
   }
   .header_text {
-    color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size|times: 1.3}}px;
+    color: {{ block.settings.accent_color }}
+    ;
+    font-size: {{ block.settings.base_font_size|times: 1.3}}
+    px;
     font-weight: 800;
     padding: 0 2%;
   }
   .subheader_text {
-    color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size | times: 0.8}}px;
+    color: {{ block.settings.accent_color }}
+    ;
+    font-size: {{ block.settings.base_font_size | times: 0.8}}
+    px;
     font-weight: 500;
     padding: 0 2%;
   }
@@ -68,12 +88,15 @@
     background-color: #D9D9D9;
   }
   input[value] {
-    color: {{ block.settings.accent_color }};
+    color: {{ block.settings.accent_color }}
+    ;
   }
-  .copy-link-btn{
-    border: 1px solid {{ block.settings.accent_color }};
-    background-color: {{ block.settings.main_color }};
-    color: {{ block.settings.accent_color }};
+  .copy-link-btn {
+    border: 1px solid{{ block.settings.accent_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .img-layout {
     background-position: center;
@@ -93,40 +116,54 @@
     {% endif %}
   }
   .gift-layout {
-    background-color: {{ block.settings.main_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
   }
   .friends-joined {
-    color: {{ block.settings.accent_color }};
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .timeline-headers {
-    color: {{ block.settings.main_color }};
+    color: {{ block.settings.main_color }}
+    ;
   }
   .vertical-timeline-headers {
-    color: {{ block.settings.main_color }};
+    color: {{ block.settings.main_color }}
+    ;
   }
   .reward-target {
-    border: 1px solid {{ block.settings.accent_color }};
-    background-color: {{ block.settings.main_color }};
-    color: {{ block.settings.accent_color }};
+    border: 1px solid{{ block.settings.accent_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .vertical-reward-target {
-    border: 1px solid {{ block.settings.accent_color }};
-    background-color: {{ block.settings.main_color }};
-    color: {{ block.settings.accent_color }};
+    border: 1px solid{{ block.settings.accent_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .referral-count-achieved {
-    background-color: {{ block.settings.accent_color }};
-    color: {{ block.settings.main_color }};
+    background-color: {{ block.settings.accent_color }}
+    ;
+    color: {{ block.settings.main_color }}
+    ;
   }
   .vertical-referral-count-achieved {
-    background-color: {{ block.settings.accent_color }};
-    color: {{ block.settings.main_color }};
+    background-color: {{ block.settings.accent_color }}
+    ;
+    color: {{ block.settings.main_color }}
+    ;
   }
   .reward-item-detail span {
-    color: {{ block.settings.accent_color }};
+    color: {{ block.settings.accent_color }}
+    ;
   }
   svg > path {
-    fill: {{ block.settings.main_color }} !important;
+    fill: {{ block.settings.main_color }}
+     !important;
   }
 </style>
 
@@ -146,24 +183,25 @@
         "id": "show_header_footer",
         "label": "Show Header & Footer",
         "default": true
-      }, {
+      },
+      {
         "type": "color_background",
         "id": "background_color",
         "label": "Background Overlay",
         "default": "linear-gradient(#ffffff, #000000)"
-      }, 
+      },
       {
         "label": "Main Color",
         "id": "main_color",
         "type": "color",
         "default": "#000000"
-      }, {
+      },
+      {
         "label": "Accent Color",
         "id": "accent_color",
         "type": "color",
         "default": "#ffffff"
-      }, 
-      {
+      }, {
         "type": "select",
         "id": "layout",
         "label": "Screen Divider",
