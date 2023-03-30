@@ -4,7 +4,7 @@ import { Shopify } from '@shopify/shopify-api';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+  connectionString: 'postgres://postgres:postgres@localhost:5432/prelaunchdb',
 });
 
 pool.connect((err, result) => {
