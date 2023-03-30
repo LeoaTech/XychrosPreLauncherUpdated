@@ -234,14 +234,26 @@ function NewCampaignForm() {
     }
   };
 
-  console.log(selectedTemplateData)
+  async function saveCampaignTemplate(data, template) {
+    await fetch("/api/create_template", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data, template),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }
+
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
 
     // Function call to save the campaign data and selected templates
 
-    function saveCampaignTemplate(newCampaignData, selectedTemplatedData) {}
+    await saveCampaignTemplate(newCampaignData, selectedTemplateData);
 
     // Editing Camapign Form
     if (isEdit) {
