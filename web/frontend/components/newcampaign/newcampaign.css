@@ -392,14 +392,14 @@ input[type="checkbox"]:checked {
 
 .reward-card {
   background-color: #25242d;
-  border-radius: 26px;
+  border-radius: 16px;
   box-shadow: 0px 5px 11px 9px #1d1b1bd6;
-  padding: 25px;
-  margin: 25px 0;
-  -webkit-border-radius: 26px;
-  -moz-border-radius: 26px;
-  -ms-border-radius: 26px;
-  -o-border-radius: 26px;
+  padding: 44px;
+  margin: 32px 20px;
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  -ms-border-radius: 16px;
+  -o-border-radius: 16px;
 }
 
 .rewards-settings-form p {
@@ -592,13 +592,15 @@ input[type="checkbox"]:checked {
 
 .template-cards {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
-  gap: 15px;
+  align-items: center;
+  gap: 5px;
   margin: 25px 0;
 }
 .template-card-block {
-  height: 220px;
-  width: 350px;
+  height: 290px;
+  width: 450px;
   background-color: #fff;
   border-radius: 12px;
   -webkit-border-radius: 12px;
@@ -621,7 +623,7 @@ input[type="checkbox"]:checked {
   border-radius: 12px;
   cursor: pointer;
 }
-.template-card-block:last-child {
+.template-card-block:first-child {
   background-color: #5447df;
   display: flex;
   text-align: center;
@@ -663,7 +665,9 @@ input[type="checkbox"]:checked {
     margin: 20px;
   }
 
-  .campaign-form .input-form-groups input, .select-products select,.select-user-input select  {
+  .campaign-form .input-form-groups input,
+  .select-products select,
+  .select-user-input select {
     width: 400px;
   }
 

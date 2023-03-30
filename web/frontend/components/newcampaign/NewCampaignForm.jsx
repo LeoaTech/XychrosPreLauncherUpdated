@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { anime, xychrosLogo } from "../../assets/index";
+import { anime, template1, template2, xychrosLogo } from "../../assets/index";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { integratelinks } from "./socialLinks";
@@ -23,12 +23,18 @@ import { RewardData } from "./rewardTier/RewardData";
 import { useAuthenticatedFetch } from "../../hooks";
 import { fetchAllSettings } from "../../app/features/settings/settingsSlice";
 import { fetchAllProducts } from "../../app/features/productSlice";
+import useFetchTemplates from "../../constant/fetchTemplates";
 
 function NewCampaignForm() {
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const templateData = useFetchTemplates("/api/templates", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   const { isEdit, setIsEdit } = useStateContext();
   const { campaignsid } = useParams();
 
@@ -36,30 +42,33 @@ function NewCampaignForm() {
   const campaignById = useSelector((state) =>
     fetchCampaignById(state, Number(campaignsid))
   );
+  const campaignName = useSelector(fetchCampaignByName); //Get the Campaign Name to verify unique campaign name
+  const globalSettings = useSelector(fetchAllSettings); //Settings Data
+  const productsData = useSelector(fetchAllProducts); //Get all products of Shop
 
-  const campaignName = useSelector(fetchCampaignByName);
-  const globalSettings = useSelector(fetchAllSettings);
-  const productsData = useSelector(fetchAllProducts);
   const [editCampaignData, setEditCampaignData] = useState();
+
   useEffect(() => {
     if (campaignById) {
       setEditCampaignData(campaignById);
     }
-
     if (globalSettings && productsData.length > 0) {
       console.log("render");
     }
   }, [globalSettings, productsData]);
 
+  // Get Date for next 6 days for the Campaign end Date
   let today = new Date();
   let getNextDate = new Date();
   getNextDate.setDate(today.getDate() + 6);
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(getNextDate);
-  const [errorMsg, setErrorMsg] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); //Loading screen for aniamtion
   const [errorName, setErrorName] = useState(false);
-
+  const [templateList, setTemplateList] = useState([]); //To store all templates received from Template db
+  const [randomTemplate, setRandomTemplate] = useState();
+  const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
   const [expanded, setExpanded] = useState(Array(6).fill(false));
   const [newCampaignData, setNewCampaignData] = useState({
     collect_phone: globalSettings?.collect_phone,
@@ -115,9 +124,33 @@ function NewCampaignForm() {
     tiktok_link: globalSettings?.tiktok_link,
     twitter_link: globalSettings?.twitter_link,
     welcome_email: globalSettings?.welcome_email,
-    template_id: 2,
+    template_id: null,
     discount_type: globalSettings?.discount_type,
   });
+
+
+  useEffect(() => {
+    if (templateData?.length > 0) {
+      setTemplateList(templateData);
+    }
+  }, [templateData]);
+
+  // Generate Random Templates Array with Template Ids
+
+  useEffect(() => {
+    if (templateList.length > 0) {
+      const randomTemplates = [
+        templateList[0],
+        ...templateList
+          .slice(1)
+          .sort(() => 0.5 - Math.random() * 5)
+          .slice(0, 2),
+      ];
+      setRandomTemplate(randomTemplates);
+    }
+  }, [templateList]);
+
+  console.log(randomTemplate);
 
   // authenticated fetch
   const authenticated_fetch = useAuthenticatedFetch();
@@ -157,7 +190,6 @@ function NewCampaignForm() {
 
   // Handle Next Button event for each
   const handleNext = (index) => {
-    const loadingOverlay = document.getElementById("loading-overlay");
     if (
       index === 1 && isEdit
         ? editCampaignData.name !== ""
@@ -198,15 +230,18 @@ function NewCampaignForm() {
       setNewCampaignData((prevState) => ({
         ...prevState,
         [name]: value,
-        // start_date: startDate,
-        // end_date: endDate,
       }));
     }
   };
 
+  console.log(selectedTemplateData)
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
+
+    // Function call to save the campaign data and selected templates
+
+    function saveCampaignTemplate(newCampaignData, selectedTemplatedData) {}
 
     // Editing Camapign Form
     if (isEdit) {
@@ -272,6 +307,8 @@ function NewCampaignForm() {
       }));
     }
   }
+
+  console.log("Form Data", newCampaignData);
 
   return (
     <div className="new-campaign-container">
@@ -1188,23 +1225,34 @@ function NewCampaignForm() {
                 </div>
                 <div className="templates-block-container">
                   <div className="template-cards">
-                    {[1, 2, 3].map((item, index) => (
-                      <div key={index} className="template-card-block">
-                        {index === 2 ? (
-                          <h3>
+                    {randomTemplate?.map((template, index) => (
+                      <div key={template.id} className="template-card-block">
+                        {template?.id === 1 ? (
+                          <h3
+                            onClick={(e) => {
+                              setNewCampaignData({
+                                ...newCampaignData,
+                                template_id: template?.id,
+                              });
+                              setSelectedTemplateData(template);
+                            }}
+                          >
                             Build a custom template in the Shopify Theme Editor{" "}
                           </h3>
                         ) : (
-                          <img
-                            src="https://images.unsplash.com/photo-1677530248563-e6105354fafb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNnx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"
-                            alt="template"
-                            onClick={(e) =>
-                              setNewCampaignData({
-                                ...newCampaignData,
-                                template_id: index,
-                              })
-                            }
-                          />
+                          template?.id > 1 && (
+                            <img
+                              src={index === 1 ? template1 : template2}
+                              alt="template"
+                              onClick={(e) => {
+                                setNewCampaignData({
+                                  ...newCampaignData,
+                                  template_id: template?.id,
+                                });
+                                setSelectedTemplateData(template);
+                              }}
+                            />
+                          )
                         )}
                       </div>
                     ))}
@@ -1230,7 +1278,7 @@ function NewCampaignForm() {
         </section>
       </form>
 
-      {/* Loading overlay  */}
+      {/* Loading Animation  */}
       <div id="loading-overlay">
         <div id="loading-spinner">
           <h2>Setting Up the best templates for your campaigns</h2>
