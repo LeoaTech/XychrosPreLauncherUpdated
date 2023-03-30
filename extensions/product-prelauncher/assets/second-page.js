@@ -1,4 +1,37 @@
-const totalProducts = product_list.count;
+//Get Referral count and referral link
+
+let count_referrals = document.getElementById('count_referrals');
+let referral_div = document.getElementById('referral_rows');
+let urlParams2 = new URL(window.location.href).searchParams;
+let user_code2 = urlParams.get('referralCode');
+var copyCode = document.getElementById('code');
+
+// find referral details for rewards page
+const get_referrals = async () => {
+  const url = '/apps/xychrosupdated/api/get_referrals/';
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ referral_code: user_code2 }),
+  });
+  const data = await response.json();
+  if (response.status == 200) {
+    if (data.message.length > 0) {
+      count_referrals.innerText = `Total Referrals Joined: ${data.message.length}`;
+      console.log(data);
+    } else {
+      count_referrals.innerText =
+        '0 friends have joined! Invite friends to Join';
+    }
+  }
+};
+
+get_referrals();
+
+//Hover effect on rewards
+// const totalProducts = product_list.count;
 
 function mouseenter(x) {
   let childrenelements = x.children;
@@ -29,16 +62,17 @@ function mouseleaveproduct(x) {
 }
 
 function copyToClipboard() {
-  var copyCode = document.getElementById("code");
   copyCode.select();
   copyCode.setSelectionRange(0, 99999);
   navigator.clipboard.writeText(copyCode.value);
-  var x = document.getElementById("snackbar");
-  x.className = "show";
-  setTimeout(function() {
-    x.className = x.className.replace("show", "");
+  var x = document.getElementById('snackbarCopy');
+  x.className = 'show';
+  setTimeout(function () {
+    x.className = x.className.replace('show', '');
   }, 2000);
 }
+
+// Sharing copied messages
 
 let link = encodeURI(window.location.href);
 let subject = 'Subject';
@@ -62,14 +96,14 @@ function copyMessage() {
   setTimeout(() => {
     const fb = document.querySelector('.facebook');
     fb.href = 'https://www.facebook.com/';
-    
+
     const instagram = document.querySelector('.instagram');
-    instagram.href = "https://instagram.com/";
-    
+    instagram.href = 'https://instagram.com/';
+
     const snapchat = document.querySelector('.snapchat');
-    snapchat.href = "https://accounts.snapchat.com/accounts/login";
-    
+    snapchat.href = 'https://accounts.snapchat.com/accounts/login';
+
     const tiktok = document.querySelector('.tiktok');
-    tiktok.href = "https://www.tiktok.com/en/";
-  }, 500)
+    tiktok.href = 'https://www.tiktok.com/en/';
+  }, 500);
 }

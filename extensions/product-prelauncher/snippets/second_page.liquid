@@ -10,9 +10,9 @@
           id="code"
           disabled
           type="text"
-          value="3245hjkjhgfdsfghgffd"
+          value=""
           class="referral-link-inp" />
-        <button class="copy-link-btn" onclick="copyToClipboard()">Copy Link</button>
+        <button class="copy-link-btn" onclick="copyToClipboard()">Copy</button>
         <div id="snackbar">Copied to clipboard</div>
       </div>
       <div class="socials">
@@ -59,7 +59,7 @@
         </a>
       </div>
       <div class="none-gift-layout">
-        <div class="friends-joined">0 friends have joined! Invite friends to Join</div>
+        <div class="friends-joined" id="count_referrals">0 friends have joined! Invite friends to Join</div>
         <div class="timeline-group">
           <div class="timeline-headers">
             <div>Friends Joined</div>
@@ -125,7 +125,7 @@
               id="code"
               disabled
               type="text"
-              value="3245hjkjhgfdsfghgffd"
+              value=""
               class="referral-link-inp" />
             <button class="copy-link-btn" onclick="copyToClipboard()">Copy Link</button>
             <div id="snackbar">Copied to clipboard</div>
@@ -174,7 +174,7 @@
             </a>
           </div>
         </div>
-        <div class="spaced friends-joined">0 friends have joined! Invite friends to Join</div>
+        <div class="spaced friends-joined" id="count_referrals">0 friends have joined! Invite friends to Join</div>
         <div class="vertical-timeline-headers">
           <div>Friends Joined</div>
           <div>Rewards</div>
@@ -234,7 +234,7 @@
           id="code"
           disabled
           type="text"
-          value="3245hjkjhgfdsfghgffd"
+          value=""
           class="referral-link-inp" />
         <button class="copy-link-btn" onclick="copyToClipboard()">Copy Link</button>
         <div id="snackbar">Copied to clipboard</div>
@@ -284,7 +284,7 @@
       </div>
     </div>
     <div class="gift-layout full">
-      <div class="friends-joined">0 friends have joined! Invite friends to Join</div>
+      <div class="friends-joined" id="count_referrals">0 friends have joined! Invite friends to Join</div>
       <div class="timeline-group">
         <div class="timeline-headers">
           <div>Friends Joined</div>
@@ -350,7 +350,7 @@
             id="code"
             disabled
             type="text"
-            value="3245hjkjhgfdsfghgffd"
+            value=""
             class="referral-link-inp" />
           <button class="copy-link-btn" onclick="copyToClipboard()">Copy Link</button>
           <div id="snackbar">Copied to clipboard</div>
@@ -399,9 +399,13 @@
           </a>
         </div>
       </div>
-      <div class="spaced friends-joined">0 friends have joined! Invite friends to Join</div>
+      <div class="spaced friends-joined" id="count_referrals">0 friends have joined! Invite friends to Join</div>
       <div class="vertical-timeline-headers">
-        <div>Friends Joined</div>
+        <div>
+          <h3>Friends Joined</h3>
+          <div id="'referral_rows"></div>
+        </div>
+
         <div>Rewards</div>
       </div>
       <div class="spaced vertical-timeline">
