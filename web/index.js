@@ -1,5 +1,6 @@
 // @ts-check
 import { join } from "path";
+
 import { readFileSync } from "fs";
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -15,6 +16,7 @@ import campaignApiEndpoints from "./middleware/campaign-api.js";
 import referralsApiEndpoints from "./middleware/referrals.js";
 import globalSettingsApiEndPoint from "./middleware/global-settings-api.js";
 import bodyParser from "body-parser";
+import create_template from './middleware/create_template.js';
 import templatesApiEndpoints from "./middleware/templates_api.js";
 const USE_ONLINE_TOKENS = false;
 
@@ -168,6 +170,9 @@ export async function createServer(
   );
   campaignApiEndpoints(app);
   referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
+
+  // template api
+  create_template(app);
   globalSettingsApiEndPoint(app);
   templatesApiEndpoints(app);
 

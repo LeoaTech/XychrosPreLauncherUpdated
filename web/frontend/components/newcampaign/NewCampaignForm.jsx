@@ -128,6 +128,7 @@ function NewCampaignForm() {
     discount_type: globalSettings?.discount_type,
   });
 
+
   useEffect(() => {
     if (templateData?.length > 0) {
       setTemplateList(templateData);
@@ -150,6 +151,9 @@ function NewCampaignForm() {
   }, [templateList]);
 
   console.log(randomTemplate);
+
+  // authenticated fetch
+  const authenticated_fetch = useAuthenticatedFetch();
 
   const ExampleCustomInput = forwardRef(({ value, onClick, onChange }, ref) => (
     <div className="wrapper">
@@ -266,7 +270,8 @@ function NewCampaignForm() {
         .then((res) => res.json())
         .then((data) => dispatch(addNewCampaign(data)))
         .catch((err) => console.log(err));
-      console.log("form sent");
+      await authenticated_fetch("/api/create_template");
+      console.log("template created");
       navigate("/campaigns");
     }
   };
