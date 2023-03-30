@@ -20,8 +20,12 @@ export default function campaignApiEndpoints(app) {
       );
 
       const campaigns = await pool.query(
+
         'select * from campaign_settings where shop_id = $1 ',
         [session?.id]
+
+      //  "select * from campaign_settings where shop_id = $1 ",
+      //  [session?.shop]
       );
       res.json(campaigns.rows);
     } catch (err) {
@@ -153,10 +157,9 @@ export default function campaignApiEndpoints(app) {
           welcome_email,
           template_id,
           discount_type,
-          session?.id,
+          session?.shop,
         ]
       );
-
       res.json(campaigns.rows);
     } catch (err) {
       console.error(err.message);
@@ -347,7 +350,7 @@ export default function campaignApiEndpoints(app) {
           template_id,
           discount_type,
           campaign_id,
-          session?.id,
+          session?.shop,
         ]
       );
 
@@ -369,7 +372,7 @@ export default function campaignApiEndpoints(app) {
       const { campaign_id } = req.params;
       const campaigns = await pool.query(
         `DELETE FROM campaign_settings WHERE campaign_id =$1 AND shop_id= $2 RETURNING campaign_id`,
-        [campaign_id, session?.id]
+        [campaign_id, session?.shop]
       );
 
       res.send(campaigns?.rows);

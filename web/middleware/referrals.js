@@ -4,6 +4,7 @@ import queryString from 'query-string';
 import crypto from 'crypto';
 //import { db } from '../prelauncherDB.js';
 import emailValidator from 'deep-email-validator';
+
 import { pool } from '../config/db.js';
 
 import { sendemail } from './sendEmails.js';
@@ -12,6 +13,7 @@ import {
   replace_referral_email_text,
   replace_reward_email_text,
 } from '../helpers/emailText.js';
+
 
 export default function referralsApiEndpoints(app, secret) {
   // endpoint to get users for Shopify Customers

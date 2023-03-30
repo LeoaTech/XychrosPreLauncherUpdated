@@ -1,7 +1,9 @@
 import { Shopify } from '@shopify/shopify-api';
 
 //import { db } from '../prelauncherDB.js';
+
 import { pool } from '../config/db.js';
+
 
 pool.connect((err, result) => {
   if (err) throw err;
