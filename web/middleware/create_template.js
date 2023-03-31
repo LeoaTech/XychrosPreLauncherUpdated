@@ -5,20 +5,23 @@ import fetch from 'node-fetch';
 // import { getSessionToken } from '@shopify/app-bridge-utils';
 // import { assetForTheme } from '@shopify/koa-shopify-graphql-proxy';
 
+
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+
 });
 
 // api calls
 const admin_apis = async (accessToken) => {
-  const shopURL = 'updatedxychros.myshopify.com';
-  const shopOrigin = `https://${shopURL}`;
-  const headers = {
-    'X-Shopify-Access-Token': accessToken,
-    'Content-Type': 'application/json',
-  };
+    const shopURL = 'sky2-dev.myshopify.com/';
+    const shopOrigin = `https://${shopURL}`
+    const headers = {
+        'X-Shopify-Access-Token': accessToken,
+        'Content-Type': 'application/json',
+    };
+
 
   const body1 = {
     sections: {
