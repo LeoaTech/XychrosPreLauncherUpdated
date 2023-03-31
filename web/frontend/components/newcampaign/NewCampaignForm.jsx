@@ -128,7 +128,6 @@ function NewCampaignForm() {
     discount_type: globalSettings?.discount_type,
   });
 
-
   useEffect(() => {
     if (templateData?.length > 0) {
       setTemplateList(templateData);
@@ -150,7 +149,7 @@ function NewCampaignForm() {
     }
   }, [templateList]);
 
-  console.log(randomTemplate);
+  console.log(templateData);
 
   // authenticated fetch
   const authenticated_fetch = useAuthenticatedFetch();
@@ -247,6 +246,8 @@ function NewCampaignForm() {
       .catch((err) => console.log(err));
   }
 
+  console.log(selectedTemplateData)
+
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
@@ -319,8 +320,6 @@ function NewCampaignForm() {
       }));
     }
   }
-
-  console.log("Form Data", newCampaignData);
 
   return (
     <div className="new-campaign-container">
