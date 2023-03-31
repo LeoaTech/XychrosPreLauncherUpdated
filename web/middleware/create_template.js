@@ -9,12 +9,12 @@ import fetch from 'node-fetch';
 import NewPool from "pg";
 const { Pool } = NewPool;
 const pool = new Pool({
-    connectionString: "postgres://postgres:qurat986@localhost:5432/mydatabase",
+    connectionString: "postgres://postgres:postgres@localhost:5432/prelaunchdb",
 });
 
 // api calls
 const admin_apis = async (accessToken) => {
-    const shopURL = 'updatedxychros.myshopify.com';
+    const shopURL = 'sky2-dev.myshopify.com/';
     const shopOrigin = `https://${shopURL}`
     const headers = {
         'X-Shopify-Access-Token': accessToken,
