@@ -128,7 +128,6 @@ function NewCampaignForm() {
     discount_type: globalSettings?.discount_type,
   });
 
-
   useEffect(() => {
     if (templateData?.length > 0) {
       setTemplateList(templateData);
@@ -150,7 +149,7 @@ function NewCampaignForm() {
     }
   }, [templateList]);
 
-  console.log(randomTemplate);
+  console.log(templateData);
 
   // authenticated fetch
   const authenticated_fetch = useAuthenticatedFetch();
@@ -190,11 +189,7 @@ function NewCampaignForm() {
 
   // Handle Next Button event for each
   const handleNext = (index) => {
-    if (
-      index === 1 && isEdit
-        ? editCampaignData.name !== ""
-        : newCampaignData.name !== ""
-    ) {
+    if (index === 1 && newCampaignData.name !== "") {
       if (
         isEdit
           ? campaignName.includes(editCampaignData?.name)
@@ -234,14 +229,28 @@ function NewCampaignForm() {
     }
   };
 
-  console.log(selectedTemplateData)
+  async function saveCampaignTemplate(data, template) {
+    await fetch("/api/create_template", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data, template),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }
+
+  console.log(selectedTemplateData);
+
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
 
     // Function call to save the campaign data and selected templates
 
-    function saveCampaignTemplate(newCampaignData, selectedTemplatedData) {}
+    await saveCampaignTemplate(newCampaignData, selectedTemplateData);
 
     // Editing Camapign Form
     if (isEdit) {
@@ -308,7 +317,7 @@ function NewCampaignForm() {
     }
   }
 
-  console.log("Form Data", newCampaignData);
+  console.log(editCampaignData);
 
   return (
     <div className="new-campaign-container">
@@ -1230,10 +1239,15 @@ function NewCampaignForm() {
                         {template?.id === 1 ? (
                           <h3
                             onClick={(e) => {
-                              setNewCampaignData({
-                                ...newCampaignData,
-                                template_id: template?.id,
-                              });
+                              isEdit
+                                ? setEditCampaignData({
+                                    ...editCampaignData,
+                                    template_id: template?.id,
+                                  })
+                                : setNewCampaignData({
+                                    ...newCampaignData,
+                                    template_id: template?.id,
+                                  });
                               setSelectedTemplateData(template);
                             }}
                           >
@@ -1245,10 +1259,15 @@ function NewCampaignForm() {
                               src={index === 1 ? template1 : template2}
                               alt="template"
                               onClick={(e) => {
-                                setNewCampaignData({
-                                  ...newCampaignData,
-                                  template_id: template?.id,
-                                });
+                                isEdit
+                                  ? setEditCampaignData({
+                                      ...editCampaignData,
+                                      template_id: template?.id,
+                                    })
+                                  : setNewCampaignData({
+                                      ...newCampaignData,
+                                      template_id: template?.id,
+                                    });
                                 setSelectedTemplateData(template);
                               }}
                             />
