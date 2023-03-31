@@ -1,9 +1,10 @@
 import { Shopify } from '@shopify/shopify-api';
 
-//import { db } from '../prelauncherDB.js';
-
-import { pool } from '../config/db.js';
-
+import NewPool from 'pg';
+const { Pool } = NewPool;
+const pool = new Pool({
+  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+});
 
 pool.connect((err, result) => {
   if (err) throw err;

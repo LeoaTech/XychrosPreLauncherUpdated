@@ -5,14 +5,11 @@ import fetch from 'node-fetch';
 // import { getSessionToken } from '@shopify/app-bridge-utils';
 // import { assetForTheme } from '@shopify/koa-shopify-graphql-proxy';
 
-//import { db } from '../prelauncherDB.js';
-// import NewPool from "pg";
-// const { Pool } = NewPool;
-// const pool = new Pool({
-//     connectionString: "postgres://postgres:qurat986@localhost:5432/mydatabase",
-// });
-
-import { pool } from '../config/db.js';
+import NewPool from 'pg';
+const { Pool } = NewPool;
+const pool = new Pool({
+  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+});
 
 // api calls
 const admin_apis = async (accessToken) => {
