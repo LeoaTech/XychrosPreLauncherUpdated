@@ -189,11 +189,7 @@ function NewCampaignForm() {
 
   // Handle Next Button event for each
   const handleNext = (index) => {
-    if (
-      index === 1 && isEdit
-        ? editCampaignData.name !== ""
-        : newCampaignData.name !== ""
-    ) {
+    if (index === 1 && newCampaignData.name !== "") {
       if (
         isEdit
           ? campaignName.includes(editCampaignData?.name)
@@ -246,7 +242,7 @@ function NewCampaignForm() {
       .catch((err) => console.log(err));
   }
 
-  console.log(selectedTemplateData)
+  console.log(selectedTemplateData);
 
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
@@ -320,6 +316,8 @@ function NewCampaignForm() {
       }));
     }
   }
+
+  console.log(editCampaignData);
 
   return (
     <div className="new-campaign-container">
@@ -1241,10 +1239,15 @@ function NewCampaignForm() {
                         {template?.id === 1 ? (
                           <h3
                             onClick={(e) => {
-                              setNewCampaignData({
-                                ...newCampaignData,
-                                template_id: template?.id,
-                              });
+                              isEdit
+                                ? setEditCampaignData({
+                                    ...editCampaignData,
+                                    template_id: template?.id,
+                                  })
+                                : setNewCampaignData({
+                                    ...newCampaignData,
+                                    template_id: template?.id,
+                                  });
                               setSelectedTemplateData(template);
                             }}
                           >
@@ -1256,10 +1259,15 @@ function NewCampaignForm() {
                               src={index === 1 ? template1 : template2}
                               alt="template"
                               onClick={(e) => {
-                                setNewCampaignData({
-                                  ...newCampaignData,
-                                  template_id: template?.id,
-                                });
+                                isEdit
+                                  ? setEditCampaignData({
+                                      ...editCampaignData,
+                                      template_id: template?.id,
+                                    })
+                                  : setNewCampaignData({
+                                      ...newCampaignData,
+                                      template_id: template?.id,
+                                    });
                                 setSelectedTemplateData(template);
                               }}
                             />
