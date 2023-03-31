@@ -112,8 +112,7 @@
   .subheader_text {
     color: {{ block.settings.accent_color }}
     ;
-    font-size: {{ block.settings.base_font_size | times: 1.3}}
-    px;
+    font-size: {{ block.settings.base_font_size}}px;
     font-weight: 400;
     padding: 0 3%;
     text-align: center;
@@ -121,16 +120,15 @@
   .header_text {
     color: {{ block.settings.accent_color }}
     ;
-    font-size: {{ block.settings.base_font_size|times: 2}}
-    px;
-    font-weight: 400;
+    font-size: {{ block.settings.base_font_size | times: 3}}px;
+    font-weight: 800;
     padding: 0 2%;
     text-align: center;
   }
   .tag-line {
 
     color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size | times: 1.2}}px;
+    font-size: {{ block.settings.base_font_size}}px;
     font-weight: 600;
     margin: 10px auto;
     padding: 0 2%;
@@ -333,11 +331,11 @@
         "label": "Text Base Font Size",
         "id": "base_font_size",
         "type": "range",
-        "min": 16,
-        "max": 32,
+        "min": 24,
+        "max": 64,
         "step": 1,
         "unit": "px",
-        "default": 24
+        "default": 30
       }, {
         "type": "select",
         "id": "text_layout",

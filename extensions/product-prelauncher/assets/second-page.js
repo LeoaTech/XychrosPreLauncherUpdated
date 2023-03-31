@@ -5,16 +5,20 @@ let referral_div = document.getElementById('referral_rows');
 let urlParams2 = new URL(window.location.href).searchParams;
 let user_code2 = urlParams.get('referralCode');
 var copyCode = document.getElementById('code');
+var campaignid = 5;
 
 // find referral details for rewards page
 const get_referrals = async () => {
-  const url = '/apps/xychrosupdated/api/get_referrals/';
+  const url = '/apps/xychrosupdated/api/get_referrals';
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ referral_code: user_code2 }),
+    body: JSON.stringify({
+      referral_code: user_code2,
+      campaign_id: campaignid,
+    }),
   });
   const data = await response.json();
   if (response.status == 200) {
