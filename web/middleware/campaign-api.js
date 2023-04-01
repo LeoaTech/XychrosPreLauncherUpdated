@@ -1,12 +1,16 @@
 import { Shopify } from '@shopify/shopify-api';
 
-//import { db } from '../prelauncherDB.js';
-import { pool } from '../config/db.js';
+import NewPool from 'pg';
+const { Pool } = NewPool;
+const pool = new Pool({
 
-// pool.connect((err, result) => {
-//   if (err) throw err;
-//   console.log("Connected");
-// });
+  connectionString: "postgres://postgres:postgres@localhost:5432/prelaunchdb",
+});
+
+pool.connect((err, result) => {
+  if (err) throw err;
+  console.log("Connected");
+});
 
 export default function campaignApiEndpoints(app) {
   //read all campaign
@@ -20,12 +24,11 @@ export default function campaignApiEndpoints(app) {
       );
 
       const campaigns = await pool.query(
-
         'select * from campaign_settings where shop_id = $1 ',
         [session?.id]
 
-      //  "select * from campaign_settings where shop_id = $1 ",
-      //  [session?.shop]
+        //  "select * from campaign_settings where shop_id = $1 ",
+        //  [session?.shop]
       );
       res.json(campaigns.rows);
     } catch (err) {

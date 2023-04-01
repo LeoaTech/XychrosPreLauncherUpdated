@@ -6,10 +6,11 @@ import fetch from 'node-fetch';
 // import { assetForTheme } from '@shopify/koa-shopify-graphql-proxy';
 
 
-import NewPool from "pg";
+import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-    connectionString: "postgres://postgres:postgres@localhost:5432/prelaunchdb",
+  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+
 });
 
 // api calls

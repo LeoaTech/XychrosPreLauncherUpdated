@@ -1,33 +1,35 @@
-import { Shopify } from '@shopify/shopify-api';
+import { Shopify } from "@shopify/shopify-api";
 
-import NewPool from 'pg';
+//import { db } from '../prelauncherDB.js';
+import NewPool from "pg";
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+  connectionString: "postgres://postgres:postgres@localhost:5432/prelaunchdb",
 });
 
 pool.connect((err, result) => {
   if (err) throw err;
-  console.log('Connected');
+  console.log("Konsi DB hai Connected");
 });
 
 export default function globalSettingsApiEndPoint(app) {
   //read Global setting for the shop id
 
-  app.get('/api/updatesettings', async (req, res) => {
+  app.get("/api/updatesettings", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
-      // console.log(session);
 
       const findSettings = await pool.query(
-        `select * from global_settings where shop_id = $1`,
-        [session?.shop]
+        `select * from global_settings where id = $1 `,[1]
+        // ,
+        // [session?.id]
       );
-      // console.log(findSettings?.rows);
+
+      // console.log(findSettings.rows);
       res.json(findSettings.rows);
     } catch (err) {
       console.error(err.message);
@@ -35,15 +37,13 @@ export default function globalSettingsApiEndPoint(app) {
   });
 
   // Insert new settings
-  app.post('/api/updatesettings', async (req, res) => {
+ /*  app.post("/api/updatesettings", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
-
-      console.log('Form received', req.body);
 
       const {
         facebook_link,
@@ -97,17 +97,6 @@ export default function globalSettingsApiEndPoint(app) {
         klaviyo_api_key,
         templates,
       } = req.body;
-
-      if (
-        !req.body.hasOwnProperty('reward_1_code') ||
-        !req.body.hasOwnProperty('reward_2_code')
-      ) {
-        return res.status(400).send('Missing required fields');
-      }
-
-      if (!req.body.reward_1_code || !req.body.reward_2_code) {
-        return res.status(400).send('Required fields cannot be empty');
-      }
       const settings = await pool.query(
         `INSERT INTO global_settings (
           shop_id,
@@ -160,15 +149,15 @@ export default function globalSettingsApiEndPoint(app) {
           klaviyo_Integration,
           klaviyo_api_key,
           templates
-        ) VALUES(
+        ) VALUES (
           $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
           $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
           $21, $22, $23, $24, $25, $26, $27, $28, $29, $30,
           $31, $32, $33, $34, $35, $36, $37, $38, $39, $40,
-          $41, $42, $43, $44, $45, $46, $47, $48, $49, $50,$51) 
-       `,
+          $41, $42, $43, $44, $45, $46, $47, $48, $49, $50,$51
+        )`,
         [
-          session?.id,
+          "razaa-dev.myshopify.com",
           facebook_link,
           instagram_link,
           discord_link,
@@ -221,20 +210,20 @@ export default function globalSettingsApiEndPoint(app) {
           templates,
         ]
       );
-      console.log('data', settings);
-      res.json(settings.rows);
+      // console.log("data",settings);
+      res.json(settings);
     } catch (err) {
       console.error(err.message);
     }
-  });
+  }); */
 
   //update Settings at shop_id
-  app.put('/api/updatesettings', async (req, res) => {
+  app.put("/api/updatesettings", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
 
       const {
@@ -292,58 +281,58 @@ export default function globalSettingsApiEndPoint(app) {
 
       const settings = await pool.query(
         `UPDATE global_settings SET
-        facebook_link = $1,
-        instagram_link =$2,
-        discord_link = $3,
-        snapchat_link =$4,
-        tiktok_link =$5,
-        twitter_link =$6,
-        show_discord_link = $7,
-        show_twitter_link = $8,
-        show_snapchat_link =$9,
-        show_facebook_link = $10,
-        show_tiktok_link = $11,
-        show_instagram_link =$12,
-        collect_phone = $13,
-        share_facebook_message =$14 ,
-        share_facebook_referral = $15,
-        share_instagram_message = $16,
-        share_instagram_referral = $17,
-        share_discord_message = $18,
-        share_discord_referral = $19,
-        share_snapchat_message = $20,
-        share_snapchat_referral = $21,
-        share_tiktok_message = $22,
-        share_tiktok_referral = $23,
-        share_twitter_message = $24,
-        share_twitter_referral = $25,
-        share_whatsapp_message = $26,
-        share_whatsapp_referral = $27,
-        share_email_message = $28,
-        share_email_referral = $29,
-        discount_type= $30,  
-        reward_1_code = $31,
-        reward_1_discount = $32,
-        reward_1_tier = $33,
-        reward_2_code = $34,
-        reward_2_tier = $35,
-        reward_2_discount = $36,
-        reward_3_code = $37,
-        reward_3_discount = $38,
-        reward_3_tier = $39,
-        reward_4_code = $40,
-        reward_4_tier = $41,
-        reward_4_discount = $42,
-        double_opt_in = $43,
-        double_opt_in_email = $44,
-        reward_email = $45,
-        welcome_email = $46,
-        referral_email = $47,
-        klaviyo_Integration = $48,
-        klaviyo_api_key= $49,
-        templates = $50
+          facebook_link = $1,
+          instagram_link = $2,
+          discord_link =$3,
+          snapchat_link=$4,
+          tiktok_link=$5,
+          twitter_link=$6,
+          show_discord_link =$7,
+          show_twitter_link=$8,
+          show_snapchat_link=$9,
+          show_facebook_link=$10,
+          show_tiktok_link=$11,
+          show_instagram_link=$12,
+          collect_phone=$13,
+          share_facebook_message=$14,
+          share_facebook_referral=$15,
+          share_instagram_message=$16,
+          share_instagram_referral=$17,
+          share_discord_message=$18,
+          share_discord_referral=$19,
+          share_snapchat_message=$20,
+          share_snapchat_referral=$21,
+          share_tiktok_message=$22,
+          share_tiktok_referral=$23,
+          share_twitter_message=$24,
+          share_twitter_referral=$25,
+          share_whatsapp_message=$26,
+          share_whatsapp_referral=$27,
+          share_email_message=$28,
+          share_email_referral=$29,
+          discount_type=$30,
+          reward_1_code=$31,
+          reward_1_discount=$32,
+          reward_1_tier=$33,
+          reward_2_code=$34,
+          reward_2_tier=$35,
+          reward_2_discount=$36,
+          reward_3_code=$37,
+          reward_3_discount=$38,
+          reward_3_tier=$39,
+          reward_4_code=$40,
+          reward_4_tier=$41,
+          reward_4_discount=$42,
+          double_opt_in=$43,
+          double_opt_in_email=$44,
+          reward_email=$45,
+          welcome_email=$46,
+          referral_email=$47,
+          klaviyo_Integration=$48,
+          klaviyo_api_key=$49,
+          templates=$50
         WHERE
-          shop_id = $51 RETURNING *`,
+          shop_id = $51`,
         [
           facebook_link,
           instagram_link,
@@ -395,15 +384,12 @@ export default function globalSettingsApiEndPoint(app) {
           klaviyo_Integration,
           klaviyo_api_key,
           templates,
-          session?.shop,
+          session?.id,
         ]
       );
 
-      if (settings.rowCount > 0) {
-        res.status(201).json({ message: 'Updated Data' });
-      } else {
-        res.status(500).json({ message: 'Not created' });
-      }
+      console.log(settings);
+      // res.json(settings.rowCount);
     } catch (err) {
       console.error(err.message);
     }
