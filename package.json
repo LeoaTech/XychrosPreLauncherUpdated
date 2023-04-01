@@ -2,6 +2,9 @@
   "name": "xychros-product-pre-launcher",
   "version": "1.0.0",
   "main": "web/index.js",
+  "engines": {
+    "node": "16.16.0"
+  },
   "license": "UNLICENSED",
   "scripts": {
     "shopify": "shopify",
