@@ -1,6 +1,5 @@
 // @ts-check
 import { join } from 'path';
-
 import { readFileSync } from 'fs';
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -18,6 +17,7 @@ import globalSettingsApiEndPoint from './middleware/global-settings-api.js';
 import bodyParser from 'body-parser';
 import create_template from './middleware/create_template.js';
 import templatesApiEndpoints from './middleware/templates_api.js';
+
 const USE_ONLINE_TOKENS = false;
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -28,22 +28,22 @@ const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
 // const DB_PATH = `${process.cwd()}/database.sqlite`;
 
-const DB_PATH = 'postgres://postgres:postgres@localhost:5432/prelauncher';
+const DB_PATH = "postgres://postgres:postgres@localhost:5432/prelauncher";
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
-  SCOPES: process.env.SCOPES.split(','),
-  HOST_NAME: process.env.HOST.replace(/https?:\/\//, ''),
-  HOST_SCHEME: process.env.HOST.split('://')[0],
+  SCOPES: process.env.SCOPES.split(","),
+  HOST_NAME: process.env.HOST.replace(/https?:\/\//, ""),
+  HOST_SCHEME: process.env.HOST.split("://")[0],
   API_VERSION: LATEST_API_VERSION,
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
   SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(DB_PATH),
 });
 
-Shopify.Webhooks.Registry.addHandler('APP_UNINSTALLED', {
-  path: '/api/webhooks',
+Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
+  path: "/api/webhooks",
   webhookHandler: async (_topic, shop, _body) => {
     await AppInstallations.delete(shop);
   },
@@ -66,17 +66,17 @@ const BILLING_SETTINGS = {
 //
 // More details can be found on shopify.dev:
 // https://shopify.dev/apps/webhooks/configuration/mandatory-webhooks
-setupGDPRWebHooks('/api/webhooks');
+setupGDPRWebHooks("/api/webhooks");
 
 // export for test use only
 export async function createServer(
   root = process.cwd(),
-  isProd = process.env.NODE_ENV === 'production',
+  isProd = process.env.NODE_ENV === "production",
   billingSettings = BILLING_SETTINGS
 ) {
   const app = express();
 
-  app.set('use-online-tokens', USE_ONLINE_TOKENS);
+  app.set("use-online-tokens", USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
 
   applyAuthMiddleware(app, {
@@ -89,7 +89,7 @@ export async function createServer(
   // Shopify.Webhooks.Registry.process().
   // See https://github.com/Shopify/shopify-api-node/blob/main/docs/usage/webhooks.md#note-regarding-use-of-body-parsers
   // for more details.
-  app.post('/api/webhooks', async (req, res) => {
+  app.post("/api/webhooks", async (req, res) => {
     try {
       await Shopify.Webhooks.Registry.process(req, res);
       console.log(`Webhook processed, returned status code 200`);
@@ -123,11 +123,11 @@ export async function createServer(
   //   res.status(200).send(countData);
   // });
 
-  app.get('/api/2022-10/products.json', async (req, res) => {
+  app.get("/api/2022-10/products.json", async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(
       req,
       res,
-      app.get('use-online-tokens')
+      app.get("use-online-tokens")
     );
     const { Product } = await import(
       `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
@@ -170,42 +170,42 @@ export async function createServer(
   );
   campaignApiEndpoints(app);
   referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
-
   // template api
   create_template(app);
   globalSettingsApiEndPoint(app);
   templatesApiEndpoints(app);
 
+
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
     if (Shopify.Context.IS_EMBEDDED_APP && shop) {
       res.setHeader(
-        'Content-Security-Policy',
+        "Content-Security-Policy",
         `frame-ancestors https://${encodeURIComponent(
           shop
         )} https://admin.shopify.com;`
       );
     } else {
-      res.setHeader('Content-Security-Policy', `frame-ancestors 'none';`);
+      res.setHeader("Content-Security-Policy", `frame-ancestors 'none';`);
     }
     next();
   });
 
   if (isProd) {
-    const compression = await import('compression').then(
+    const compression = await import("compression").then(
       ({ default: fn }) => fn
     );
-    const serveStatic = await import('serve-static').then(
+    const serveStatic = await import("serve-static").then(
       ({ default: fn }) => fn
     );
     app.use(compression());
     app.use(serveStatic(PROD_INDEX_PATH, { index: false }));
   }
 
-  app.use('/*', async (req, res, next) => {
-    if (typeof req.query.shop !== 'string') {
+  app.use("/*", async (req, res, next) => {
+    if (typeof req.query.shop !== "string") {
       res.status(500);
-      return res.send('No shop provided');
+      return res.send("No shop provided");
     }
 
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
@@ -215,7 +215,7 @@ export async function createServer(
       return redirectToAuth(req, res, app);
     }
 
-    if (Shopify.Context.IS_EMBEDDED_APP && req.query.embedded !== '1') {
+    if (Shopify.Context.IS_EMBEDDED_APP && req.query.embedded !== "1") {
       const embeddedUrl = Shopify.Utils.getEmbeddedAppUrl(req);
 
       return res.redirect(embeddedUrl + req.path);
@@ -223,12 +223,12 @@ export async function createServer(
 
     const htmlFile = join(
       isProd ? PROD_INDEX_PATH : DEV_INDEX_PATH,
-      'index.html'
+      "index.html"
     );
 
     return res
       .status(200)
-      .set('Content-Type', 'text/html')
+      .set("Content-Type", "text/html")
       .send(readFileSync(htmlFile));
   });
 
