@@ -1,9 +1,8 @@
-import { Shopify } from '@shopify/shopify-api';
+import { Shopify } from "@shopify/shopify-api";
 
-import NewPool from 'pg';
+import NewPool from "pg";
 const { Pool } = NewPool;
 const pool = new Pool({
-
   connectionString: "postgres://postgres:postgres@localhost:5432/prelaunchdb",
 });
 
@@ -15,20 +14,20 @@ pool.connect((err, result) => {
 export default function campaignApiEndpoints(app) {
   //read all campaign
 
-  app.get('/api/getcampaigns', async (req, res) => {
+  app.get("/api/getcampaigns", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
 
       const campaigns = await pool.query(
-        'select * from campaign_settings where shop_id = $1 ',
-        [session?.id]
+        // 'select * from campaign_settings where shop_id = $1 ',
+        // [session?.id]
 
-        //  "select * from campaign_settings where shop_id = $1 ",
-        //  [session?.shop]
+        "select * from campaign_settings where shop_id = $1 ",
+        [session?.shop]
       );
       res.json(campaigns.rows);
     } catch (err) {
@@ -38,12 +37,12 @@ export default function campaignApiEndpoints(app) {
   //get one campaign
 
   //create campaign
-  app.post('/api/campaignsettings', async (req, res) => {
+  app.post("/api/campaignsettings", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
       const {
         collect_phone,
@@ -171,12 +170,12 @@ export default function campaignApiEndpoints(app) {
 
   //update campaign
 
-  app.put('/api/campaignsettings/:campaign_id', async (req, res) => {
+  app.put("/api/campaignsettings/:campaign_id", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
       const { campaign_id } = req.params;
       const {
@@ -365,12 +364,12 @@ export default function campaignApiEndpoints(app) {
 
   //delete campaign
 
-  app.delete('/api/campaignsettings/:campaign_id', async (req, res) => {
+  app.delete("/api/campaignsettings/:campaign_id", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
       const { campaign_id } = req.params;
       const campaigns = await pool.query(
