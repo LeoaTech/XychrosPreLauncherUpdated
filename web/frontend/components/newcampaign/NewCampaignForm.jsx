@@ -2,7 +2,21 @@ import React, { useState, forwardRef, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { anime, template1, template2, xychrosLogo } from "../../assets/index";
+import {
+  anime,
+  xychrosLogo,
+  food,
+  food2,
+  WelcomeClothing,
+  WelcomeFood,
+  WelcomeFood2,
+  WelcomeJewelry,
+  WelcomeNature,
+  nature,
+  nature2,
+  jewelry,
+  jewelry2,
+} from "../../assets/index";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { integratelinks } from "./socialLinks";
@@ -53,7 +67,7 @@ function NewCampaignForm() {
       setEditCampaignData(campaignById);
     }
     if (globalSettings && productsData.length > 0) {
-      console.log("render");
+      console.log("");
     }
   }, [globalSettings, productsData]);
 
@@ -64,11 +78,11 @@ function NewCampaignForm() {
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(getNextDate);
-  const [isLoading, setIsLoading] = useState(false); //Loading screen for aniamtion
   const [errorName, setErrorName] = useState(false);
   const [templateList, setTemplateList] = useState([]); //To store all templates received from Template db
   const [randomTemplate, setRandomTemplate] = useState();
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
+  const [selectedImage, setSelectedImage] = useState(false); //Store the selected template data
   const [expanded, setExpanded] = useState(Array(6).fill(false));
   const [newCampaignData, setNewCampaignData] = useState({
     collect_phone: globalSettings?.collect_phone,
@@ -134,6 +148,19 @@ function NewCampaignForm() {
     }
   }, [templateData]);
 
+  const templates_show_list = [
+    { id: 1, image: WelcomeClothing, name: "WelcomeClothing" },
+    { id: 2, image: WelcomeFood, name: "WelcomeFood" },
+    { id: 3, image: WelcomeFood2, name: "WelcomeFood2" },
+    { id: 4, image: WelcomeJewelry, name: "WelcomeJewelry" },
+    { id: 5, image: WelcomeNature, name: "WelcomeNature" },
+    { id: 6, image: food, name: "food" },
+    { id: 7, image: food2, name: "food2" },
+    { id: 8, image: nature, name: "nature" },
+    { id: 9, image: nature2, name: "nature2" },
+    { id: 10, image: jewelry, name: "jewelry" },
+    { id: 11, image: jewelry2, name: "jewelry2" },
+  ];
   // Generate Random Templates Array with Template Ids
 
   useEffect(() => {
@@ -190,11 +217,7 @@ function NewCampaignForm() {
   // Handle Next Button event for each
   const handleNext = (index) => {
     if (index === 1 && newCampaignData.name !== "") {
-      if (
-        isEdit
-          ? campaignName.includes(editCampaignData?.name)
-          : campaignName.includes(newCampaignData?.name)
-      ) {
+      if (campaignName.includes(newCampaignData?.name)) {
         setErrorName(true);
         setExpanded((prevExpand) =>
           prevExpand.map((state, i) => i === index - 1 && true)
@@ -250,7 +273,7 @@ function NewCampaignForm() {
 
     // Function call to save the campaign data and selected templates
 
-    await saveCampaignTemplate(newCampaignData, selectedTemplateData);
+    // await saveCampaignTemplate(newCampaignData, selectedTemplateData);
 
     // Editing Camapign Form
     if (isEdit) {
@@ -317,7 +340,23 @@ function NewCampaignForm() {
     }
   }
 
-  console.log(editCampaignData);
+  // HandleTemplate Select event
+  function handleTemplateSelect(template) {
+    if (isEdit) {
+      setEditCampaignData({
+        ...editCampaignData,
+        template_id: template?.id,
+      });
+    } else {
+      setNewCampaignData({
+        ...newCampaignData,
+        template_id: template?.id,
+      });
+    }
+    setSelectedTemplateData(template);
+  }
+
+  console.log(randomTemplate); // Will show wwhen Edit a Campaign Form
 
   return (
     <div className="new-campaign-container">
@@ -1235,42 +1274,29 @@ function NewCampaignForm() {
                 <div className="templates-block-container">
                   <div className="template-cards">
                     {randomTemplate?.map((template, index) => (
-                      <div key={template.id} className="template-card-block">
+                      <div
+                        key={template.id}
+                        className={
+                          selectedTemplateData?.id === template?.id
+                            ? "template-card-block selected"
+                            : "template-card-block"
+                        }
+                        onClick={() => handleTemplateSelect(template)}
+                      >
                         {template?.id === 1 ? (
-                          <h3
-                            onClick={(e) => {
-                              isEdit
-                                ? setEditCampaignData({
-                                    ...editCampaignData,
-                                    template_id: template?.id,
-                                  })
-                                : setNewCampaignData({
-                                    ...newCampaignData,
-                                    template_id: template?.id,
-                                  });
-                              setSelectedTemplateData(template);
-                            }}
-                          >
+                          <h3>
                             Build a custom template in the Shopify Theme Editor{" "}
                           </h3>
                         ) : (
-                          template?.id > 1 && (
-                            <img
-                              src={index === 1 ? template1 : template2}
-                              alt="template"
-                              onClick={(e) => {
-                                isEdit
-                                  ? setEditCampaignData({
-                                      ...editCampaignData,
-                                      template_id: template?.id,
-                                    })
-                                  : setNewCampaignData({
-                                      ...newCampaignData,
-                                      template_id: template?.id,
-                                    });
-                                setSelectedTemplateData(template);
-                              }}
-                            />
+                          template?.id > 1 &&
+                          templates_show_list?.map(
+                            (data) =>
+                              data?.name === template?.campaign_image && (
+                                <img
+                                  src={data?.image}
+                                  alt={template?.campaign_image}
+                                />
+                              )
                           )
                         )}
                       </div>
