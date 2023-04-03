@@ -612,9 +612,9 @@ const SettingComponent = () => {
           )}
         </section>
 
-        {/* Template Settings */}
+        {/* Template Settings Hide this  */}
 
-        <section className="global-settings">
+        {/* <section className="global-settings">
           <div className="templates-settings" onClick={() => handleExpand(5)}>
             <div className="main-heading">
               <h2 className="main-title">Templates Settings</h2>
@@ -674,7 +674,7 @@ const SettingComponent = () => {
               </div>
             </>
           )}
-        </section>
+        </section> */}
 
         <div className="settings-savebtn">
           <button className="saveSettingsbtn" type="submit">
