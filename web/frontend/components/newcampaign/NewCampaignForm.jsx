@@ -38,7 +38,6 @@ import { useAuthenticatedFetch } from "../../hooks";
 import { fetchAllSettings } from "../../app/features/settings/settingsSlice";
 import { fetchAllProducts } from "../../app/features/productSlice";
 import useFetchTemplates from "../../constant/fetchTemplates";
-import axios from "axios";
 
 function NewCampaignForm() {
   const fetch = useAuthenticatedFetch();
@@ -149,7 +148,7 @@ function NewCampaignForm() {
       setTemplateList(templateData);
     }
   }, [templateData]);
-  //  Template images with their names
+  //  Template images with their names [Hardcoded Images]  06-APR-2023 (Update Soon)
   const templates_show_list = [
     { id: 1, image: WelcomeClothing, name: "WelcomeClothing" },
     { id: 2, image: WelcomeFood, name: "WelcomeFood" },
@@ -250,6 +249,7 @@ function NewCampaignForm() {
     }
   };
 
+  // Get Klaviyo API Lists
   useEffect(() => {
     if (
       newCampaignData?.klaviyo_integration === true &&
@@ -258,6 +258,7 @@ function NewCampaignForm() {
       getKlaviyoList(newCampaignData?.klaviyo_api_key);
     }
   }, [newCampaignData?.klaviyo_api_key]);
+
   // Get Klaviyo integration Lists
   async function getKlaviyoList(apikey) {
     try {
@@ -275,7 +276,6 @@ function NewCampaignForm() {
     } catch (err) {
       console.error(err);
     }
-    //  pk_42de217ca89ed3a5b748241538d0485998
   }
 
   // Create_templates_list
@@ -292,8 +292,6 @@ function NewCampaignForm() {
       .catch((err) => console.log(err));
   }
 
-  // console.log(selectedTemplateData);
-
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
@@ -302,7 +300,7 @@ function NewCampaignForm() {
 
     // await saveCampaignTemplate(newCampaignData, selectedTemplateData);
 
-    // Editing Camapign Form
+    // Editing Camapign Data Form
     if (isEdit) {
       await fetch(`/api/campaignsettings/${campaignsid}`, {
         method: "PUT",
@@ -317,7 +315,7 @@ function NewCampaignForm() {
       setIsEdit(false);
       navigate("/campaigns");
     }
-    // Adding new Campaign Form
+    // Adding A New Campaign and Save in Database
     else {
       await fetch("/api/campaignsettings", {
         method: "POST",
@@ -329,7 +327,9 @@ function NewCampaignForm() {
         .then((res) => res.json())
         .then((data) => dispatch(addNewCampaign(data)))
         .catch((err) => console.log(err));
-      await fetch("/api/create_template");
+
+      // {UnComment this Line when call the create-template API}
+      // await fetch("/api/create_template");
       // console.log("template created");
       navigate("/campaigns");
     }
@@ -384,8 +384,6 @@ function NewCampaignForm() {
     }
     setSelectedTemplateData(template);
   }
-
-  console.log(newCampaignData); // Will show wwhen Edit a Campaign Form
 
   return (
     <div className="new-campaign-container">
@@ -1235,7 +1233,6 @@ function NewCampaignForm() {
                             placeholder="Enter API Key"
                             value={editCampaignData?.klaviyo_api_key}
                             onChange={handleChange}
-                            // disabled
                           />
                         ) : (
                           <input
@@ -1245,7 +1242,6 @@ function NewCampaignForm() {
                             placeholder="Enter API Key"
                             value={newCampaignData?.klaviyo_api_key}
                             onChange={handleChange}
-                            // disabled
                           />
                         )}
                       </div>
