@@ -2,21 +2,9 @@
   let second_page_settings = {{ block.settings | json }};
   console.log(second_page_settings);
 
-  let urlParams = new URL(window.location.href).searchParams;
-  let user_code = urlParams.get('referralCode');
-  console.log(user_code);
+  let product_list = {{ block.settings.product_list | json }};
 
   window.onload = (e) => {
-    var copyCode = document.getElementById('code');
-
-    let urlredirect = window.location.href;
-    urlredirect = urlredirect.split('/pages')[0];
-    urlredirect = urlredirect + '/pages/' + second_page_settings.page + '?refer=' + user_code;
-    console.log(urlredirect);
-
-    copyCode.value = urlredirect;
-    copyCode.innerHTML = urlredirect;
-
     var el = document.querySelector('.product-prelaunch-second-page');
     el.parentElement.style.padding = '0';
     el.parentElement.style.margin = '0';
@@ -27,39 +15,31 @@
       do {
         var parent = el.parentNode;
 
-        // Collect element children
+// Collect element children
         for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
           node = parent.childNodes[i];
 
-          // Collect only sibling nodes that are elements and not the current element
+// Collect only sibling nodes that are elements and not the current element
           if (node.nodeType == 1 && node != el) {
             nodes.push(node);
           }
         }
 
-        // Go up to parent
+// Go up to parent
         el = parent;
 
-        // Stop when processed the body's child nodes
+// Stop when processed the body's child nodes
       } while (el.tagName.toLowerCase() != 'body');
 
-      // Hide the collected nodes
+// Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
       });
     }
 
-    let second_image_background = 'https:' + second_page_settings.background;
+    let second_image_background = 'https:' + second_page_settings.background_image;
     console.log(second_image_background);
-    console.log(second_page_settings.background_color + ',url(' + second_image_background + ')');{% comment %}if (second_page_settings.background) {
-        document.getElementById('second-background-image').style.backgroundImage = url(' + second_image_background + ');
-      } else {
-        document.getElementById('second-background-image').style.backgroundImage = second_page_settings.background_color;
-
-      }
-    {% endcomment %}
-
-    document.getElementById('second-background-image').style.backgroundImage = second_page_settings.background_color + ',url(' + second_image_background + ')';
+    document.getElementById('second-background-image').style.backgroundImage = second_page_settings.background_overlay + ',url(' + second_image_background + ')';
   }
 </script>
 
@@ -71,21 +51,24 @@
   .preheader_text {
     color: {{ block.settings.accent_color }}
     ;
-    font-size: {{ block.settings.base_font_size}}px;
+    font-size: {{ block.settings.base_font_size | times: 0.9}}
+    px;
     font-weight: 800;
     padding: 0 2%;
   }
   .header_text {
     color: {{ block.settings.accent_color }}
     ;
-    font-size: {{ block.settings.base_font_size | times: 3 }}px;
+    font-size: {{ block.settings.base_font_size|times: 1.3}}
+    px;
     font-weight: 800;
     padding: 0 2%;
   }
   .subheader_text {
     color: {{ block.settings.accent_color }}
     ;
-    font-size: {{ block.settings.base_font_size }}px;
+    font-size: {{ block.settings.base_font_size | times: 0.8}}
+    px;
     font-weight: 500;
     padding: 0 2%;
   }
@@ -191,9 +174,9 @@
       },
       {
         "type": "color_background",
-        "id": "background_color",
+        "id": "background_overlay",
         "label": "Background Overlay",
-        "default": "linear-gradient(#ffffff, #000000)"
+        "default": "linear-gradient(137deg, rgba(0, 0, 0, 0) 100%, rgba(167, 144, 140, 0) 100%)"
       },
       {
         "label": "Main Color",
@@ -228,7 +211,7 @@
         "default": "horizontal"
       }, {
         "label": "Background Image",
-        "id": "background",
+        "id": "background_image",
         "type": "image_picker"
       }, {
         "label": "Pre-Header",
@@ -250,7 +233,7 @@
         "id": "base_font_size",
         "type": "range",
         "min": 24,
-        "max": 48,
+        "max": 64,
         "step": 1,
         "unit": "px",
         "default": 24
