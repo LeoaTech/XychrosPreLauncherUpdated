@@ -607,7 +607,7 @@ const SettingComponent = () => {
                   </div>
                 </div>
               </div>
-              <div className="toggle-next-btn">{renderButton(5)}</div>
+              {/* <div className="toggle-next-btn">{renderButton(5)}</div> */}
             </>
           )}
         </section>
