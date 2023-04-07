@@ -8,6 +8,10 @@ const admin_apis = async (accessToken, shopURL, templateData) => {
 
   const app_name = "updated-xychros-app";
   const extension_uuid = "990d48eb-16d0-4af0-b902-f323ed2bbfab";
+import NewPool from 'pg';
+const { Pool } = NewPool;
+const pool = new Pool({
+  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
 
   // extract pre-defined template settings
   const campaign_name = templateData.campaign_name;

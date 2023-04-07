@@ -14,7 +14,6 @@ import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 
-
 const NewCampaign = () => {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
@@ -33,13 +32,13 @@ const NewCampaign = () => {
     if (settingsData) {
       dispatch(fetchSettings(settingsData));
     }
-  }, [dispatch]);
+  }, [dispatch, settingsData]);
 
   useEffect(() => {
-    if (productsList.length>0) {
+    if (productsList.length > 0) {
       dispatch(fetchProducts(productsList));
     }
-  }, [dispatch,productsList]);
+  }, [dispatch, productsList]);
 
   return (
     <div className="app">
@@ -61,9 +60,7 @@ const NewCampaign = () => {
               <Header />
             </div>
 
-            {/* <React.Suspense fallback={<Spinner size="large" />}> */}
             <NewCampaignForm />
-            {/* </React.Suspense> */}
           </MainPage>
         </div>
       ) : (

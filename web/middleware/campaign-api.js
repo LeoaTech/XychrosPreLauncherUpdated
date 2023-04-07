@@ -3,7 +3,7 @@ import { Shopify } from "@shopify/shopify-api";
 import NewPool from "pg";
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelaunchdb",
+  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
 });
 
 pool.connect((err, result) => {
@@ -23,9 +23,6 @@ export default function campaignApiEndpoints(app) {
       );
 
       const campaigns = await pool.query(
-        // 'select * from campaign_settings where shop_id = $1 ',
-        // [session?.id]
-
         "select * from campaign_settings where shop_id = $1 ",
         [session?.shop]
       );
