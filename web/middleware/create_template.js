@@ -1,22 +1,10 @@
 import { Shopify } from '@shopify/shopify-api';
 import fetch from 'node-fetch';
-
-<<<<<<< HEAD
-// import createApp from '@shopify/app-bridge';
-// import { getSessionToken } from '@shopify/app-bridge-utils';
-// import { assetForTheme } from '@shopify/koa-shopify-graphql-proxy';
-
-
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
-  
-
-});
-
-=======
->>>>>>> 4182c6f (XYC-125 Updated API call to create templates using campaign form template settings)
+})
 // api calls
 const admin_apis = async (accessToken, shopURL, templateData) => {
 
@@ -60,11 +48,20 @@ const admin_apis = async (accessToken, shopURL, templateData) => {
   const referral_position = templateData.referral_position;
   const reward_position = templateData.reward_position;
 
-  // set headers
-  const headers = {
-    'X-Shopify-Access-Token': accessToken,
-    'Content-Type': 'application/json',
-  };
+// api calls
+// const admin_apis = async (accessToken) => {
+//     const shopURL = 'sky2-dev.myshopify.com/';
+//     const shopOrigin = `https://${shopURL}`
+//     const headers = {
+//         'X-Shopify-Access-Token': accessToken,
+//         'Content-Type': 'application/json',
+//     };
+
+ // set headers
+ const headers = {
+  'X-Shopify-Access-Token': accessToken,
+  'Content-Type': 'application/json',
+};
 
   // template 1 body
 
