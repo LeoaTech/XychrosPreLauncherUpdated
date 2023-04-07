@@ -1,45 +1,52 @@
-import SummaryCard from '../ui/SummaryCard';
-import { Marketing, subscriber, Sale, arrow } from '../../assets/index';
-import CampaignBlock from './CampaignBlock';
-import Pagination from '../ui/Pagination';
-import React, { useState, useEffect, Fragment } from 'react';
-import { useStateContext } from '../../contexts/ContextProvider';
-import { useDispatch, useSelector } from 'react-redux';
+import SummaryCard from "../ui/SummaryCard";
+import { Marketing, subscriber, Sale, arrow } from "../../assets/index";
+import CampaignBlock from "./CampaignBlock";
+import Pagination from "../ui/Pagination";
+import React, { useState, useEffect, Fragment } from "react";
+import { useStateContext } from "../../contexts/ContextProvider";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteCampaign,
   fetchAllCampaigns,
   fetchCampaign,
   removeCampaign,
 } from "../../app/features/campaigns/campaignSlice";
-import CountUp from "react-countup";
 import { useAuthenticatedFetch } from "../../hooks";
-import useFetchCampaignsData from "../../constant/fetchCampaignsData";
 import { useNavigate } from "react-router-dom";
-
 
 export default function CampaignsComponent() {
   const { setIsEdit } = useStateContext();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const List = useSelector(fetchAllCampaigns);
   const [getCampaigns, setCampaigns] = useState([]);
-
-  useEffect(() => {
-    console.log(List)
-    setCampaigns(List);
-  }, [List,dispatch]);
-
- 
-
-
   const [editData, setEditData] = useState([]);
+  useEffect(() => {
+    setCampaigns(List);
+  }, [List, dispatch]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(getCampaigns.length / itemsPerPage);
+
+  // Handle Previous Page Click events
+  const handlePrevClick = () => {
+    setCurrentPage((currentPage) => currentPage - 1);
+  };
+  // Handle Next Page Click events
+  const handleNextClick = () => {
+    setCurrentPage((currentPage) => currentPage + 1);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = getCampaigns.slice(startIndex, endIndex);
+
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
   const fetch = useAuthenticatedFetch();
 
   const handleDelete = async (id) => {
-    setDeleteId(id)
+    setDeleteId(id);
     await fetch(`/api/campaignsettings/${id}`, {
       method: "DELETE",
       headers: {
@@ -51,44 +58,42 @@ export default function CampaignsComponent() {
       .catch((err) => console.log(err));
   };
 
-  
-
   const handleEdit = (id) => {
     setIsEdit(true);
   };
 
   return (
-    <div className='home-container'>
-      <div className='summary-blocks'>
+    <div className="home-container">
+      <div className="summary-blocks">
         <SummaryCard
           value={getCampaigns?.length}
           title="Campaigns"
           icon={Marketing}
-          class='campaign-icon'
+          class="campaign-icon"
         />
         <SummaryCard
-          value='543678'
-          title='Referrals'
+          value="543678"
+          title="Referrals"
           icon={subscriber}
-          class='referral-icon'
+          class="referral-icon"
         />
         <SummaryCard
-          value='$253,467'
-          title='Revenue'
+          value="$253,467"
+          title="Revenue"
           icon={Sale}
-          class='revenue-icon'
+          class="revenue-icon"
         />
         <SummaryCard
-          value='4551678'
-          title='Clicks'
+          value="4551678"
+          title="Clicks"
           icon={arrow}
-          class='clicks-icon'
+          class="clicks-icon"
         />
       </div>
-      <div className='campaigns'>
+      <div className="campaigns">
         {getCampaigns?.length > 0 ? (
           <>
-            {getCampaigns?.map((campaign) => (
+            {currentItems?.map((campaign) => (
               <>
                 <CampaignBlock
                   key={campaign?.campaign_id}
@@ -103,6 +108,23 @@ export default function CampaignsComponent() {
                 />
               </>
             ))}
+
+            {/* Pagination */}
+            <div className="pagination-content">
+              {currentPage > 1 && (
+                <button className="prev-btn" onClick={handlePrevClick}>
+                  Prev
+                </button>
+              )}
+              <span className="pagination-text">
+                Page {currentPage} of {totalPages}
+              </span>
+              {currentPage < totalPages && (
+                <button className="next-btn" onClick={handleNextClick}>
+                  Next
+                </button>
+              )}
+            </div>
           </>
         ) : (
           <h1
@@ -123,11 +145,3 @@ export default function CampaignsComponent() {
     </div>
   );
 }
-
-/*
- <Pagination
-            data={getCampaigns}
-            RenderComponent={CampaignBlock}
-            pageLimit={pageLimit}
-            dataLimit={dataLimit}
-          />*/
