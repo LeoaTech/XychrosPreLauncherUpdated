@@ -29,7 +29,7 @@ const NewCampaign = () => {
   });
 
   useEffect(() => {
-    if (settingsData) {
+    if (settingsData.length>0) {
       dispatch(fetchSettings(settingsData));
     }
   }, [dispatch, settingsData]);
