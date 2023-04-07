@@ -49,27 +49,43 @@ function NewCampaignForm() {
       "Content-Type": "application/json",
     },
   });
+
   const { isEdit, setIsEdit } = useStateContext();
   const { campaignsid } = useParams();
+
+  // Check if page URL is New Camapign or Campaign/id
+  useEffect(() => {
+    if (window.location.pathname === `/campaigns/${campaignsid}`) {
+      setIsEdit(true);
+    } else if (window.location.pathname === `/newcampaign`) {
+      setIsEdit(false);
+    }
+  }, [isEdit]);
 
   // Get A Single Campaign with ID
   const campaignById = useSelector((state) =>
     fetchCampaignById(state, Number(campaignsid))
   );
   const campaignName = useSelector(fetchCampaignByName); //Get the Campaign Name to verify unique campaign name
-  const globalSettings = useSelector(fetchAllSettings); //Settings Data
+  const settings = useSelector(fetchAllSettings); //Settings Data
   const productsData = useSelector(fetchAllProducts); //Get all products of Shop
 
   const [editCampaignData, setEditCampaignData] = useState();
+  const [globalSettings, setGlobalSettings] = useState();
 
+  // Will map all the global settings fields into the Form
+  useEffect(() => {
+    if (settings.length > 0) {
+      setGlobalSettings(settings[0]);
+    }
+  }, [settings]);
+
+  // Get the Data with Campaigns ID
   useEffect(() => {
     if (campaignById) {
       setEditCampaignData(campaignById);
     }
-    if (globalSettings && productsData.length > 0) {
-      console.log("");
-    }
-  }, [globalSettings, productsData]);
+  }, [campaignById]);
 
   // Get Date for next 6 days for the Campaign end Date
   let today = new Date();
@@ -84,64 +100,20 @@ function NewCampaignForm() {
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
   const [expanded, setExpanded] = useState(Array(6).fill(false));
   const [klaviyoList, setKlaviyoList] = useState([]);
-
   const [newCampaignData, setNewCampaignData] = useState({
-    collect_phone: globalSettings?.collect_phone,
-    discord_link: globalSettings?.discord_link,
-    double_opt_in: globalSettings?.double_opt_in,
-    double_opt_in_email: globalSettings?.double_opt_in_email,
-    end_date: endDate,
-    facebook_link: globalSettings?.facebook_link,
-    instagram_link: globalSettings?.instagram_link,
-    klaviyo_integration: globalSettings?.klaviyo_integration,
-    klaviyo_list_id: "",
     name: "",
     product: "",
-    klaviyo_api_key: globalSettings?.klaviyo_api_key,
-    referral_email: globalSettings?.referral_email,
-    reward_1_code: globalSettings?.reward_1_code,
-    reward_1_discount: globalSettings?.reward_1_discount,
-    reward_1_tier: globalSettings?.reward_1_tier,
-    reward_2_code: globalSettings?.reward_2_code,
-    reward_2_discount: globalSettings?.reward_2_discount,
-    reward_2_tier: globalSettings?.reward_2_tier,
-    reward_3_code: globalSettings?.reward_3_code,
-    reward_3_discount: globalSettings?.reward_3_discount,
-    reward_3_tier: globalSettings?.reward_3_tier,
-    reward_4_code: globalSettings?.reward_4_code,
-    reward_4_discount: globalSettings?.reward_4_discount,
-    reward_4_tier: globalSettings?.reward_4_tier,
-    reward_email: globalSettings?.reward_email,
-    share_discord_message: globalSettings?.share_discord_message,
-    share_discord_referral: globalSettings?.share_discord_referral,
-    share_email_message: globalSettings?.share_email_message,
-    share_email_referral: globalSettings?.share_email_referral,
-    share_facebook_message: globalSettings?.share_facebook_message,
-    share_facebook_referral: globalSettings?.share_facebook_referral,
-    share_instagram_message: globalSettings?.share_instagram_message,
-    share_instagram_referral: globalSettings?.share_instagram_referral,
-    share_snapchat_message: globalSettings?.share_snapchat_message,
-    share_snapchat_referral: globalSettings?.share_snapchat_referral,
-    share_tiktok_message: globalSettings?.share_tiktok_message,
-    share_tiktok_referral: globalSettings?.share_tiktok_referral,
-    share_twitter_message: globalSettings?.share_twitter_message,
-    share_twitter_referral: globalSettings?.share_twitter_referral,
-    share_whatsapp_message: globalSettings?.share_whatsapp_message,
-    share_whatsapp_referral: globalSettings?.share_whatsapp_referral,
-    show_discord_link: globalSettings?.show_discord_link,
-    show_facebook_link: globalSettings?.show_facebook_link,
-    show_instagram_link: globalSettings?.show_instagram_link,
-    show_snapchat_link: globalSettings?.show_snapchat_link,
-    show_tiktok_link: globalSettings?.show_tiktok_link,
-    show_twitter_link: globalSettings?.show_twitter_link,
-    snapchat_link: globalSettings?.snapchat_link,
+    klaviyo_list_id: "",
     start_date: startDate,
-    tiktok_link: globalSettings?.tiktok_link,
-    twitter_link: globalSettings?.twitter_link,
-    welcome_email: globalSettings?.welcome_email,
-    template_id: null,
-    discount_type: globalSettings?.discount_type,
+    end_date: endDate,
   });
+
+  // New Campaign data with ALL Global Settings Fields
+  useEffect(() => {
+    if (globalSettings !== undefined) {
+      setNewCampaignData({ ...newCampaignData, ...globalSettings });
+    }
+  }, [globalSettings]);
 
   useEffect(() => {
     if (templateData?.length > 0) {
@@ -251,14 +223,24 @@ function NewCampaignForm() {
 
   // Get Klaviyo API Lists
   useEffect(() => {
-    if (
-      newCampaignData?.klaviyo_integration === true &&
-      newCampaignData?.klaviyo_api_key !== ""
-    ) {
-      getKlaviyoList(newCampaignData?.klaviyo_api_key);
+    if (isEdit) {
+      if (
+        editCampaignData?.klaviyo_integration === true &&
+        globalSettings?.klaviyo_api_key !== ""
+      ) {
+        getKlaviyoList(globalSettings?.klaviyo_api_key);
+      }
+    } else {
+      if (
+        newCampaignData?.klaviyo_integration === true &&
+        newCampaignData?.klaviyo_api_key !== ""
+      ) {
+        getKlaviyoList(newCampaignData?.klaviyo_api_key);
+      }
     }
-  }, [newCampaignData?.klaviyo_api_key]);
+  }, [newCampaignData?.klaviyo_api_key, globalSettings?.klaviyo_api_key]);
 
+  console.log(editCampaignData, "data");
   // Get Klaviyo integration Lists
   async function getKlaviyoList(apikey) {
     try {
@@ -271,7 +253,7 @@ function NewCampaignForm() {
 
       const list = await response.json();
 
-      console.log(list);
+      console.log(response?.data);
       setKlaviyoList(list);
     } catch (err) {
       console.error(err);
@@ -335,7 +317,7 @@ function NewCampaignForm() {
     }
   };
 
-  console.log(templateData);
+  console.log(newCampaignData);
 
   // HandleCheckbox events in the basic form settings
 
@@ -1231,7 +1213,7 @@ function NewCampaignForm() {
                             name="klaviyo_api_key"
                             id="klaviyo_api_key"
                             placeholder="Enter API Key"
-                            value={editCampaignData?.klaviyo_api_key}
+                            value={globalSettings?.klaviyo_api_key}
                             onChange={handleChange}
                           />
                         ) : (
