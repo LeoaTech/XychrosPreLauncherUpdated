@@ -82,8 +82,9 @@ function NewCampaignForm() {
   const [templateList, setTemplateList] = useState([]); //To store all templates received from Template db
   const [randomTemplate, setRandomTemplate] = useState();
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
-  const [selectedImage, setSelectedImage] = useState(false); //Store the selected template data
   const [expanded, setExpanded] = useState(Array(6).fill(false));
+  const [klaviyoList, setKlaviyoList] = useState([]);
+
   const [newCampaignData, setNewCampaignData] = useState({
     collect_phone: globalSettings?.collect_phone,
     discord_link: globalSettings?.discord_link,
@@ -147,7 +148,7 @@ function NewCampaignForm() {
       setTemplateList(templateData);
     }
   }, [templateData]);
-
+  //  Template images with their names [Hardcoded Images]  06-APR-2023 (Update Soon)
   const templates_show_list = [
     { id: 1, image: WelcomeClothing, name: "WelcomeClothing" },
     { id: 2, image: WelcomeFood, name: "WelcomeFood" },
@@ -161,10 +162,11 @@ function NewCampaignForm() {
     { id: 10, image: jewelry, name: "jewelry" },
     { id: 11, image: jewelry2, name: "jewelry2" },
   ];
+
   // Generate Random Templates Array with Template Ids
 
   useEffect(() => {
-    if (templateList.length > 0) {
+    if (templateList?.length > 0) {
       const randomTemplates = [
         templateList[0],
         ...templateList
@@ -175,11 +177,6 @@ function NewCampaignForm() {
       setRandomTemplate(randomTemplates);
     }
   }, [templateList]);
-
-  console.log(templateData);
-
-  // authenticated fetch
-  const authenticated_fetch = useAuthenticatedFetch();
 
   const ExampleCustomInput = forwardRef(({ value, onClick, onChange }, ref) => (
     <div className="wrapper">
@@ -252,20 +249,48 @@ function NewCampaignForm() {
     }
   };
 
+  // Get Klaviyo API Lists
+  useEffect(() => {
+    if (
+      newCampaignData?.klaviyo_integration === true &&
+      newCampaignData?.klaviyo_api_key !== ""
+    ) {
+      getKlaviyoList(newCampaignData?.klaviyo_api_key);
+    }
+  }, [newCampaignData?.klaviyo_api_key]);
+
+  // Get Klaviyo integration Lists
+  async function getKlaviyoList(apikey) {
+    try {
+      const response = await fetch(`/api/lists?apiKey=${apikey}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const list = await response.json();
+
+      console.log(list);
+      setKlaviyoList(list);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // Create_templates_list
   async function saveCampaignTemplate(data, template) {
     await fetch("/api/create_template", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data, template),
+      body: JSON.stringify({ data, template }),
     })
       .then((res) => res.json())
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
   }
-
-  console.log(selectedTemplateData);
 
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
@@ -275,7 +300,7 @@ function NewCampaignForm() {
 
     // await saveCampaignTemplate(newCampaignData, selectedTemplateData);
 
-    // Editing Camapign Form
+    // Editing Camapign Data Form
     if (isEdit) {
       await fetch(`/api/campaignsettings/${campaignsid}`, {
         method: "PUT",
@@ -290,7 +315,7 @@ function NewCampaignForm() {
       setIsEdit(false);
       navigate("/campaigns");
     }
-    // Adding new Campaign Form
+    // Adding A New Campaign and Save in Database
     else {
       await fetch("/api/campaignsettings", {
         method: "POST",
@@ -302,11 +327,15 @@ function NewCampaignForm() {
         .then((res) => res.json())
         .then((data) => dispatch(addNewCampaign(data)))
         .catch((err) => console.log(err));
-      await authenticated_fetch("/api/create_template");
-      console.log("template created");
+
+      // {UnComment this Line when call the create-template API}
+      // await fetch("/api/create_template");
+      // console.log("template created");
       navigate("/campaigns");
     }
   };
+
+  console.log(templateData);
 
   // HandleCheckbox events in the basic form settings
 
@@ -355,8 +384,6 @@ function NewCampaignForm() {
     }
     setSelectedTemplateData(template);
   }
-
-  console.log(randomTemplate); // Will show wwhen Edit a Campaign Form
 
   return (
     <div className="new-campaign-container">
@@ -1224,14 +1251,39 @@ function NewCampaignForm() {
                         <label htmlFor="">List to Add Users</label>
 
                         <div className="select-user-input">
-                          <select>
-                            <option value="john">John Dape</option>
-                            <option value="janee">Janee</option>
-                            <option selected value="Mickey">
-                              Mickey Author
-                            </option>
-                            <option value="Laurwes">Laurwes</option>
-                          </select>
+                          {isEdit ? (
+                            <select
+                              name="klaviyo_list_id"
+                              id="klaviyo_list_id"
+                              value={editCampaignData?.klaviyo_list_id}
+                              onChange={handleChange}
+                            >
+                              {klaviyoList?.map((list) => (
+                                <option
+                                  key={list?.list_id}
+                                  value={list?.list_id}
+                                >
+                                  {list?.list_name}
+                                </option>
+                              ))}
+                            </select>
+                          ) : (
+                            <select
+                              name="klaviyo_list_id"
+                              id="klaviyo_list_id"
+                              value={newCampaignData?.klaviyo_list_id}
+                              onChange={handleChange}
+                            >
+                              {klaviyoList?.map((list) => (
+                                <option
+                                  key={list?.list_id}
+                                  value={list?.list_id}
+                                >
+                                  {list?.list_name}
+                                </option>
+                              ))}
+                            </select>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1295,6 +1347,7 @@ function NewCampaignForm() {
                                 <img
                                   src={data?.image}
                                   alt={template?.campaign_image}
+                                  loading="lazy"
                                 />
                               )
                           )

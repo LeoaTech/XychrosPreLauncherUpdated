@@ -10,6 +10,7 @@ import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+  
 
 });
 
