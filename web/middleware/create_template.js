@@ -8,10 +8,6 @@ const admin_apis = async (accessToken, shopURL, templateData) => {
 
   const app_name = "updated-xychros-app";
   const extension_uuid = "990d48eb-16d0-4af0-b902-f323ed2bbfab";
-import NewPool from 'pg';
-const { Pool } = NewPool;
-const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
 
   // extract pre-defined template settings
   const campaign_name = templateData.campaign_name;
@@ -106,7 +102,7 @@ const pool = new Pool({
 
   // template 2 body
 
-  // first app block unique_id
+  // second app block unique_id
   const randomHex2 = () => Math.floor(Math.random() * 16).toString(16);
   let secondBlockId = "";
   for (let i = 0; i < 4; i++) {
