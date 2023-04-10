@@ -3,7 +3,7 @@ import { Shopify } from '@shopify/shopify-api';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-    connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+    connectionString: 'postgres://postgres:postgres@localhost:5432/prelaunchdb',
 
 });
 
@@ -401,9 +401,9 @@ export default function globalSettingsApiEndPoint(app) {
       );
 
       if (settings.rowCount > 0) {
-        res.status(201).json({ message: 'Updated Data' });
+        res.status(201).json(settings?.rows);
       } else {
-        res.status(500).json({ message: 'Not created' });
+        res.status(500).json({ message: 'Not Updated' });
       }
     } catch (err) {
       console.error(err.message);
