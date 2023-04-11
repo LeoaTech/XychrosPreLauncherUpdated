@@ -6,26 +6,29 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useStateContext } from "../../contexts/ContextProvider";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteCampaign,
   fetchAllCampaigns,
   fetchCampaign,
   removeCampaign,
 } from "../../app/features/campaigns/campaignSlice";
 import { useAuthenticatedFetch } from "../../hooks";
-import { useNavigate } from "react-router-dom";
 
 export default function CampaignsComponent() {
   const { setIsEdit } = useStateContext();
   const dispatch = useDispatch();
-  const List = useSelector(fetchAllCampaigns);
+  const List = useSelector((state) => state.campaign.campaigns);
   const [getCampaigns, setCampaigns] = useState([]);
   const [editData, setEditData] = useState([]);
+
   useEffect(() => {
     setCampaigns(List);
-  }, [List, dispatch]);
+  }, [dispatch, List]);
+
+  console.log(getCampaigns, " Camapigns", List);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
-  const totalPages = Math.ceil(getCampaigns.length / itemsPerPage);
+  const totalPages = Math.ceil(getCampaigns?.length / itemsPerPage);
 
   // Handle Previous Page Click events
   const handlePrevClick = () => {
@@ -38,7 +41,7 @@ export default function CampaignsComponent() {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems = getCampaigns.slice(startIndex, endIndex);
+  const currentItems = getCampaigns?.slice(startIndex, endIndex);
 
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -47,6 +50,7 @@ export default function CampaignsComponent() {
 
   const handleDelete = async (id) => {
     setDeleteId(id);
+
     await fetch(`/api/campaignsettings/${id}`, {
       method: "DELETE",
       headers: {
@@ -54,8 +58,16 @@ export default function CampaignsComponent() {
       },
     })
       .then((res) => res.json())
-      .then((data) => dispatch(removeCampaign(data[0])))
+      .then((data) => {
+        dispatch(deleteCampaign(data[0]));
+      })
       .catch((err) => console.log(err));
+
+    const newData = await getCampaigns?.filter(
+      (campaign) => campaign.campaign_id !== id
+    );
+    await dispatch(fetchCampaign(newData));
+    setCampaigns(newData);
   };
 
   const handleEdit = (id) => {
