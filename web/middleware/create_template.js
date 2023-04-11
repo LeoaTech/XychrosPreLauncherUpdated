@@ -1,6 +1,10 @@
 import { Shopify } from '@shopify/shopify-api';
 import fetch from 'node-fetch';
-
+import NewPool from 'pg';
+const { Pool } = NewPool;
+const pool = new Pool({
+  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+})
 // api calls
 const admin_apis = async (accessToken, shopURL, templateData) => {
 
@@ -44,11 +48,20 @@ const admin_apis = async (accessToken, shopURL, templateData) => {
   const referral_position = templateData.referral_position;
   const reward_position = templateData.reward_position;
 
-  // set headers
-  const headers = {
-    'X-Shopify-Access-Token': accessToken,
-    'Content-Type': 'application/json',
-  };
+// api calls
+// const admin_apis = async (accessToken) => {
+//     const shopURL = 'sky2-dev.myshopify.com/';
+//     const shopOrigin = `https://${shopURL}`
+//     const headers = {
+//         'X-Shopify-Access-Token': accessToken,
+//         'Content-Type': 'application/json',
+//     };
+
+ // set headers
+ const headers = {
+  'X-Shopify-Access-Token': accessToken,
+  'Content-Type': 'application/json',
+};
 
   // template 1 body
 
