@@ -29,13 +29,13 @@ const NewCampaign = () => {
   });
 
   useEffect(() => {
-    if (settingsData.length>0) {
+    if (settingsData?.length > 0) {
       dispatch(fetchSettings(settingsData));
     }
   }, [dispatch, settingsData]);
 
   useEffect(() => {
-    if (productsList.length > 0) {
+    if (productsList?.length > 0) {
       dispatch(fetchProducts(productsList));
     }
   }, [dispatch, productsList]);
