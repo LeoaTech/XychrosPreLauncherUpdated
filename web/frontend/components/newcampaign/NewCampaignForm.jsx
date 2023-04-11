@@ -247,17 +247,23 @@ function NewCampaignForm() {
   // HandleAnimation
 
   function NextClick(index) {
-    const loadingOverlay = document.getElementById("loading-overlay");
-    loadingOverlay.style.display = "block";
-
-    setTimeout(function () {
-      // Hide loading overlay and proceed to next step
-      loadingOverlay.style.display = "none";
-      // Add code here to proceed to next step
+    if (isEdit) {
       setExpanded((prevExpand) =>
         prevExpand.map((state, i) => (i === index ? !state : false))
       );
-    }, 3000);
+    } else {
+      const loadingOverlay = document.getElementById("loading-overlay");
+      loadingOverlay.style.display = "block";
+
+      setTimeout(function () {
+        // Hide loading overlay and proceed to next step
+        loadingOverlay.style.display = "none";
+        // Add code here to proceed to next step
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => (i === index ? !state : false))
+        );
+      }, 3000);
+    }
   }
   // Handle Previous Step event for each Form
   const handlePrevious = (index) => {
@@ -302,22 +308,6 @@ function NewCampaignForm() {
       }));
     }
   };
-
-  function handleEmailText() {
-    const doubleOptEmailText = document.getElementById(
-      "double_opt_in_email"
-    ).value;
-    const welcomeEmailText = document.getElementById("welcome_email")?.value;
-    console.log(welcomeEmailText, "text");
-    const ReferralEmailText = document.getElementById("referral_email")?.value;
-    const RewardEmailText = document.getElementById("reward_email")?.value;
-
-    const formattedEmailText = welcomeEmailText.replace(/\r?\n/g, "&#13;&#10;"); // replace newlines with HTML <br> tags
-    setNewCampaignData((prevState) => ({
-      ...prevState,
-      // welcome_email: newCampaignData?.welcome_email,
-    }));
-  }
 
   // Get Klaviyo API Lists
   useEffect(() => {
@@ -374,25 +364,19 @@ function NewCampaignForm() {
 
     // Editing Camapign Data Form
     if (isEdit) {
-      if (selectedTemplateData !== undefined) {
-        setIsLoading(true);
-
-        await fetch(`/api/campaignsettings/${campaignsid}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editCampaignData),
-        })
-          .then((res) => res.json())
-          .then((data) => dispatch(updateCampaign(data)))
-          .catch((err) => console.log(err));
-        setIsLoading(false);
-        setIsEdit(false);
-        navigate("/campaigns");
-      } else {
-        return;
-      }
+      await fetch(`/api/campaignsettings/${campaignsid}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editCampaignData),
+      })
+        .then((res) => res.json())
+        .then((data) => dispatch(updateCampaign(data)))
+        .catch((err) => console.log(err));
+      setIsLoading(false);
+      setIsEdit(false);
+      navigate("/campaigns");
     }
     // Adding A New Campaign and Save in Database
     else {
@@ -471,8 +455,6 @@ function NewCampaignForm() {
   }
 
   console.log(newCampaignData, "form Data");
-
-  console.log("Templates selected", selectedTemplateData);
 
   return (
     <div className="new-campaign-container">
@@ -1329,24 +1311,17 @@ function NewCampaignForm() {
             className={`integration-settings ${
               expanded[4] ? "active-card" : "inactive-card"
             }`}
-            // onClick={() => handleExpand(4)}
           >
             <div className="card-header">
               <h2 className="card-title">Integration Settings</h2>
-              <span
-                className="toggle-btn"
-                // onClick={() => handleExpand(4)}
-              >
+              <span className="toggle-btn">
                 {expanded[4] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(4)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    // onClick={() => handleExpand(4)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -1481,24 +1456,17 @@ function NewCampaignForm() {
             className={`template-settings ${
               expanded[5] ? "active-card" : "inactive-card"
             }`}
-            onClick={() => handleExpand(5)}
           >
             <div className="card-header">
               <h2 className="card-title">Template Settings</h2>
-              <span
-                className="toggle-btn"
-                // onClick={() => handleExpand(5)}
-              >
+              <span className="toggle-btn">
                 {expanded[5] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(5)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    // onClick={() => handleExpand(5)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -1532,6 +1500,7 @@ function NewCampaignForm() {
                             (data) =>
                               data?.name === template?.campaign_image && (
                                 <img
+                                  key={template?.id}
                                   src={data?.image}
                                   alt={template?.campaign_image}
                                   loading="lazy"
