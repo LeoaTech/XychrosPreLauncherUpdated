@@ -10,7 +10,7 @@ const useFetchCampaignsData = (url) => {
       await fetchData(url)
         .then((response) => {
           if (response.ok) return response.json();
-          throw new Error("something went wrong while requesting posts");
+          throw new Error("something went wrong while requesting Campaigns");
         })
         .then((myCampaigns) => {
           setData(myCampaigns);
