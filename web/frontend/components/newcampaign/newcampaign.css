@@ -25,7 +25,8 @@
 }
 
 .saveFormBtn,
-.nextBtn {
+.nextBtn,
+.prevBtn {
   height: 60px;
   width: 200px;
   background-color: var(--secondary-color);
@@ -43,10 +44,22 @@
   -o-border-radius: 10px;
 }
 
+.saveFormBtn:hover,
+.nextBtn:hover,
+.prevBtn:hover {
+  background-color: #342d84;
+}
+
 .nextBtn {
-  height: 50px;
-  width: 100px;
+  /* height: 50px; */
+  width: 120px;
   font-size: 23px;
+}
+
+.prevBtn {
+  width: 130px;
+  font-size: 21px;
+  margin-bottom: 10px;
 }
 
 .toggle-btn {
@@ -71,6 +84,17 @@
   margin-left: 10px; */
 }
 
+.active-card {
+  color: #fff;
+}
+
+.inactive-card {
+  color: gray;
+}
+
+.inactive-card .toggle-btn {
+  color: gray;
+}
 /*------------- Basic Form Sections -----------*/
 
 .newcampaign-settings {
@@ -378,7 +402,8 @@ input[type="checkbox"]:checked {
 
 .referral-nextbtn {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /*----------------------- Reward Tier-------------------- */
@@ -429,7 +454,7 @@ input[type="checkbox"]:checked {
 }
 .reward-section {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .reward-setting-btn {
@@ -567,7 +592,24 @@ input[type="checkbox"]:checked {
 
 .integrate-setting-btn {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+}
+
+.klaviyo-message {
+  margin-top: 30px;
+  font-size: 18px;
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+  text-decoration: underline;
+}
+
+.disabled-value {
+  color: gray !important;
+}
+
+.klaviyo-message:hover {
+  color: var(--secondary-color);
 }
 
 /*------------- Template Settings -------------------- */
@@ -585,7 +627,7 @@ input[type="checkbox"]:checked {
 
 .template-end {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-bottom: 30px;
 }
 
@@ -737,7 +779,7 @@ input[type="checkbox"]:checked {
     column-gap: normal;
   }
 
-  .reward-card{
+  .reward-card {
     padding: 28px;
   }
 
