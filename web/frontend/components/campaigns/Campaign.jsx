@@ -106,19 +106,17 @@ export default function CampaignsComponent() {
         {getCampaigns?.length > 0 ? (
           <>
             {currentItems?.map((campaign) => (
-              <>
-                <CampaignBlock
-                  key={campaign?.campaign_id}
-                  setEditData={setEditData}
-                  data={campaign}
-                  deleteId={deleteId}
-                  setDeleteId={setDeleteId}
-                  deleteModal={deleteModal}
-                  setDeleteModal={setDeleteModal}
-                  handleDelete={handleDelete}
-                  handleEdit={handleEdit}
-                />
-              </>
+              <CampaignBlock
+                key={campaign?.campaign_id}
+                setEditData={setEditData}
+                data={campaign}
+                deleteId={deleteId}
+                setDeleteId={setDeleteId}
+                deleteModal={deleteModal}
+                setDeleteModal={setDeleteModal}
+                handleDelete={handleDelete}
+                handleEdit={handleEdit}
+              />
             ))}
 
             {/* Pagination */}
