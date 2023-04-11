@@ -45,6 +45,12 @@ const SettingComponent = () => {
     );
   };
 
+  const handlePrevious = (index) => {
+    setCurrentExpanded((prevExpand) =>
+      prevExpand.map((state, i) => (i === index ? !state : false))
+    );
+  };
+
   // Handle Next Button event for each
   const handleNext = (index) => {
     if (index === 4) {
@@ -226,7 +232,10 @@ const SettingComponent = () => {
                   </div>
                 </div>
               </div>
-              <div className="toggle-next-btn">{renderButton(1)}</div>
+              <div className="toggle-next-btn">
+                <div></div>
+                {renderButton(1)}
+              </div>
             </>
           )}
         </section>
@@ -238,24 +247,17 @@ const SettingComponent = () => {
             className={`referral-settings ${
               currentExpanded[1] ? "active-form" : "inactive-form"
             }`}
-            // onClick={() => handleExpand(1)}
           >
             <div className="main-heading">
               <h2 className="main-title">Referral Settings</h2>
-              <span
-                className="toggle-card-btn"
-                // onClick={() => handleExpand(1)}
-              >
+              <span className="toggle-card-btn">
                 {currentExpanded[1] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(1)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    // onClick={() => handleExpand(1)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -309,7 +311,16 @@ const SettingComponent = () => {
                   ))}
                 </div>
               </div>
-              <div className="toggle-next-btn">{renderButton(2)}</div>
+              <div className="toggle-next-btn">
+                <>
+                  <button className="prev-Btn" onClick={() => handlePrevious(0)}>
+                    Previous
+                  </button>
+                  <button className="next-button" onClick={() => handleNext(2)}>
+                    Next
+                  </button>
+                </>
+              </div>
             </>
           )}
         </section>
@@ -320,24 +331,17 @@ const SettingComponent = () => {
             className={`reward-settings ${
               currentExpanded[2] ? "active-form" : "inactive-form"
             }`}
-            // onClick={() => handleExpand(2)}
           >
             <div className="main-heading">
               <h2 className="main-title">Rewards Settings</h2>
-              <span
-                className="toggle-card-btn"
-                // onClick={() => handleExpand(2)}
-              >
+              <span className="toggle-card-btn">
                 {currentExpanded[2] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(2)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    // onClick={() => handleExpand(2)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -452,7 +456,16 @@ const SettingComponent = () => {
                   ))}
                 </div>
               </div>
-              <div className="toggle-next-btn">{renderButton(3)}</div>
+              <div className="toggle-next-btn">
+                <>
+                  <button className="prev-Btn" onClick={() => handlePrevious(1)}>
+                    Previous
+                  </button>
+                  <button className="next-button" onClick={() => handleNext(3)}>
+                    Next
+                  </button>
+                </>
+              </div>
             </>
           )}
         </section>
@@ -463,24 +476,17 @@ const SettingComponent = () => {
             className={`email-drafts-settings ${
               currentExpanded[3] ? "active-form" : "inactive-form"
             }`}
-            // onClick={() => handleExpand(3)}
           >
             <div className="main-heading">
               <h2 className="main-title">Emails Settings</h2>
-              <span
-                className="toggle-card-btn"
-                // onClick={() => handleExpand(3)}
-              >
+              <span className="toggle-card-btn">
                 {currentExpanded[3] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(3)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    // onClick={() => handleExpand(3)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -597,7 +603,16 @@ const SettingComponent = () => {
                   </div>
                 </section>
               </div>
-              <div className="toggle-next-btn">{renderButton(4)}</div>
+              <div className="toggle-next-btn">
+                <>
+                  <button className="prev-Btn" onClick={() => handlePrevious(2)}>
+                    Previous
+                  </button>
+                  <button className="next-button" onClick={() => handleNext(4)}>
+                    Next
+                  </button>
+                </>
+              </div>
             </>
           )}
         </section>
@@ -609,24 +624,17 @@ const SettingComponent = () => {
             className={`integration--settings ${
               currentExpanded[4] ? "active-form" : "inactive-form"
             }`}
-            // onClick={() => handleExpand(4)}
           >
             <div className="main-heading">
               <h2 className="main-title">Integrations Settings</h2>
-              <span
-                className="toggle-card-btn"
-                // onClick={() => handleExpand(4)}
-              >
+              <span className="toggle-card-btn">
                 {currentExpanded[4] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(4)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    // onClick={() => handleExpand(4)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -669,7 +677,17 @@ const SettingComponent = () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="toggle-next-btn">{renderButton(5)}</div> */}
+              <div className="toggle-next-btn">
+                <>
+                  <button className="prev-Btn" onClick={() => handlePrevious(3)}>
+                    Previous
+                  </button>
+                  <div></div>
+                  {/* <button className="next-button" onClick={() => handleNext(2)}>
+                    Next
+                  </button> */}
+                </>
+              </div>
             </>
           )}
         </section>
