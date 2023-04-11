@@ -286,7 +286,7 @@ export default function globalSettingsApiEndPoint(app) {
         reward_email,
         welcome_email,
         referral_email,
-        klaviyo_Integration,
+        klaviyo_integration,
         klaviyo_api_key,
         templates,
       } = req.body;
@@ -340,7 +340,7 @@ export default function globalSettingsApiEndPoint(app) {
         reward_email = $45,
         welcome_email = $46,
         referral_email = $47,
-        klaviyo_Integration = $48,
+        klaviyo_integration = $48,
         klaviyo_api_key= $49,
         templates = $50
         WHERE
@@ -393,7 +393,7 @@ export default function globalSettingsApiEndPoint(app) {
           reward_email,
           welcome_email,
           referral_email,
-          klaviyo_Integration,
+          klaviyo_integration,
           klaviyo_api_key,
           templates,
           session?.shop,
