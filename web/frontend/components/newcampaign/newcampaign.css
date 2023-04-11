@@ -50,15 +50,14 @@
   background-color: #342d84;
 }
 
-.nextBtn {
-  /* height: 50px; */
+.nextBtn,.prevBtn {
+  height: 50px;
   width: 120px;
-  font-size: 23px;
+  font-size: 19px;
 }
 
 .prevBtn {
-  width: 130px;
-  font-size: 21px;
+  
   margin-bottom: 10px;
 }
 
