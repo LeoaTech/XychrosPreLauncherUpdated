@@ -2,9 +2,6 @@ import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 
 const initialState = {
   campaigns: [],
-
-  status: false,
-  isError: null,
 };
 
 export const campaignSlice = createSlice({
@@ -12,7 +9,6 @@ export const campaignSlice = createSlice({
   initialState: initialState,
   reducers: {
     removeCampaign: (state, action) => {
-      console.log(action.payload);
       let deleteItem = state.campaigns.find(
         (campaign) => campaign.id === action.payload.campaign_id
       );
@@ -33,28 +29,12 @@ export const campaignSlice = createSlice({
       state.campaigns.push(action.payload);
     },
     deleteCampaign: (state, action) => {
-      console.log(action.payload);
-
-      const updatedData = campaignsProxy.filter(
+      const updatedData = state.campaigns.filter(
         (campaign) => campaign.id !== action.payload
       );
       state.campaigns = updatedData;
     },
   },
-  // extraReducers(builder) {
-  //   builder
-  //     .addCase(fetchCampaignsData.pending, (state, action) => {
-  //       state.status = true;
-  //     })
-  //     .addCase(fetchCampaignsData.fulfilled, (state, action) => {
-  //       state.status = false;
-  //       state.campaigns = action.payload;
-  //     })
-  //     .addCase(fetchCampaignsData.rejected, (state, action) => {
-  //       state.status = false;
-  //       state.isError = action.payload;
-  //     });
-  // },
 });
 
 // Get All Campaigns
@@ -71,9 +51,6 @@ export const fetchCampaignByName = (state) => {
   state.campaign.campaigns.forEach((campaign) => result.push(campaign.name));
   return result;
 };
-
-export const getCampaignsStatus = (state) => state.campaign.status;
-export const getCampaignsError = (state) => state.campaign.isError;
 
 // All Action of the campaign
 

@@ -1,5 +1,5 @@
 import React, { useState, forwardRef, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -40,6 +40,7 @@ import { fetchAllProducts } from "../../app/features/productSlice";
 import useFetchTemplates from "../../constant/fetchTemplates";
 
 function NewCampaignForm() {
+  const [activeCard, setActiveCard] = useState(false);
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -49,28 +50,45 @@ function NewCampaignForm() {
       "Content-Type": "application/json",
     },
   });
+
   const { isEdit, setIsEdit } = useStateContext();
   const { campaignsid } = useParams();
+
+  // Check if page URL is New Camapign or Campaign/id
+  useEffect(() => {
+    if (window.location.pathname === `/campaigns/${campaignsid}`) {
+      setIsEdit(true);
+    } else if (window.location.pathname === `/newcampaign`) {
+      setIsEdit(false);
+    }
+  }, [isEdit]);
 
   // Get A Single Campaign with ID
   const campaignById = useSelector((state) =>
     fetchCampaignById(state, Number(campaignsid))
   );
   const campaignName = useSelector(fetchCampaignByName); //Get the Campaign Name to verify unique campaign name
-  const globalSettings = useSelector(fetchAllSettings); //Settings Data
+  const settings = useSelector(fetchAllSettings); //Settings Data
   const productsData = useSelector(fetchAllProducts); //Get all products of Shop
 
   const [editCampaignData, setEditCampaignData] = useState();
+  const [globalSettings, setGlobalSettings] = useState();
 
+  // Will map all the global settings fields into the Form
+  useEffect(() => {
+    if (settings?.length > 0) {
+      setGlobalSettings(settings[0]);
+    }
+  }, [settings]);
+
+  // Get the Data with Campaigns ID
   useEffect(() => {
     if (campaignById) {
       setEditCampaignData(campaignById);
     }
-    if (globalSettings && productsData.length > 0) {
-      console.log("");
-    }
-  }, [globalSettings, productsData]);
+  }, [campaignById]);
 
+  console.log("Edit campaign", editCampaignData);
   // Get Date for next 6 days for the Campaign end Date
   let today = new Date();
   let getNextDate = new Date();
@@ -83,8 +101,8 @@ function NewCampaignForm() {
   const [randomTemplate, setRandomTemplate] = useState();
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
   const [expanded, setExpanded] = useState(Array(6).fill(false));
+  const [isLoading, setIsLoading] = useState(false);
   const [klaviyoList, setKlaviyoList] = useState([]);
-
   const [newCampaignData, setNewCampaignData] = useState({
     collect_phone: globalSettings?.collect_phone,
     discord_link: globalSettings?.discord_link,
@@ -143,6 +161,21 @@ function NewCampaignForm() {
     discount_type: globalSettings?.discount_type,
   });
 
+  // New Campaign data with ALL Global Settings Fields /// not rendering
+  useEffect(() => {
+    if (globalSettings !== undefined) {
+      setNewCampaignData({
+        name: "",
+        product: "",
+        klaviyo_list_id: "",
+        template_id: null,
+        start_date: startDate,
+        end_date: endDate,
+        ...globalSettings,
+      });
+    }
+  }, [globalSettings]);
+
   useEffect(() => {
     if (templateData?.length > 0) {
       setTemplateList(templateData);
@@ -171,7 +204,7 @@ function NewCampaignForm() {
         templateList[0],
         ...templateList
           .slice(1)
-          .sort(() => 0.5 - Math.random() * 5)
+          .sort(() => 0.5 - Math.random())
           .slice(0, 2),
       ];
       setRandomTemplate(randomTemplates);
@@ -211,6 +244,33 @@ function NewCampaignForm() {
     );
   };
 
+  // HandleAnimation
+
+  function NextClick(index) {
+    if (isEdit) {
+      setExpanded((prevExpand) =>
+        prevExpand.map((state, i) => (i === index ? !state : false))
+      );
+    } else {
+      const loadingOverlay = document.getElementById("loading-overlay");
+      loadingOverlay.style.display = "block";
+
+      setTimeout(function () {
+        // Hide loading overlay and proceed to next step
+        loadingOverlay.style.display = "none";
+        // Add code here to proceed to next step
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => (i === index ? !state : false))
+        );
+      }, 3000);
+    }
+  }
+  // Handle Previous Step event for each Form
+  const handlePrevious = (index) => {
+    setExpanded((prevExpand) =>
+      prevExpand.map((state, i) => (i === index ? !state : false))
+    );
+  };
   // Handle Next Button event for each
   const handleNext = (index) => {
     if (index === 1 && newCampaignData.name !== "") {
@@ -251,18 +311,21 @@ function NewCampaignForm() {
 
   // Get Klaviyo API Lists
   useEffect(() => {
-    if (
-      newCampaignData?.klaviyo_integration === true &&
-      newCampaignData?.klaviyo_api_key !== ""
-    ) {
-      getKlaviyoList(newCampaignData?.klaviyo_api_key);
+    if (isEdit) {
+      if (globalSettings?.klaviyo_api_key !== "") {
+        getKlaviyoList();
+      }
+    } else if (newCampaignData?.klaviyo_api_key !== "") {
+      getKlaviyoList();
+    } else {
+      getKlaviyoList();
     }
-  }, [newCampaignData?.klaviyo_api_key]);
+  }, [newCampaignData?.klaviyo_api_key, globalSettings?.klaviyo_api_key]);
 
   // Get Klaviyo integration Lists
-  async function getKlaviyoList(apikey) {
+  async function getKlaviyoList() {
     try {
-      const response = await fetch(`/api/lists?apiKey=${apikey}`, {
+      const response = await fetch(`/api/lists`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -271,10 +334,9 @@ function NewCampaignForm() {
 
       const list = await response.json();
 
-      console.log(list);
       setKlaviyoList(list);
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   }
 
@@ -312,21 +374,30 @@ function NewCampaignForm() {
         .then((res) => res.json())
         .then((data) => dispatch(updateCampaign(data)))
         .catch((err) => console.log(err));
+      setIsLoading(false);
       setIsEdit(false);
       navigate("/campaigns");
     }
     // Adding A New Campaign and Save in Database
     else {
-      await fetch("/api/campaignsettings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newCampaignData),
-      })
-        .then((res) => res.json())
-        .then((data) => dispatch(addNewCampaign(data)))
-        .catch((err) => console.log(err));
+      if (newCampaignData?.template_id !== null) {
+        setIsLoading(true);
+
+        await fetch("/api/campaignsettings", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newCampaignData),
+        })
+          .then((res) => res.json())
+          .then((data) => dispatch(addNewCampaign(data)))
+          .catch((err) => console.log(err));
+
+        setIsLoading(false);
+      } else {
+        return;
+      }
 
       // {UnComment this Line when call the create-template API}
       // await fetch("/api/create_template");
@@ -334,8 +405,6 @@ function NewCampaignForm() {
       navigate("/campaigns");
     }
   };
-
-  console.log(templateData);
 
   // HandleCheckbox events in the basic form settings
 
@@ -385,6 +454,8 @@ function NewCampaignForm() {
     setSelectedTemplateData(template);
   }
 
+  console.log(newCampaignData, "form Data");
+
   return (
     <div className="new-campaign-container">
       <div className="newcampaign-title">
@@ -393,7 +464,12 @@ function NewCampaignForm() {
       <form onSubmit={handleSaveClick}>
         {/* Basic Settings Input Form Section  */}
         <section className="newcampaign-settings">
-          <div className="basic-form-settings" onClick={() => handleExpand(0)}>
+          <div
+            className={`basic-form-settings ${
+              expanded[0] ? "active-card" : "inactive-card"
+            }`}
+            onClick={() => handleExpand(0)}
+          >
             <div className="card-header">
               <h2 className="card-title">Basic Settings</h2>
               <span className="toggle-btn" onClick={() => handleExpand(0)}>
@@ -465,7 +541,9 @@ function NewCampaignForm() {
                             <option>Select</option>;
                             {productsData?.map((item) => {
                               return (
-                                <option value={item.title}>{item.title}</option>
+                                <option value={item.title} key={item.id}>
+                                  {item.title}
+                                </option>
                               );
                             })}
                           </select>
@@ -482,7 +560,9 @@ function NewCampaignForm() {
                             <option>Select</option>;
                             {productsData?.map((item) => {
                               return (
-                                <option value={item.title}>{item.title}</option>
+                                <option value={item.title} key={item.id}>
+                                  {item.title}
+                                </option>
                               );
                             })}
                           </select>
@@ -691,10 +771,18 @@ function NewCampaignForm() {
 
         {/* Referal Settings */}
         <section className="newcampaign-settings">
-          <div className="referrals-settings" onClick={() => handleExpand(1)}>
+          <div
+            className={`referrals-settings ${
+              expanded[1] ? "active-card" : "inactive-card"
+            }`}
+            //  onClick={() => handleExpand(1)}
+          >
             <div className="card-header">
               <h2 className="card-title">Referral Settings</h2>
-              <span className="toggle-btn" onClick={() => handleExpand(1)}>
+              <span
+                className="toggle-btn"
+                // onClick={() => handleExpand(1)}
+              >
                 {expanded[1] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
@@ -703,7 +791,7 @@ function NewCampaignForm() {
                 ) : (
                   <IoIosArrowDown
                     style={{ strokeWidth: "70", fill: "#fff" }}
-                    onClick={() => handleExpand(1)}
+                    // onClick={() => handleExpand(1)}
                   />
                 )}
               </span>
@@ -722,11 +810,11 @@ function NewCampaignForm() {
                   </p>
                 </div>
                 <div className="social-links-container">
-                  {integratelinks.map((link) => (
-                    <div className="social_block" key={link.id}>
+                  {integratelinks?.map((link) => (
+                    <div className="social_block" key={link?.id}>
                       <div className="social-section">
                         <div className="social-title">
-                          <span className="social-icons">{link.icon}</span>
+                          <span className="social-icons">{link?.icon}</span>
                         </div>
 
                         <div className="check-input">
@@ -734,9 +822,11 @@ function NewCampaignForm() {
                             <input
                               type="checkbox"
                               name={`share_${link?.title}_referral`}
-                              id={`share_${link.title}_referral`}
+                              id={`share_${link?.title}_referral`}
                               checked={
-                                editCampaignData[`share_${link.title}_referral`]
+                                editCampaignData[
+                                  `share_${link?.title}_referral`
+                                ]
                               }
                               onChange={handleCheckboxChange}
                             />
@@ -744,14 +834,14 @@ function NewCampaignForm() {
                             <input
                               type="checkbox"
                               name={`share_${link?.title}_referral`}
-                              id={`share_${link.title}_referral`}
+                              id={`share_${link?.title}_referral`}
                               checked={
-                                newCampaignData[`share_${link.title}_referral`]
+                                newCampaignData[`share_${link?.title}_referral`]
                               }
                               onChange={handleCheckboxChange}
                             />
                           )}{" "}
-                          <label htmlFor="">{link.desc}</label>
+                          <label htmlFor="">{link?.desc}</label>
                         </div>
 
                         <div className="referral-link-input">
@@ -780,7 +870,16 @@ function NewCampaignForm() {
                   ))}
                 </div>
               </div>
-              <div className="referral-nextbtn">{renderButton(2)}</div>
+              <div className="referral-nextbtn">
+                <>
+                  <button className="prevBtn" onClick={() => handlePrevious(0)}>
+                    Previous
+                  </button>
+                  <button className="nextBtn" onClick={() => handleNext(2)}>
+                    Next
+                  </button>
+                </>
+              </div>
             </>
           )}
         </section>
@@ -788,10 +887,18 @@ function NewCampaignForm() {
         {/* Reward Settings */}
 
         <section className="newcampaign-settings">
-          <div className="rewards-settings" onClick={() => handleExpand(2)}>
+          <div
+            className={`rewards-settings ${
+              expanded[2] ? "active-card" : "inactive-card"
+            }`}
+            // onClick={() => handleExpand(2)}
+          >
             <div className="card-header">
               <h2 className="card-title">Reward Settings</h2>
-              <span className="toggle-btn" onClick={() => handleExpand(2)}>
+              <span
+                className="toggle-btn"
+                // onClick={() => handleExpand(2)}
+              >
                 {expanded[2] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
@@ -800,7 +907,7 @@ function NewCampaignForm() {
                 ) : (
                   <IoIosArrowDown
                     style={{ strokeWidth: "70", fill: "#fff" }}
-                    onClick={() => handleExpand(2)}
+                    // onClick={() => handleExpand(2)}
                   />
                 )}
               </span>
@@ -977,17 +1084,34 @@ function NewCampaignForm() {
                 </div>
               </div>
 
-              <div className="reward-section">{renderButton(3)}</div>
+              <div className="reward-section">
+                <>
+                  <button className="prevBtn" onClick={() => handlePrevious(1)}>
+                    Previous
+                  </button>
+                  <button className="nextBtn" onClick={() => handleNext(3)}>
+                    Next
+                  </button>
+                </>
+              </div>
             </>
           )}
         </section>
 
         {/* Email Settings */}
         <section className="newcampaign-settings">
-          <div className="emails-settings" onClick={() => handleExpand(3)}>
+          <div
+            className={`emails-settings ${
+              expanded[3] ? "active-card" : "inactive-card"
+            }`}
+            // onClick={() => handleExpand(3)}
+          >
             <div className="card-header">
               <h2 className="card-title">Email Settings</h2>
-              <span className="toggle-btn" onClick={() => handleExpand(3)}>
+              <span
+                className="toggle-btn"
+                // onClick={() => handleExpand(3)}
+              >
                 {expanded[3] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
@@ -996,7 +1120,7 @@ function NewCampaignForm() {
                 ) : (
                   <IoIosArrowDown
                     style={{ strokeWidth: "70", fill: "#fff" }}
-                    onClick={() => handleExpand(3)}
+                    // onClick={() => handleExpand(3)}
                   />
                 )}
               </span>
@@ -1167,8 +1291,14 @@ function NewCampaignForm() {
                 </section>
               </div>
               <div className="email-setting-section">
-                <div></div>
-                <div>{renderButton(4)}</div>
+                <>
+                  <button className="prevBtn" onClick={() => handlePrevious(2)}>
+                    Previous
+                  </button>
+                  <button className="nextBtn" onClick={() => handleNext(4)}>
+                    Next
+                  </button>
+                </>
               </div>
             </>
           )}
@@ -1177,20 +1307,21 @@ function NewCampaignForm() {
         {/* Integration Settings */}
 
         <section className="newcampaign-settings">
-          <div className="integration-settings" onClick={() => handleExpand(4)}>
+          <div
+            className={`integration-settings ${
+              expanded[4] ? "active-card" : "inactive-card"
+            }`}
+          >
             <div className="card-header">
               <h2 className="card-title">Integration Settings</h2>
-              <span className="toggle-btn" onClick={() => handleExpand(4)}>
+              <span className="toggle-btn">
                 {expanded[4] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(4)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    onClick={() => handleExpand(4)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -1228,69 +1359,92 @@ function NewCampaignForm() {
                         {isEdit ? (
                           <input
                             type="text"
+                            className="disabled-value"
                             name="klaviyo_api_key"
                             id="klaviyo_api_key"
                             placeholder="Enter API Key"
-                            value={editCampaignData?.klaviyo_api_key}
+                            value={globalSettings?.klaviyo_api_key}
                             onChange={handleChange}
+                            disabled
                           />
                         ) : (
                           <input
+                            className="disabled-value"
                             type="text"
                             name="klaviyo_api_key"
                             id="klaviyo_api_key"
                             placeholder="Enter API Key"
                             value={newCampaignData?.klaviyo_api_key}
                             onChange={handleChange}
+                            disabled
                           />
                         )}
                       </div>
                     </div>
                     <div className="form-group">
                       <div className="inputfield">
-                        <label htmlFor="">List to Add Users</label>
+                        {klaviyoList?.length > 2 && (
+                          <label htmlFor="">List to Add Users</label>
+                        )}
 
-                        <div className="select-user-input">
-                          {isEdit ? (
-                            <select
-                              name="klaviyo_list_id"
-                              id="klaviyo_list_id"
-                              value={editCampaignData?.klaviyo_list_id}
-                              onChange={handleChange}
-                            >
-                              {klaviyoList?.map((list) => (
-                                <option
-                                  key={list?.list_id}
-                                  value={list?.list_id}
-                                >
-                                  {list?.list_name}
-                                </option>
-                              ))}
-                            </select>
-                          ) : (
-                            <select
-                              name="klaviyo_list_id"
-                              id="klaviyo_list_id"
-                              value={newCampaignData?.klaviyo_list_id}
-                              onChange={handleChange}
-                            >
-                              {klaviyoList?.map((list) => (
-                                <option
-                                  key={list?.list_id}
-                                  value={list?.list_id}
-                                >
-                                  {list?.list_name}
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                        </div>
+                        {klaviyoList?.length > 2 ? (
+                          <div className="select-user-input">
+                            {isEdit ? (
+                              <select
+                                name="klaviyo_list_id"
+                                id="klaviyo_list_id"
+                                value={editCampaignData?.klaviyo_list_id}
+                                onChange={handleChange}
+                              >
+                                {klaviyoList?.map((list) => (
+                                  <option
+                                    key={list?.list_id}
+                                    value={list?.list_id}
+                                  >
+                                    {list?.list_name}
+                                  </option>
+                                ))}
+                              </select>
+                            ) : (
+                              <select
+                                name="klaviyo_list_id"
+                                id="klaviyo_list_id"
+                                value={newCampaignData?.klaviyo_list_id}
+                                onChange={handleChange}
+                              >
+                                {klaviyoList?.map((list) => (
+                                  <option
+                                    key={list?.list_id}
+                                    value={list?.list_id}
+                                  >
+                                    {list?.list_name}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                          </div>
+                        ) : (
+                          <Link to="/settings">
+                            <p className="klaviyo-message">
+                              {klaviyoList?.message}
+                            </p>
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="integrate-setting-btn">{renderButton(5)}</div>
+              <div className="integrate-setting-btn">
+                <>
+                  <button className="prevBtn" onClick={() => handlePrevious(3)}>
+                    Previous
+                  </button>
+                  <button className="nextBtn" onClick={() => NextClick(5)}>
+                    Next
+                  </button>
+                </>
+              </div>
             </>
           )}
         </section>
@@ -1298,20 +1452,21 @@ function NewCampaignForm() {
         {/* Template Settings */}
 
         <section className="newcampaign-settings">
-          <div className="template-settings" onClick={() => handleExpand(5)}>
+          <div
+            className={`template-settings ${
+              expanded[5] ? "active-card" : "inactive-card"
+            }`}
+          >
             <div className="card-header">
               <h2 className="card-title">Template Settings</h2>
-              <span className="toggle-btn" onClick={() => handleExpand(5)}>
+              <span className="toggle-btn">
                 {expanded[5] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(5)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    onClick={() => handleExpand(5)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -1345,6 +1500,7 @@ function NewCampaignForm() {
                             (data) =>
                               data?.name === template?.campaign_image && (
                                 <img
+                                  key={template?.id}
                                   src={data?.image}
                                   alt={template?.campaign_image}
                                   loading="lazy"
@@ -1365,11 +1521,18 @@ function NewCampaignForm() {
                 </div>
               </div>
               <div className="template-end">
-                <div>
-                  <button className="saveFormBtn" type="submit">
-                    {isEdit ? "Update Campaign" : "Create Campaign"}
+                <>
+                  <button className="prevBtn" onClick={() => handlePrevious(4)}>
+                    Previous
                   </button>
-                </div>
+                  <button className="saveFormBtn" type="submit">
+                    {isEdit ? (
+                      <>{isLoading ? "Updating..." : "Update Campaign"}</>
+                    ) : (
+                      <>{isLoading ? "Creating..." : "Create Campaign"}</>
+                    )}
+                  </button>
+                </>
               </div>
             </>
           )}
