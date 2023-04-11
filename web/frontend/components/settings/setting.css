@@ -34,7 +34,7 @@
 }
 
 .saveSettingsbtn,
-.next-button {
+.next-button, .prev-Btn {
   height: 50px;
   width: 100px;
   background-color: var(--secondary-color);
@@ -57,7 +57,7 @@
 }
 
 
-.next-button {
+.next-button, .prev-Btn {
   font-size: 19px;
   cursor: pointer;
   
@@ -118,7 +118,7 @@
 .toggle-next-btn {
   margin-top: 20px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between
 }
 
 /* Basic Settings Card Block */
