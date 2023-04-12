@@ -1,4 +1,7 @@
 <div class="section-layout {{ block.settings.layout }}">
+  
+  <div class="hidden">{{ block.settings.campaign_name }}</div>
+
   {% comment %}Start of None Horizontal layout{% endcomment %}
   {% if block.settings.layout == 'nonehorizontal' %}
     <div id='second-background-image' class="img-layout none-full">
