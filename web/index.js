@@ -15,7 +15,7 @@ import campaignApiEndpoints from "./middleware/campaign-api.js";
 import referralsApiEndpoints from "./middleware/referrals.js";
 import globalSettingsApiEndPoint from "./middleware/global-settings-api.js";
 import bodyParser from "body-parser";
-import create_template from "./middleware/create_template.js";
+import createTemplateApiEndpoint from "./middleware/create_template.js";
 import templatesApiEndpoints from "./middleware/templates_api.js";
 import integrationApi from "./middleware/klaviyo-api.js";
 
@@ -171,8 +171,7 @@ export async function createServer(
   );
   campaignApiEndpoints(app);
   referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
-  // template api
-  create_template(app);
+  createTemplateApiEndpoint(app);
   globalSettingsApiEndPoint(app);
   templatesApiEndpoints(app);
   integrationApi(app);   //Klaviyo Integration API
