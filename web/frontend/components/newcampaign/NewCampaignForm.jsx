@@ -342,6 +342,22 @@ function NewCampaignForm() {
 
   // Discounts API Call
 
+  async function sendCampaignData(newCampaignData) {
+    try {
+      const response = await fetch("/api/generate_discount", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({campaignData: newCampaignData}),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // Template API Call
 
   async function sendTemplateData(selectedTemplateData, newCampaignData) {
@@ -366,6 +382,7 @@ function NewCampaignForm() {
 
     // Function call to send the campaign data and selected templates data
 
+    // await sendCampaignData(newCampaignData);
 
     if(selectedTemplateData !== undefined) {
       await sendTemplateData(selectedTemplateData, newCampaignData);

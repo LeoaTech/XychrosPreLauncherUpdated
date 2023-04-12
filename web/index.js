@@ -18,6 +18,7 @@ import bodyParser from "body-parser";
 import createTemplateApiEndpoint from "./middleware/create_template.js";
 import templatesApiEndpoints from "./middleware/templates_api.js";
 import integrationApi from "./middleware/klaviyo-api.js";
+import discountApiEndpoint from './middleware/discount-api.js';
 
 const USE_ONLINE_TOKENS = false;
 
@@ -175,6 +176,7 @@ export async function createServer(
   globalSettingsApiEndPoint(app);
   templatesApiEndpoints(app);
   integrationApi(app);   //Klaviyo Integration API
+  discountApiEndpoint(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
