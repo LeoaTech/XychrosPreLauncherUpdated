@@ -15,9 +15,10 @@ import campaignApiEndpoints from "./middleware/campaign-api.js";
 import referralsApiEndpoints from "./middleware/referrals.js";
 import globalSettingsApiEndPoint from "./middleware/global-settings-api.js";
 import bodyParser from "body-parser";
-import create_template from "./middleware/create_template.js";
+import createTemplateApiEndpoint from "./middleware/create_template.js";
 import templatesApiEndpoints from "./middleware/templates_api.js";
 import integrationApi from "./middleware/klaviyo-api.js";
+import discountApiEndpoint from './middleware/discount-api.js';
 
 const USE_ONLINE_TOKENS = false;
 
@@ -171,11 +172,11 @@ export async function createServer(
   );
   campaignApiEndpoints(app);
   referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
-  // template api
-  create_template(app);
+  createTemplateApiEndpoint(app);
   globalSettingsApiEndPoint(app);
   templatesApiEndpoints(app);
   integrationApi(app);   //Klaviyo Integration API
+  discountApiEndpoint(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
