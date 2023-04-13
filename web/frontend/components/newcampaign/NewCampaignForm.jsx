@@ -340,27 +340,55 @@ function NewCampaignForm() {
     }
   }
 
-  // Create_templates_list
-  async function saveCampaignTemplate(data, template) {
-    await fetch("/api/create_template", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ data, template }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+  // Discounts API Call
+
+  async function sendCampaignData(newCampaignData) {
+    try {
+      const response = await fetch("/api/generate_discount", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({campaignData: newCampaignData}),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Template API Call
+
+  async function sendTemplateData(selectedTemplateData, newCampaignData) {
+    try {
+      const response = await fetch("/api/create_template", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({templateData: selectedTemplateData, campaignData: newCampaignData}),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
 
-    // Function call to save the campaign data and selected templates
+    // Function call to send the campaign data and selected templates data
 
-    // await saveCampaignTemplate(newCampaignData, selectedTemplateData);
+    // await sendCampaignData(newCampaignData);
+
+    if(selectedTemplateData !== undefined) {
+      await sendTemplateData(selectedTemplateData, newCampaignData);
+    } else {
+      return
+    }
 
     // Editing Camapign Data Form
     if (isEdit) {
@@ -398,10 +426,6 @@ function NewCampaignForm() {
       } else {
         return;
       }
-
-      // {UnComment this Line when call the create-template API}
-      // await fetch("/api/create_template");
-      // console.log("template created");
       navigate("/campaigns");
     }
   };
