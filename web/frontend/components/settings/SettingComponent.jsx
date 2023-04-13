@@ -7,12 +7,17 @@ import { integratelinks } from "../newcampaign/socialLinks";
 import { RewardData } from "../newcampaign/rewardTier/RewardData";
 import { dummyTeplates } from "./dummyTemplates";
 import { useAuthenticatedFetch } from "../../hooks";
-import { useSelector } from "react-redux";
-import { fetchAllSettings } from "../../app/features/settings/settingsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllSettings,
+  fetchSettings,
+} from "../../app/features/settings/settingsSlice";
 
 const SettingComponent = () => {
   const defaultSettings = useSelector(fetchAllSettings);
+  const dispatch = useDispatch();
   const [settingsData, setSettingsData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const fetch = useAuthenticatedFetch();
 
   // Get Default Settings Data
@@ -40,23 +45,48 @@ const SettingComponent = () => {
     );
   };
 
-  // Handle Next Button event for each
-  const handleNext = (index) => {
+  const handlePrevious = (index) => {
     setCurrentExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
     );
   };
 
+  // Handle Next Button event for each
+  const handleNext = (index) => {
+    if (index === 4) {
+      document.getElementById("settings-save").disabled = false;
+      document.getElementById("settings-save").style.cursor = "pointer";
+      setCurrentExpanded((prevExpand) =>
+        prevExpand.map((state, i) => (i === index ? !state : false))
+      );
+    } else {
+      setCurrentExpanded((prevExpand) =>
+        prevExpand.map((state, i) => (i === index ? !state : false))
+      );
+    }
+  };
+
   // Update Global Settings for the Shop
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch("/api/updatesettings", {
+    setIsLoading(true);
+    await fetch("/api/updatesettings", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(settingsData),
-    });
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch(fetchSettings(data[0]));
+        setIsLoading(false);
+      });
+
+    handleNext(4);
+    document.getElementById("settings-save").setAttribute("disabled", "");
+    document.getElementById("settings-save").style.color = "#f5f5f5";
+    document.getElementById("settings-save").style.cursor = "none";
   };
 
   // Handle Form Save Settings
@@ -75,15 +105,21 @@ const SettingComponent = () => {
   function handleCheckboxChange(e) {
     const { name, checked } = e.target;
 
-    setSettingsData({ ...settingsData, [name]: checked });
+    setSettingsData({
+      ...settingsData,
+      [name]: checked,
+      klaviyo_integration: checked,
+    });
   }
 
+  // Handle Radio Change Event
   function handleRadioChange(event) {
     const { name, value } = event.target;
     // Update the state with the new value
     setSettingsData((prevSettingsData) => ({
       ...prevSettingsData,
-      [name]: value === "phone",
+      // [name]: value === "phone",
+      collect_phone: value === "phone",
       discount_type: value,
     }));
   }
@@ -99,7 +135,12 @@ const SettingComponent = () => {
       <form onSubmit={handleSubmit}>
         {/* Basic Settings Section */}
         <section className="global-settings">
-          <div className="basic-settings" onClick={() => handleExpand(0)}>
+          <div
+            className={`basic-settings ${
+              currentExpanded[0] ? "active-form" : "inactive-form"
+            }`}
+            onClick={() => handleExpand(0)}
+          >
             <div className="main-heading">
               <h2 className="main-title">Basic Settings</h2>
               <span className="toggle-card-btn" onClick={() => handleExpand(0)}>
@@ -191,7 +232,10 @@ const SettingComponent = () => {
                   </div>
                 </div>
               </div>
-              <div className="toggle-next-btn">{renderButton(1)}</div>
+              <div className="toggle-next-btn">
+                <div></div>
+                {renderButton(1)}
+              </div>
             </>
           )}
         </section>
@@ -199,20 +243,21 @@ const SettingComponent = () => {
         {/* Referral Settings Section */}
 
         <section className="global-settings">
-          <div className="referral-settings" onClick={() => handleExpand(1)}>
+          <div
+            className={`referral-settings ${
+              currentExpanded[1] ? "active-form" : "inactive-form"
+            }`}
+          >
             <div className="main-heading">
               <h2 className="main-title">Referral Settings</h2>
-              <span className="toggle-card-btn" onClick={() => handleExpand(1)}>
+              <span className="toggle-card-btn">
                 {currentExpanded[1] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(1)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    onClick={() => handleExpand(1)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -266,26 +311,37 @@ const SettingComponent = () => {
                   ))}
                 </div>
               </div>
-              <div className="toggle-next-btn">{renderButton(2)}</div>
+              <div className="toggle-next-btn">
+                <>
+                  <button className="prev-Btn" onClick={() => handlePrevious(0)}>
+                    Previous
+                  </button>
+                  <button className="next-button" onClick={() => handleNext(2)}>
+                    Next
+                  </button>
+                </>
+              </div>
             </>
           )}
         </section>
+
         {/* Rewards Settings Section */}
         <section className="global-settings">
-          <div className="reward-settings" onClick={() => handleExpand(2)}>
+          <div
+            className={`reward-settings ${
+              currentExpanded[2] ? "active-form" : "inactive-form"
+            }`}
+          >
             <div className="main-heading">
               <h2 className="main-title">Rewards Settings</h2>
-              <span className="toggle-card-btn" onClick={() => handleExpand(2)}>
+              <span className="toggle-card-btn">
                 {currentExpanded[2] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(2)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    onClick={() => handleExpand(2)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -400,7 +456,16 @@ const SettingComponent = () => {
                   ))}
                 </div>
               </div>
-              <div className="toggle-next-btn">{renderButton(3)}</div>
+              <div className="toggle-next-btn">
+                <>
+                  <button className="prev-Btn" onClick={() => handlePrevious(1)}>
+                    Previous
+                  </button>
+                  <button className="next-button" onClick={() => handleNext(3)}>
+                    Next
+                  </button>
+                </>
+              </div>
             </>
           )}
         </section>
@@ -408,22 +473,20 @@ const SettingComponent = () => {
         {/* Email Settings Section */}
         <section className="global-settings">
           <div
-            className="email-drafts-settings"
-            onClick={() => handleExpand(3)}
+            className={`email-drafts-settings ${
+              currentExpanded[3] ? "active-form" : "inactive-form"
+            }`}
           >
             <div className="main-heading">
               <h2 className="main-title">Emails Settings</h2>
-              <span className="toggle-card-btn" onClick={() => handleExpand(3)}>
+              <span className="toggle-card-btn">
                 {currentExpanded[3] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(3)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    onClick={() => handleExpand(3)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -540,7 +603,16 @@ const SettingComponent = () => {
                   </div>
                 </section>
               </div>
-              <div className="toggle-next-btn">{renderButton(4)}</div>
+              <div className="toggle-next-btn">
+                <>
+                  <button className="prev-Btn" onClick={() => handlePrevious(2)}>
+                    Previous
+                  </button>
+                  <button className="next-button" onClick={() => handleNext(4)}>
+                    Next
+                  </button>
+                </>
+              </div>
             </>
           )}
         </section>
@@ -549,22 +621,20 @@ const SettingComponent = () => {
 
         <section className="global-settings">
           <div
-            className="integration--settings"
-            onClick={() => handleExpand(4)}
+            className={`integration--settings ${
+              currentExpanded[4] ? "active-form" : "inactive-form"
+            }`}
           >
             <div className="main-heading">
               <h2 className="main-title">Integrations Settings</h2>
-              <span className="toggle-card-btn" onClick={() => handleExpand(4)}>
+              <span className="toggle-card-btn">
                 {currentExpanded[4] ? (
                   <IoIosArrowUp
                     style={{ strokeWidth: "70", fill: "#fff" }}
                     onClick={() => handleExpand(4)}
                   />
                 ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: "70", fill: "#fff" }}
-                    onClick={() => handleExpand(4)}
-                  />
+                  <IoIosArrowDown style={{ strokeWidth: "70", fill: "#fff" }} />
                 )}
               </span>
             </div>
@@ -576,12 +646,12 @@ const SettingComponent = () => {
                   <div className="check-input">
                     <input
                       type="checkbox"
-                      name="klaviyo_Integration"
-                      id="klaviyo_Integration"
-                      checked={settingsData?.klaviyo_Integration}
+                      name="klaviyo_integration"
+                      id="klaviyo_integration"
+                      checked={settingsData?.klaviyo_integration}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="klaviyo_Integration">
+                    <label htmlFor="klaviyo_integration">
                       Integrate with Klaviyo
                     </label>
                   </div>
@@ -607,7 +677,17 @@ const SettingComponent = () => {
                   </div>
                 </div>
               </div>
-              <div className="toggle-next-btn">{renderButton(5)}</div>
+              <div className="toggle-next-btn">
+                <>
+                  <button className="prev-Btn" onClick={() => handlePrevious(3)}>
+                    Previous
+                  </button>
+                  <div></div>
+                  {/* <button className="next-button" onClick={() => handleNext(2)}>
+                    Next
+                  </button> */}
+                </>
+              </div>
             </>
           )}
         </section>
@@ -615,7 +695,11 @@ const SettingComponent = () => {
         {/* Template Settings Hide this  */}
 
         {/* <section className="global-settings">
-          <div className="templates-settings" onClick={() => handleExpand(5)}>
+          <div className={`templates-settings ${
+              currentExpanded[1] ? "active-form" : "inactive-form"
+            }`} 
+            onClick={() => handleExpand(5)}
+            >
             <div className="main-heading">
               <h2 className="main-title">Templates Settings</h2>
               <span className="toggle-card-btn" onClick={() => handleExpand(5)}>
@@ -677,8 +761,13 @@ const SettingComponent = () => {
         </section> */}
 
         <div className="settings-savebtn">
-          <button className="saveSettingsbtn" type="submit">
-            Save
+          <button
+            id="settings-save"
+            className="saveSettingsbtn"
+            type="submit"
+            disabled
+          >
+            {isLoading ? "Saving..." : "Save"}
           </button>
         </div>
       </form>

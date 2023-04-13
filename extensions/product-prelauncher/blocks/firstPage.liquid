@@ -38,9 +38,9 @@
     let urlredirect = window.location.href;
     urlredirect = urlredirect.split('/pages')[0];
 
-    let image_background = 'https:' + first_page_settings.background;
+    let image_background = 'https:' + first_page_settings.background_image;
     console.log(image_background);
-    document.getElementById('background-image').style.backgroundImage = first_page_settings.background_color  + ',url(' + image_background + ')';
+    document.getElementById('background-image').style.backgroundImage = first_page_settings.background_overlay  + ',url(' + image_background + ')';
 
 
     var form = document.getElementById('form-submission'),
@@ -98,45 +98,52 @@
     width: 100vw;
   }
   .section-layout {
-
     width: 100vw;
   }
+  .consent-label-product-prelaucher {
+    font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+    color: {{ block.settings.main_color }};
+  }
   .submit-button {
-    font-size: 1em;
-    color: {{ block.settings.accent_color }}
-    ;
-    background: {{ block.settings.main_color }}
-    ;
+    font-size: {{ block.settings.base_font_size | times: 0.44}}px;
+    font-weight: 600 !important;
+    color: {{ block.settings.accent_color }} !important;
+    background: {{ block.settings.main_color }};
     border: 1px solid{{ block.settings.accent_color}};
   }
   .subheader_text {
-    color: {{ block.settings.accent_color }}
-    ;
-    font-size: {{ block.settings.base_font_size}}px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.5}}px;
     font-weight: 400;
     padding: 0 3%;
     text-align: center;
   }
   .header_text {
-    color: {{ block.settings.accent_color }}
-    ;
-    font-size: {{ block.settings.base_font_size | times: 3}}px;
-    font-weight: 800;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size}}px;
+    font-weight: 600;
     padding: 0 2%;
     text-align: center;
   }
   .tag-line {
-
     color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size}}px;
+    font-size: {{ block.settings.base_font_size | times: 0.44}}px;
     font-weight: 600;
     margin: 10px auto;
     padding: 0 2%;
     text-align: center;
   }
+  input[value] {
+    font-weight: 400;
+    color: {{ block.settings.main_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.44}}px;
+  }
+  ::placeholder{
+    color: {{ block.settings.main_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+  }
   .text-layout {
-    background-color: {{ block.settings.main_color }}
-    ;
+    background-color: {{ block.settings.main_color }};
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -168,7 +175,6 @@
     align-items: center;
     text-align: center;
   }
-
   .none-layout .header_text {
     margin-bottom: 10rem;
   }
@@ -234,10 +240,18 @@
         "label": "Show Header & Footer",
         "default": true
       }, {
+        "label": "Campaign Name",
+        "id": "campaign_name",
+        "type": "text",
+        "default": "MyCampaign"
+      }, {
+        "type": "paragraph",
+        "content": "Note: Do not change campaign name here as you have already named your campaign on merchants dashboard, updating it here would cause potential risks."
+      }, {
         "type": "color_background",
-        "id": "background_color",
+        "id": "background_overlay",
         "label": "Background Overlay",
-        "default": "linear-gradient(#ffffff, #000000)"
+        "default": "linear-gradient(137deg, rgba(0, 0, 0, 0) 100%, rgba(167, 144, 140, 0) 100%)"
       }, {
         "label": "Main Color",
         "id": "main_color",
@@ -288,7 +302,7 @@
         "default": "none"
       }, {
         "label": "Background Image",
-        "id": "background",
+        "id": "background_image",
         "type": "image_picker"
       }, 
       // {
