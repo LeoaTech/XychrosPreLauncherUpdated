@@ -2,10 +2,14 @@
 
 let count_referrals = document.getElementById('count_referrals');
 let referral_div = document.getElementById('referral_rows');
+let current_referrals = document.getElementById('current_referrals');
+let remaining_referrals = document.getElementById('remaining_referrals');
+
 let urlParams2 = new URL(window.location.href).searchParams;
-let user_code2 = urlParams.get('referralCode');
+let user_code2 = urlParams2.get('referralCode');
 var copyCode = document.getElementById('code');
-var campaignid = 5;
+// get campaign name
+const campaign_name = document.getElementById('review_campaign_name');
 
 // find referral details for rewards page
 const get_referrals = async () => {
@@ -17,17 +21,24 @@ const get_referrals = async () => {
     },
     body: JSON.stringify({
       referral_code: user_code2,
-      campaign_id: campaignid,
+      campaign_name: campaign_name.innerHTML,
     }),
   });
   const data = await response.json();
   if (response.status == 200) {
-    if (data.message.length > 0) {
-      count_referrals.innerText = `Total Referrals Joined: ${data.message.length}`;
-      console.log(data);
+    let campaign_data = data.campaign_data.rows[0];
+
+    console.log(data);
+    if (data.referral_data.length > 0) {
+      count_referrals.innerText = `Total Referrals Joined: ${data.referral_data.length}`;
+      current_referrals.innerText = `${data.referral_data.length}`;
+
+      // remaining_referrals.innerText = `${.length}`;
     } else {
       count_referrals.innerText =
         '0 friends have joined! Invite friends to Join';
+      current_referrals.innerText = 0;
+      remaining_referrals.innerText = `${data.message.length}`;
     }
   }
 };
