@@ -1,5 +1,7 @@
 <div class="section-layout {{ block.settings.layout }}">
 
+  <div class="hidden">{{ block.settings.campaign_name }}</div>
+
   <div id="snackbar">You have already signed up either from this email address or from the same IP</div>
   <div id="snackbar2">Email is not valid</div>
   <div id="snackbar3">Something went wrong</div>
@@ -31,6 +33,16 @@
                 placeholder="{{ block.settings.phone_text }}"
                 class='phone-input-product-prelaucher' />
             {% endif %}
+            <div class="consent">
+              <input
+                type="checkbox"
+                id="userconsent"
+                name="userconsent"
+                value="Agree"
+                class='consent-input-product-prelaucher' />
+              <label for="userconsent" class="consent-label-product-prelaucher">
+                I consent to share my email address and phone number for marketing material</label>
+            </div>
             <input
               type="submit"
               value="{{ block.settings.button_text }}"
@@ -67,7 +79,8 @@
               id="phone"
               name="phone"
               placeholder="{{ block.settings.phone_text }}"
-              class='phone-input-product-prelaucher' />{% endif %}
+              class='phone-input-product-prelaucher' />
+            {% endif %}
           <input
             type="submit"
             value="{{ block.settings.button_text }}"
@@ -143,7 +156,8 @@
               id="phone"
               name="phone"
               placeholder="{{ block.settings.phone_text }}"
-              class='phone-input-product-prelaucher' />{% endif %}
+              class='phone-input-product-prelaucher' />
+          {% endif %}
           <input
             type="submit"
             value="{{ block.settings.button_text }}"
@@ -179,7 +193,8 @@
               id="phone"
               name="phone"
               placeholder="{{ block.settings.phone_text }}"
-              class='phone-input-product-prelaucher' />{% endif %}
+              class='phone-input-product-prelaucher' />
+          {% endif %}
           <input
             type="submit"
             value="{{ block.settings.button_text }}"
@@ -221,7 +236,8 @@
               id="phone"
               name="phone"
               placeholder="{{ block.settings.phone_text }}"
-              class='phone-input-product-prelaucher' />{% endif %}
+              class='phone-input-product-prelaucher' />
+          {% endif %}
           <input
             type="submit"
             value="{{ block.settings.button_text }}"
@@ -260,7 +276,8 @@
               id="phone"
               name="phone"
               placeholder="{{ block.settings.phone_text }}"
-              class='phone-input-product-prelaucher' />{% endif %}
+              class='phone-input-product-prelaucher' />
+          {% endif %}
           <input
             type="submit"
             value="{{ block.settings.button_text }}"
@@ -299,7 +316,8 @@
               id="phone"
               name="phone"
               placeholder="{{ block.settings.phone_text }}"
-              class='phone-input-product-prelaucher' />{% endif %}
+              class='phone-input-product-prelaucher' />
+          {% endif %}
           <input
             type="submit"
             value="{{ block.settings.button_text }}"
@@ -338,7 +356,8 @@
               id="phone"
               name="phone"
               placeholder="{{ block.settings.phone_text }}"
-              class='phone-input-product-prelaucher' />{% endif %}
+              class='phone-input-product-prelaucher' />
+          {% endif %}
           <input
             type="submit"
             value="{{ block.settings.button_text }}"

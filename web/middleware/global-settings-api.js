@@ -3,7 +3,8 @@ import { Shopify } from '@shopify/shopify-api';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+    connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+
 });
 
 pool.connect((err, result) => {
@@ -285,7 +286,7 @@ export default function globalSettingsApiEndPoint(app) {
         reward_email,
         welcome_email,
         referral_email,
-        klaviyo_Integration,
+        klaviyo_integration,
         klaviyo_api_key,
         templates,
       } = req.body;
@@ -339,7 +340,7 @@ export default function globalSettingsApiEndPoint(app) {
         reward_email = $45,
         welcome_email = $46,
         referral_email = $47,
-        klaviyo_Integration = $48,
+        klaviyo_integration = $48,
         klaviyo_api_key= $49,
         templates = $50
         WHERE
@@ -392,7 +393,7 @@ export default function globalSettingsApiEndPoint(app) {
           reward_email,
           welcome_email,
           referral_email,
-          klaviyo_Integration,
+          klaviyo_integration,
           klaviyo_api_key,
           templates,
           session?.shop,
@@ -400,9 +401,9 @@ export default function globalSettingsApiEndPoint(app) {
       );
 
       if (settings.rowCount > 0) {
-        res.status(201).json({ message: 'Updated Data' });
+        res.status(201).json(settings?.rows);
       } else {
-        res.status(500).json({ message: 'Not created' });
+        res.status(500).json({ message: 'Not Updated' });
       }
     } catch (err) {
       console.error(err.message);

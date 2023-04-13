@@ -25,7 +25,8 @@
 }
 
 .saveFormBtn,
-.nextBtn {
+.nextBtn,
+.prevBtn {
   height: 60px;
   width: 200px;
   background-color: var(--secondary-color);
@@ -43,10 +44,21 @@
   -o-border-radius: 10px;
 }
 
-.nextBtn {
+.saveFormBtn:hover,
+.nextBtn:hover,
+.prevBtn:hover {
+  background-color: #342d84;
+}
+
+.nextBtn,.prevBtn {
   height: 50px;
-  width: 100px;
-  font-size: 23px;
+  width: 120px;
+  font-size: 19px;
+}
+
+.prevBtn {
+  
+  margin-bottom: 10px;
 }
 
 .toggle-btn {
@@ -71,6 +83,17 @@
   margin-left: 10px; */
 }
 
+.active-card {
+  color: #fff;
+}
+
+.inactive-card {
+  color: gray;
+}
+
+.inactive-card .toggle-btn {
+  color: gray;
+}
 /*------------- Basic Form Sections -----------*/
 
 .newcampaign-settings {
@@ -98,9 +121,7 @@
   margin-bottom: 5px;
   cursor: pointer;
 }
-.campaignform,
-.store-links,
-.collect-setup {
+.campaign-form {
   margin: 20px 40px;
   padding: 20px 40px;
 }
@@ -108,13 +129,11 @@ input:required {
   border: 2px solid rgb(237, 132, 132);
 }
 
-/* .newcampaign-form-heading {
-  font-weight: 700;
-  font-size: 29px;
-  margin-bottom: 24px;
-  margin-left: 10px;
-} */
-
+.store-links,
+.collect-setup {
+  margin: 20px 0;
+  padding: 20px 0;
+}
 .basic-settings-form {
   display: flex;
   align-items: start;
@@ -126,10 +145,10 @@ input:required {
   gap: 30px;
 }
 
-.input-form-groups {
+/* .input-form-groups {
   margin: 20px 0;
   padding: 20px 0;
-}
+} */
 
 .error-message {
   font-size: 20px;
@@ -137,15 +156,21 @@ input:required {
 }
 
 .form-group {
-  margin: 0 40px;
-  padding: 0 40px;
   display: flex;
   justify-content: space-between;
   /* flex-wrap: wrap; */
   /* align-content: stretch; */
   /* align-items: center; */
 }
-
+.campaign-form .form-group {
+  /* margin: 0 40px; */
+  /* padding: 0 40px; */
+  display: flex;
+  justify-content: space-between;
+  /* flex-wrap: wrap; */
+  /* align-content: stretch; */
+  /* align-items: center; */
+}
 /* Labels */
 
 label {
@@ -163,7 +188,7 @@ label {
   border-radius: 18px;
   height: 45px;
   color: white;
-  width: 500px;
+  width: 470px;
   font-size: 20px;
   font-weight: 500;
   -webkit-border-radius: 18px;
@@ -189,7 +214,7 @@ label {
   border-radius: 18px;
   height: 45px;
   color: white;
-  width: 500px;
+  width: 470px;
   font-size: 20px;
   font-weight: 500;
   appearance: none;
@@ -255,12 +280,6 @@ label {
 
 /* Store Social Links inside camapign form Section */
 
-.store-links .sub-heading {
-  /* padding: 0 20px; */
-  /* margin: 0 25px; */
-  /* margin-bottom: 30px; */
-}
-
 .campaign-form .store-links .store-social-links {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -285,7 +304,7 @@ label {
 
 .campaign-form .store-links .social-inputfield {
   height: 30px;
-  width: 270px;
+  width: 100%;
   background-color: #25242d;
   border: none;
   color: #fff;
@@ -382,7 +401,8 @@ input[type="checkbox"]:checked {
 
 .referral-nextbtn {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /*----------------------- Reward Tier-------------------- */
@@ -394,16 +414,16 @@ input[type="checkbox"]:checked {
 .rewards-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  column-gap: 50px;
-  margin-bottom: 30px;
+  column-gap: 20px;
+  margin-bottom: 0px;
   background-color: transparent;
 }
 
 .reward-card {
   background-color: #25242d;
   border-radius: 16px;
-  box-shadow: 0px 5px 11px 9px #1d1b1bd6;
-  padding: 44px;
+  box-shadow: 0px 5px 2px 5px #1d1b1bd6;
+  padding: 30px;
   margin: 32px 20px;
   -webkit-border-radius: 16px;
   -moz-border-radius: 16px;
@@ -433,7 +453,7 @@ input[type="checkbox"]:checked {
 }
 .reward-section {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .reward-setting-btn {
@@ -557,21 +577,38 @@ input[type="checkbox"]:checked {
   background-color: #25242d;
   border: none;
   padding: 25px 15px;
-  border-radius: 12px;
-  height: 60px;
+  border-radius: 18px;
+  height: 45px;
   color: white;
-  width: 620px;
-  font-size: 23px;
+  width: 500px;
+  font-size: 20px;
   font-weight: 500;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
-  -ms-border-radius: 12px;
-  -o-border-radius: 12px;
+  -webkit-border-radius: 18px;
+  -moz-border-radius: 18px;
+  -ms-border-radius: 18px;
+  -o-border-radius: 18px;
 }
 
 .integrate-setting-btn {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+}
+
+.klaviyo-message {
+  margin-top: 30px;
+  font-size: 18px;
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+  text-decoration: underline;
+}
+
+.disabled-value {
+  color: gray !important;
+}
+
+.klaviyo-message:hover {
+  color: var(--secondary-color);
 }
 
 /*------------- Template Settings -------------------- */
@@ -589,7 +626,7 @@ input[type="checkbox"]:checked {
 
 .template-end {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-bottom: 30px;
 }
 
@@ -604,18 +641,20 @@ input[type="checkbox"]:checked {
   flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
   margin: 25px 0;
 }
 .template-card-block {
-  height: 290px;
-  width: 450px;
-  background-color: #fff;
-  border-radius: 12px;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
-  -ms-border-radius: 12px;
-  -o-border-radius: 12px;
+  height: 280px;
+  width: 100%;
+  opacity: 0.5;
+  cursor: pointer;
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }
 .template-card-block h3 {
   font-size: 25px;
@@ -623,14 +662,22 @@ input[type="checkbox"]:checked {
   line-height: 1.6;
   margin: 0 25px;
   text-decoration: underline;
-  cursor: pointer;
 }
 
 .template-card-block img {
   height: 100%;
   width: 100%;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+.template-card-block:hover,
+.template-card-block.selected {
+  opacity: 1;
+  border: 2px solid rgb(39, 21, 44);
 }
 .template-card-block:first-child {
   background-color: #5447df;
@@ -674,10 +721,16 @@ input[type="checkbox"]:checked {
     margin: 20px;
   }
 
+  .form-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
   .campaign-form .input-form-groups input,
   .select-products select,
   .select-user-input select {
-    width: 400px;
+    width: 360px;
   }
 
   .store-links .sub-heading {
@@ -715,13 +768,18 @@ input[type="checkbox"]:checked {
   }
 
   .reward-container {
-    padding: 0 42px;
+    padding: 0 40px;
     margin: 0 40px;
   }
 
   .rewards-container {
     grid-template-columns: repeat(2, 1fr);
     row-gap: 10px;
+    column-gap: normal;
+  }
+
+  .reward-card {
+    padding: 28px;
   }
 
   /* Integrations Settings */

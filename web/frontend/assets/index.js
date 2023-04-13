@@ -13,5 +13,16 @@ export { default as SideLogo } from "./sidebarlogo.png";
 export { default as Logo } from "./logoicon.png";
 export { default as anime } from "./animegirl.gif";
 export { default as profile } from "./avatar.jpeg";
-export { default as template1 } from "./temp1.png";
-export { default as template2 } from "./temp2.png";
+
+// Templates images
+export { default as food } from "../../shopify_assets/food.png";
+export { default as food2 } from "../../shopify_assets/food2.jpg";
+export { default as jewelry } from "../../shopify_assets/jewelry.png";
+export { default as jewelry2 } from "../../shopify_assets/jewelry2.png";
+export { default as nature } from "../../shopify_assets/nature.png";
+export { default as nature2 } from "../../shopify_assets/nature2.png";
+export { default as WelcomeClothing } from "../../shopify_assets/WelcomeClothing.png";
+export { default as WelcomeFood } from "../../shopify_assets/WelcomeFood.png";
+export { default as WelcomeFood2 } from "../../shopify_assets/WelcomeFood2.png";
+export { default as WelcomeNature } from "../../shopify_assets/WelcomeNature.png";
+export { default as WelcomeJewelry } from "../../shopify_assets/WelcomeJewelry.png";

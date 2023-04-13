@@ -19,7 +19,7 @@ const Campaigns = () => {
   });
 
   useEffect(() => {
-    if (campaigns.length) {
+    if (campaigns?.length>0) {
       dispatch(fetchCampaign(campaigns));
     }
   }, [campaigns, dispatch]);

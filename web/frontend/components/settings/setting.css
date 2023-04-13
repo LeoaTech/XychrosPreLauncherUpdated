@@ -3,7 +3,7 @@
 .settings-container {
   color: var(--primary-color);
   padding: 5px 25px;
-  margin:5px 25px;
+  margin: 5px 25px;
 
   display: flex;
   flex-direction: column;
@@ -34,14 +34,13 @@
 }
 
 .saveSettingsbtn,
-.next-button {
+.next-button, .prev-Btn {
   height: 50px;
   width: 100px;
   background-color: var(--secondary-color);
   border: none;
   color: white;
   float: right;
-  cursor: pointer;
   font-size: 25px;
   font-weight: 500;
   margin-top: 20px;
@@ -52,10 +51,28 @@
   -o-border-radius: 10px;
 }
 
-.next-button {
-  font-size: 19px;
+.saveSettingsbtn {
+  width: 120px;
+  font-size: 23px;
 }
 
+
+.next-button, .prev-Btn {
+  font-size: 19px;
+  cursor: pointer;
+  
+}
+
+.active-form {
+  color: #fff;
+}
+
+.inactive-form .next-button {
+  color: gray;
+}
+.inactive-form {
+  color: gray;
+}
 .global-settings {
   background-color: #1b1a21;
   padding: 22px;
@@ -101,7 +118,7 @@
 .toggle-next-btn {
   margin-top: 20px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between
 }
 
 /* Basic Settings Card Block */
@@ -152,10 +169,8 @@
   -o-border-radius: 10px;
 }
 
-
-.error-message{
-  color:red;
-  
+.error-message {
+  color: red;
 }
 
 .collect__inputs {

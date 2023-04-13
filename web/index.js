@@ -1,22 +1,24 @@
 // @ts-check
-import { join } from 'path';
-import { readFileSync } from 'fs';
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import { Shopify, LATEST_API_VERSION } from '@shopify/shopify-api';
-import applyAuthMiddleware from './middleware/auth.js';
-import verifyRequest from './middleware/verify-request.js';
-import { setupGDPRWebHooks } from './gdpr.js';
-import redirectToAuth from './helpers/redirect-to-auth.js';
-import { BillingInterval } from './helpers/ensure-billing.js';
-import { AppInstallations } from './app_installations.js';
-import cors from 'cors';
-import campaignApiEndpoints from './middleware/campaign-api.js';
-import referralsApiEndpoints from './middleware/referrals.js';
-import globalSettingsApiEndPoint from './middleware/global-settings-api.js';
-import bodyParser from 'body-parser';
-import create_template from './middleware/create_template.js';
-import templatesApiEndpoints from './middleware/templates_api.js';
+import { join } from "path";
+import { readFileSync } from "fs";
+import express from "express";
+import cookieParser from "cookie-parser";
+import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
+import applyAuthMiddleware from "./middleware/auth.js";
+import verifyRequest from "./middleware/verify-request.js";
+import { setupGDPRWebHooks } from "./gdpr.js";
+import redirectToAuth from "./helpers/redirect-to-auth.js";
+import { BillingInterval } from "./helpers/ensure-billing.js";
+import { AppInstallations } from "./app_installations.js";
+import cors from "cors";
+import campaignApiEndpoints from "./middleware/campaign-api.js";
+import referralsApiEndpoints from "./middleware/referrals.js";
+import globalSettingsApiEndPoint from "./middleware/global-settings-api.js";
+import bodyParser from "body-parser";
+import createTemplateApiEndpoint from "./middleware/create_template.js";
+import templatesApiEndpoints from "./middleware/templates_api.js";
+import integrationApi from "./middleware/klaviyo-api.js";
+import discountApiEndpoint from './middleware/discount-api.js';
 
 const USE_ONLINE_TOKENS = false;
 
@@ -170,11 +172,11 @@ export async function createServer(
   );
   campaignApiEndpoints(app);
   referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
-  // template api
-  create_template(app);
+  createTemplateApiEndpoint(app);
   globalSettingsApiEndPoint(app);
   templatesApiEndpoints(app);
-
+  integrationApi(app);   //Klaviyo Integration API
+  discountApiEndpoint(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);

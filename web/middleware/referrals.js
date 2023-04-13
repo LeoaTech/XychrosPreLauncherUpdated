@@ -4,11 +4,12 @@ import queryString from 'query-string';
 import crypto from 'crypto';
 //import { db } from '../prelauncherDB.js';
 import emailValidator from 'deep-email-validator';
+import { add_to_klaviyo_list } from '../helpers/klaviyoIntegrations.js';
 
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelaunchdb',
+  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
 });
 
 import {
@@ -20,6 +21,7 @@ import {
 
 export default function referralsApiEndpoints(app, secret) {
   // endpoint to get users for Shopify Customers
+
   // Landing page API
   app.post('/api/getuser', async (req, res) => {
     console.log('In the data API block');
@@ -38,23 +40,25 @@ export default function referralsApiEndpoints(app, secret) {
       console.log(ip_address);
       console.log(req.headers.referer);
       console.log(req.query);
+      let refererURL = req.headers.referer;
+      refererURL = refererURL.split('?refer')[0];
+      console.log(refererURL);
 
       const { email, phone, refer, campaign, shop } = req.query;
       let message = '';
 
       if (!email) {
         return res
-          .status(400)
+          .status(500)
           .json({ success: false, message: 'Please provide valid input' });
       }
 
-      const shop_id = 'offline_' + shop;
+      // const shop_id = 'offline_' + shop;
 
       const campaign_details = await pool.query(
-        `SELECT * from campaign_settings where name='${campaign}' and shop_id='${shop_id}'`
+        `SELECT * from campaign_settings where name='${campaign}' and shop_id='${shop}'`
       );
       const campaignID = campaign_details.rows[0].campaign_id;
-      const welcome_message = campaign_details.rows[0].welcome_email;
 
       console.log(email);
       console.log(refer);
@@ -77,6 +81,7 @@ export default function referralsApiEndpoints(app, secret) {
 
       let referralcode = '';
 
+      //case of sign in
       if (users.rows[0]) {
         referralcode = users.rows[0].referral_code;
       } else {
@@ -96,7 +101,7 @@ export default function referralsApiEndpoints(app, secret) {
           // if IP exists more than 2 times
           if (count >= 2) {
             count = count + 1;
-            let data = await pool.query(
+            await pool.query(
               `UPDATE ip_addresses SET count_ip=${count}, updated_at=now() WHERE address='${ip_address}' and campaign_id=${campaignID}`
             );
 
@@ -106,8 +111,18 @@ export default function referralsApiEndpoints(app, secret) {
             });
           } else {
             // if IP exists less than 2 times
+
+            //add to Klaviyo List
+            let klaviyo_list = add_to_klaviyo_list(
+              email,
+              phone,
+              campaign_details,
+              shop
+            );
+            console.log(klaviyo_list);
+
             count = count + 1;
-            let data = await pool.query(
+            await pool.query(
               `UPDATE ip_addresses SET count_ip=${count}, updated_at=now() WHERE address='${ip_address}' and campaign_id=${campaignID}`
             );
 
@@ -116,10 +131,9 @@ export default function referralsApiEndpoints(app, secret) {
             );
 
             referralcode = getreferrals.rows[0].referral_code;
-            console.log('Testing till here');
             //prepare welcome email
             message = await replace_welcome_email_text(
-              welcome_message,
+              refererURL,
               campaign_details,
               shop,
               email
@@ -134,7 +148,8 @@ export default function referralsApiEndpoints(app, secret) {
             );
             console.log(send_message);
             //check referrer code and send reward unlock email or referral email
-            let get_referrer = await get_referrer(
+            const referrer_process = await find_referrer(
+              refererURL,
               refer,
               campaign_details,
               shop
@@ -154,7 +169,7 @@ export default function referralsApiEndpoints(app, secret) {
 
           //prepare welcome email
           message = await replace_welcome_email_text(
-            welcome_message,
+            refererURL,
             campaign_details,
             shop,
             email
@@ -166,7 +181,7 @@ export default function referralsApiEndpoints(app, secret) {
             'You have Subscribed'
           );
           //check referrer code and send reward unlock email or referral email
-          let get_referrer = await find_referrer(refer, campaign_details, shop);
+          await find_referrer(refererURL, refer, campaign_details, shop);
         }
       }
 
@@ -225,7 +240,11 @@ export default function referralsApiEndpoints(app, secret) {
   // get customer information for Shopify FrontEnd
   app.post('/api/get_referrals', async (req, res, next) => {
     try {
-      const { referral_code, campaign_id } = req.body;
+      const { referral_code, campaign_name } = req.body;
+      const campaign_details = await pool.query(
+        `SELECT * from campaign_settings where campaign_name=${campaign_name}`
+      );
+      const campaign_id = campaign_details.rows[0].campaign_id;
       const data = await pool.query(
         'SELECT * FROM referrals WHERE referral_code=$1 and campaign_id=$2',
         [referral_code, campaign_id]
@@ -234,10 +253,19 @@ export default function referralsApiEndpoints(app, secret) {
         'SELECT * FROM referrals WHERE referrer_id=$1',
         [data.rows[0].referral_code]
       );
+      console.log(data_.rows);
       if (data_.rows.length > 0) {
-        return res.status(200).json({ success: true, message: data_.rows });
+        return res.status(200).json({
+          success: true,
+          referral_data: data_.rows,
+          campaign_data: campaign_details,
+        });
       } else {
-        return res.status(200).json({ success: true, message: [] });
+        return res.status(200).json({
+          success: true,
+          referral_data: [],
+          campaign_data: campaign_details,
+        });
       }
     } catch (error) {
       return res
@@ -247,24 +275,26 @@ export default function referralsApiEndpoints(app, secret) {
   });
 
   //Function for getting referrer details (Send referral email and reward unlock email if applicable)
-  const find_referrer = async (refer, campaign, shop) => {
+  const find_referrer = async (refererURL, refer, campaign, shop) => {
     if (refer) {
       const referrer = await pool.query(
         `SELECT * FROM referrals WHERE referral_code='${refer}' and campaign_id=${campaign.rows[0].campaign_id}`
       );
+      console.log(referrer.rows);
+      let referral_email_text = '';
+      let reward_email_text = '';
       if (referrer.rows.length > 0) {
         let total_referrals = await pool.query(
           `SELECT * FROM referrals WHERE referrer_id='${refer}' and campaign_id=${campaign.rows[0].campaign_id}`
         );
-        let referral_email_text = campaign.referral_email;
-        let reward_email_text = campaign.reward_email;
         referral_email_text = await replace_referral_email_text(
-          referral_email_text,
+          refererURL,
           campaign,
           shop,
           refer,
           total_referrals.rowCount
         );
+        console.log(referral_email_text);
         await send_email(
           referral_email_text,
           referrer.rows[0].email,
@@ -283,16 +313,16 @@ export default function referralsApiEndpoints(app, secret) {
         if (checker) {
           if (checker == 'reward_1_tier') {
             reward_email_text = await replace_reward_email_text(
-              reward_email_text,
+              refererURL,
               campaign,
               shop,
-              code,
+              refer,
               total_referrals.rowCount,
               campaign.rows[0].reward_1_code
             );
           } else if (checker == 'reward_2_tier') {
             reward_email_text = await replace_reward_email_text(
-              reward_email_text,
+              refererURL,
               campaign,
               shop,
               code,
@@ -301,7 +331,7 @@ export default function referralsApiEndpoints(app, secret) {
             );
           } else if (checker == 'reward_3_tier') {
             reward_email_text = await replace_reward_email_text(
-              reward_email_text,
+              refererURL,
               campaign,
               shop,
               code,
@@ -310,7 +340,7 @@ export default function referralsApiEndpoints(app, secret) {
             );
           } else if (checker == 'reward_4_tier') {
             reward_email_text = await replace_reward_email_text(
-              reward_email_text,
+              refererURL,
               campaign,
               shop,
               code,
