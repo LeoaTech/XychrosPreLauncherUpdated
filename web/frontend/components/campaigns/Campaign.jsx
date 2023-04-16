@@ -105,20 +105,22 @@ export default function CampaignsComponent() {
       <div className="campaigns">
         {getCampaigns?.length > 0 ? (
           <>
-            {currentItems?.map((campaign) => (
-              <CampaignBlock
-                key={campaign?.campaign_id}
-                setEditData={setEditData}
-                data={campaign}
-                deleteId={deleteId}
-                setDeleteId={setDeleteId}
-                deleteModal={deleteModal}
-                setDeleteModal={setDeleteModal}
-                handleDelete={handleDelete}
-                handleEdit={handleEdit}
-              />
-            ))}
-
+            {" "}
+            <div className="campaigns-blocks">
+              {currentItems?.map((campaign) => (
+                <CampaignBlock
+                  key={campaign?.campaign_id}
+                  setEditData={setEditData}
+                  data={campaign}
+                  deleteId={deleteId}
+                  setDeleteId={setDeleteId}
+                  deleteModal={deleteModal}
+                  setDeleteModal={setDeleteModal}
+                  handleDelete={handleDelete}
+                  handleEdit={handleEdit}
+                />
+              ))}
+            </div>
             {/* Pagination */}
             <div className="pagination-content">
               {currentPage > 1 && (

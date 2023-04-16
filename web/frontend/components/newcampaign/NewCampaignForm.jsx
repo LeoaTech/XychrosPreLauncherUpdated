@@ -1,5 +1,5 @@
 import React, { useState, forwardRef, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -23,7 +23,6 @@ import { integratelinks } from "./socialLinks";
 import { useStateContext } from "../../contexts/ContextProvider";
 import "./newcampaign.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import "./socialsBlocks/social.css";
 import "./rewardTier/RewardTier.css";
 import {
@@ -40,69 +39,40 @@ import { fetchAllProducts } from "../../app/features/productSlice";
 import useFetchTemplates from "../../constant/fetchTemplates";
 
 function NewCampaignForm() {
-  const [activeCard, setActiveCard] = useState(false);
+  const { isEdit, setIsEdit } = useStateContext();
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const templateData = useFetchTemplates("/api/templates", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const { isEdit, setIsEdit } = useStateContext();
   const { campaignsid } = useParams();
 
-  // Check if page URL is New Camapign or Campaign/id
-  useEffect(() => {
-    if (window.location.pathname === `/campaigns/${campaignsid}`) {
-      setIsEdit(true);
-    } else if (window.location.pathname === `/newcampaign`) {
-      setIsEdit(false);
-    }
-  }, [isEdit]);
-
-  // Get A Single Campaign with ID
-  const campaignById = useSelector((state) =>
-    fetchCampaignById(state, Number(campaignsid))
-  );
+  // Get Values from Redux-Store
   const campaignName = useSelector(fetchCampaignByName); //Get the Campaign Name to verify unique campaign name
   const settings = useSelector(fetchAllSettings); //Settings Data
   const productsData = useSelector(fetchAllProducts); //Get all products of Shop
+  const campaignById = useSelector(
+    (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
+  );
 
-  const [editCampaignData, setEditCampaignData] = useState();
-  const [globalSettings, setGlobalSettings] = useState();
-
-  // Will map all the global settings fields into the Form
-  useEffect(() => {
-    if (settings?.length > 0) {
-      setGlobalSettings(settings[0]);
-    }
-  }, [settings]);
-
-  // Get the Data with Campaigns ID
-  useEffect(() => {
-    if (campaignById) {
-      setEditCampaignData(campaignById);
-    }
-  }, [campaignById]);
-
-  console.log("Edit campaign", editCampaignData);
-  // Get Date for next 6 days for the Campaign end Date
+  // Get Date for next 6 days for the Campaign End Date
   let today = new Date();
   let getNextDate = new Date();
   getNextDate.setDate(today.getDate() + 6);
 
+  // Local States of Components
+  const [errorMessage, setErrorMessage] = useState(false);
+  const [editCampaignData, setEditCampaignData] = useState();
+  const [globalSettings, setGlobalSettings] = useState();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(getNextDate);
   const [errorName, setErrorName] = useState(false);
-  const [templateList, setTemplateList] = useState([]); //To store all templates received from Template db
-  const [randomTemplate, setRandomTemplate] = useState();
+  
+  const [templateList, setTemplateList] = useState([]); //To store all templates received from Template API
+  const [randomTemplate, setRandomTemplate] = useState(); //Get Random Template from templateList
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
   const [expanded, setExpanded] = useState(Array(6).fill(false));
   const [isLoading, setIsLoading] = useState(false);
   const [klaviyoList, setKlaviyoList] = useState([]);
+  //? New Campaign Form Data Fields
   const [newCampaignData, setNewCampaignData] = useState({
     collect_phone: globalSettings?.collect_phone,
     discord_link: globalSettings?.discord_link,
@@ -157,18 +127,42 @@ function NewCampaignForm() {
     tiktok_link: globalSettings?.tiktok_link,
     twitter_link: globalSettings?.twitter_link,
     welcome_email: globalSettings?.welcome_email,
-    template_id: null,
+    template_id: 1,
     discount_type: globalSettings?.discount_type,
   });
 
-  // New Campaign data with ALL Global Settings Fields /// not rendering
+  
+
+  // Check if page URL is New Camapign or Campaign/id then render the form
+  useEffect(() => {
+    if (window.location.pathname === `/campaigns/${campaignsid}`) {
+      setIsEdit(true);
+    } else if (window.location.pathname === `/newcampaign`) {
+      setIsEdit(false);
+    }
+  }, [isEdit]);
+
+  // Get the Data with Campaigns ID for Edit campaign
+  useEffect(() => {
+    if (campaignById) {
+      setEditCampaignData(campaignById);
+    }
+  }, [campaignById]);
+
+  //! Re-render all the global settings fields into the Form
+  useEffect(() => {
+    if (settings?.length > 0) {
+      setGlobalSettings(settings[0]);
+    }
+  }, [settings]);
+
   useEffect(() => {
     if (globalSettings !== undefined) {
       setNewCampaignData({
         name: "",
         product: "",
         klaviyo_list_id: "",
-        template_id: null,
+        template_id: 1,
         start_date: startDate,
         end_date: endDate,
         ...globalSettings,
@@ -176,11 +170,54 @@ function NewCampaignForm() {
     }
   }, [globalSettings]);
 
+
+
+  // Fetch Templates Data from API
+  const templateData = useFetchTemplates("/api/templates", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  // if Fetch result is successful store the result in templateList
   useEffect(() => {
     if (templateData?.length > 0) {
       setTemplateList(templateData);
     }
   }, [templateData]);
+
+  // Generate Random Templates Array with Template Ids
+  useEffect(() => {
+    if (templateList?.length > 0) {
+      if (isEdit) {
+        const editSelectTemplate = templateList?.filter(
+          (template) => template?.id === editCampaignData?.template_id
+        );
+        templateList[1] = editSelectTemplate[0];
+        const randomTemplates = [
+          templateList[0],
+          templateList[1],
+          ...templateList
+            .slice(1)
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 1),
+        ];
+        setRandomTemplate(randomTemplates);
+        setSelectedTemplateData(editSelectTemplate[0]);
+      } else {
+        const randomTemplates = [
+          templateList[0],
+          ...templateList
+            .slice(1)
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 2),
+        ];
+        setRandomTemplate(randomTemplates);
+      }
+    }
+  }, [templateList]);
+
   //  Template images with their names [Hardcoded Images]  06-APR-2023 (Update Soon)
   const templates_show_list = [
     { id: 1, image: WelcomeClothing, name: "WelcomeClothing" },
@@ -196,20 +233,52 @@ function NewCampaignForm() {
     { id: 11, image: jewelry2, name: "jewelry2" },
   ];
 
-  // Generate Random Templates Array with Template Ids
+  // Get Klaviyo integration Lists from API
+  async function getKlaviyoList() {
+    try {
+      const response = await fetch(`/api/lists`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  useEffect(() => {
-    if (templateList?.length > 0) {
-      const randomTemplates = [
-        templateList[0],
-        ...templateList
-          .slice(1)
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 2),
-      ];
-      setRandomTemplate(randomTemplates);
+      const list = await response.json();
+
+      setKlaviyoList(list);
+    } catch (err) {
+      console.log(err);
     }
-  }, [templateList]);
+  }
+
+  // Update Klaviyo API Lists in the Form
+  useEffect(() => {
+    if (isEdit) {
+      if (globalSettings?.klaviyo_api_key !== "") {
+        getKlaviyoList();
+      }
+    } else if (newCampaignData?.klaviyo_api_key !== "") {
+      getKlaviyoList();
+    } else {
+      getKlaviyoList();
+    }
+  }, [newCampaignData?.klaviyo_api_key, globalSettings?.klaviyo_api_key]);
+
+  // Create_templates_list
+  async function saveCampaignTemplate(data, template) {
+    await fetch("/api/create_template", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data, template }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }
+
+  //? Event handling functions
 
   const ExampleCustomInput = forwardRef(({ value, onClick, onChange }, ref) => (
     <div className="wrapper">
@@ -244,38 +313,20 @@ function NewCampaignForm() {
     );
   };
 
-  // HandleAnimation
-
-  function NextClick(index) {
-    if (isEdit) {
-      setExpanded((prevExpand) =>
-        prevExpand.map((state, i) => (i === index ? !state : false))
-      );
-    } else {
-      const loadingOverlay = document.getElementById("loading-overlay");
-      loadingOverlay.style.display = "block";
-
-      setTimeout(function () {
-        // Hide loading overlay and proceed to next step
-        loadingOverlay.style.display = "none";
-        // Add code here to proceed to next step
-        setExpanded((prevExpand) =>
-          prevExpand.map((state, i) => (i === index ? !state : false))
-        );
-      }, 3000);
-    }
-  }
   // Handle Previous Step event for each Form
   const handlePrevious = (index) => {
     setExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
     );
   };
-  // Handle Next Button event for each
+  // Handle Next Button event for each sub-form section
   const handleNext = (index) => {
-    if (index === 1 && newCampaignData.name !== "") {
-      if (campaignName.includes(newCampaignData?.name)) {
-        setErrorName(true);
+    // Edit Campaign Form
+    if (isEdit) {
+      const isValid = validateForm();
+      if (index === 1 && isValid === false) {
+        console.log(errorMessage, "next");
+        setErrorMessage(true);
         setExpanded((prevExpand) =>
           prevExpand.map((state, i) => i === index - 1 && true)
         );
@@ -285,14 +336,55 @@ function NewCampaignForm() {
           prevExpand.map((state, i) => (i === index ? !state : false))
         );
       }
-    } else {
-      setExpanded((prevExpand) =>
-        prevExpand.map((state, i) => (i === index ? !state : false))
-      );
+    }
+    // New campaign form
+    else {
+      const isValid = validateForm();
+      if (index === 1 && isValid === false) {
+        console.log(errorMessage, "next");
+        setErrorMessage(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      } else if (index === 1 && newCampaignData.name !== "") {
+        if (campaignName.includes(newCampaignData?.name)) {
+          setErrorName(true);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => i === index - 1 && true)
+          );
+        } else {
+          setErrorMessage(false);
+          setErrorName(false);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => (i === index ? !state : false))
+          );
+        }
+      } else {
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => (i === index ? !state : false))
+        );
+      }
     }
   };
 
-  // Handle State change events
+  // Validate Required fields of the Form
+  const validateForm = () => {
+    const requiredFields = document.querySelectorAll(
+      "input[required], select[required]"
+    );
+    let isFormValid = true;
+    requiredFields.forEach((field) => {
+      if (!field.value) {
+        isFormValid = false;
+        setErrorMessage(true);
+      } else {
+        setErrorMessage(false);
+      }
+    });
+    return isFormValid;
+  };
+
+  // Handle input change events
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -306,127 +398,7 @@ function NewCampaignForm() {
         ...prevState,
         [name]: value,
       }));
-    }
-  };
-
-  // Get Klaviyo API Lists
-  useEffect(() => {
-    if (isEdit) {
-      if (globalSettings?.klaviyo_api_key !== "") {
-        getKlaviyoList();
-      }
-    } else if (newCampaignData?.klaviyo_api_key !== "") {
-      getKlaviyoList();
-    } else {
-      getKlaviyoList();
-    }
-  }, [newCampaignData?.klaviyo_api_key, globalSettings?.klaviyo_api_key]);
-
-  // Get Klaviyo integration Lists
-  async function getKlaviyoList() {
-    try {
-      const response = await fetch(`/api/lists`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const list = await response.json();
-
-      setKlaviyoList(list);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  // Discounts API Call
-
-  async function sendCampaignData(newCampaignData) {
-    try {
-      const response = await fetch("/api/generate_discount", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({campaignData: newCampaignData}),
-      });
-      const responseData = await response.json();
-      console.log(responseData);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  // Template API Call
-
-  async function sendTemplateData(selectedTemplateData, newCampaignData) {
-    try {
-      const response = await fetch("/api/create_template", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({templateData: selectedTemplateData, campaignData: newCampaignData}),
-      });
-      const responseData = await response.json();
-      console.log(responseData);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  // Save  New Campaign form  & Update Campaign Form
-  const handleSaveClick = async (e) => {
-    e.preventDefault();
-
-    // Function call to send the campaign data and selected templates data
-
-    // await sendCampaignData(newCampaignData);
-
-    if(selectedTemplateData !== undefined) {
-      await sendTemplateData(selectedTemplateData, newCampaignData);
-    } else {
-      return
-    }
-
-    // Editing Camapign Data Form
-    if (isEdit) {
-      await fetch(`/api/campaignsettings/${campaignsid}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editCampaignData),
-      })
-        .then((res) => res.json())
-        .then((data) => dispatch(updateCampaign(data)))
-        .catch((err) => console.log(err));
-      setIsLoading(false);
-      setIsEdit(false);
-      navigate("/campaigns");
-    }
-    // Adding A New Campaign and Save in Database
-    else {
-      if (newCampaignData?.template_id !== null) {
-        setIsLoading(true);
-
-        await fetch("/api/campaignsettings", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newCampaignData),
-        })
-          .then((res) => res.json())
-          .then((data) => dispatch(addNewCampaign(data)))
-          .catch((err) => console.log(err));
-
-        setIsLoading(false);
-      } else {
-        return;
-      }
-      navigate("/campaigns");
+    
     }
   };
 
@@ -462,29 +434,100 @@ function NewCampaignForm() {
     }
   }
 
-  // HandleTemplate Select event
-  function handleTemplateSelect(template) {
+  // Handle Animation running after integrations settings updated
+
+  function NextClick(index) {
     if (isEdit) {
-      setEditCampaignData({
-        ...editCampaignData,
-        template_id: template?.id,
-      });
+      setExpanded((prevExpand) =>
+        prevExpand.map((state, i) => (i === index ? !state : false))
+      );
     } else {
-      setNewCampaignData({
-        ...newCampaignData,
-        template_id: template?.id,
-      });
+      const loadingOverlay = document.getElementById("loading-overlay");
+      loadingOverlay.style.display = "block";
+
+      setTimeout(function () {
+        loadingOverlay.style.display = "none";
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => (i === index ? !state : false))
+        );
+      }, 3000);
     }
-    setSelectedTemplateData(template);
   }
 
-  console.log(newCampaignData, "form Data");
+  // Create_templates_list
+  async function saveCampaignTemplate(data, template) {
+    await fetch("/api/create_template", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data, template }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }
+
+  // Save  New Campaign form  & Update Campaign Form
+  const handleSaveClick = async (e) => {
+    e.preventDefault();
+
+    // Function call to save the campaign data and selected templates
+
+    // await saveCampaignTemplate(newCampaignData, selectedTemplateData);
+
+    // Editing Camapign Data Form
+    if (isEdit) {
+      await fetch(`/api/campaignsettings/${campaignsid}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editCampaignData),
+      })
+        .then((res) => res.json())
+        .then((data) => dispatch(updateCampaign(data)))
+        .catch((err) => console.log(err));
+      setIsLoading(false);
+      setIsEdit(false);
+      navigate("/campaigns");
+    }
+    // Adding A New Campaign and Save in Database
+    else {
+      if (
+        newCampaignData?.template_id !== null &&
+        selectedTemplateData !== undefined
+      ) {
+        // Call all api methods here
+        // await saveCampaignTemplate(newCampaignData, selectedTemplateData);  //Uncomment this line for create tempalte
+
+        setIsLoading(true);
+
+        await fetch("/api/campaignsettings", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newCampaignData),
+        })
+          .then((res) => res.json())
+          .then((data) => dispatch(addNewCampaign(data)))
+          .catch((err) => console.log(err));
+
+        setIsLoading(false);
+      } else {
+        return;
+      }
+      navigate("/campaigns");
+    }
+  };
 
   return (
     <div className="new-campaign-container">
       <div className="newcampaign-title">
         <h1>{isEdit ? "Edit Campaign" : "New Campaign"}</h1>
       </div>
+     
       <form onSubmit={handleSaveClick}>
         {/* Basic Settings Input Form Section  */}
         <section className="newcampaign-settings">
@@ -539,12 +582,19 @@ function NewCampaignForm() {
                             type="text"
                             name="name"
                             id="name"
+                            placeholder="Campaign Name"
                             value={newCampaignData?.name}
                             onChange={handleChange}
+                            required
                           />
                           {errorName && (
                             <p className="error-message">
-                              "Campaign Name already Exists"
+                              Campaign Name already Exists
+                            </p>
+                          )}
+                          {errorMessage && (
+                            <p className="error-message">
+                              This field is required
                             </p>
                           )}
                         </>
@@ -577,6 +627,7 @@ function NewCampaignForm() {
                           <select
                             name="product"
                             id="product"
+                            placeholder="T-Shirts"
                             value={newCampaignData?.product}
                             onChange={handleChange}
                           >
@@ -1506,7 +1557,7 @@ function NewCampaignForm() {
                   <div className="template-cards">
                     {randomTemplate?.map((template, index) => (
                       <div
-                        key={template.id}
+                        key={template?.id}
                         className={
                           selectedTemplateData?.id === template?.id
                             ? "template-card-block selected"

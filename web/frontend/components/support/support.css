@@ -86,17 +86,25 @@
   font-size: 20px;
 }
 
-.text-issue .issue-textarea {
+.text-issue .issue-textfield {
   margin-top: 10px;
-
   width: 100%;
   height: 300px;
+  border-radius:12px;
+
+  -webkit-border-radius:12px;
+  -moz-border-radius:12px;
+  -ms-border-radius:12px;
+  -o-border-radius:12px;
+  -webkit-border-radius:12px;
 }
 
-.issue-textarea {
+.issue-textfield {
   padding: 20px;
   color: white;
   font-size: 23px;
+  border:none;
+  background-color: rgba(56, 54, 54, 0.894);
 }
 
 .submit-btn {

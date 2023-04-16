@@ -1,6 +1,6 @@
 .summary-card {
-  width: 280px;
-  height: 140px;
+  width: 250px;
+  height: 117px;
   background: var(--secondary-text-color);
   border: 1px solid #dcd9d9;
   box-shadow: 0px 4px 4px #313131;
@@ -55,7 +55,7 @@
 @media only screen and (max-width: 900px) {
   .summary-card {
     width: 250px;
-    height: 140px;
+    height: 110px;
     padding: 20px;
   }
 }
@@ -121,9 +121,13 @@
     align-items: center;
   }
 
+  .summary-card-title{
+    font-size: 23px;
+    font-weight: 500;
+  }
   .summary-card-value {
     font-weight: 500;
-    font-size: 32px;
+    font-size: 28px;
     line-height: 30px;
   }
 
@@ -145,5 +149,21 @@
   .campaign-icon {
     width: 41px;
     height: 44px;
+  }
+}
+
+@media only screen and (max-width: 390px) {
+  .summary-card {
+    gap: 10px;
+    width: 130px;
+    padding: 5px;
+    margin: 10px 0;
+  }
+  .summary-card-title {
+    font-size: 22px;
+  }
+
+  .summary-card-value {
+    font-size: 26px;
   }
 }
