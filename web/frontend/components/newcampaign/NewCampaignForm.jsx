@@ -510,6 +510,8 @@ function NewCampaignForm() {
 
     // Editing Camapign Data Form
     if (isEdit) {
+      setDraftModal(false);
+
       await fetch(`/api/campaignsettings/${campaignsid}`, {
         method: "PUT",
         headers: {
