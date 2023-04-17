@@ -269,7 +269,7 @@ function NewCampaignForm() {
     const unloadCallback = (event) => {
       event.preventDefault();
       event.returnValue = "";
-      
+
       return "";
     };
 
@@ -414,7 +414,7 @@ function NewCampaignForm() {
         [name]: value,
       }));
       // value is asynchronic, so it's updated in the next render
-      if (e.target.value !== "") setDraftModal(true);
+      if (e.target.value !== "" && !isLoading) setDraftModal(true);
       else setDraftModal(false);
     }
   };
@@ -470,7 +470,22 @@ function NewCampaignForm() {
       }, 3000);
     }
   }
-
+  // Handle Template Selection
+  function handleTemplateSelect(template) {
+    if (isEdit) {
+      setEditCampaignData({
+        ...editCampaignData,
+        template_id: template?.id,
+      });
+      setSelectedTemplateData(template);
+    } else {
+      setNewCampaignData({
+        ...newCampaignData,
+        template_id: template?.id,
+      });
+      setSelectedTemplateData(template);
+    }
+  }
   // Create_templates_list
   async function saveCampaignTemplate(data, template) {
     await fetch("/api/create_template", {
@@ -511,6 +526,7 @@ function NewCampaignForm() {
     }
     // Adding A New Campaign and Save in Database
     else {
+      setDraftModal(false);
       if (
         newCampaignData?.template_id !== null &&
         selectedTemplateData !== undefined
