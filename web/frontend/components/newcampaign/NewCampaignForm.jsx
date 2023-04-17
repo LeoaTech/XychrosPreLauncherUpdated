@@ -37,6 +37,8 @@ import { useAuthenticatedFetch } from "../../hooks";
 import { fetchAllSettings } from "../../app/features/settings/settingsSlice";
 import { fetchAllProducts } from "../../app/features/productSlice";
 import useFetchTemplates from "../../constant/fetchTemplates";
+import { useCallbackPrompt } from "../../hooks/useNavigatingPrompt";
+import SaveDraft from "../modal/SaveDraft";
 
 function NewCampaignForm() {
   const { isEdit, setIsEdit } = useStateContext();
@@ -65,7 +67,9 @@ function NewCampaignForm() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(getNextDate);
   const [errorName, setErrorName] = useState(false);
-  
+  const [draftModal, setDraftModal] = useState(false);
+  const [showPrompt, confirmNavigation, cancelNavigation] =
+    useCallbackPrompt(draftModal);
   const [templateList, setTemplateList] = useState([]); //To store all templates received from Template API
   const [randomTemplate, setRandomTemplate] = useState(); //Get Random Template from templateList
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
@@ -131,8 +135,6 @@ function NewCampaignForm() {
     discount_type: globalSettings?.discount_type,
   });
 
-  
-
   // Check if page URL is New Camapign or Campaign/id then render the form
   useEffect(() => {
     if (window.location.pathname === `/campaigns/${campaignsid}`) {
@@ -169,8 +171,6 @@ function NewCampaignForm() {
       });
     }
   }, [globalSettings]);
-
-
 
   // Fetch Templates Data from API
   const templateData = useFetchTemplates("/api/templates", {
@@ -263,6 +263,21 @@ function NewCampaignForm() {
       getKlaviyoList();
     }
   }, [newCampaignData?.klaviyo_api_key, globalSettings?.klaviyo_api_key]);
+
+  //? When user try to reload or change the page
+  useEffect(() => {
+    const unloadCallback = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+      
+      return "";
+    };
+
+    window.addEventListener("beforeunload", unloadCallback);
+    return () => {
+      window.removeEventListener("beforeunload", unloadCallback);
+    };
+  }, []);
 
   // Create_templates_list
   async function saveCampaignTemplate(data, template) {
@@ -398,7 +413,9 @@ function NewCampaignForm() {
         ...prevState,
         [name]: value,
       }));
-    
+      // value is asynchronic, so it's updated in the next render
+      if (e.target.value !== "") setDraftModal(true);
+      else setDraftModal(false);
     }
   };
 
@@ -498,11 +515,8 @@ function NewCampaignForm() {
         newCampaignData?.template_id !== null &&
         selectedTemplateData !== undefined
       ) {
-        // Call all api methods here
         // await saveCampaignTemplate(newCampaignData, selectedTemplateData);  //Uncomment this line for create tempalte
-
         setIsLoading(true);
-
         await fetch("/api/campaignsettings", {
           method: "POST",
           headers: {
@@ -522,12 +536,37 @@ function NewCampaignForm() {
     }
   };
 
+  // Save Draft Campaign data to database
+  const handleSaveDraft = async () => {
+    if (draftModal === true) {
+      await fetch("/api/campaignsettings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCampaignData),
+      })
+        .then((res) => res.json())
+        .then((data) => dispatch(addNewCampaign(data)))
+        .catch((err) => console.log(err));
+    } else {
+      return;
+    }
+  };
+
   return (
     <div className="new-campaign-container">
       <div className="newcampaign-title">
         <h1>{isEdit ? "Edit Campaign" : "New Campaign"}</h1>
       </div>
-     
+
+      <SaveDraft
+        openModal={showPrompt}
+        confirmNavigation={confirmNavigation}
+        cancelNavigation={cancelNavigation}
+        handleSaveDraft={handleSaveDraft}
+      />
+
       <form onSubmit={handleSaveClick}>
         {/* Basic Settings Input Form Section  */}
         <section className="newcampaign-settings">
