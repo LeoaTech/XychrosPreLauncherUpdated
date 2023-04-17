@@ -1,4 +1,4 @@
-import { BrowserRouter } from "react-router-dom";
+import { unstable_HistoryRouter as BrowserRouter } from "react-router-dom";
 import { NavigationMenu } from "@shopify/app-bridge-react";
 import Routes from "./Routes";
 import React from "react";
@@ -7,6 +7,7 @@ import {
   QueryProvider,
   PolarisProvider,
 } from "./components";
+import history from "./hooks/history";
 //
 export default function App() {
   // Any .tsx or .jsx files in /pages will become a route
@@ -15,7 +16,7 @@ export default function App() {
 
   return (
     <PolarisProvider>
-      <BrowserRouter>
+      <BrowserRouter history={history}>
         <AppBridgeProvider>
           <QueryProvider>
             <NavigationMenu
