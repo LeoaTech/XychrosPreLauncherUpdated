@@ -36,10 +36,9 @@ const SupportComponent = () => {
             <div className="text-issue">
               <label htmlFor="">Issue</label>
               <textarea
-                className="issue-textarea"
+                className="issue-textfield"
                 rows={9}
-                // value={defaultEmail}
-                // onChange={setDefaultEmail}
+               
               />
             </div>
 

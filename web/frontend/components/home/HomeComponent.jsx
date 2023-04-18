@@ -188,7 +188,7 @@ const HomeComponent = () => {
 
     plugins: {
       legend: {
-        position: "right",
+        position: "bottom",
 
         labels: {
           color: "#FFFFFF",

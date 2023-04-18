@@ -16,12 +16,6 @@ export default function templatesApiEndpoints(app) {
 
   app.get("/api/templates", async (req, res) => {
     try {
-      const session = await Shopify.Utils.loadCurrentSession(
-        req,
-        res,
-        app.get("use-online-tokens")
-      );
-
       const reward_page = await pool.query(
         `
       SELECT 
@@ -47,17 +41,16 @@ export default function templatesApiEndpoints(app) {
         JOIN template_landing_page tlp ON tlr.landing_template_id = tlp.id`
       );
 
-      const result = {
-        reward_page: reward_page.rows,
-        templates: templates.rows,
-      };
+      // const result = {
+      //   reward_page: reward_page.rows,
+      //   templates: templates.rows,
+      // };
 
       const combinedData = templates.rows.map((template, index) => {
         const rewardPage = reward_page.rows[index];
-        // console.log(templates);
         return {
           id: template?.id,
-          // rewards_page_template_columns
+          // rewards_template_columns
 
           rewards_page_id: rewardPage?.id,
           rewards_template_id: rewardPage?.rewards_template_id,
@@ -78,10 +71,9 @@ export default function templatesApiEndpoints(app) {
           campaign_name: rewardPage?.campaign_name,
           rewards_background_overlay: rewardPage?.background_overlay,
 
-          // Landing_page_template data
+          // Landing_template data
           landing_template_id: template?.landing_template_id,
           campaign_image: template?.campaign_image,
-
           landing_show_header_footer: template?.show_header_footer,
           landing_background_image: template?.background_image,
           landing_base_text_size: template?.base_text_size,
@@ -102,10 +94,9 @@ export default function templatesApiEndpoints(app) {
         };
       });
 
-
-      res.json(combinedData);
+      return res.status(200).json(combinedData);
     } catch (err) {
-      console.error(err);
+      return res.status(500).json(err.message);
     }
   });
 }

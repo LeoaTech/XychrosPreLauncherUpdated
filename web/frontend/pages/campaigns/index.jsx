@@ -1,16 +1,12 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchCampaign } from "../../app/features/campaigns/campaignSlice";
-import { SideBar, Header, Campaign, MainPage } from "../../components/index";
+import { SideBar, Header, Campaign } from "../../components/index";
 import useFetchCampaignsData from "../../constant/fetchCampaignsData";
 import { useStateContext } from "../../contexts/ContextProvider";
-import { useThemeContext } from "../../contexts/ThemeContext";
-import { useAuthenticatedFetch } from "../../hooks";
 
 const Campaigns = () => {
   const { activeMenu } = useStateContext();
-  const { darkTheme } = useThemeContext();
-  const fetch = useAuthenticatedFetch();
   const dispatch = useDispatch();
 
   const campaigns = useFetchCampaignsData("/api/getcampaigns", {
@@ -19,45 +15,48 @@ const Campaigns = () => {
   });
 
   useEffect(() => {
-    if (campaigns?.length>0) {
+    if (campaigns?.length > 0) {
       dispatch(fetchCampaign(campaigns));
     }
   }, [campaigns, dispatch]);
 
+  // Page render Scroll to Top
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="app">
       {activeMenu ? (
-        <div className={darkTheme ? "sidebar" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       ) : (
-        <div className={darkTheme ? "sidebar closed" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       )}
-      {activeMenu ? (
-        <div className={darkTheme ? "main__container" : "main__container dark"}>
-          <MainPage>
-            <div className="header">
-              <Header />
+      <div className="main-app">
+        {activeMenu ? (
+          <>
+            <div className="sidebar">
+              <SideBar />
             </div>
-            <Campaign />
-          </MainPage>
-        </div>
-      ) : (
-        <div
-          className={
-            darkTheme ? "main__container full" : "main__container dark"
-          }
-        >
-          <MainPage>
-            <div className="header">
-              <Header />
+            <div className="main-container">
+              <Campaign />
             </div>
-            <Campaign />
-          </MainPage>
-        </div>
-      )}
+          </>
+        ) : (
+          <>
+            <div className="sidebar closed">
+              <SideBar />
+            </div>
+            <div className="main-container full">
+              <Campaign />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
