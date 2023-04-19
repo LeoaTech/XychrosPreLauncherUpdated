@@ -35,6 +35,33 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
     landing_phone_placeholder_text = templateData.landing_phone_placeholder_text;
   }
 
+  // store's social links
+  let landing_facebook_link = '';
+  let landing_instagram_link = '';
+  let landing_twitter_link = '';
+  let landing_tiktok_link = '';
+  let landing_snapchat_link = '';
+  let landing_discord_link = '';
+
+  // we have to show only checked social icons on landing page, hence:
+  if (campaignData.show_facebook_link == true) {
+    landing_facebook_link = campaignData.facebook_link;
+  }
+  if (campaignData.show_instagram_link == true) {
+    landing_instagram_link = campaignData.instagram_link;
+  }
+  if (campaignData.show_twitter_link == true) {
+    landing_twitter_link = campaignData.twitter_link;
+  }
+  if (campaignData.show_tiktok_link == true) {
+    landing_tiktok_link = campaignData.tiktok_link;
+  }
+  if (campaignData.show_snapchat_link == true) {
+    landing_snapchat_link = campaignData.snapchat_link;
+  }
+  if (campaignData.show_discord_link == true) {
+    landing_discord_link = campaignData.discord_link;
+  }
   const landing_button_text = templateData.landing_button_text;
   const landing_base_font_size = templateData.landing_base_text_size;
 
@@ -93,6 +120,12 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
               "email_text": landing_email_placeholder_text,
               "phone_text": landing_phone_placeholder_text,
               "button_text": landing_button_text,
+              "facebook_link": landing_facebook_link,
+              "instagram_link": landing_instagram_link,
+              "twitter_link": landing_twitter_link,
+              "tiktok_link": landing_tiktok_link,
+              "snapchat_link": landing_snapchat_link,
+              "discord_link": landing_discord_link,
               "base_font_size": landing_base_font_size,
               "page": second_page
             }
@@ -322,6 +355,12 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
                 "email_text": landing_email_placeholder_text,
                 "phone_text": landing_phone_placeholder_text,
                 "button_text": landing_button_text,
+                "facebook_link": landing_facebook_link,
+                "instagram_link": landing_instagram_link,
+                "twitter_link": landing_twitter_link,
+                "tiktok_link": landing_tiktok_link,
+                "snapchat_link": landing_snapchat_link,
+                "discord_link": landing_discord_link,
                 "base_font_size": landing_base_font_size,
                 "page": pagehandle
               }
