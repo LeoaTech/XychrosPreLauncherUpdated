@@ -2,39 +2,41 @@ import { Shopify } from '@shopify/shopify-api';
 import fetch from 'node-fetch';
 
 // api calls
-const templateApiCalls = async (accessToken, shopURL, templateData) => {
+const templateApiCalls = async (accessToken, shopURL, templateData, campaignData) => {
 
   // [hardcoded] - please update according to your app for dev purpose only
 
   const app_name = "updated-xychros-app";
   const extension_uuid = "990d48eb-16d0-4af0-b902-f323ed2bbfab";
 
-  // extract pre-defined template settings
-  const campaign_name = templateData.campaign_name;
+  // extract campaign settings and template settings
+  const campaign_name = campaignData.name;
+  const template_name = templateData.campaign_name;
+
+  // landing and reward page links
   const first_page = templateData.first_page || '';
   const second_page = templateData.second_page || '';
 
-  // landing page settings
+  // landing template settings
   const landing_show_header_footer = templateData.landing_show_header_footer;
   const landing_background_overlay = templateData.landing_background_overlay; // gradient values need to be updated in database
-  const landing_main_color = `#${templateData.landing_main_color}`; // need to be updated in database (# will be added with color value)
   const landing_accent_color = `#${templateData.landing_accent_color}`;
   const landing_divider = templateData.landing_divider;
   const landing_background_image = `${templateData.landing_background_image}.png`; // need to add .png/jpg or file path in database
   const landing_header_text = templateData.landing_header_text || '';
   const landing_pre_header_text = templateData.landing_pre_header_text || '';
-  const landing_tagline_text = templateData.landing_tagline_text || ''; // need to be updated in database (all null text values need to be converted into empty strings) 
+  const landing_tagline_text = templateData.landing_tagline_text || '';
   const landing_email_placeholder_text = templateData.landing_email_placeholder_text || '';
-  const landing_phone_placeholder_text = templateData.landing_phone_placeholder_text || '';
+
   const landing_button_text = templateData.landing_button_text;
   const landing_base_font_size = templateData.landing_base_text_size;
 
-  // rewards page settings
+  // rewards template settings
   const rewards_background_image = `${templateData.rewards_background_image}.png`; // need to be updated in database
   const rewards_show_header_footer = templateData.rewards_show_header_footer;
   const rewards_background_overlay = templateData.rewards_background_overlay; // need to be updated in database
-  const rewards_main_color = `#${templateData.rewards_main_color}`; // need to be updated in database
-  const rewards_accent_color = `#${templateData.rewards_accent_color}`; // need to be updated in database
+  const rewards_main_color = `#${templateData.rewards_main_color}`;
+  const rewards_accent_color = `#${templateData.rewards_accent_color}`;
   const rewards_divider = templateData.rewards_divider; // need to be updated in database
   const rewards_preheader_text = templateData.rewards_pre_header_text || '';
   const rewards_header_text = templateData.header_text || '';
@@ -457,7 +459,7 @@ export default function createTemplateApiEndpoint(app) {
       // console.log(accessToken, shop);
       // console.log(templateData);
       // console.log(campaignData);
-      await templateApiCalls(accessToken, shop, templateData);
+      await templateApiCalls(accessToken, shop, templateData, campaignData);
       return res.status(200).json({ success: true, message: "Templates and Pages Created Successfully" });
     } catch (error) {
       return res.status(400).json({ success: false, message: "Failed to Create Templates and Pages", error: error.message });
