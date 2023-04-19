@@ -20,6 +20,7 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   // landing template settings
   const landing_show_header_footer = templateData.landing_show_header_footer;
   const landing_background_overlay = templateData.landing_background_overlay; // gradient values need to be updated in database
+  const landing_main_color = `#${templateData.landing_main_color}`;
   const landing_accent_color = `#${templateData.landing_accent_color}`;
   const landing_divider = templateData.landing_divider;
   const landing_background_image = `${templateData.landing_background_image}.png`; // need to add .png/jpg or file path in database
@@ -27,6 +28,12 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   const landing_pre_header_text = templateData.landing_pre_header_text || '';
   const landing_tagline_text = templateData.landing_tagline_text || '';
   const landing_email_placeholder_text = templateData.landing_email_placeholder_text || '';
+
+  // show phone placeholder only if merchant wants to collect phone number
+  let landing_phone_placeholder_text = '';
+  if (campaignData.collect_phone == true) {
+    landing_phone_placeholder_text = templateData.landing_phone_placeholder_text;
+  }
 
   const landing_button_text = templateData.landing_button_text;
   const landing_base_font_size = templateData.landing_base_text_size;
