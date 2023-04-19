@@ -86,6 +86,9 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
     'Content-Type': 'application/json',
   };
 
+  // generate uuid for template and page names
+  const uuid = Math.random().toString(36).substring(2, 15);
+
   // template 1 body
 
   // first app block unique_id
@@ -219,8 +222,7 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   // create first template
   const createFirstPageTemplate = async (themeid) => {
     const templateName = "LandingTemplate"; // base name
-    const randomString = Math.random().toString(36).substring(2, 15); // generate random string
-    const uniqueTemplateName = templateName + "_" + randomString; // concatenate base name and random string
+    const uniqueTemplateName = templateName + "_" + uuid; // concatenate base name and uuid
     try {
       const response = await fetch(`https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`, {
         method: 'PUT',
@@ -247,8 +249,7 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   // create second template
   const createSecondPageTemplate = async (themeid) => {
     const templateName = 'RewardsTemplate'; // base name
-    const randomString = Math.random().toString(36).substring(2, 15); // generate random string
-    const uniqueTemplateName = templateName + '_' + randomString; // concatenate base name and random string
+    const uniqueTemplateName = templateName + '_' + uuid; // concatenate base name and uuid
     try {
       const response = await fetch(
         `https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`,
@@ -277,8 +278,7 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   // create first page 
   const createFirstPage = async (templateSuffix) => {
     const pageName = "LandingPage"; // base name
-    const randomString = Math.random().toString(36).substring(2, 15); // generate random string
-    const uniquePageeName = pageName + "_" + randomString; // concatenate base name and random string
+    const uniquePageeName = pageName + "_" + uuid; // concatenate base name and uuid
     const pageBody = JSON.stringify({
       "page": {
         "title": uniquePageeName,
@@ -306,8 +306,7 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   // create second page
   const createSecondPage = async (templateSuffix) => {
     const pageName = "RewardsPage"; // base name
-    const randomString = Math.random().toString(36).substring(2, 15); // generate random string
-    const uniquePageeName = pageName + "_" + randomString; // concatenate base name and random string
+    const uniquePageeName = pageName + "_" + uuid; // concatenate base name and uuid
     const pageBody = JSON.stringify({
       "page": {
         "title": uniquePageeName,
