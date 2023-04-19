@@ -11,6 +11,7 @@ ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider>
       <ContextProvider>
+      
         <App />
       </ContextProvider>
     </ThemeProvider>

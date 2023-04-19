@@ -18,6 +18,10 @@ const NewCampaign = () => {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
   const dispatch = useDispatch();
+  // Page render Scroll to Top
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   let productsList = useFetchAllProducts("/api/2022-10/products.json", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -43,55 +47,35 @@ const NewCampaign = () => {
   return (
     <div className="app">
       {activeMenu ? (
-        <div className={darkTheme ? "sidebar" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       ) : (
-        <div className={darkTheme ? "sidebar closed" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       )}
-      {activeMenu ? (
-        <div
-          className={darkTheme ? "main__container " : "main__container dark"}
-        >
-          <MainPage>
-            <div className="header">
-              <Header />
+      <div className="main-app">
+        {activeMenu ? (
+          <>
+            <div className="sidebar">
+              <SideBar />
             </div>
-
-            <NewCampaignForm />
-          </MainPage>
-        </div>
-      ) : (
-        <div
-          className={
-            darkTheme ? "main__container full" : "main__container dark"
-          }
-        >
-          <MainPage>
-            <div className="header">
-              <Header />
-            </div>
-            {settingsData.length > 0 && data !== undefined ? (
+            <div className="main-container">
               <NewCampaignForm />
-            ) : (
-              <h1
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100vh",
-                  fontSize: 12,
-                  color: "#fff",
-                }}
-              >
-                Loading...
-              </h1>
-            )}
-          </MainPage>
-        </div>
-      )}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="sidebar closed">
+              <SideBar />
+            </div>
+            <div className="main-container full">
+              <NewCampaignForm />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

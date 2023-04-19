@@ -53,13 +53,12 @@
 }
 
 @media screen and (max-width: 1480px) {
-
   .reward-form {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-bottom: 10px;
-    gap:10px;
+    gap: 10px;
   }
 
   .reward-form .inputfield {
@@ -87,7 +86,7 @@
     flex-direction: column;
     justify-content: space-between;
     margin-bottom: 10px;
-    gap:10px;
+    gap: 10px;
   }
 
   .reward-form .inputfield {
@@ -99,13 +98,13 @@
 
   .small-inputfield {
     height: 55px;
-    width: 130px;
-    font-size: 23px;
+    width: 70px;
+    font-size: 19px;
     font-weight: 700;
   }
   .large-field {
-    font-size: 23px;
-    width: 130px !important;
+    font-size: 19px;
+    width: 115px !important;
   }
 }
 
@@ -125,6 +124,11 @@
     flex-direction: column;
     justify-content: space-between;
     margin-bottom: 10px;
+  }
+  .reward-title h2 {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 30px;
   }
 
   .reward-form .inputfield {

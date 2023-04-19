@@ -1,45 +1,46 @@
+import { useEffect } from "react";
 import { SideBar, Header, Pricing, MainPage } from "../components/index";
 import { useStateContext } from "../contexts/ContextProvider";
-import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 
 const PricePage = () => {
   const { activeMenu } = useStateContext();
-  const { darkTheme } = useThemeContext();
+   // Page render Scroll to Top
+   useEffect(()=>{
+    window.scrollTo(0, 0);
+  },[])
   return (
     <div className="app">
       {activeMenu ? (
-        <div className={darkTheme ? "sidebar" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       ) : (
-        <div className={darkTheme ? "sidebar closed" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       )}
-      {activeMenu ? (
-        <div className={darkTheme ? "main__container" : "main__container dark"}>
-          <MainPage>
-            <div className="header">
-              <Header />
+      <div className="main-app">
+        {activeMenu ? (
+          <>
+            <div className="sidebar">
+              <SideBar />
             </div>
-            <Pricing />
-          </MainPage>
-        </div>
-      ) : (
-        <div
-          className={
-            darkTheme ? "main__container full" : "main__container dark"
-          }
-        >
-          <MainPage>
-            <div className="header">
-              <Header />
+            <div className="main-container">
+              <Pricing />
             </div>
-            <Pricing />
-          </MainPage>
-        </div>
-      )}
+          </>
+        ) : (
+          <>
+            <div className="sidebar closed">
+              <SideBar />
+            </div>
+            <div className="main-container full">
+              <Pricing />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

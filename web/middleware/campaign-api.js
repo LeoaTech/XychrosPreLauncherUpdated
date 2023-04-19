@@ -26,9 +26,9 @@ export default function campaignApiEndpoints(app) {
         "select * from campaign_settings where shop_id = $1 ",
         [session?.shop]
       );
-      res.json(campaigns.rows);
+      return res.status(200).json(campaigns.rows);
     } catch (err) {
-      console.error(err);
+      return res.status(500).json(err.message);
     }
   });
   //get one campaign
@@ -159,9 +159,9 @@ export default function campaignApiEndpoints(app) {
           session?.shop,
         ]
       );
-      res.json(campaigns.rows);
+      return res.status(201).json(campaigns.rows);
     } catch (err) {
-      console.error(err.message);
+      return res.status(500).json(err.message);
     }
   });
 
@@ -353,9 +353,9 @@ export default function campaignApiEndpoints(app) {
         ]
       );
 
-      res.send(campaigns.rows);
+      return res.status(200).send(campaigns.rows);
     } catch (err) {
-      console.error(err.message);
+      return res.status(500).json(err.message);
     }
   });
 
@@ -374,9 +374,9 @@ export default function campaignApiEndpoints(app) {
         [campaign_id, session?.shop]
       );
 
-      res.send(campaigns?.rows);
+      return res.status(204).send(campaigns?.rows);
     } catch (err) {
-      console.error(err);
+      return res.status(500).json(err.message);
     }
   });
 }

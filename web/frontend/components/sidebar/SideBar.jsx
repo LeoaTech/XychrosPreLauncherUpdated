@@ -153,9 +153,7 @@ const SideBar = () => {
                 }
               >
                 <span className="icon-img">
-                  <HiOutlineUser
-                    style={{ height: "30px", width: "30px", color: "#fff" }}
-                  />{" "}
+                  <HiOutlineUser />{" "}
                 </span>
                 <p className="icon-text">User Profile</p>
               </NavLink>
@@ -170,7 +168,7 @@ const SideBar = () => {
                 }
               >
                 <span className="icon-img">
-                  <CgNotes style={{ height: "30px", width: "30px" }} />{" "}
+                  <CgNotes />{" "}
                 </span>
                 <p className="icon-text">FAQ</p>
               </NavLink>
@@ -184,9 +182,7 @@ const SideBar = () => {
                 }
               >
                 <span className="icon-img">
-                  <MdOutlinePriceChange
-                    style={{ height: "30px", width: "30px" }}
-                  />{" "}
+                  <MdOutlinePriceChange />{" "}
                 </span>
                 <p className="icon-text">Pricing</p>
               </NavLink>
