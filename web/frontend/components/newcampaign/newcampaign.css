@@ -1,7 +1,7 @@
 .new-campaign-container {
   color: var(--primary-color);
-  padding: 5px 25px;
-  margin: 5px 25px;
+  padding: 5px 15px;
+  margin: 5px 15px;
 
   display: flex;
   flex-direction: column;
@@ -50,14 +50,14 @@
   background-color: #342d84;
 }
 
-.nextBtn,.prevBtn {
+.nextBtn,
+.prevBtn {
   height: 50px;
   width: 120px;
   font-size: 19px;
 }
 
 .prevBtn {
-  
   margin-bottom: 10px;
 }
 
@@ -823,7 +823,7 @@ input[type="checkbox"]:checked {
     padding: 0 15px;
   }
 
-  .campaignform,
+  .campaign-form,
   .store-links,
   .collect-setup,
   .referral-settings-form,
@@ -844,16 +844,14 @@ input[type="checkbox"]:checked {
 
   /* Basic Form Settings */
 
-  .input-form-groups {
-    margin: 0 15px;
-  }
+
 
   .form-group {
     flex-direction: column;
   }
   .campaign-form .input-form-groups input,
   .campaign-form .input-form-groups select {
-    width: 100%;
+    width: 400px;
   }
 
   .store-links .sub-heading {
@@ -981,7 +979,7 @@ input[type="checkbox"]:checked {
     padding: 0 15px;
   }
 
-  .campaignform,
+  .campaign-form,
   .store-links,
   .collect-setup,
   .referral-settings-form,
@@ -1002,16 +1000,12 @@ input[type="checkbox"]:checked {
 
   /* Basic Form Settings */
 
-  .input-form-groups {
-    margin: 0 15px;
-  }
-
   .form-group {
     flex-direction: column;
   }
   .campaign-form .input-form-groups input,
   .campaign-form .input-form-groups select {
-    width: 100%;
+    width: 550px;
   }
 
   .store-links .sub-heading {
@@ -1081,9 +1075,6 @@ input[type="checkbox"]:checked {
     width: 70px;
   }
 
-  .email-container section {
-    /* padding: 19px 8px; */
-  }
   .email-section h2 {
     padding-left: 12px;
     line-height: 1.4;
@@ -1134,42 +1125,35 @@ input[type="checkbox"]:checked {
   .rewards-settings,
   .integration-settings,
   .template-settings {
-    margin: 0 7px;
-    padding: 0 5px;
+    margin: 0 10px;
+    padding: 0 10px;
   }
 
   /* Basic Form Settings */
 
-  .campaignform,
+  .campaign-form,
   .store-links,
   .collect-setup {
     margin: 15px 5px;
     padding: 12px 5px;
   }
-
-  .collect-settings {
-    padding-left: 12px;
-  }
   .input-form-groups {
-    margin: 0 25px;
+    margin: 0 20px;
+    padding: 0 20px;
   }
 
   .form-group {
     flex-direction: column;
   }
   .campaign-form .input-form-groups input,
-  .campaign-form .input-form-groups select {
-    width: 100%;
+  .campaign-form .input-form-groups select,
+  .select-products select,
+  .select-user-input select {
+    width: 390px;
   }
 
-  .store-links .sub-heading {
-    padding: 0 10px;
-    margin: 0 11px;
-    margin-bottom: 30px;
-  }
   .campaign-form .store-links .store-social-links {
     grid-template-columns: repeat(1, 1fr);
-    margin-left: 20px;
   }
 
   .campaign-form .store-links .social-inputfield {
@@ -1263,7 +1247,7 @@ input[type="checkbox"]:checked {
   }
   .integration-settings-container input,
   .select-user-input select {
-    width: 100%;
+    width: 470px;
   }
 
   /* Animation for Loading screens */
@@ -1304,6 +1288,16 @@ input[type="checkbox"]:checked {
 }
 
 @media only screen and (max-width: 500px) {
+  .newcampaign-settings {
+    background-color: #1b1a21;
+    padding: 22px 17px;
+    border-radius: 12px;
+    margin: 0 9px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -ms-border-radius: 12px;
+    -o-border-radius: 12px;
+  }
   .new-campaign-container {
     padding: 10px 6px;
     margin: 10px 6px;
@@ -1314,26 +1308,35 @@ input[type="checkbox"]:checked {
     margin: 20px;
   }
   /* Basic Form Settings */
+  .campaign-form {
+    margin: 20px 10px;
+    padding: 20px 10px;
+  }
   .input-form-groups {
     margin: 0 25px;
   }
 
-  .nextBtn {
+  .saveFormBtn,
+  .nextBtn,
+  .prevBtn {
     height: 40px;
   }
 
-  .campaignform,
+  .campaign-form,
   .store-links,
   .collect-setup {
-    margin: 20px 10px;
-    padding: 20px 10px;
+    margin: 20px 5px;
+    padding: 20px 5px;
   }
 
   .form-group {
     flex-direction: column;
   }
-  .campaign-form .input-form-groups input {
-    width: 100%;
+  .campaign-form .input-form-groups input,
+  .campaign-form .input-form-groups select,
+  .select-products select,
+  .select-user-input select {
+    width: 300px;
   }
 
   .store-links .sub-heading {
@@ -1370,13 +1373,17 @@ input[type="checkbox"]:checked {
 
   /* Reward settings */
 
+  .reward-card {
+    margin: 13px 3px;
+    padding: 18px;
+  }
   .rewards-settings-form p {
     font-size: 18px;
   }
 
   .reward-container {
     padding: 0 10px;
-    margin: 0 15px;
+    margin: 0 5px;
   }
 
   .rewards-container {
@@ -1393,7 +1400,25 @@ input[type="checkbox"]:checked {
     margin: 0 10px;
   }
 
+  .email-section h2 {
+    font-size: 20.5px;
+  }
+  .email-textinput {
+    font-size: 18.5px;
+  }
+
+  .email-section .email-content img {
+    height: 40px;
+    width: 140px;
+    margin: 20px 0;
+  }
   /* Integrations Settings */
+
+  .integration-settings {
+    margin: 0 10px;
+    padding: 0 10px;
+  }
+
   .integration-container {
     margin: 0 10px;
     padding: 0 10px;
@@ -1403,9 +1428,12 @@ input[type="checkbox"]:checked {
     flex-direction: column;
     margin: 0 10px;
   }
+  .campaign-form .input-form-groups input,
+  .select-products select,
+  .select-user-input select,
   .integration-settings-container input,
   .select-user-input select {
-    width: 100%;
+    width: 300px;
   }
 
   /* Template Settings */
