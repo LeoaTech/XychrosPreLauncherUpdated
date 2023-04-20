@@ -69,6 +69,7 @@ function NewCampaignForm() {
   const [expanded, setExpanded] = useState(Array(6).fill(false));
   const [isLoading, setIsLoading] = useState(false);
   const [klaviyoList, setKlaviyoList] = useState([]);
+
   //? New Campaign Form Data Fields
   const [newCampaignData, setNewCampaignData] = useState({
     collect_phone: globalSettings?.collect_phone,
@@ -128,6 +129,7 @@ function NewCampaignForm() {
     discount_type: globalSettings?.discount_type,
   });
 
+  const [getCampaignName, setCampaignName] = useState();
   // Check if page URL is New Camapign or Campaign/id then render the form
   useEffect(() => {
     if (window.location.pathname === `/campaigns/${campaignsid}`) {
@@ -191,53 +193,81 @@ function NewCampaignForm() {
     const filtered_templates = [];
 
     if (templateList?.length > 0) {
-      const variantTemplate = templateList?.filter(
-        (template) => template?.campaign_image !== null
-      );
-      filtered_templates.push(variantTemplate);
-
+      // Basic Template will remain unchanged
       const basicTemplate = templateList?.find(
         (template) => template?.campaign_image === null
       );
 
-      const filterItem = filtered_templates?.filter((template) => {
-        if (newCampaignData?.name != "") {
-          if (
-            newCampaignData?.name
-              .toLowerCase()
-              .includes(template?.campaign_name?.toLowerCase())
-          ) {
-          }
-        }
-      });
-
+      // Get Random templates based on the campaign name in the Form field
+      const variantTemplate = templateList?.filter(
+        (template) => template?.campaign_image !== null
+      );
       if (isEdit) {
         const editSelectTemplate = templateList?.filter(
           (template) => template?.id === editCampaignData?.template_id
         );
-        templateList[1] = editSelectTemplate[0];
+        console.log(editSelectTemplate);
+        if (editSelectTemplate[0].id !== basicTemplate?.id) {
+          filtered_templates.push(editSelectTemplate[0]);
+          filtered_templates.push(
+            ...variantTemplate
+              .slice(1)
+              .sort(() => 0.5 - Math.random())
+              .slice(0, 2)
+          );
+          // console.log(filtered_templates);
+        } else {
+          filtered_templates.push(editSelectTemplate[0]);
+
+          filtered_templates.push(
+            ...variantTemplate
+              .slice(1)
+              .sort(() => 0.5 - Math.random())
+              .slice(0, 2)
+          );
+          // console.log(filtered_templates);
+        }
         const randomTemplates = [
-          (templateList[0] = basicTemplate),
-          templateList[1],
-          ...filtered_templates
-            .slice(1)
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 1),
+          (filtered_templates[0] = basicTemplate),
+          ...filtered_templates,
         ];
         setRandomTemplate(randomTemplates);
         setSelectedTemplateData(editSelectTemplate[0]);
       } else {
+        if (newCampaignData?.name !== "") {
+          setCampaignName(newCampaignData?.name);
+
+          const filtered = templateList?.filter((template) =>
+            getCampaignName
+              ?.toLowerCase()
+              .includes(template.campaign_name?.toLowerCase())
+          );
+          if (filtered.length > 0 && filtered.length < 2) {
+            filtered_templates.push(filtered[0]);
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 1)
+            );
+          } else {
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 2)
+            );
+          }
+        }
         const randomTemplates = [
           (templateList[0] = basicTemplate),
-          ...variantTemplate
-            .slice(1)
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 2),
+          ...filtered_templates,
         ];
+        // console.log(randomTemplates);
         setRandomTemplate(randomTemplates);
       }
     }
-  }, [templateList]);
+  }, [templateList, getCampaignName]);
 
   //  Template images with their names [Hardcoded Images]  06-APR-2023 (Updated Soon)
   useEffect(() => {
@@ -265,7 +295,7 @@ function NewCampaignForm() {
   useEffect(async () => {
     if (selectedTemplateData !== undefined) {
       let fileurl = await handleGetURL(selectedTemplateData?.campaign_image);
-      // Append the URL with selected Template Data 
+      // Append the URL with selected Template Data
       setResult({ ...selectedTemplateData, fileurl }); //selectedTemplateData + bgUrl
     }
   }, [selectedTemplateData]);
@@ -449,9 +479,11 @@ function NewCampaignForm() {
         ...prevState,
         [name]: value,
       }));
+
       // value is asynchronic, so it's updated in the next render
       if (e.target.value !== "" && !isLoading) setDraftModal(true);
       else setDraftModal(false);
+      if (newCampaignData?.name !== "") setCampaignName(newCampaignData?.name);
     }
   };
 
@@ -475,13 +507,13 @@ function NewCampaignForm() {
     if (isEdit) {
       setEditCampaignData((prevcampaignData) => ({
         ...prevcampaignData,
-        [name]: value === "phone",
+        collect_phone: value === "phone",
         discount_type: value,
       }));
     } else {
       setNewCampaignData((prevnewcampaignData) => ({
         ...prevnewcampaignData,
-        [name]: value === "phone",
+        collect_phone: value === "phone",
         discount_type: value,
       }));
     }
