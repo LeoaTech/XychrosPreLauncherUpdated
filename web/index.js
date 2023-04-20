@@ -19,6 +19,8 @@ import createTemplateApiEndpoint from "./middleware/create_template.js";
 import templatesApiEndpoints from "./middleware/templates_api.js";
 import integrationApi from "./middleware/klaviyo-api.js";
 import discountApiEndpoint from './middleware/discount-api.js';
+import userDetailsApiEndPoint from "./middleware/userdetails-api.js";
+import getUrlApi from "./middleware/geturl-api.js";
 
 const USE_ONLINE_TOKENS = false;
 
@@ -176,6 +178,8 @@ export async function createServer(
   globalSettingsApiEndPoint(app);
   templatesApiEndpoints(app);
   integrationApi(app);   //Klaviyo Integration API
+  userDetailsApiEndPoint(app)
+  getUrlApi(app)
   discountApiEndpoint(app);
 
   app.use((req, res, next) => {
