@@ -260,13 +260,15 @@ function NewCampaignForm() {
     setShowList(templates_show_list);
   }, [randomTemplate]);
 
+  // Call the GET URL API when user Select a template from tempalte Settings
+
   useEffect(async () => {
     if (selectedTemplateData !== undefined) {
       let fileurl = await handleGetURL(selectedTemplateData?.campaign_image);
-      setResult({ ...selectedTemplateData, fileurl });  //selectedTemplateData + bgUrl 
+      // Append the URL with selected Template Data 
+      setResult({ ...selectedTemplateData, fileurl }); //selectedTemplateData + bgUrl
     }
   }, [selectedTemplateData]);
-
 
   // Get Klaviyo integration Lists from API
   async function getKlaviyoList() {
@@ -520,6 +522,8 @@ function NewCampaignForm() {
       setSelectedTemplateData(template);
     }
   }
+
+  // Handle Get Url of Campaign name
   async function handleGetURL(imgFile) {
     try {
       const response = await fetch(`/api/geturl/?file=${imgFile}`, {
@@ -528,12 +532,9 @@ function NewCampaignForm() {
           "Content-Type": "application/json",
         },
       });
-
       const list = await response.json();
       if (response.ok) {
         return list;
-        // setSelectedTemplateData((prevState) => ({ ...prevState, list }));
-        // console.log(selectedTemplateData, "append result")
       }
     } catch (err) {
       console.log(err);
