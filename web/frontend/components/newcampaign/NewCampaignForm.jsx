@@ -1,22 +1,12 @@
 import React, { useState, forwardRef, useEffect, useRef } from "react";
+// import { asset_url } from '@shopify/theme-utilities';
+
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {
-  anime,
-  xychrosLogo,
-  food,
-  food2,
-  WelcomeClothing,
-  WelcomeFood,
-  WelcomeFood2,
-  WelcomeJewelry,
-  WelcomeNature,
-  nature,
-  nature2,
-  jewelry,
-  jewelry2,
-} from "../../assets/index";
+import { anime, xychrosLogo } from "../../assets/index";
+
+import * as images from "../../assets/index";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { integratelinks } from "./socialLinks";
@@ -50,7 +40,7 @@ function NewCampaignForm() {
   // Get Values from Redux-Store
   const campaignName = useSelector(fetchCampaignByName); //Get the Campaign Name to verify unique campaign name
   const settings = useSelector(fetchAllSettings); //Settings Data
-  const productsData = useSelector(fetchAllProducts); //Get all products of Shop
+  const products = useSelector(fetchAllProducts); //Get all products of Shop
   const campaignById = useSelector(
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
@@ -64,15 +54,18 @@ function NewCampaignForm() {
   const [errorMessage, setErrorMessage] = useState(false);
   const [editCampaignData, setEditCampaignData] = useState();
   const [globalSettings, setGlobalSettings] = useState();
+  const [productsData, setProductsData] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(getNextDate);
   const [errorName, setErrorName] = useState(false);
   const [draftModal, setDraftModal] = useState(false);
+  const [result, setResult] = useState();
   const [showPrompt, confirmNavigation, cancelNavigation] =
     useCallbackPrompt(draftModal);
   const [templateList, setTemplateList] = useState([]); //To store all templates received from Template API
   const [randomTemplate, setRandomTemplate] = useState(); //Get Random Template from templateList
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
+  const [showList, setShowList] = useState({});
   const [expanded, setExpanded] = useState(Array(6).fill(false));
   const [isLoading, setIsLoading] = useState(false);
   const [klaviyoList, setKlaviyoList] = useState([]);
@@ -157,6 +150,12 @@ function NewCampaignForm() {
       setGlobalSettings(settings[0]);
     }
   }, [settings]);
+  // get the Products in select box
+  useEffect(() => {
+    if (products?.length > 0) {
+      setProductsData(products);
+    }
+  }, [products]);
 
   useEffect(() => {
     if (globalSettings !== undefined) {
@@ -189,16 +188,38 @@ function NewCampaignForm() {
 
   // Generate Random Templates Array with Template Ids
   useEffect(() => {
+    const filtered_templates = [];
+
     if (templateList?.length > 0) {
+      const variantTemplate = templateList?.filter(
+        (template) => template?.campaign_image !== null
+      );
+      filtered_templates.push(variantTemplate);
+
+      const basicTemplate = templateList?.find(
+        (template) => template?.campaign_image === null
+      );
+
+      const filterItem = filtered_templates?.filter((template) => {
+        if (newCampaignData?.name != "") {
+          if (
+            newCampaignData?.name
+              .toLowerCase()
+              .includes(template?.campaign_name?.toLowerCase())
+          ) {
+          }
+        }
+      });
+
       if (isEdit) {
         const editSelectTemplate = templateList?.filter(
           (template) => template?.id === editCampaignData?.template_id
         );
         templateList[1] = editSelectTemplate[0];
         const randomTemplates = [
-          templateList[0],
+          (templateList[0] = basicTemplate),
           templateList[1],
-          ...templateList
+          ...filtered_templates
             .slice(1)
             .sort(() => 0.5 - Math.random())
             .slice(0, 1),
@@ -207,8 +228,8 @@ function NewCampaignForm() {
         setSelectedTemplateData(editSelectTemplate[0]);
       } else {
         const randomTemplates = [
-          templateList[0],
-          ...templateList
+          (templateList[0] = basicTemplate),
+          ...variantTemplate
             .slice(1)
             .sort(() => 0.5 - Math.random())
             .slice(0, 2),
@@ -218,20 +239,34 @@ function NewCampaignForm() {
     }
   }, [templateList]);
 
-  //  Template images with their names [Hardcoded Images]  06-APR-2023 (Update Soon)
-  const templates_show_list = [
-    { id: 1, image: WelcomeClothing, name: "WelcomeClothing" },
-    { id: 2, image: WelcomeFood, name: "WelcomeFood" },
-    { id: 3, image: WelcomeFood2, name: "WelcomeFood2" },
-    { id: 4, image: WelcomeJewelry, name: "WelcomeJewelry" },
-    { id: 5, image: WelcomeNature, name: "WelcomeNature" },
-    { id: 6, image: food, name: "food" },
-    { id: 7, image: food2, name: "food2" },
-    { id: 8, image: nature, name: "nature" },
-    { id: 9, image: nature2, name: "nature2" },
-    { id: 10, image: jewelry, name: "jewelry" },
-    { id: 11, image: jewelry2, name: "jewelry2" },
-  ];
+  //  Template images with their names [Hardcoded Images]  06-APR-2023 (Updated Soon)
+  useEffect(() => {
+    const templates_show_list = [];
+
+    randomTemplate?.map((template) => {
+      const name = template?.campaign_image?.substring(
+        0,
+        template?.campaign_image?.lastIndexOf(".")
+      );
+      const imgUrl = `/assets/shopify_assets/${template?.campaign_image}`;
+
+      const imagePath = imgUrl?.substring(imgUrl?.indexOf("/web"));
+      templates_show_list.push({
+        id: template?.id,
+        name: template?.campaign_image,
+        image: imagePath,
+      });
+    });
+    setShowList(templates_show_list);
+  }, [randomTemplate]);
+
+  useEffect(async () => {
+    if (selectedTemplateData !== undefined) {
+      let fileurl = await handleGetURL(selectedTemplateData?.campaign_image);
+      setResult({ ...selectedTemplateData, fileurl });  //selectedTemplateData + bgUrl 
+    }
+  }, [selectedTemplateData]);
+
 
   // Get Klaviyo integration Lists from API
   async function getKlaviyoList() {
@@ -356,7 +391,6 @@ function NewCampaignForm() {
     else {
       const isValid = validateForm();
       if (index === 1 && isValid === false) {
-        console.log(errorMessage, "next");
         setErrorMessage(true);
         setExpanded((prevExpand) =>
           prevExpand.map((state, i) => i === index - 1 && true)
@@ -471,7 +505,7 @@ function NewCampaignForm() {
     }
   }
   // Handle Template Selection
-  function handleTemplateSelect(template) {
+  async function handleTemplateSelect(template) {
     if (isEdit) {
       setEditCampaignData({
         ...editCampaignData,
@@ -486,6 +520,26 @@ function NewCampaignForm() {
       setSelectedTemplateData(template);
     }
   }
+  async function handleGetURL(imgFile) {
+    try {
+      const response = await fetch(`/api/geturl/?file=${imgFile}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const list = await response.json();
+      if (response.ok) {
+        return list;
+        // setSelectedTemplateData((prevState) => ({ ...prevState, list }));
+        // console.log(selectedTemplateData, "append result")
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   // Create_templates_list
   async function saveCampaignTemplate(data, template) {
     await fetch("/api/create_template", {
@@ -503,11 +557,6 @@ function NewCampaignForm() {
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
-
-    // Function call to save the campaign data and selected templates
-
-    // await saveCampaignTemplate(newCampaignData, selectedTemplateData);
-
     // Editing Camapign Data Form
     if (isEdit) {
       setDraftModal(false);
@@ -533,7 +582,8 @@ function NewCampaignForm() {
         newCampaignData?.template_id !== null &&
         selectedTemplateData !== undefined
       ) {
-        // await saveCampaignTemplate(newCampaignData, selectedTemplateData);  //Uncomment this line for create tempalte
+        // Now we need to pass the result as (selected tempalte + bgUrl)
+        await saveCampaignTemplate(newCampaignData, result); //Uncomment this line for create tempalte
         setIsLoading(true);
         await fetch("/api/campaignsettings", {
           method: "POST",
@@ -1628,11 +1678,12 @@ function NewCampaignForm() {
                           </h3>
                         ) : (
                           template?.id > 1 &&
-                          templates_show_list?.map(
+                          showList?.map(
                             (data) =>
+                              data?.image !== null &&
                               data?.name === template?.campaign_image && (
                                 <img
-                                  key={template?.id}
+                                  key={data?.id || template?.id}
                                   src={data?.image}
                                   alt={template?.campaign_image}
                                   loading="lazy"
