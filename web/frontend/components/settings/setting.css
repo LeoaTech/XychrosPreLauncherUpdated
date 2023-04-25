@@ -34,7 +34,8 @@
 }
 
 .saveSettingsbtn,
-.next-button, .prev-Btn {
+.next-button,
+.prev-Btn {
   height: 50px;
   width: 100px;
   background-color: var(--secondary-color);
@@ -56,11 +57,10 @@
   font-size: 23px;
 }
 
-
-.next-button, .prev-Btn {
+.next-button,
+.prev-Btn {
   font-size: 19px;
   cursor: pointer;
-  
 }
 
 .active-form {
@@ -118,7 +118,7 @@
 .toggle-next-btn {
   margin-top: 20px;
   display: flex;
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 /* Basic Settings Card Block */
@@ -286,7 +286,10 @@
 
 /* ---------------------- Media  Queries  ---------------------------- */
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1480px) {
+  .settings-container{
+    margin-left: 4%;
+  }
   .stores__social_links {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -300,6 +303,9 @@
 }
 
 @media screen and (max-width: 1050px) {
+  .settings-container{
+    margin-left: 3%;
+  }
   .basic-settings,
   .referral-settings,
   .reward-settings,
@@ -335,6 +341,13 @@
   }
 }
 @media screen and (max-width: 768px) {
+  .settings-container {
+    padding: 5px 15px;
+    margin: 5px 15px;
+  }
+  .settings-heading h1{
+    font-size: 27px;
+  }
   .basic-settings,
   .referral-settings,
   .reward-settings,
@@ -345,6 +358,11 @@
     padding: 0 9px;
     margin-top: 5px;
     margin-bottom: 5px;
+  }
+
+  .main-title {
+    font-size: 20px;
+    font-weight: 700;
   }
 
   .store__links,

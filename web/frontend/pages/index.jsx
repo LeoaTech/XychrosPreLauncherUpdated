@@ -15,6 +15,10 @@ export default function HomePage() {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
   const dispatch = useDispatch();
+  // Page render Scroll to Top
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+  },[])
   const campaigns = useFetchCampaignsData("/api/getcampaigns", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -50,37 +54,35 @@ export default function HomePage() {
   return (
     <div className="app">
       {activeMenu ? (
-        <div className={darkTheme ? "sidebar" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       ) : (
-        <div className={darkTheme ? "sidebar closed" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       )}
-      {activeMenu ? (
-        <div className={darkTheme ? "main__container" : "main__container dark"}>
-          <MainPage className="sidebar-overlay">
-            <div className="header">
-              <Header />
+      <div className="main-app">
+        {activeMenu ? (
+          <>
+            <div className="sidebar">
+              <SideBar />
             </div>
-            <HomeComponent />
-          </MainPage>
-        </div>
-      ) : (
-        <div
-          className={
-            darkTheme ? "main__container full" : "main__container dark"
-          }
-        >
-          <MainPage className="sidebar-overlay">
-            <div className="header">
-              <Header />
+            <div className="main-container">
+              <HomeComponent />
             </div>
-            <HomeComponent />
-          </MainPage>
-        </div>
-      )}
+          </>
+        ) : (
+          <>
+            <div className="sidebar closed">
+              <SideBar />
+            </div>
+            <div className="main-container full">
+              <HomeComponent />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
