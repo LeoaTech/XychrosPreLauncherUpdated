@@ -1,0 +1,147 @@
+.modal {
+  position: fixed;
+  inset: 0; /* inset sets all 4 values (top right bottom left) much like how we set padding, margin etc., */
+  background-color: rgba(81, 80, 80, 0.824);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  z-index: 999;
+  padding: 40px 20px 20px;
+}
+
+.draft-modal-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  height: 290px;
+  line-height: normal;
+  border: 1px solid #080808;
+  box-shadow: 24;
+  background-color: var(--primary-color);
+  border-radius: 12px;
+  border-top: none;
+  padding: 4;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.draft-modal-container nav {
+  display: flex;
+  justify-content: center;
+  height: 70px;
+  background-color: #080808;
+  color: #fff;
+
+  align-items: center;
+  border: 1px solid #262626;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.modal-nav h6 {
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.warning-sign {
+  font-size: 34px;
+}
+
+.modal-content {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.modal-content p {
+  word-break: keep-all;
+}
+.modal-body {
+  justify-content: center;
+  align-items: cesnter;
+  font-size: 18px;
+  color: #333;
+}
+
+.action__btn-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  cursor: pointer;
+}
+
+.confirm-btn,
+.discard-btn {
+  border: none;
+  text-align: center;
+  border: 1px solid rgb(44, 43, 44);
+  padding: 11px;
+  margin: 10px;
+  height: 48px;
+  width: 130px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 9px;
+  cursor: pointer;
+  background-color: var(--secondary-color);
+  text-align: center;
+  color: #ffffff;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  -ms-border-radius: 9px;
+  -o-border-radius: 9px;
+}
+
+.confirm-btn:hover,
+.discard-btn:hover {
+  background-color: #5b15b6;
+  border: 1px solid #e7e4e7;
+}
+
+@media screen and (max-width: 786px) {
+  .draft-modal-container {
+    width: 380px;
+    height: 280px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .draft-modal-container {
+    width: 330px;
+    height: 290px;
+  }
+  .confirm-btn,
+  .discard-btn {
+    padding: 9px;
+    margin: 10px;
+    height: 44px;
+    width: 140px;
+    font-size: 14px;
+  }
+  .action__btn-modal {
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .modal-body {
+    justify-content: center;
+    align-items: cesnter;
+    font-size: 17.5px;
+    font-weight: 700;
+    color: #333;
+  }
+}

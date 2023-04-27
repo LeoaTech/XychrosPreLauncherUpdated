@@ -42,7 +42,6 @@ export const add_to_klaviyo_list = async (
               type: 'profile-subscription-bulk-create-job',
               attributes: {
                 list_id: `'${campaign.klaviyo_list_id}'`,
-                custom_source: 'Marketing Event',
                 subscriptions: [
                   {
                     channels: { email: ['MARKETING'], sms: ['MARKETING'] },
@@ -69,7 +68,6 @@ export const add_to_klaviyo_list = async (
               type: 'profile-subscription-bulk-create-job',
               attributes: {
                 list_id: `'${campaign.klaviyo_list_id}'`,
-                custom_source: 'Marketing Event',
                 subscriptions: [
                   {
                     channels: { email: ['MARKETING'] },

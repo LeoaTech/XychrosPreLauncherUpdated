@@ -1,11 +1,9 @@
 .sidebar-container {
   height: 100vh;
-  /* overflow: hidden; */
-  /* overflow: auto; */
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* align-items: flex-start; */
 }
 
 .sidebar-content .sidebar-logo {
@@ -33,10 +31,7 @@ a {
 
 .sidebar_header {
   display: flex;
-  padding: 10px 20px;
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* margin-left: 20px; */
+  padding: 5px 20px;
 }
 
 /* New Campaign button  */
@@ -51,6 +46,7 @@ a {
   display: flex;
   font-weight: 500;
   padding: 5px;
+  border: none;
   background-color: rgb(234, 234, 234);
   border-radius: 10px;
   -webkit-border-radius: 10px;
@@ -94,7 +90,6 @@ a {
 
 .top .sidebar_links {
   margin-top: 30px;
-  /* width: 250px; */
 }
 
 .top .sidebar_links div {
@@ -103,16 +98,16 @@ a {
 
 .sidebar-link-bottom a {
   margin-top: 30px;
-  /* width: 300px; */
 }
 
-.icon-img {
+.icon-img,
+.sidebar-link-bottom .icon-img {
   width: 30px;
   height: 30px;
-  /* margin-left: 30px; */
 }
 
-.icon-img img {
+.icon-img img,
+.bottom img {
   width: 30px;
   height: 30px;
 }
@@ -158,22 +153,32 @@ a {
   margin-left: 20px;
 }
 
+.bottom .normallink .icon-text {
+  color: rgb(193, 193, 193);
+}
+
 /* Media Queries */
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 1480px) {
   .sidebar_header {
     display: flex;
     padding: 10px 5px;
     justify-content: space-between;
     align-items: center;
-    margin-left: 20px;
+    margin-left: 10px;
   }
-  .close-menubtn {
-    display: block;
+
+  .top .normallink,
+  .bottom .normallink {
+    font-size: 19px;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
   }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1050px) {
   .sidebar_header {
     display: flex;
     padding: 10px 5px;
@@ -181,8 +186,94 @@ a {
     align-items: center;
     margin-left: 20px;
   }
+
+  .add-icon-text {
+    display: block;
+    font-size: 19px;
+  }
+  .top .normallink .icon-img,
+  .bottom .sidebar-link-bottom .normallink .icon-img {
+    width: 24px;
+    height: 24px;
+  }
+  .icon-text,
+  .sidebar-link-bottom .icon-text {
+    display: block;
+    font-weight: 500;
+    font-size: 22px;
+  }
+  .bottom .sidebar-link-bottom .normallink {
+    font-size: 22px;
+    align-items: center;
+  }
+  .icon-img,
+  .sidebar-link-bottom .icon-img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .bottom .sidebar-link-bottom .normallink .icon-text {
+    font-size: 19px;
+  }
+
+  .sidebar-link-bottom a {
+    margin-top: 8px;
+  }
+
+  .bottom .sidebar-link-bottom .normallink {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    gap: 20px;
+    margin-bottom: 10px;
+  }
+}
+
+@media only screen and (max-width: 786px) {
+  .sidebar_header {
+    display: flex;
+    padding: 10px 5px;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+  }
   .close-menubtn {
     display: block;
+  }
+
+  .icon-img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .icon-img img {
+    width: 24px;
+    height: 24px;
+  }
+  .icon-text,
+  .sidebar-link-bottom .icon-text {
+    display: block;
+    font-weight: 500;
+    font-size: 22px;
+  }
+  .top .normallink,
+  .bottom .sidebar-link-bottom .normallink {
+    font-size: 22px;
+    align-items: center;
+  }
+
+  .bottom .sidebar-link-bottom .normallink .icon-text {
+    font-size: 19px;
+  }
+
+  .sidebar-link-bottom a {
+    margin-top: 8px;
+  }
+
+  .bottom .sidebar-link-bottom .normallink {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    gap: 20px;
+    margin-bottom: 10px;
   }
 }
 
@@ -190,7 +281,7 @@ a {
   .sidebar_header {
     display: flex;
     padding: 10px 5px;
-    
+
     /* justify-content: space-between; */
     /* align-items: center; */
     /* margin-left: 20px; */
@@ -205,6 +296,19 @@ a {
     font-size: 21px;
   }
 
+  /* .top .normallink, */
+  .bottom {
+    display: flex;
+    font-weight: 500;
+    font-size: 15px;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    gap: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+  }
+
   /* Active Link */
   .activelink {
     padding-top: 10px;
@@ -214,24 +318,14 @@ a {
 
   .sidebar-link-bottom a {
     margin-top: 5px;
-    /* width: 300px; */
-  }
-
-
-  .sidebar-link-bottom .icon-text{
-    font-size: 19px;
-    font-weight: 500;
   }
 
   /* In-Active Links */
 
   .top .normallink,
   .bottom .normallink {
-    font-size: 16px;
     align-items: center;
     padding-top: 10px;
     padding-bottom: 10px;
-    margin-bottom: 14px;
   }
-   
 }

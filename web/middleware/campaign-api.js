@@ -1,45 +1,48 @@
-import { Shopify } from "@shopify/shopify-api";
+import { Shopify } from '@shopify/shopify-api';
 
-import NewPool from "pg";
+import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
+  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
 });
 
 pool.connect((err, result) => {
   if (err) throw err;
-  console.log("Connected");
+  console.log('Connected');
 });
 
 export default function campaignApiEndpoints(app) {
   //read all campaign
 
-  app.get("/api/getcampaigns", async (req, res) => {
+  app.get('/api/getcampaigns', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
 
       const campaigns = await pool.query(
-        "select * from campaign_settings where shop_id = $1 ",
+        // 'select * from campaign_settings where shop_id = $1 ',
+        // [session?.id]
+
+        'select * from campaign_settings where shop_id = $1 ',
         [session?.shop]
       );
-      res.json(campaigns.rows);
+      return res.status(200).json(campaigns.rows);
     } catch (err) {
-      console.error(err);
+      return res.status(500).json(err.message);
     }
   });
   //get one campaign
 
   //create campaign
-  app.post("/api/campaignsettings", async (req, res) => {
+  app.post('/api/campaignsettings', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
       const {
         collect_phone,
@@ -159,20 +162,20 @@ export default function campaignApiEndpoints(app) {
           session?.shop,
         ]
       );
-      res.json(campaigns.rows);
+      return res.status(201).json(campaigns.rows);
     } catch (err) {
-      console.error(err.message);
+      return res.status(500).json(err.message);
     }
   });
 
   //update campaign
 
-  app.put("/api/campaignsettings/:campaign_id", async (req, res) => {
+  app.put('/api/campaignsettings/:campaign_id', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
       const { campaign_id } = req.params;
       const {
@@ -353,20 +356,20 @@ export default function campaignApiEndpoints(app) {
         ]
       );
 
-      res.send(campaigns.rows);
+      return res.status(200).send(campaigns.rows);
     } catch (err) {
-      console.error(err.message);
+      return res.status(500).json(err.message);
     }
   });
 
   //delete campaign
 
-  app.delete("/api/campaignsettings/:campaign_id", async (req, res) => {
+  app.delete('/api/campaignsettings/:campaign_id', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
       const { campaign_id } = req.params;
       const campaigns = await pool.query(
@@ -374,9 +377,9 @@ export default function campaignApiEndpoints(app) {
         [campaign_id, session?.shop]
       );
 
-      res.send(campaigns?.rows);
+      return res.status(204).send(campaigns?.rows);
     } catch (err) {
-      console.error(err);
+      return res.status(500).json(err.message);
     }
   });
 }

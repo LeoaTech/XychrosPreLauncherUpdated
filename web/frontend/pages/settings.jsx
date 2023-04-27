@@ -14,51 +14,52 @@ const SettingsPage = () => {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
   const dispatch = useDispatch();
-  
+   // Page render Scroll to Top
+   useEffect(()=>{
+    window.scrollTo(0, 0);
+  },[])
+
   const data = useFetchSettings("/api/updatesettings", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
-  console.log(data)
   useEffect(() => {
     if (data.length > 0) {
       dispatch(fetchSettings(data[0]));
     }
-  }, [dispatch,data]);
+  }, [dispatch, data]);
   return (
     <div className="app">
       {activeMenu ? (
-        <div className={darkTheme ? "sidebar" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       ) : (
-        <div className={darkTheme ? "sidebar closed" : "sidebar dark"}>
-          <SideBar />
+        <div className="header">
+          <Header />
         </div>
       )}
-      {activeMenu ? (
-        <div className={darkTheme ? "main__container" : "main__container dark"}>
-          <MainPage>
-            <div className="header">
-              <Header />
+      <div className="main-app">
+        {activeMenu ? (
+          <>
+            <div className="sidebar">
+              <SideBar />
             </div>
-            <Settings />
-          </MainPage>
-        </div>
-      ) : (
-        <div
-          className={
-            darkTheme ? "main__container full" : "main__container dark"
-          }
-        >
-          <MainPage>
-            <div className="header">
-              <Header />
+            <div className="main-container">
+              <Settings />
             </div>
-            <Settings />
-          </MainPage>
-        </div>
-      )}
+          </>
+        ) : (
+          <>
+            <div className="sidebar closed">
+              <SideBar />
+            </div>
+            <div className="main-container full">
+              <Settings />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

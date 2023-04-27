@@ -1,15 +1,22 @@
 /* Pagination Component */
 
+.campaigns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 1%;
+}
 
 .pagination-content {
-  padding-top: 15px;
+  padding-top: 25px;
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  position: absolute;
   bottom: 10px;
   right: 70px;
+
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .pagination-text {
@@ -46,6 +53,7 @@
   box-shadow: 0 0 3px rgba(117, 116, 116, 0.4);
   margin: 0 10px;
   cursor: pointer;
+  border-color: #b7b3b3;
 }
 
 .pagination-item.active {
@@ -71,7 +79,7 @@
   border: 1px solid #fff;
   box-shadow: 0px 4px 4px rgb(0 0 0 / 15%);
   border-radius: 10px;
-  margin: 28px 14px;
+  margin: 28px 2px;
   padding: 11px 20px;
   flex-wrap: wrap;
   display: flex;
@@ -135,23 +143,72 @@
 .clicks-icon {
   width: 33px;
   height: 31px;
+  cursor: pointer;
 }
 .revenue-icon {
   width: 43px;
   height: 46px;
+  cursor: pointer;
 }
 
 .referral-icon {
   width: 37px;
   height: 46px;
+  cursor: pointer;
 }
 
 .campaign-icon {
   width: 55px;
   height: 62px;
+  cursor: pointer;
 }
 
-@media only screen and (max-width: 900px) {
+@media screen and (max-width: 1480px) {
+  .campaign-block {
+    width: 97%;
+    background: var(--sidebar-bg-color);
+
+    margin: 28px 14px;
+    padding: 11px 20px;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .campaign-right-card {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  /* .campaign-actions {
+    display: flex;
+    margin-bottom: 5px;
+    flex-direction: row;
+    gap: 26rem;
+  }
+  .campaign-actions div {
+    font-size: 20px;
+    font-weight: 300;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .campaign-actions div a {
+    display: flex;
+  }
+
+  .campaign-actions div span {
+    display: block;
+  }
+  .campaign-actions div span {
+    display: block;
+  } */
+}
+
+@media only screen and (max-width: 1050px) {
   .campaign-block {
     display: flex;
     margin: 20px 11px;
@@ -163,6 +220,16 @@
 
   .campaign-details {
     margin-bottom: 14px;
+  }
+  .campaign-right-card {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .campaign-kpis {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 
   .campaign-actions {
@@ -177,7 +244,14 @@
   }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 786px) {
+  .campaign-block {
+    width: 96%;
+    margin: 28px 10px;
+    padding: 11px 20px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
   /* .campaign-right-card {
     flex-direction: column;
     justify-content: flex-start;
@@ -197,12 +271,14 @@
   .campaign-kpis {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
   }
 
   .campaign-actions {
     display: flex;
     flex-direction: row;
-    gap: 12rem;
+    gap: 16rem;
   }
 
   .campaign-actions div {
@@ -230,6 +306,7 @@
 
 @media screen and (max-width: 500px) {
   .campaign-block {
+    width: 94%;
     display: flex;
     margin: 20px 11px;
     padding: 11px 15px;
@@ -251,12 +328,13 @@
   .campaign-kpis {
     display: flex;
     justify-content: space-between;
+    flex-wrap: nowrap;
   }
 
   .campaign-actions {
     display: flex;
     flex-direction: row;
-    gap: 8rem;
+    gap: 12rem;
   }
 
   .campaign-actions div {
@@ -285,5 +363,18 @@
   .referral-icon {
     width: 30px;
     height: 40px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .campaign-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 5rem;
+  }
+  .campaign-kpis {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 }
