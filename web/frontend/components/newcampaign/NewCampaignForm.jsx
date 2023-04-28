@@ -486,27 +486,44 @@ function NewCampaignForm() {
       setSelectedTemplateData(template);
     }
   }
-  // Create_templates_list
-  async function saveCampaignTemplate(data, template) {
-    await fetch("/api/create_template", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ data, template }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+
+  // Discounts API Call
+  async function generateDiscounts(newCampaignData) {
+    try {
+      const response = await fetch("/api/generate_discount", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({campaignData: newCampaignData}),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Template API Call
+  async function createTemplates(selectedTemplateData, newCampaignData) {
+    try {
+      const response = await fetch("/api/create_template", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({templateData: selectedTemplateData, campaignData: newCampaignData}),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
-
-    // Function call to save the campaign data and selected templates
-
-    // await saveCampaignTemplate(newCampaignData, selectedTemplateData);
 
     // Editing Camapign Data Form
     if (isEdit) {
@@ -533,7 +550,8 @@ function NewCampaignForm() {
         newCampaignData?.template_id !== null &&
         selectedTemplateData !== undefined
       ) {
-        // await saveCampaignTemplate(newCampaignData, selectedTemplateData);  //Uncomment this line for create tempalte
+        // await generateDiscounts(newCampaignData);
+        await createTemplates(selectedTemplateData, newCampaignData);  
         setIsLoading(true);
         await fetch("/api/campaignsettings", {
           method: "POST",
