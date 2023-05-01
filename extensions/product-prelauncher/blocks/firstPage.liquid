@@ -123,10 +123,11 @@
     width: 100vw;
   }
   .consent-label-product-prelaucher {
-    font-size: {{ block.settings.base_font_size | times: 0.25}}
-    px;
-    color: {{ block.settings.main_color }}
-    ;
+    font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+    color: {{ block.settings.accent_color }};
+  }
+  svg > path {
+    fill: {{ block.settings.accent_color }} !important;
   }
   .submit-button {
     font-size: {{ block.settings.base_font_size | times: 0.44}}
@@ -393,6 +394,41 @@
       }, {
         "label": "Button Text",
         "id": "button_text",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "type": "checkbox",
+        "id": "show_social_icons",
+        "label": "Show Social Icons",
+        "default": true
+      }, {
+        "label": "Facebook",
+        "id": "facebook_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Instagram",
+        "id": "instagram_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Twitter",
+        "id": "twitter_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Tiktok",
+        "id": "tiktok_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Snapchat",
+        "id": "snapchat_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Discord",
+        "id": "discord_link",
         "type": "text",
         "default": "Enter"
       }, {
