@@ -1,3 +1,4 @@
+
 import React, { useState, forwardRef, useEffect, useRef } from 'react';
 // import { asset_url } from '@shopify/theme-utilities';
 
@@ -30,6 +31,8 @@ import useFetchTemplates from '../../constant/fetchTemplates';
 import { useCallbackPrompt } from '../../hooks/useNavigatingPrompt';
 import SaveDraft from '../modal/SaveDraft';
 
+
+
 function NewCampaignForm() {
   const { isEdit, setIsEdit } = useStateContext();
   const fetch = useAuthenticatedFetch();
@@ -45,6 +48,8 @@ function NewCampaignForm() {
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
 
+  console.log("Edit Campaign Data", campaignById)
+
   // Get Date for next 6 days for the Campaign End Date
   let today = new Date();
   let getNextDate = new Date();
@@ -52,7 +57,9 @@ function NewCampaignForm() {
 
   // Local States of Components
   const [errorMessage, setErrorMessage] = useState(false);
-  const [editCampaignData, setEditCampaignData] = useState();
+  const [error, setError] = useState(false);
+
+  const [editCampaignData, setEditCampaignData] = useState({});
   const [globalSettings, setGlobalSettings] = useState();
   const [productsData, setProductsData] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
@@ -66,7 +73,7 @@ function NewCampaignForm() {
   const [randomTemplate, setRandomTemplate] = useState(); //Get Random Template from templateList
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
   const [showList, setShowList] = useState({});
-  const [expanded, setExpanded] = useState(Array(6).fill(false));
+  const [expanded, setExpanded] = useState([true, false, false, false, false, false]);
   const [isLoading, setIsLoading] = useState(false);
   const [klaviyoList, setKlaviyoList] = useState([]);
 
@@ -141,8 +148,9 @@ function NewCampaignForm() {
 
   // Get the Data with Campaigns ID for Edit campaign
   useEffect(() => {
-    if (campaignById) {
-      setEditCampaignData(campaignById);
+    if (campaignById !== undefined) {
+      setEditCampaignData({ ...campaignById });
+      console.log(editCampaignData, "bysetting")
     }
   }, [campaignById]);
 
@@ -161,15 +169,11 @@ function NewCampaignForm() {
 
   useEffect(() => {
     if (globalSettings !== undefined) {
-      setNewCampaignData({
-        name: '',
-        product: '',
-        klaviyo_list_id: '',
-        template_id: 1,
-        start_date: startDate,
-        end_date: endDate,
+      setNewCampaignData((prevState) => ({
+        ...prevState,
+
         ...globalSettings,
-      });
+      }));
     }
   }, [globalSettings]);
 
@@ -191,7 +195,6 @@ function NewCampaignForm() {
   // Generate Random Templates Array with Template Ids
   useEffect(() => {
     const filtered_templates = [];
-
     if (templateList?.length > 0) {
       // Basic Template will remain unchanged
       const basicTemplate = templateList?.find(
@@ -202,47 +205,102 @@ function NewCampaignForm() {
       const variantTemplate = templateList?.filter(
         (template) => template?.campaign_image !== null
       );
+
+      // Select Templates for Edit a Campaign Form
       if (isEdit) {
         const editSelectTemplate = templateList?.filter(
           (template) => template?.id === editCampaignData?.template_id
         );
-        console.log(editSelectTemplate);
-        if (editSelectTemplate[0].id !== basicTemplate?.id) {
-          filtered_templates.push(editSelectTemplate[0]);
-          filtered_templates.push(
-            ...variantTemplate
-              .slice(1)
-              .sort(() => 0.5 - Math.random())
-              .slice(0, 2)
-          );
-          // console.log(filtered_templates);
-        } else {
-          filtered_templates.push(editSelectTemplate[0]);
+        const filtered = templateList?.filter((template) =>
+          editCampaignData?.name
+            ?.toLowerCase()
+            .includes(template.campaign_name?.toLowerCase())
+        );
 
+
+        if (editSelectTemplate[0].id !== basicTemplate?.id) {
+          filtered_templates.push(basicTemplate)
+          if (filtered[0]?.id !== editSelectTemplate[0]?.id) {
+            filtered_templates.push(editSelectTemplate[0]);
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 1)
+            );
+          } else {
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 2)
+            );
+          }
+
+        }
+        else {
+
+          filtered_templates.push(editSelectTemplate[0]);
           filtered_templates.push(
             ...variantTemplate
               .slice(1)
               .sort(() => 0.5 - Math.random())
               .slice(0, 2)
           );
-          // console.log(filtered_templates);
         }
         const randomTemplates = [
-          (filtered_templates[0] = basicTemplate),
           ...filtered_templates,
         ];
+
         setRandomTemplate(randomTemplates);
         setSelectedTemplateData(editSelectTemplate[0]);
-      } else {
-        const randomTemplates = [
-          templateList[0],
-          ...templateList
-            .slice(1)
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 2),
-        ];
-        // console.log(randomTemplates);
-        setRandomTemplate(randomTemplates);
+      }
+      // Templates Selected Based on New Campaign (campaign-name) 
+
+      else {
+        if (newCampaignData?.name !== "") {
+          setCampaignName(newCampaignData?.name);
+
+          //  Get Filtered Lists of templates bases on campaign name;
+          const filtered = templateList?.filter((template) =>
+            getCampaignName
+              ?.toLowerCase()
+              .includes(template.campaign_name?.toLowerCase())
+          );
+
+          if (filtered.length > 0 && filtered.length < 2) {
+            filtered_templates.push(basicTemplate);
+            filtered_templates.push(filtered[0]);
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 1)
+            );
+          } else {
+            filtered_templates.push(basicTemplate);
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 2)
+            );
+          }
+        } else {
+          if (newCampaignData?.name === "") {
+            filtered_templates.push(basicTemplate);
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 2)
+            );
+          }
+        }
+        const randomTemplate = [...filtered_templates];
+        console.log(randomTemplate, "randomly");
+        setRandomTemplate(randomTemplate);
+
       }
     }
   }, [templateList, getCampaignName]);
@@ -405,6 +463,21 @@ function NewCampaignForm() {
           setErrorName(false);
           setExpanded((prevExpand) =>
             prevExpand.map((state, i) => (i === index ? !state : false))
+          );
+        }
+      } else if (index == 3) {
+        console.log(newCampaignData?.discount_type)
+        if (newCampaignData?.discount_type === "percent" || newCampaignData?.discount_type === "amount") {
+          setError(false);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => (i === index ? !state : false))
+          );
+
+        }
+        else {
+          setError(true);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => i === index - 1 && true)
           );
         }
       } else {
@@ -607,6 +680,10 @@ function NewCampaignForm() {
         // await generateDiscounts(newCampaignData);
         await createTemplates(selectedTemplateData, newCampaignData);  
 
+
+        // Now we need to pass the result as (selected tempalte + bgUrl)
+        await saveCampaignTemplate(newCampaignData, selectedTemplateData); //Uncomment this line for create tempalte
+
         setIsLoading(true);
         await fetch('/api/campaignsettings', {
           method: 'POST',
@@ -645,6 +722,8 @@ function NewCampaignForm() {
     }
   };
 
+  console.log(editCampaignData)
+  console.log(newCampaignData)
   return (
     <div className='new-campaign-container'>
       <div className='newcampaign-title'>
@@ -662,9 +741,9 @@ function NewCampaignForm() {
         {/* Basic Settings Input Form Section  */}
         <section className='newcampaign-settings'>
           <div
-            className={`basic-form-settings ${
-              expanded[0] ? 'active-card' : 'inactive-card'
-            }`}
+            className={`basic-form-settings ${expanded[0] ? "active-card" : "inactive-card"
+              }`}
+
             onClick={() => handleExpand(0)}
           >
             <div className='card-header'>
@@ -891,7 +970,7 @@ function NewCampaignForm() {
                             className='social-input'
                             type='checkbox'
                             name={`show_${link?.name}`}
-                            checked={editCampaignData[`show_${link?.name}`]}
+                            checked={editCampaignData !== undefined ? editCampaignData[`show_${link?.name}`] : null}
                             onChange={handleCheckboxChange}
                           />
                         ) : (
@@ -989,16 +1068,17 @@ function NewCampaignForm() {
         {/* Referal Settings */}
         <section className='newcampaign-settings'>
           <div
-            className={`referrals-settings ${
-              expanded[1] ? 'active-card' : 'inactive-card'
-            }`}
-            //  onClick={() => handleExpand(1)}
+            className={`referrals-settings ${expanded[1] ? "active-card" : "inactive-card"
+              }`}
+          //  onClick={() => handleExpand(1)}
+
           >
             <div className='card-header'>
               <h2 className='card-title'>Referral Settings</h2>
               <span
-                className='toggle-btn'
-                // onClick={() => handleExpand(1)}
+                className="toggle-btn"
+              // onClick={() => handleExpand(1)}
+
               >
                 {expanded[1] ? (
                   <IoIosArrowUp
@@ -1007,8 +1087,9 @@ function NewCampaignForm() {
                   />
                 ) : (
                   <IoIosArrowDown
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                    // onClick={() => handleExpand(1)}
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                  // onClick={() => handleExpand(1)}
+
                   />
                 )}
               </span>
@@ -1045,7 +1126,7 @@ function NewCampaignForm() {
                               id={`share_${link?.title}_referral`}
                               checked={
                                 editCampaignData[
-                                  `share_${link?.title}_referral`
+                                `share_${link?.title}_referral`
                                 ]
                               }
                               onChange={handleCheckboxChange}
@@ -1114,16 +1195,17 @@ function NewCampaignForm() {
 
         <section className='newcampaign-settings'>
           <div
-            className={`rewards-settings ${
-              expanded[2] ? 'active-card' : 'inactive-card'
-            }`}
-            // onClick={() => handleExpand(2)}
+            className={`rewards-settings ${expanded[2] ? "active-card" : "inactive-card"
+              }`}
+          // onClick={() => handleExpand(2)}
+
           >
             <div className='card-header'>
               <h2 className='card-title'>Reward Settings</h2>
               <span
-                className='toggle-btn'
-                // onClick={() => handleExpand(2)}
+                className="toggle-btn"
+              // onClick={() => handleExpand(2)}
+
               >
                 {expanded[2] ? (
                   <IoIosArrowUp
@@ -1132,8 +1214,8 @@ function NewCampaignForm() {
                   />
                 ) : (
                   <IoIosArrowDown
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                    // onClick={() => handleExpand(2)}
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                  // onClick={() => handleExpand(2)}
                   />
                 )}
               </span>
@@ -1151,9 +1233,12 @@ function NewCampaignForm() {
                   Note: Discount will not be applicable on Shipping. Each code
                   can be used by a customer only once.
                 </p>
-                <div className='rewards-settings-container'>
-                  <h2 className='sub-heading'>Discount</h2>
-                  <div className='discount-settings'>
+
+                <div className="rewards-settings-container">
+                  <h2 className="sub-heading">Discount</h2>
+                  <div className="discount-settings">
+                    {error ? <p className="error-message">Select the Discount Type</p> : null}
+
                     <div>
                       {isEdit ? (
                         <input
@@ -1230,7 +1315,7 @@ function NewCampaignForm() {
                                   name={`reward_${reward?.id}_tier`}
                                   value={
                                     editCampaignData[
-                                      `reward_${reward?.id}_tier`
+                                    `reward_${reward?.id}_tier`
                                     ]
                                   }
                                   onChange={handleChange}
@@ -1258,7 +1343,7 @@ function NewCampaignForm() {
                                   name={`reward_${reward?.id}_discount`}
                                   value={
                                     editCampaignData[
-                                      `reward_${reward?.id}_discount`
+                                    `reward_${reward?.id}_discount`
                                     ]
                                   }
                                   onChange={handleChange}
@@ -1270,7 +1355,7 @@ function NewCampaignForm() {
                                   name={`reward_${reward?.id}_discount`}
                                   value={
                                     newCampaignData[
-                                      `reward_${reward?.id}_discount`
+                                    `reward_${reward?.id}_discount`
                                     ]
                                   }
                                   onChange={handleChange}
@@ -1288,7 +1373,7 @@ function NewCampaignForm() {
                                   name={`reward_${reward?.id}_code`}
                                   value={
                                     editCampaignData[
-                                      `reward_${reward?.id}_code`
+                                    `reward_${reward?.id}_code`
                                     ]
                                   }
                                   onChange={handleChange}
@@ -1336,16 +1421,17 @@ function NewCampaignForm() {
         {/* Email Settings */}
         <section className='newcampaign-settings'>
           <div
-            className={`emails-settings ${
-              expanded[3] ? 'active-card' : 'inactive-card'
-            }`}
-            // onClick={() => handleExpand(3)}
+            className={`emails-settings ${expanded[3] ? "active-card" : "inactive-card"
+              }`}
+          // onClick={() => handleExpand(3)}
+
           >
             <div className='card-header'>
               <h2 className='card-title'>Email Settings</h2>
               <span
-                className='toggle-btn'
-                // onClick={() => handleExpand(3)}
+                className="toggle-btn"
+              // onClick={() => handleExpand(3)}
+
               >
                 {expanded[3] ? (
                   <IoIosArrowUp
@@ -1354,9 +1440,9 @@ function NewCampaignForm() {
                   />
                 ) : (
                   <IoIosArrowDown
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                    // onClick={() => handleExpand(3)}
-                  />
+                    style={{ strokeWidth: "70", fill: "#fff" }}
+                  // onClick={() => handleExpand(3)}
+  />
                 )}
               </span>
             </div>
@@ -1549,9 +1635,9 @@ function NewCampaignForm() {
 
         <section className='newcampaign-settings'>
           <div
-            className={`integration-settings ${
-              expanded[4] ? 'active-card' : 'inactive-card'
-            }`}
+            className={`integration-settings ${expanded[4] ? "active-card" : "inactive-card"
+              }`}
+
           >
             <div className='card-header'>
               <h2 className='card-title'>Integration Settings</h2>
@@ -1637,6 +1723,12 @@ function NewCampaignForm() {
                                 value={editCampaignData?.klaviyo_list_id}
                                 onChange={handleChange}
                               >
+                                <option
+
+                                  value='Select'
+                                >
+                                  Select
+                                </option>
                                 {klaviyoList?.map((list) => (
                                   <option
                                     key={list?.list_id}
@@ -1653,6 +1745,12 @@ function NewCampaignForm() {
                                 value={newCampaignData?.klaviyo_list_id}
                                 onChange={handleChange}
                               >
+                                <option
+
+                                  value='Select'
+                                >
+                                  Select
+                                </option>
                                 {klaviyoList?.map((list) => (
                                   <option
                                     key={list?.list_id}
@@ -1700,9 +1798,9 @@ function NewCampaignForm() {
 
         <section className='newcampaign-settings'>
           <div
-            className={`template-settings ${
-              expanded[5] ? 'active-card' : 'inactive-card'
-            }`}
+            className={`template-settings ${expanded[5] ? "active-card" : "inactive-card"
+              }`}
+
           >
             <div className='card-header'>
               <h2 className='card-title'>Template Settings</h2>
@@ -1751,8 +1849,7 @@ function NewCampaignForm() {
                                   key={data?.id || template?.id}
                                   src={data?.image}
                                   alt={template?.campaign_image}
-                                  loading='lazy'
-                                />
+                   />
                               )
                           )
                         )}

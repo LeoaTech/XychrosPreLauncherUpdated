@@ -43,8 +43,8 @@
 }
 
 .campaign-icon {
-  width: 32px;
-  height: 42px;
+  width: 55px;
+  height: 62px;
 }
 
 .clicks-icon {
@@ -52,13 +52,120 @@
   width: 31px;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1480px) {
   .summary-card {
     width: 250px;
     height: 110px;
-    padding: 20px;
+    padding: 10px;
+  }
+
+  .summary-card-value {
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 38px;
+  }
+
+  .summary-card-title {
+    font-size: 21px;
+  }
+
+  .clicks-icon {
+    width: 30px;
+    height: 26px;
+  }
+
+  .revenue-icon {
+    width: 32px;
+    height: 30px;
+  }
+
+  .referral-icon {
+    width: 32px;
+    height: 40px;
+  }
+
+  .campaign-icon {
+    width: 55px;
+    height: 62px;
   }
 }
+
+@media only screen and (max-width: 1280px) {
+  .summary-card {
+    width: 250px;
+    height: 110px;
+    padding: 10px;
+  }
+
+  .summary-card-value {
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 38px;
+  }
+
+  .summary-card-title {
+    font-size: 21px;
+  }
+
+  .clicks-icon {
+    width: 30px;
+    height: 26px;
+  }
+
+  .revenue-icon {
+    width: 32px;
+    height: 30px;
+  }
+
+  .referral-icon {
+    width: 32px;
+    height: 40px;
+  }
+
+  .campaign-icon {
+    width: 55px;
+    height: 62px;
+  }
+}
+
+@media only screen and (max-width: 1050px) {
+  .summary-card {
+    width: 25%;
+    height: 90px;
+    padding: 10px 14px;
+  }
+
+  .summary-card-value {
+    font-weight: 600;
+    font-size: 23px;
+    line-height: 38px;
+  }
+
+  .summary-card-title {
+    font-size: 17px;
+  }
+
+  .clicks-icon {
+    width: 30px;
+    height: 26px;
+  }
+
+  .revenue-icon {
+    width: 32px;
+    height: 30px;
+  }
+
+  .referral-icon {
+    width: 32px;
+    height: 40px;
+  }
+
+  .campaign-icon {
+    width: 55px;
+    height: 62px;
+  }
+}
+
 @media only screen and (max-width: 686px) {
   .summary-card {
     width: 200px;
@@ -75,12 +182,14 @@
     justify-content: center;
     align-items: center;
   }
+
   .summary-card-value {
     font-weight: 700;
     font-size: 26px;
     line-height: 38px;
   }
-  .summary-card-title{
+
+  .summary-card-title {
     font-size: 21px;
   }
 
@@ -100,10 +209,11 @@
   }
 
   .campaign-icon {
-    width: 50px;
-    height: 57px;
+    width: 55px;
+    height: 42px;
   }
 }
+
 @media only screen and (max-width: 500px) {
   .summary-card {
     width: 146px;
@@ -119,18 +229,19 @@
 
   .summary-details {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    /* flex-direction: column; */
+    /* justify-content: center; */
+    /* align-items: center; */
   }
 
-  .summary-card-title{
-    font-size: 23px;
+  .summary-card-title {
+    font-size: 20px;
     font-weight: 500;
   }
+
   .summary-card-value {
     font-weight: 500;
-    font-size: 28px;
+    font-size: 25px;
     line-height: 30px;
   }
 
@@ -150,8 +261,8 @@
   }
 
   .campaign-icon {
-    width: 41px;
-    height: 44px;
+    width: 55px;
+    height: 62px;
   }
 }
 
@@ -162,11 +273,12 @@
     padding: 5px;
     margin: 10px 0;
   }
+
   .summary-card-title {
-    font-size: 22px;
+    font-size: 17px;
   }
 
   .summary-card-value {
-    font-size: 26px;
+    font-size: 21px;
   }
 }

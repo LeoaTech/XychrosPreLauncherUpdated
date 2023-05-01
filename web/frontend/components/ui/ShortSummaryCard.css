@@ -1,6 +1,6 @@
 .short-summary-card {
-  width: 180px;
-  height: 70px;
+  width: 140px;
+  height: 50px;
   background: var(--sidebar-bg-color);
   border: 1px solid var(--main-text-color);
   border: 1px solid #fcfcfc;
@@ -8,8 +8,9 @@
   border-radius: 10px;
   margin: 10px 14px;
   display: flex;
-  padding: 10px 15px;
+  padding: 15px 15px;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -19,29 +20,51 @@
 
 .short-summary-card-value {
   font-weight: 700;
-  font-size: 30px;
+  font-size: 17px;
   line-height: 42px;
   color: var(--primary-color);
 }
 
 .short-summary-card-icon {
-  height: 31px;
-  width: 31px;
+  height: 26px;
+  width: 25px;
 }
 
 @media only screen and (max-width: 1050px) {
   .short-summary-card {
-    width: 190px;
+    width: 110px;
     margin: 10px 5px;
     display: flex;
-    padding: 10px 17px;
+    padding: 5px 13px;
     justify-content: space-between;
-    align-items: center;
+    /* align-items: center; */
     flex-wrap: wrap;
   }
 
   .short-summary-card-value {
-    font-size: 29px;
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  /* .short-summary-card-icon {
+    height: 25px;
+    width: 25px;
+  } */
+
+  .short-summary-card .revenue-icon {
+    width: 27px;
+    height: 26px;
+  }
+
+  .short-summary-card .referral-icon {
+    width: 37px;
+    height: 26px;
+  }
+
+
+  .short-summary-card .clicks-icon {
+    height: 26px;
+    width: 28px;
   }
 }
 
@@ -64,18 +87,18 @@
 
 @media only screen and (max-width: 500px) {
   .short-summary-card {
-    width: 110px;
-    height: 70px;
-    margin: 10px 10px;
+    width: 70px;
+    height: 105px;
+    margin: 10px 18px;
     display: flex;
-    padding: 10px 4px;
-    justify-content: space-between;
+    padding: 13px 8px;
+    flex-direction: row-reverse;
     flex-wrap: wrap;
     align-items: center;
   }
 
   .short-summary-card-value {
-    font-size: 26px;
+    font-size: 21px;
   }
 }
 
@@ -85,8 +108,9 @@
     height: 70px;
     margin: 10px;
     padding: 10px;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-around;
     flex-wrap: wrap;
-    align-items: center;
+    /* align-items: center; */
   }
 }

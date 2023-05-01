@@ -24,7 +24,6 @@ export default function CampaignsComponent() {
     setCampaigns(List);
   }, [dispatch, List]);
 
-  console.log(getCampaigns, " Camapigns", List);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
@@ -72,6 +71,7 @@ export default function CampaignsComponent() {
 
   const handleEdit = (id) => {
     setIsEdit(true);
+    setEditData(getCampaigns?.filter((data) => data?.campaign_id === id))
   };
 
   return (
@@ -110,7 +110,7 @@ export default function CampaignsComponent() {
               {currentItems?.map((campaign) => (
                 <CampaignBlock
                   key={campaign?.campaign_id}
-                  setEditData={setEditData}
+                  eitData={editData}
                   data={campaign}
                   deleteId={deleteId}
                   setDeleteId={setDeleteId}
@@ -118,6 +118,7 @@ export default function CampaignsComponent() {
                   setDeleteModal={setDeleteModal}
                   handleDelete={handleDelete}
                   handleEdit={handleEdit}
+
                 />
               ))}
             </div>

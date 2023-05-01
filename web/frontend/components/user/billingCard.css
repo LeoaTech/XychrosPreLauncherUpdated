@@ -1,6 +1,6 @@
 .card-block {
   height: 400px;
-  width: 350px;
+  width: 260px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -22,11 +22,21 @@
 
 .feature {
   display: flex;
+  /* justify-content: flex-start; */
   align-items: center;
 }
 
+.feature .check-icon {
+  color: var(--secondary-text-colors)
+}
+
+.feature p:first-child {
+  color: white;
+}
+
 .feature p {
-  font-size: 15px;
+  color: rgb(194, 187, 187);
+  font-size: 14spx;
 }
 
 .card-content .card-slug {
@@ -42,10 +52,12 @@
   gap: 10px;
   justify-content: center;
   align-items: center;
+  bottom: 0;
 }
 
 .price-tag p {
-  font-size: 23px;
+  margin-top: 18px;
+  font-size: 20px;
   margin-bottom: 5px;
 }
 
@@ -53,7 +65,6 @@
   height: 40px;
   background-color: rgb(233, 229, 229);
   width: 120px;
-  margin-bottom: 25px;
   display: flex;
   justify-content: center;
   border: none;
@@ -62,17 +73,42 @@
   border-radius: 25px;
   color: black;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 17px;
   -webkit-border-radius: 25px;
   -moz-border-radius: 25px;
   -ms-border-radius: 25px;
   -o-border-radius: 25px;
 }
 
-@media screen and (max-width: 1024px) {
+.subscribed-btn.subscribed {
+  height: 40px;
+  background-color: #635da1;
+
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  border: none;
+  align-items: center;
+  text-align: center;
+  border-radius: 25px;
+  color: rgb(252, 252, 252);
+  cursor: pointer;
+  font-size: 18px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+
+}
+
+.subscribed-btn:hover {
+  background-color: #cfcbcb;
+}
+
+@media screen and (max-width: 1050px) {
   .card-block {
-    height: 390px;
-    width: 340px;
+    height: 100%;
+    width: 250px;
   }
 }
 
