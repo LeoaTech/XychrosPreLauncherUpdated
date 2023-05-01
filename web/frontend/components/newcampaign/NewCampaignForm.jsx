@@ -536,6 +536,40 @@ function NewCampaignForm() {
     }
   }
 
+
+  // Discounts API Call
+  async function generateDiscounts(newCampaignData) {
+    try {
+      const response = await fetch("/api/generate_discount", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({campaignData: newCampaignData}),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Template API Call
+  async function createTemplates(selectedTemplateData, newCampaignData) {
+    try {
+      const response = await fetch("/api/create_template", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({templateData: selectedTemplateData, campaignData: newCampaignData}),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+
   // Handle Get Url of Campaign name
   async function handleGetURL(imgFile) {
     try {
@@ -566,11 +600,13 @@ function NewCampaignForm() {
       .then((res) => res.json())
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
+
   }
 
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
+
     // Editing Camapign Data Form
     if (isEdit) {
       setDraftModal(false);
@@ -596,8 +632,13 @@ function NewCampaignForm() {
         newCampaignData?.template_id !== null &&
         selectedTemplateData !== undefined
       ) {
+
+        // await generateDiscounts(newCampaignData);
+        await createTemplates(selectedTemplateData, newCampaignData);  
+
         // Now we need to pass the result as (selected tempalte + bgUrl)
         await saveCampaignTemplate(newCampaignData, result); //Uncomment this line for create tempalte
+
         setIsLoading(true);
         await fetch('/api/campaignsettings', {
           method: 'POST',
