@@ -92,18 +92,19 @@
 }
 
 .camapign-block-name {
-  font-weight: 400;
-  font-size: 26px;
+  font-weight: 500;
+  font-size: 19px;
   line-height: 35px;
   color: #fff;
   display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
-  align-items: center;
 }
 
 .campaign-block-product-name {
   font-weight: 400;
-  font-size: 20px;
+  font-size: 19px;
   line-height: 24px;
   text-decoration-line: underline;
   color: #d8d4d6;
@@ -115,12 +116,14 @@
   line-height: 19px;
   color: #8b8a8a;
 }
+
 .campaign-right-card {
   display: flex;
   gap: 20px;
   justify-content: center;
   align-items: center;
 }
+
 .campaign-kpis {
   display: flex;
   justify-content: space-between;
@@ -140,28 +143,7 @@
   display: none;
 }
 
-.clicks-icon {
-  width: 33px;
-  height: 31px;
-  cursor: pointer;
-}
-.revenue-icon {
-  width: 43px;
-  height: 46px;
-  cursor: pointer;
-}
 
-.referral-icon {
-  width: 37px;
-  height: 46px;
-  cursor: pointer;
-}
-
-.campaign-icon {
-  width: 55px;
-  height: 62px;
-  cursor: pointer;
-}
 
 @media screen and (max-width: 1480px) {
   .campaign-block {
@@ -181,6 +163,7 @@
     justify-content: flex-start;
     align-items: center;
   }
+
   /* .campaign-actions {
     display: flex;
     margin-bottom: 5px;
@@ -221,11 +204,13 @@
   .campaign-details {
     margin-bottom: 14px;
   }
+
   .campaign-right-card {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
   }
+
   .campaign-kpis {
     display: flex;
     justify-content: space-between;
@@ -242,6 +227,7 @@
     font-weight: 300;
     color: white;
   }
+
 }
 
 @media only screen and (max-width: 786px) {
@@ -252,6 +238,7 @@
     flex-wrap: wrap;
     align-items: flex-start;
   }
+
   /* .campaign-right-card {
     flex-direction: column;
     justify-content: flex-start;
@@ -262,6 +249,7 @@
   .campaign-details {
     margin-bottom: 14px;
   }
+
   .campaign-right-card {
     flex-direction: column;
     justify-content: flex-start;
@@ -348,13 +336,15 @@
 
   /* Summmary cards icons */
   .campaign-icon {
-    width: 39px;
-    height: 38px;
+    width: 55px;
+    height: 62px;
   }
+
   .clicks-icon {
-    width: 30px;
-    height: 31px;
+    width: 25px;
+    height: 25px;
   }
+
   .revenue-icon {
     width: 33px;
     height: 36px;
@@ -372,6 +362,7 @@
     flex-direction: row;
     gap: 5rem;
   }
+
   .campaign-kpis {
     display: flex;
     justify-content: space-between;
