@@ -210,7 +210,7 @@
 
   .campaign-icon {
     width: 55px;
-    height: 62px;
+    height: 42px;
   }
 }
 
@@ -229,19 +229,19 @@
 
   .summary-details {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    /* flex-direction: column; */
+    /* justify-content: center; */
+    /* align-items: center; */
   }
 
   .summary-card-title {
-    font-size: 23px;
+    font-size: 20px;
     font-weight: 500;
   }
 
   .summary-card-value {
     font-weight: 500;
-    font-size: 28px;
+    font-size: 25px;
     line-height: 30px;
   }
 
@@ -275,10 +275,10 @@
   }
 
   .summary-card-title {
-    font-size: 22px;
+    font-size: 17px;
   }
 
   .summary-card-value {
-    font-size: 26px;
+    font-size: 21px;
   }
 }
