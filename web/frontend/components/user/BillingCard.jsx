@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./billingCard.css";
-import { BsCheck2 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 const BillingCard = ({ card, handleSubscription, isSubscribed }) => {
 
@@ -31,8 +30,7 @@ const BillingCard = ({ card, handleSubscription, isSubscribed }) => {
 
       <div className="price-tag">
         <p>${card.price}/month</p>
-        {/* <button className={`subscribed-btn ${isSub? 'subscribed' : ''}`} disabled={card.subscribed}>{card.subscribed ? 'Subscribed' : 'Update'}</button> */}
-        <button className={`subscribed-btn ${isSubscribed? 'subscribed' : ''}`} disabled={isSubscribed}> {isSubscribed ? "Subscribed" : "Update"}</button>
+        <button className={`subscribed-btn ${isSubscribed ? 'subscribed' : ''}`} disabled={isSubscribed}> {isSubscribed ? "Subscribed" : "Update"}</button>
       </div>
     </div>
   );
