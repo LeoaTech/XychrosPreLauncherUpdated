@@ -3,7 +3,7 @@ import { Shopify } from "@shopify/shopify-api";
 import NewPool from "pg";
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelaunchdb",
+  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
 });
 
 pool.connect((err, result) => {
@@ -21,6 +21,13 @@ export default function userDetailsApiEndPoint(app) {
         res,
         app.get("use-online-tokens")
       );
+
+      const user = await pool.query(
+        `SELECT * FROM  user_details where store_url= $1`,
+        [session?.shop]
+      );
+
+      return res.status(200).json(user.rows);
     } catch (err) {
       return res.status(500).json(err.message);
     }
@@ -35,11 +42,20 @@ export default function userDetailsApiEndPoint(app) {
         app.get("use-online-tokens")
       );
 
-      const {} = req.body;
+      const { firstname, lastname, email, billing_id } = req.body;
 
-      const userDetails = await pool.query(``);
+      console.log(req.body)
+      const fullName = `${firstname} ${lastname}`;
+      const user = await pool.query(
+        `INSERT INTO user_details (
+          username,email,store_url,billing_id) VALUES($1,$2,$3,$4) RETURNING *`,
+        [fullName, email, session?.shop, billing_id]
+      );
+
+      console.log("data", user);
+      return res.status(201).json(user.rows);
     } catch (err) {
-      console.error(err.message);
+      return res.status(500).json(err.message);
     }
   });
 
@@ -52,13 +68,23 @@ export default function userDetailsApiEndPoint(app) {
         app.get("use-online-tokens")
       );
 
-      const {} = req.body;
+      console.log(req.body, "idhr aya")
 
-      const userDetails = await pool.query(
-        `
-        `,
-        [session?.shop]
+      const { email, firstname, lastname, billing_id } = req.body;
+      const fullName = `${firstname} ${lastname}`;
+      const updateUser = await pool.query(
+        `UPDATE user_details SET 
+          username =$1,
+          email =$2,
+          billing_id=$3
+          WHERE 
+          store_url =$4 
+          RETURNING *`,
+        [fullName, email, billing_id, session?.shop]
       );
+
+
+      res.status(200).json(updateUser?.rows);
     } catch (err) {
       return res.status(500).json(err.message);
     }
