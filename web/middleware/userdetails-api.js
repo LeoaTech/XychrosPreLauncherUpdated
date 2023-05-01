@@ -1,25 +1,25 @@
-import { Shopify } from "@shopify/shopify-api";
+import { Shopify } from '@shopify/shopify-api';
 
-import NewPool from "pg";
+import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
-});
+  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+  });
 
-pool.connect((err, result) => {
-  if (err) throw err;
-  console.log("Connected");
-});
+// pool.connect((err, result) => {
+//   if (err) throw err;
+//   console.log("Connected");
+// });
 
 export default function userDetailsApiEndPoint(app) {
   //read Global setting for the shop id
 
-  app.get("/api/userprofile", async (req, res) => {
+  app.get('/api/userprofile', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
 
       const user = await pool.query(
@@ -34,12 +34,12 @@ export default function userDetailsApiEndPoint(app) {
   });
 
   // Insert new userdetails
-  app.post("/api/userprofile", async (req, res) => {
+  app.post('/api/userprofile', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
 
       const { firstname, lastname, email, billing_id } = req.body;
@@ -58,12 +58,12 @@ export default function userDetailsApiEndPoint(app) {
   });
 
   //update userdetails at shop_id
-  app.put("/api/userprofile", async (req, res) => {
+  app.put('/api/userprofile', async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get("use-online-tokens")
+        app.get('use-online-tokens')
       );
 
 
