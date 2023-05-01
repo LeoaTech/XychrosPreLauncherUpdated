@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import BillingCard from "./BillingCard";
 import "./user.css";
 
@@ -35,6 +35,39 @@ const PriceDetails = [
   },
 ];
 const UserProfile = () => {
+  const formData = {
+    firstname: "",
+    lastname: "",
+    email: "",
+    store_url: "",
+    billing_id: 1,
+  };
+
+  const [userDetails, setUserDetails] = useState(formData);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setUserDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubit = async (e) => {
+    e.preventDefault();
+
+    await fetch("/api/userprofile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userDetails),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+
+    // dispatch(saveUserDetails(data))
+  };
+
   return (
     <div className="home-container">
       <div className="account-section">
@@ -50,7 +83,13 @@ const UserProfile = () => {
               <div className="form-input-group">
                 <div className="inputfield">
                   <label htmlFor="firstname">First Name</label>
-                  <input type="text" name="firstname" id="firstname" />
+                  <input
+                    type="text"
+                    name="firstname"
+                    id="firstname"
+                    value={userDetails?.firstname}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="inputfield">
                   <label htmlFor="lastname">Last Name</label>
@@ -58,15 +97,21 @@ const UserProfile = () => {
                     type="text"
                     name="lastname"
                     id="lastname"
-                    // value={""}
-                    // onChange={""}
+                    value={userDetails?.lastname}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
               <div className="form-input-group">
                 <div className="inputfield">
                   <label htmlFor="email">Contact Email</label>
-                  <input type="text" name="email" id="email" />
+                  <input
+                    type="text"
+                    name="email"
+                    id="email"
+                    value={userDetails?.email}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div className="inputfield">
@@ -75,7 +120,8 @@ const UserProfile = () => {
                     type="text"
                     name="storelink"
                     id="storelink"
-                    // sssdd
+                    value={userDetails?.store_url}
+                    onChange={handleChange}
                   />
                 </div>
               </div>

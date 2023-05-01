@@ -1,5 +1,7 @@
 <div class="section-layout {{ block.settings.layout }}">
-  <div class="hidden">{{ block.settings.campaign_name }}</div>
+
+  <div class="hidden" id="landing_campaign_name" name="{{ block.settings.campaign_name }}">{{ block.settings.campaign_name }}</div>
+
   <div id="snackbar">You have already signed up either from this email address or from the same IP</div>
   <div id="snackbar2">Email is not valid</div>
   <div id="snackbar3">Something went wrong</div>
