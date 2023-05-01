@@ -9,7 +9,7 @@ export default function SummaryCard(props) {
       </div>
 
       <div>
-        <img src={props.icon} className={props.class + " summary-card-icon"} />u
+        <img src={props.icon} className={props.class + " summary-card-icon"} />
       </div>
     </div>
   );
