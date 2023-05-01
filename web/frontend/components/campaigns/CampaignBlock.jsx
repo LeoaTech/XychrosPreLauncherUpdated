@@ -17,6 +17,7 @@ export default function CampaignBlock({
   setDeleteModal,
   deleteModal,
   deleteId,
+  editData,
   setDeleteId,
 }) {
   // Campaign Card Block Data Properties
@@ -92,7 +93,7 @@ export default function CampaignBlock({
             <IconContext.Provider
               value={{
                 color: "#fcfcfc",
-                size: "30px",
+                size: 24,
               }}
             >
               <div className="icon-image">
@@ -100,7 +101,7 @@ export default function CampaignBlock({
                   to={`/campaigns/${campaign_id}`}
                   onClick={() => handleEdit(campaign_id)}
                 >
-                  <FaEdit style={{ height: "30px", width: "30px" }} />
+                  <FaEdit style={{ height: 24, width: 24 }} />
                   <div>
                     <span>Edit</span>
                   </div>
@@ -110,7 +111,7 @@ export default function CampaignBlock({
             <IconContext.Provider
               value={{
                 color: "red",
-                size: "30px",
+                size: 24,
               }}
             >
               <div className="icon-image">
@@ -120,7 +121,7 @@ export default function CampaignBlock({
                     setDeleteEndDate(endDate);
                     checkAndDeleteCampaign(deleteEndData);
                   }}
-                  style={{ height: "30px", width: "30px", color: "red" }}
+                  style={{ height: 24, width: 24, color: "red" }}
                 />
                 <div>
                   <span style={{ color: "red" }}>Delete</span>
