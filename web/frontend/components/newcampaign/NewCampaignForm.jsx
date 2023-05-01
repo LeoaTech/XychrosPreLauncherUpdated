@@ -382,20 +382,6 @@ function NewCampaignForm() {
     };
   }, []);
 
-  // Create_templates_list
-  async function saveCampaignTemplate(data, template) {
-    await fetch('/api/create_template', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ data, template }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-  }
-
   //? Event handling functions
 
   const ExampleCustomInput = forwardRef(({ value, onClick, onChange }, ref) => (
@@ -609,7 +595,6 @@ function NewCampaignForm() {
     }
   }
 
-
   // Discounts API Call
   async function generateDiscounts(newCampaignData) {
     try {
@@ -642,6 +627,7 @@ function NewCampaignForm() {
     } catch (error) {
       console.log(error);
     }
+  }
 
   // Handle Get Url of Campaign name
   async function handleGetURL(imgFile) {
@@ -659,21 +645,6 @@ function NewCampaignForm() {
     } catch (err) {
       console.log(err);
     }
-  }
-
-  // Create_templates_list
-  async function saveCampaignTemplate(data, template) {
-    await fetch('/api/create_template', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ data, template }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-
   }
 
   // Save  New Campaign form  & Update Campaign Form
@@ -708,6 +679,7 @@ function NewCampaignForm() {
 
         // await generateDiscounts(newCampaignData);
         await createTemplates(selectedTemplateData, newCampaignData);  
+
 
         // Now we need to pass the result as (selected tempalte + bgUrl)
         await saveCampaignTemplate(newCampaignData, selectedTemplateData); //Uncomment this line for create tempalte

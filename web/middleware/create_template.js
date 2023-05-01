@@ -2,7 +2,6 @@ import { Shopify } from '@shopify/shopify-api';
 import fetch from 'node-fetch';
 
 // api calls
-
 const templateApiCalls = async (accessToken, shopURL, templateData, campaignData) => {
 
   // [hardcoded] - please update according to your app for dev purpose only
@@ -18,7 +17,8 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   const first_page = templateData.first_page || '';
   const second_page = templateData.second_page || '';
 
-  // landing template settings
+  // start of landing template settings
+
   const landing_show_header_footer = templateData.landing_show_header_footer;
   const landing_background_overlay = templateData.landing_background_overlay; // gradient values need to be updated in database
   const landing_main_color = `#${templateData.landing_main_color}`;
@@ -63,11 +63,13 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   if (campaignData.show_discord_link == true) {
     landing_discord_link = campaignData.discord_link;
   }
-
   const landing_button_text = templateData.landing_button_text;
   const landing_base_font_size = templateData.landing_base_text_size;
 
-  // rewards template settings
+  // end of landing template settings
+
+  // start of rewards template settings
+
   const rewards_background_image = `${templateData.rewards_background_image}.png`; // need to be updated in database
   const rewards_show_header_footer = templateData.rewards_show_header_footer;
   const rewards_background_overlay = templateData.rewards_background_overlay; // need to be updated in database
@@ -82,6 +84,8 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   const referral_position = templateData.rewards_referral_position;
   const reward_position = templateData.reward_position;
 
+  // end of reward template settings
+
   // set headers
   const headers = {
     'X-Shopify-Access-Token': accessToken,
@@ -95,20 +99,20 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
 
   // first app block unique_id
   const randomHex1 = () => Math.floor(Math.random() * 16).toString(16);
-  let firstBlockId = '';
+  let firstBlockId = "";
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
       firstBlockId += randomHex1();
     }
-    firstBlockId += '-';
+    firstBlockId += "-";
   }
   firstBlockId += Math.random().toString(36).substring(2, 7);
 
   const body1 = {
-    sections: {
-      main: {
-        type: 'apps',
-        blocks: {
+    "sections": {
+      "main": {
+        "type": "apps",
+        "blocks": {
           [firstBlockId]: {
             "type": `shopify:\/\/apps\/${app_name}\/blocks\/firstPage\/${extension_uuid}`,
             "settings": {
@@ -135,57 +139,66 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
               "page": second_page
             }
           }
-
         },
-        block_order: [`${firstBlockId}`],
-        settings: {},
-      },
+        "block_order": [
+          `${firstBlockId}`
+        ],
+        "settings": {
+        }
+      }
     },
-    order: ['main'],
+    "order": [
+      "main"
+    ]
   };
 
   // template 2 body
 
   // second app block unique_id
   const randomHex2 = () => Math.floor(Math.random() * 16).toString(16);
-  let secondBlockId = '';
+  let secondBlockId = "";
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
       secondBlockId += randomHex2();
     }
-    secondBlockId += '-';
+    secondBlockId += "-";
   }
   secondBlockId += Math.random().toString(36).substring(2, 7);
 
   const body2 = {
-    sections: {
-      main: {
-        type: 'apps',
-        blocks: {
+    "sections": {
+      "main": {
+        "type": "apps",
+        "blocks": {
           [secondBlockId]: {
-            type: `shopify:\/\/apps\/${app_name}\/blocks\/secondPage\/${extension_uuid}`,
-            settings: {
-              show_header_footer: rewards_show_header_footer,
-              campaign_name: campaign_name,
-              background_overlay: rewards_background_overlay,
-              main_color: rewards_main_color,
-              accent_color: rewards_accent_color,
-              layout: rewards_divider,
-              background_image: `shopify:\/\/shop_images\/${rewards_background_image}`,
-              preheader_text: rewards_preheader_text,
-              header_text: rewards_header_text,
-              subheader_text: rewards_subheader_text,
-              base_font_size: rewards_base_font_size,
-              icon_dropdown: rewards_image,
-              page: first_page,
-            },
-          },
+            "type": `shopify:\/\/apps\/${app_name}\/blocks\/secondPage\/${extension_uuid}`,
+            "settings": {
+              "show_header_footer": rewards_show_header_footer,
+              "campaign_name": campaign_name,
+              "background_overlay": rewards_background_overlay,
+              "main_color": rewards_main_color,
+              "accent_color": rewards_accent_color,
+              "layout": rewards_divider,
+              "background_image": `shopify:\/\/shop_images\/${rewards_background_image}`,
+              "preheader_text": rewards_preheader_text,
+              "header_text": rewards_header_text,
+              "subheader_text": rewards_subheader_text,
+              "base_font_size": rewards_base_font_size,
+              "icon_dropdown": rewards_image,
+              "page": first_page
+            }
+          }
         },
-        block_order: [`${secondBlockId}`],
-        settings: {},
-      },
+        "block_order": [
+          `${secondBlockId}`
+        ],
+        "settings": {
+        }
+      }
     },
-    order: ['main'],
+    "order": [
+      "main"
+    ],
   };
 
   // get active theme id
@@ -216,28 +229,25 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   const createFirstPageTemplate = async (themeid) => {
     const templateName = "LandingTemplate"; // base name
     const uniqueTemplateName = templateName + "_" + uuid; // concatenate base name and uuid
-
     try {
-      const response = await fetch(
-        `https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`,
-        {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({
-            asset: {
-              key: `templates/page.${uniqueTemplateName}.json`,
-              value: JSON.stringify(body1),
-            },
-          }),
-        }
-      );
+      const response = await fetch(`https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          asset: {
+            key: `templates/page.${uniqueTemplateName}.json`,
+            value: JSON.stringify(body1),
+          },
+        }),
+      });
       const data = await response.json();
       console.log(data);
       if (!response.ok) {
         throw new Error(`Failed to create page template: ${data.errors}`);
       }
       return data;
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
     }
   };
@@ -271,16 +281,15 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
     }
   };
 
-  // create first page
+  // create first page 
   const createFirstPage = async (templateSuffix) => {
     const pageName = "LandingPage"; // base name
     const uniquePageeName = pageName + "_" + uuid; // concatenate base name and uuid
-
     const pageBody = JSON.stringify({
-      page: {
-        title: uniquePageeName,
-        template_suffix: templateSuffix,
-      },
+      "page": {
+        "title": uniquePageeName,
+        "template_suffix": templateSuffix,
+      }
     });
 
     try {
@@ -304,12 +313,11 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   const createSecondPage = async (templateSuffix) => {
     const pageName = "RewardsPage"; // base name
     const uniquePageeName = pageName + "_" + uuid; // concatenate base name and uuid
-
     const pageBody = JSON.stringify({
-      page: {
-        title: uniquePageeName,
-        template_suffix: templateSuffix,
-      },
+      "page": {
+        "title": uniquePageeName,
+        "template_suffix": templateSuffix,
+      }
     });
 
     try {
@@ -332,10 +340,10 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   // update template1 with second page handle
   const updateFirstPageTemplate = async (templateSuffix, pagehandle) => {
     const body = {
-      sections: {
-        main: {
-          type: 'apps',
-          blocks: {
+      "sections": {
+        "main": {
+          "type": "apps",
+          "blocks": {
             [firstBlockId]: {
               "type": `shopify:\/\/apps\/${app_name}\/blocks\/firstPage\/${extension_uuid}`,
               "settings": {
@@ -362,13 +370,17 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
                 "page": pagehandle
               }
             }
-
           },
-          block_order: [`${firstBlockId}`],
-          settings: {},
-        },
+          "block_order": [
+            `${firstBlockId}`
+          ],
+          "settings": {
+          }
+        }
       },
-      order: ['main'],
+      "order": [
+        "main"
+      ],
     };
 
     try {
@@ -399,34 +411,39 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   // update template2 with first page handle
   const updateSecondPageTemplate = async (templateSuffix, pagehandle) => {
     const body = {
-      sections: {
-        main: {
-          type: 'apps',
-          blocks: {
+      "sections": {
+        "main": {
+          "type": "apps",
+          "blocks": {
             [secondBlockId]: {
-              type: `shopify:\/\/apps\/${app_name}\/blocks\/secondPage\/${extension_uuid}`,
-              settings: {
-                show_header_footer: rewards_show_header_footer,
-                campaign_name: campaign_name,
-                background_overlay: rewards_background_overlay,
-                main_color: rewards_main_color,
-                accent_color: rewards_accent_color,
-                layout: rewards_divider,
-                background_image: `shopify:\/\/shop_images\/${rewards_background_image}`,
-                preheader_text: rewards_preheader_text,
-                header_text: rewards_header_text,
-                subheader_text: rewards_subheader_text,
-                base_font_size: rewards_base_font_size,
-                icon_dropdown: rewards_image,
-                page: pagehandle,
-              },
-            },
+              "type": `shopify:\/\/apps\/${app_name}\/blocks\/secondPage\/${extension_uuid}`,
+              "settings": {
+                "show_header_footer": rewards_show_header_footer,
+                "campaign_name": campaign_name,
+                "background_overlay": rewards_background_overlay,
+                "main_color": rewards_main_color,
+                "accent_color": rewards_accent_color,
+                "layout": rewards_divider,
+                "background_image": `shopify:\/\/shop_images\/${rewards_background_image}`,
+                "preheader_text": rewards_preheader_text,
+                "header_text": rewards_header_text,
+                "subheader_text": rewards_subheader_text,
+                "base_font_size": rewards_base_font_size,
+                "icon_dropdown": rewards_image,
+                "page": pagehandle
+              }
+            }
           },
-          block_order: [`${secondBlockId}`],
-          settings: {},
-        },
+          "block_order": [
+            `${secondBlockId}`
+          ],
+          "settings": {
+          }
+        }
       },
-      order: ['main'],
+      "order": [
+        "main"
+      ],
     };
 
     try {
@@ -481,12 +498,12 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
 // --------------------------------------- API ------------------------------------
 
 export default function createTemplateApiEndpoint(app) {
-  app.post('/api/create_template', async (req, res) => {
+  app.post("/api/create_template", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
       const { accessToken, shop } = session;
       const { templateData, campaignData } = req.body;
@@ -495,13 +512,8 @@ export default function createTemplateApiEndpoint(app) {
       // console.log(campaignData);
       await templateApiCalls(accessToken, shop, templateData, campaignData);
       return res.status(200).json({ success: true, message: "Templates and Pages Created Successfully" });
-
     } catch (error) {
-      return res.status(400).json({
-        success: false,
-        message: 'Failed to Create Templates and Pages',
-        error: error.message,
-      });
+      return res.status(400).json({ success: false, message: "Failed to Create Templates and Pages", error: error.message });
     }
   });
 }
