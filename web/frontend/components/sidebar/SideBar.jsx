@@ -42,29 +42,29 @@ const SideBar = () => {
     {
       title: "Home",
       path: "/",
-      icon: <FaHome style={{ color: "#fff", height: 30, width: 30 }} />,
+      icon: <FaHome style={{ color: "#fff", height: 24, width: 24 }} />,
     },
     {
       title: "Campaigns",
       path: "/campaigns",
-      icon: <HiSpeakerphone style={{ color: "#fff", height: 30, width: 30 }} />,
+      icon: <HiSpeakerphone style={{ color: "#fff", height: 24, width: 24 }} />,
     },
     {
       title: "Referrals",
       path: "/referrals",
-      icon: <GiShipWheel style={{ color: "#fff", height: 30, width: 30 }} />,
+      icon: <GiShipWheel style={{ color: "#fff", height: 24, width: 24 }} />,
     },
     {
       title: "Settings",
       path: "/settings",
-      icon: <MdSettings style={{ color: "#fff", height: 30, width: 30 }} />,
+      icon: <MdSettings style={{ color: "#fff", height: 24, width: 24 }} />,
     },
     {
       title: "Support",
       path: "/support",
       icon: (
         <RiCustomerServiceLine
-          style={{ color: "#fff", height: 30, width: 30 }}
+          style={{ color: "#fff", height: 24, width: 24 }}
         />
       ),
     },
@@ -111,7 +111,7 @@ const SideBar = () => {
                 className="sidebar-add-btn"
               >
                 <span className="add-icon-img">
-                  <MdAdd style={{ height: 30, width: 30 }} />
+                  <MdAdd style={{ height: 24, width: 24 }} />
                 </span>
                 <p className="add-icon-text">New Campaign</p>
               </NavLink>
@@ -196,7 +196,7 @@ const SideBar = () => {
               }
             >
               <span className="icon-img">
-                <MdOutlineMessage style={{ height: 30, width: 30 }} />
+                <MdOutlineMessage style={{ height: 24, width: 24 }} />
               </span>
               <p className="icon-text">Feedback</p>
             </NavLink>

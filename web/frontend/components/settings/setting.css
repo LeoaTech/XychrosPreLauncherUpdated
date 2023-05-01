@@ -288,7 +288,7 @@
 
 @media screen and (max-width: 1480px) {
   .settings-container{
-    margin-left: 4%;
+    margin-left: 2%;
   }
   .stores__social_links {
     grid-template-columns: repeat(2, 1fr);

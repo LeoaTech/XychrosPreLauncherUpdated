@@ -61,15 +61,31 @@ const Header = () => {
         <NavButton
           customFunction={() => setActiveMenu(!activeMenu)}
           color="#fff"
-          icon={<AiOutlineMenu style={{ height: "45px", width: "35px" }} />}
+          icon={<AiOutlineMenu style={{ height: 24, width: 24 }} />}
         />
+      </div>
+      <div className="extra">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div className="extra">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
       <div className="center">
         {/* logo */}
         <img
           src={SideLogo}
           alt="XychrosLogo"
-          // onClick={() => setActiveMenu(!activeMenu)}
+        // onClick={() => setActiveMenu(!activeMenu)}
         />
       </div>
 
@@ -85,7 +101,7 @@ const Header = () => {
               color="#fff"
               icon={
                 <MdOutlinePriceChange
-                  style={{ height: "35px", width: "35px" }}
+                  style={{ height: 24, width: 24 }}
                 />
               }
             />
@@ -95,17 +111,19 @@ const Header = () => {
             <NavButton
               title="FAQs"
               color="#fff"
-              icon={<CgNotes style={{ height: "30px", width: "30px" }} />}
+              className={({ isActive }) =>
+                isActive ? "" : "header-links"
+              }
+              icon={<CgNotes style={{ height: 20, width: 24 }} />}
             />
           </Link>
           <div>
             <Link to="/userprofile">
               <div
                 className="userProfile"
-                onClick={() => handleClick("UserProfile")}
               >
                 <HiOutlineUser
-                  style={{ height: "30px", width: "30px", color: "#fff" }}
+                  style={{ height: 20, width: 22, color: "#fff" }}
                 />
               </div>
             </Link>
