@@ -387,7 +387,8 @@ const UserProfile = () => {
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [priceCard, setPriceCard] = useState(PriceDetails)
   const [subscribedCardId, setSubscribedCardId] = useState(null);  //handle Biiling Card subscription ID
-  const [title, setTitle] = useState("")
+  const [title, setTitle] = useState("");
+  const [isLoading, setIsloading] = useState(false)
   const findTitle = () => {
     for (let card of priceCard) {
       if (card.id === userDetails?.billing_id) {
@@ -402,7 +403,6 @@ const UserProfile = () => {
 
   }, [userDetails?.billing_id])
 
-  console.log(title)
   useEffect(() => {
     if (data?.length > 0) {
       const mydata = data[0];
@@ -439,9 +439,8 @@ const UserProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsloading(true)
     if (data?.length > 0) {
-      console.log("this wala execute")
       const response = await fetch("/api/userprofile", {
         method: "PUT",
         headers: {
@@ -452,8 +451,8 @@ const UserProfile = () => {
 
       if (response.ok) {
         const newUserData = await response.json();
-        console.log(newUserData);
-        await dispatch(SaveUser(newUserData))
+        await dispatch(SaveUser(newUserData));
+        setIsloading(false)
       } else {
         return;
       }
@@ -469,6 +468,7 @@ const UserProfile = () => {
         .then((res) => res.json())
         .then((data) => dispatch(SaveUser(data)))
         .catch((err) => console.log(err));
+      setIsloading(false)
     }
   };
 
@@ -479,7 +479,6 @@ const UserProfile = () => {
 
 
   const handleNext = () => {
-    console.log("clicked", maxCardIndex, "current", currentCardIndex)
     if (currentCardIndex < maxCardIndex) {
       setCurrentCardIndex(currentCardIndex + 1);
     }
@@ -587,8 +586,8 @@ const UserProfile = () => {
 
         {/* Save the Data  */}
         <div className="account-save">
-          <button type="submit" onClick={handleSubmit} className="btnSave">
-            Save
+          <button type="submit" onClick={handleSubmit} className="btnSave" disabled={userDetails?.billing_id === null}>
+            {isLoading ? "Saving..." : " Save"}
           </button>
         </div>
       </div>
