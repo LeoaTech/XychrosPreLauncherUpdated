@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import BillingCard from "./BillingCard";
 import "./user.css";
 import { BsCheck2 } from "react-icons/bs";
-import { RxCross2 } from 'react-icons/rx';
-import { AiOutlineEdit, AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai'
+import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai'
 import { useAuthenticatedFetch } from "../../hooks";
 import { fetchUserDetails, SaveUser } from "../../app/features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
+
+// Pricing Card Details   
 const PriceDetails = [
   {
     id: 1,
@@ -22,6 +23,12 @@ const PriceDetails = [
         id: 2,
         icon: <BsCheck2 style={{ height: 21, width: 21, color: "#000" }} />,
         title: "50 Emails Collected",
+      }, {
+
+        id: 3,
+        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#000" }} />,
+
+        title: "Anti Fraud"
       },
 
 
@@ -48,7 +55,7 @@ const PriceDetails = [
       {
 
         id: 3,
-        icon: <RxCross2 style={{ height: 21, width: 21, color: "#fff" }} />,
+        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
 
         title: "Anti Fraud"
       },
@@ -59,7 +66,7 @@ const PriceDetails = [
         title: "Double Opt In"
       }, {
         id: 5,
-        icon: <RxCross2 style={{ height: 21, width: 21, color: "#fff" }} />,
+        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
 
         title: "Klaviyo Integration"
       }, {
@@ -279,7 +286,7 @@ const PriceDetails = [
   },
   {
     id: 8,
-    title: "Tier 8",
+    title: "Tier 7",
     feature: [
       {
         id: 1,
@@ -320,7 +327,7 @@ const PriceDetails = [
   },
   {
     id: 9,
-    title: "Tier 9",
+    title: "Tier 8",
     feature: [
       {
         id: 1,
@@ -365,10 +372,9 @@ const UserProfile = () => {
   const data = useSelector(fetchUserDetails);
   const dispatch = useDispatch();
 
-  // console.log(data, "kya data aa rha hai")
-
   const [subscribeMessage, setSubscribeMessage] = useState("")
   const fetch = useAuthenticatedFetch();
+  // Initial User Form Data
   const formData = {
     firstname: "",
     lastname: "",
@@ -381,8 +387,7 @@ const UserProfile = () => {
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [priceCard, setPriceCard] = useState(PriceDetails)
   const [subscribedCardId, setSubscribedCardId] = useState(null);  //handle Biiling Card subscription ID
-  const [isEdit, setIsEdit] = useState(false)
-
+  const [title, setTitle] = useState("")
   const findTitle = () => {
     for (let card of priceCard) {
       if (card.id === userDetails?.billing_id) {
@@ -390,6 +395,14 @@ const UserProfile = () => {
       }
     }
   }
+
+  useEffect(() => {
+    let mytitle = findTitle();
+    setTitle(mytitle)
+
+  }, [userDetails?.billing_id])
+
+  console.log(title)
   useEffect(() => {
     if (data?.length > 0) {
       const mydata = data[0];
@@ -397,7 +410,7 @@ const UserProfile = () => {
       if (name?.length > 0) {
         setUserDetails({ ...mydata, firstname: name[0], lastname: name[1], store_url: mydata?.store_url });
         setSubscribedCardId(mydata?.billing_id)
-        setSubscribeMessage(`Subscribed to  price card. Billed and reset every month on the ${new Date().getDate()} at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
+        setSubscribeMessage(`Subscribed to ${title}  price card. Billed and reset every month on the ${new Date().getDate()} at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
       }
     } else {
       return;
@@ -414,10 +427,11 @@ const UserProfile = () => {
   // Handle Price Card Subscription
   const handleSubscription = (id) => {
     setSubscribedCardId(id);   // Update the ID 
-    // const title = findTitle()
+    const newtitle = findTitle();
+    setTitle(newtitle)
     setIsSubscribed(true);
     setUserDetails((prevState) => ({ ...prevState, billing_id: id }));
-    setSubscribeMessage(`Subscribed to  pricecard. Billed and reset every month on the ${new Date().getDate()} at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
+    setSubscribeMessage(`Subscribed to ${title}  pricecard. Billed and reset every month on the ${new Date().getDate()} at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
   };
 
 
@@ -425,7 +439,6 @@ const UserProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data, "agr data hai ")
 
     if (data?.length > 0) {
       console.log("this wala execute")
@@ -436,7 +449,6 @@ const UserProfile = () => {
         },
         body: JSON.stringify(userDetails),
       })
-      console.log("response", response);
 
       if (response.ok) {
         const newUserData = await response.json();
@@ -460,9 +472,7 @@ const UserProfile = () => {
     }
   };
 
-  const handleEdit = async () => {
-    setIsEdit(true);
-  }
+
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const maxCardIndex = PriceDetails?.length - 1;
   const cardWidth = 300;
@@ -481,13 +491,14 @@ const UserProfile = () => {
     }
   };
 
-  console.log(userDetails, "ye kya bakwas hai");
   return (
     <div className="user-container">
       <div className="account-section">
         <div className="account-title">
           <h2>Account Details</h2>
         </div>
+
+        {/* Contact Details Form */}
         <div className="contact-details">
           <h3>Contact Details </h3>
 
@@ -544,23 +555,14 @@ const UserProfile = () => {
           </div>
         </div>
 
+        {/* Billing Details with All Pricing Cards */}
         <div className="billing-details">
-
-          <h3>Billing Details</h3>
-           <button class="next-btn" onClick={handleNext}><AiOutlineArrowRight /></button>
+          <button class="next-btn" onClick={handleNext}><AiOutlineArrowRight /></button>
           <button class="prev-btn" onClick={handlePrevious}><AiOutlineArrowLeft /></button>
-          <p>
-            {/* {subscribeMessage} */}
-            {/* <a style={{ color: "blueviolet" }} href="#">   // UnComment this to see Billing Details(incomplete)
-              See Details
-            </a> */}
-          </p>
-
-
-
+          <h3>Billing Details</h3>
+          <p>{subscribeMessage}</p>
           <div className="carousel" >
             <div className="billing-cards" style={{
-              // transform: `translateX(-${currentCardIndex * (cardWidth + 10)}px)`,
             }}>
               {priceCard?.map((card, index) => {
                 return (
@@ -581,9 +583,9 @@ const UserProfile = () => {
               })}
             </div>
           </div>
-
-         
         </div>
+
+        {/* Save the Data  */}
         <div className="account-save">
           <button type="submit" onClick={handleSubmit} className="btnSave">
             Save
