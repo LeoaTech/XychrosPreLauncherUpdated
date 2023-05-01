@@ -44,7 +44,6 @@ export default function userDetailsApiEndPoint(app) {
 
       const { firstname, lastname, email, billing_id } = req.body;
 
-      console.log(req.body)
       const fullName = `${firstname} ${lastname}`;
       const user = await pool.query(
         `INSERT INTO user_details (
