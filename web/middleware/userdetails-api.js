@@ -52,7 +52,6 @@ export default function userDetailsApiEndPoint(app) {
         [fullName, email, session?.shop, billing_id]
       );
 
-      console.log("data", user);
       return res.status(201).json(user.rows);
     } catch (err) {
       return res.status(500).json(err.message);
@@ -68,7 +67,6 @@ export default function userDetailsApiEndPoint(app) {
         app.get("use-online-tokens")
       );
 
-      console.log(req.body, "idhr aya")
 
       const { email, firstname, lastname, billing_id } = req.body;
       const fullName = `${firstname} ${lastname}`;
