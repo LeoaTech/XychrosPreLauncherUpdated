@@ -118,11 +118,26 @@ const SettingComponent = () => {
     // Update the state with the new value
     setSettingsData((prevSettingsData) => ({
       ...prevSettingsData,
-      // [name]: value === "phone",
       collect_phone: value === "phone",
+      // discount_type: value,
+    }));
+  }
+
+  // Handle Radio Change Event
+  function handleDiscountRadioChange(event) {
+    const { name, value } = event.target;
+    // Update the state with the new value
+    setSettingsData((prevSettingsData) => ({
+      ...prevSettingsData,
+      // [name]: value,
+
       discount_type: value,
     }));
   }
+
+
+
+
 
   console.log("Settings", settingsData);
 
@@ -136,9 +151,8 @@ const SettingComponent = () => {
         {/* Basic Settings Section */}
         <section className="global-settings">
           <div
-            className={`basic-settings ${
-              currentExpanded[0] ? "active-form" : "inactive-form"
-            }`}
+            className={`basic-settings ${currentExpanded[0] ? "active-form" : "inactive-form"
+              }`}
             onClick={() => handleExpand(0)}
           >
             <div className="main-heading">
@@ -244,9 +258,8 @@ const SettingComponent = () => {
 
         <section className="global-settings">
           <div
-            className={`referral-settings ${
-              currentExpanded[1] ? "active-form" : "inactive-form"
-            }`}
+            className={`referral-settings ${currentExpanded[1] ? "active-form" : "inactive-form"
+              }`}
           >
             <div className="main-heading">
               <h2 className="main-title">Referral Settings</h2>
@@ -328,9 +341,8 @@ const SettingComponent = () => {
         {/* Rewards Settings Section */}
         <section className="global-settings">
           <div
-            className={`reward-settings ${
-              currentExpanded[2] ? "active-form" : "inactive-form"
-            }`}
+            className={`reward-settings ${currentExpanded[2] ? "active-form" : "inactive-form"
+              }`}
           >
             <div className="main-heading">
               <h2 className="main-title">Rewards Settings</h2>
@@ -373,7 +385,7 @@ const SettingComponent = () => {
                       name="discount_type"
                       value="percent"
                       checked={settingsData?.discount_type === "percent"}
-                      onChange={handleRadioChange}
+                      onChange={handleDiscountRadioChange}
                     />
                     <label htmlFor="discount_type">
                       % off the entire order
@@ -386,7 +398,7 @@ const SettingComponent = () => {
                       name="discount_type"
                       value="amount"
                       checked={settingsData?.discount_type === "amount"}
-                      onChange={handleRadioChange}
+                      onChange={handleDiscountRadioChange}
                     />
                     <label htmlFor="discount_type">
                       $ off the entire order
@@ -473,9 +485,8 @@ const SettingComponent = () => {
         {/* Email Settings Section */}
         <section className="global-settings">
           <div
-            className={`email-drafts-settings ${
-              currentExpanded[3] ? "active-form" : "inactive-form"
-            }`}
+            className={`email-drafts-settings ${currentExpanded[3] ? "active-form" : "inactive-form"
+              }`}
           >
             <div className="main-heading">
               <h2 className="main-title">Emails Settings</h2>
@@ -621,9 +632,8 @@ const SettingComponent = () => {
 
         <section className="global-settings">
           <div
-            className={`integration--settings ${
-              currentExpanded[4] ? "active-form" : "inactive-form"
-            }`}
+            className={`integration--settings ${currentExpanded[4] ? "active-form" : "inactive-form"
+              }`}
           >
             <div className="main-heading">
               <h2 className="main-title">Integrations Settings</h2>
