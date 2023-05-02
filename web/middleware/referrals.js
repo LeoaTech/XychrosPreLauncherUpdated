@@ -242,7 +242,7 @@ export default function referralsApiEndpoints(app, secret) {
     try {
       const { referral_code, campaign_name } = req.body;
       const campaign_details = await pool.query(
-        `SELECT * from campaign_settings where campaign_name=${campaign_name}`
+        `SELECT * from campaign_settings where name=${campaign_name}`
       );
       const campaign_id = campaign_details.rows[0].campaign_id;
       const data = await pool.query(
@@ -268,9 +268,8 @@ export default function referralsApiEndpoints(app, secret) {
         });
       }
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: 'Something went wrong' });
+      console.log(error);
+      return res.status(500).json({ success: false, message: error });
     }
   });
 
