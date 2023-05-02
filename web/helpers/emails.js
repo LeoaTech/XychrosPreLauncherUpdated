@@ -103,10 +103,11 @@ export const replace_reward_email_text = async (
 
 export const send_email = async (message, email, subject) => {
   try {
+    console.log(message);
     await sendemail({
       to: email,
       subject: subject,
-      html: message,
+      text: message,
     });
   } catch (error) {
     console.log(error);

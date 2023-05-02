@@ -1,8 +1,5 @@
 <script>
   let second_page_settings = {{ block.settings | json }};
-  console.log(second_page_settings);
-
-  let product_list = {{ block.settings.product_list | json }};
 
   async function getbackground(campaign_name) {
     return await fetch('/apps/xychrosupdated/api/geturl', {
@@ -18,7 +15,7 @@
     });
   }
 
-  window.onload = (e) => {
+  window.onload = async (e) => {
     var el = document.querySelector('.product-prelaunch-second-page');
     el.parentElement.style.padding = '0';
     el.parentElement.style.margin = '0';
@@ -343,11 +340,11 @@
             "label": "Image 5",
             "group": "Image"
           }, {
-            "value": "image-7",
+            "value": "image-6",
             "label": "Image 6",
             "group": "Image"
           }, {
-            "value": "image-9",
+            "value": "image-7",
             "label": "Image 7",
             "group": "Image"
           }
