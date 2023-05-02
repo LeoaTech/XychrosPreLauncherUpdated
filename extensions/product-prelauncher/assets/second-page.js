@@ -36,6 +36,7 @@ const get_referrals = async () => {
   console.log(data);
   if (response.status == 200) {
     let campaign_data = data.campaign_data.rows[0];
+    console.log(campaign_data);
     copyCode.value = urlData;
     copyCode.innerHTML = urlData;
     if (data.referral_data.length > 0) {
