@@ -11,8 +11,15 @@ var copyCode = document.getElementById('code');
 // get campaign name
 const campaign_name = document.getElementById('review_campaign_name');
 
+let urlData = window.location.href;
+urlData = urlData.split('/pages')[0];
+urlData = urlData + `/pages/${second_page_settings.page}?refer=${user_code2}`;
+console.log(urlData);
+
 // find referral details for rewards page
 const get_referrals = async () => {
+  console.log('I came here');
+  console.log(campaign_name.innerHTML);
   const url = '/apps/xychrosupdated/api/get_referrals';
   const response = await fetch(url, {
     method: 'POST',
@@ -21,14 +28,17 @@ const get_referrals = async () => {
     },
     body: JSON.stringify({
       referral_code: user_code2,
-      campaign_name: campaign_name.innerHTML,
+      campaign_name: `'${campaign_name.innerHTML}'`,
     }),
   });
   const data = await response.json();
+
+  console.log(data);
   if (response.status == 200) {
     let campaign_data = data.campaign_data.rows[0];
-
-    console.log(data);
+    console.log(campaign_data);
+    copyCode.value = urlData;
+    copyCode.innerHTML = urlData;
     if (data.referral_data.length > 0) {
       count_referrals.innerText = `Total Referrals Joined: ${data.referral_data.length}`;
       current_referrals.innerText = `${data.referral_data.length}`;
@@ -38,8 +48,10 @@ const get_referrals = async () => {
       count_referrals.innerText =
         '0 friends have joined! Invite friends to Join';
       current_referrals.innerText = 0;
-      remaining_referrals.innerText = `${data.message.length}`;
+      remaining_referrals.innerText = `${data.referral_data.length}`;
     }
+  } else {
+    console.log(data);
   }
 };
 

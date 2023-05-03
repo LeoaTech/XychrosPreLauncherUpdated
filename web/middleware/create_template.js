@@ -2,40 +2,85 @@ import { Shopify } from '@shopify/shopify-api';
 import fetch from 'node-fetch';
 
 // api calls
-const templateApiCalls = async (accessToken, shopURL, templateData) => {
+const templateApiCalls = async (
+  accessToken,
+  shopURL,
+  templateData,
+  campaignData
+) => {
   // [hardcoded] - please update according to your app for dev purpose only
 
   const app_name = 'XychrosUpdated';
   const extension_uuid = '5ca81867-4beb-4cc6-b05f-57152679ccad';
 
-  // extract pre-defined template settings
-  const campaign_name = templateData.campaign_name;
+  // extract campaign settings and template settings
+  const campaign_name = campaignData.name;
+  const template_name = templateData.campaign_name;
+
+  // landing and reward page links
   const first_page = templateData.first_page || '';
   const second_page = templateData.second_page || '';
 
-  // landing page settings
+  // start of landing template settings
+
   const landing_show_header_footer = templateData.landing_show_header_footer;
   const landing_background_overlay = templateData.landing_background_overlay; // gradient values need to be updated in database
-  const landing_main_color = `#${templateData.landing_main_color}`; // need to be updated in database (# will be added with color value)
+  const landing_main_color = `#${templateData.landing_main_color}`;
   const landing_accent_color = `#${templateData.landing_accent_color}`;
   const landing_divider = templateData.landing_divider;
   const landing_background_image = `${templateData.landing_background_image}.png`; // need to add .png/jpg or file path in database
   const landing_header_text = templateData.landing_header_text || '';
   const landing_pre_header_text = templateData.landing_pre_header_text || '';
-  const landing_tagline_text = templateData.landing_tagline_text || ''; // need to be updated in database (all null text values need to be converted into empty strings)
+  const landing_tagline_text = templateData.landing_tagline_text || '';
   const landing_email_placeholder_text =
     templateData.landing_email_placeholder_text || '';
-  const landing_phone_placeholder_text =
-    templateData.landing_phone_placeholder_text || '';
+
+  // show phone placeholder only if merchant wants to collect phone number
+  let landing_phone_placeholder_text = '';
+  if (campaignData.collect_phone == true) {
+    landing_phone_placeholder_text =
+      templateData.landing_phone_placeholder_text;
+  }
+
+  // store's social links
+  let landing_facebook_link = '';
+  let landing_instagram_link = '';
+  let landing_twitter_link = '';
+  let landing_tiktok_link = '';
+  let landing_snapchat_link = '';
+  let landing_discord_link = '';
+
+  // we have to show only checked social icons on landing page, hence:
+  if (campaignData.show_facebook_link == true) {
+    landing_facebook_link = campaignData.facebook_link;
+  }
+  if (campaignData.show_instagram_link == true) {
+    landing_instagram_link = campaignData.instagram_link;
+  }
+  if (campaignData.show_twitter_link == true) {
+    landing_twitter_link = campaignData.twitter_link;
+  }
+  if (campaignData.show_tiktok_link == true) {
+    landing_tiktok_link = campaignData.tiktok_link;
+  }
+  if (campaignData.show_snapchat_link == true) {
+    landing_snapchat_link = campaignData.snapchat_link;
+  }
+  if (campaignData.show_discord_link == true) {
+    landing_discord_link = campaignData.discord_link;
+  }
   const landing_button_text = templateData.landing_button_text;
   const landing_base_font_size = templateData.landing_base_text_size;
 
-  // rewards page settings
+  // end of landing template settings
+
+  // start of rewards template settings
+
   const rewards_background_image = `${templateData.rewards_background_image}.png`; // need to be updated in database
   const rewards_show_header_footer = templateData.rewards_show_header_footer;
   const rewards_background_overlay = templateData.rewards_background_overlay; // need to be updated in database
-  const rewards_main_color = `#${templateData.rewards_main_color}`; // need to be updated in database
-  const rewards_accent_color = `#${templateData.rewards_accent_color}`; // need to be updated in database
+  const rewards_main_color = `#${templateData.rewards_main_color}`;
+  const rewards_accent_color = `#${templateData.rewards_accent_color}`;
   const rewards_divider = templateData.rewards_divider; // need to be updated in database
   const rewards_preheader_text = templateData.rewards_pre_header_text || '';
   const rewards_header_text = templateData.header_text || '';
@@ -45,11 +90,16 @@ const templateApiCalls = async (accessToken, shopURL, templateData) => {
   const referral_position = templateData.rewards_referral_position;
   const reward_position = templateData.reward_position;
 
+  // end of reward template settings
+
   // set headers
   const headers = {
     'X-Shopify-Access-Token': accessToken,
     'Content-Type': 'application/json',
   };
+
+  // generate uuid for template and page names
+  const uuid = Math.random().toString(36).substring(2, 15);
 
   // template 1 body
 
@@ -85,6 +135,12 @@ const templateApiCalls = async (accessToken, shopURL, templateData) => {
               email_text: landing_email_placeholder_text,
               phone_text: landing_phone_placeholder_text,
               button_text: landing_button_text,
+              facebook_link: landing_facebook_link,
+              instagram_link: landing_instagram_link,
+              twitter_link: landing_twitter_link,
+              tiktok_link: landing_tiktok_link,
+              snapchat_link: landing_snapchat_link,
+              discord_link: landing_discord_link,
               base_font_size: landing_base_font_size,
               page: second_page,
             },
@@ -141,6 +197,10 @@ const templateApiCalls = async (accessToken, shopURL, templateData) => {
     order: ['main'],
   };
 
+  console.log(body1);
+  console.log(body2);
+  console.log('are we getting any values here?');
+
   // get active theme id
   const getActiveThemeId = async () => {
     try {
@@ -168,8 +228,7 @@ const templateApiCalls = async (accessToken, shopURL, templateData) => {
   // create first template
   const createFirstPageTemplate = async (themeid) => {
     const templateName = 'LandingTemplate'; // base name
-    const randomString = Math.random().toString(36).substring(2, 15); // generate random string
-    const uniqueTemplateName = templateName + '_' + randomString; // concatenate base name and random string
+    const uniqueTemplateName = templateName + '_' + uuid; // concatenate base name and uuid
     try {
       const response = await fetch(
         `https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`,
@@ -198,9 +257,9 @@ const templateApiCalls = async (accessToken, shopURL, templateData) => {
   // create second template
   const createSecondPageTemplate = async (themeid) => {
     const templateName = 'RewardsTemplate'; // base name
-    const randomString = Math.random().toString(36).substring(2, 15); // generate random string
-    const uniqueTemplateName = templateName + '_' + randomString; // concatenate base name and random string
+    const uniqueTemplateName = templateName + '_' + uuid; // concatenate base name and uuid
     try {
+      console.log(body2);
       const response = await fetch(
         `https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`,
         {
@@ -228,8 +287,7 @@ const templateApiCalls = async (accessToken, shopURL, templateData) => {
   // create first page
   const createFirstPage = async (templateSuffix) => {
     const pageName = 'LandingPage'; // base name
-    const randomString = Math.random().toString(36).substring(2, 15); // generate random string
-    const uniquePageeName = pageName + '_' + randomString; // concatenate base name and random string
+    const uniquePageeName = pageName + '_' + uuid; // concatenate base name and uuid
     const pageBody = JSON.stringify({
       page: {
         title: uniquePageeName,
@@ -257,8 +315,7 @@ const templateApiCalls = async (accessToken, shopURL, templateData) => {
   // create second page
   const createSecondPage = async (templateSuffix) => {
     const pageName = 'RewardsPage'; // base name
-    const randomString = Math.random().toString(36).substring(2, 15); // generate random string
-    const uniquePageeName = pageName + '_' + randomString; // concatenate base name and random string
+    const uniquePageeName = pageName + '_' + uuid; // concatenate base name and uuid
     const pageBody = JSON.stringify({
       page: {
         title: uniquePageeName,
@@ -306,6 +363,12 @@ const templateApiCalls = async (accessToken, shopURL, templateData) => {
                 email_text: landing_email_placeholder_text,
                 phone_text: landing_phone_placeholder_text,
                 button_text: landing_button_text,
+                facebook_link: landing_facebook_link,
+                instagram_link: landing_instagram_link,
+                twitter_link: landing_twitter_link,
+                tiktok_link: landing_tiktok_link,
+                snapchat_link: landing_snapchat_link,
+                discord_link: landing_discord_link,
                 base_font_size: landing_base_font_size,
                 page: pagehandle,
               },
@@ -435,12 +498,13 @@ export default function createTemplateApiEndpoint(app) {
         res,
         app.get('use-online-tokens')
       );
+      console.log(req.body);
       const { accessToken, shop } = session;
       const { templateData, campaignData } = req.body;
       // console.log(accessToken, shop);
       // console.log(templateData);
       // console.log(campaignData);
-      await templateApiCalls(accessToken, shop, templateData);
+      await templateApiCalls(accessToken, shop, templateData, campaignData);
       return res.status(200).json({
         success: true,
         message: 'Templates and Pages Created Successfully',

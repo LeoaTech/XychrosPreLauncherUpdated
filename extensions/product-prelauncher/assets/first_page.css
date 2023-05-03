@@ -2,6 +2,35 @@
 
 /* ================ general settings ================== */
 
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar,
+#snackbar2,
+#snackbar3 {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -125px; /* Divide value of min-width by 2 */
+  background-color: #333; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 2px; /* Rounded borders */
+  padding: 16px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the snackbar */
+  bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show-bar,
+#snackbar2.show-bar,
+#snackbar3.show-bar {
+  visibility: visible; /* Show the snackbar */
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
 .section-layout {
   display: flex;
   margin: 0 !important;
@@ -18,11 +47,23 @@
   flex-direction: column;
 }
 
+input {
+  text-align: left;
+}
+
+::-webkit-input-placeholder {
+  text-align: left;
+}
+
+:-moz-placeholder {
+  text-align: left;
+}
+
 .email-input-product-prelaucher {
   border-radius: 4px;
   min-height: 50px;
   width: 50%;
-  font-size: 20px;
+  font-weight: 600;
   padding: 1.5%;
   border: none;
   margin: 8px auto;
@@ -41,7 +82,7 @@ input[type='email']:focus {
   border-radius: 4px;
   min-height: 50px;
   width: 50%;
-  font-size: 20px;
+  font-weight: 600;
   padding: 1.5%;
   border: none;
   margin: 0 auto;
@@ -54,6 +95,32 @@ input[type='email']:focus {
 input[type='tel']:focus {
   box-shadow: none;
   outline: none !important;
+}
+
+.consent {
+  display: flex;
+  width: 50%;
+  padding: 0.5%;
+  margin: 10px auto;
+  text-align: left;
+}
+
+.social_icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+  min-height: 50px;
+  width: 50%;
+  padding: 0.5%;
+  margin: 8px auto;
+}
+
+.social_icons a > svg {
+  padding: 1.4rem;
+  width: 50px;
+  cursor: pointer;
+  height: 50px;
 }
 
 .submit-button-product-prelaunch {
@@ -97,15 +164,15 @@ input[type='tel']:focus {
 /* flip horizontal layout */
 
 .section-layout.flip-horizontal {
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 
-.flip-three-fourth {
+.flip-horizontal .three-fourth {
   min-width: 100vw;
   min-height: 40vh;
 }
 
-.flip-one-fourth {
+.flip-horizontal .one-fourth {
   min-width: 100vw;
   min-height: 60vh;
 }
@@ -145,20 +212,7 @@ input[type='tel']:focus {
 /* flip vertical layout */
 
 .section-layout.flip-vertical {
-  flex-direction: row;
-}
-
-.flip-half {
-  min-width: 50vw;
-  min-height: 100vh;
-}
-
-.flip-spaced-evenly {
-  min-width: 50vw;
-  min-height: 100vh;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 12rem !important;
+  flex-direction: row-reverse;
 }
 
 .flip-vertical .email-input-product-prelaucher{
@@ -224,49 +278,8 @@ input[type='tel']:focus {
 
 /* flip diagonal layout */
 
-.section-layout.flip {
-  flex-direction: column;
-  position: relative;
-}
-
-.flip-background {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-
-  clip-path:polygon(100% 0, 100% 0, 100% 100%, 0 100%);
-
-}
-
-.flip-lower-triangular {
-  height: 100vh;
-  width: 100vw;
-}
-
-.flip-lower-triangular .subheader_text {
-  position: absolute;
-  bottom: 7rem;
-  right: 2rem;
-}
-
-.flip-lower-triangular .header_text {
-  position: absolute;
-  bottom: 1rem;
-  right: 3rem;
-}
-
-.flip-lower-triangular .tag-line {
-  position: absolute;
-  top: 25rem;
-  left: 5rem;
-  width: unset !important;
-}
-
-.flip-lower-triangular .first-page-form {
-  position: absolute;
-  top: 31rem;
-  left: 3rem;
-  width: 50%;
+.flip-diagonal .diagonal-background {
+  clip-path:polygon(100% 0, 100% 0, 100% 100%, 0 100%) !important;
 }
 
 .flip-diagonal .email-input-product-prelaucher{
@@ -330,49 +343,14 @@ input[type='tel']:focus {
   width: 80%;
 }
 
+.transfer-diagonal .consent{
+  width: 80%;
+}
+
 /* flip-traverse-diagonal layout */
 
-.section-layout.flip-transfer-diagonal {
-  flex-direction: column;
-  position: relative;
-}
-
-.flip-transfer-diagonal-background {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  clip-path: polygon(0 0, 0 0, 100% 0, 100% 100%);
-}
-
-.flip-transfer-lower-triangular {
-  height: 100vh;
-  width: 100vw;
-}
-
-.flip-transfer-lower-triangular .subheader_text {
-  position: absolute;
-  top: 11rem;
-  right: 3rem;
-}
-
-.flip-transfer-lower-triangular .header_text {
-  position: absolute;
-  top: 15rem;
-  right: 4rem;
-}
-
-.flip-transfer-lower-triangular .tag-line {
-  position: absolute;
-  bottom: 18rem;
-  left: 10rem;
-  width: unset !important;
-}
-
-.flip-transfer-lower-triangular .first-page-form {
-  position: absolute;
-  bottom: 6rem;
-  left: 10rem;
-  width: 50%;
+.flip-transfer-diagonal .transfer-diagonal-background {
+  clip-path: polygon(0 0, 0 0, 100% 0, 100% 100%) !important;
 }
 
 .flip-transfer-diagonal .email-input-product-prelaucher{
@@ -383,14 +361,11 @@ input[type='tel']:focus {
   width: 80%;
 }
 
-/*
-.email-input-product-prelaucher:hover {
-  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.4);
+.flip-transfer-diagonal .consent{
+  width: 80%;
 }
-*/
 
 /* =============================== CSS styles for mobile devices =========================== */ 
-
 
 @media screen and (max-width: 767px) {
 
@@ -400,40 +375,42 @@ input[type='tel']:focus {
     width: 95%;
   }
 
-
   .phone-input-product-prelaucher {
     width: 95%;
   }
 
-  input {
-    text-align: center;
+  .consent {
+    width: 95%;
+    text-align: left !important;
+    margin: 15px auto !important;
   }
 
-  ::-webkit-input-placeholder {
-    text-align: center;
+  .consent-label-product-prelaucher {
+    text-align: left !important;
+    line-height: 18px !important;
+    margin-left: 20px !important;
   }
 
-  :-moz-placeholder {
-    text-align: center;
+  input[type=checkbox] {
+    position: absolute !important;
   }
 
   /* flip-horizontal layout */
 
   .section-layout.flip-horizontal {
-    flex-direction: column-reverse;
-
+    flex-direction: column !important;
   }
 
   /* vertical layout */
 
   .section-layout.vertical {
-    flex-direction: column;
+    flex-direction: column !important;
     position: relative;
   }
 
   .half {
-    min-width: 100vw;
-    min-height: 60vh;
+    min-width: 100vw !important;
+    min-height: 60vh !important;
   }
 
   .spaced-evenly {
@@ -461,33 +438,15 @@ input[type='tel']:focus {
     width: 95%;
   }
 
+  .vertical .consent {
+    width: 95%;
+  }
+
   /* flip vertical layout */
 
   .section-layout.flip-vertical {
-    flex-direction: column-reverse;
+    flex-direction: column !important;
     position: relative;
-  }
-
-  .flip-half {
-    min-width: 100vw;
-    min-height: 60vh;
-  }
-
-  .flip-spaced-evenly {
-    justify-content: unset !important;
-    min-width: 100vw !important;
-    min-height: 40vh !important;
-  }
-
-  .flip-vertical-mobile {
-    position: absolute;
-    top: 8rem;
-    right: 0;
-    left: 0;
-  }
-
-  .flip-vertical-mobile-two {
-    margin-top: 2.5rem;
   }
 
   .flip-vertical .email-input-product-prelaucher{
@@ -495,6 +454,10 @@ input[type='tel']:focus {
   }
 
   .flip-vertical .phone-input-product-prelaucher {
+    width: 95%;
+  }
+
+  .flip-vertical .consent {
     width: 95%;
   }
 
@@ -553,14 +516,17 @@ input[type='tel']:focus {
     width: 95%;
   }
 
+  .diagonal .consent {
+    width: 95%;
+  }
+
   /* flip-diagonal layout */
 
   .section-layout.flip-diagonal {
     flex-direction: column;
-    position: relative;
   }
 
-  .flip-background {
+  .flip-diagonal .diagonal-background {
     min-width: 50vw;
     min-height: 60vh;
     position: unset !important;
@@ -569,45 +535,15 @@ input[type='tel']:focus {
     clip-path: unset !important;
   }
 
-  .flip-lower-triangular {
-    min-width: 50vw !important;
-    min-height: 40vh !important;
-    height: unset !important;
-    width: unset !important;
-  }
-
-  .flip-lower-triangular .subheader_text {
-    top: 5rem;
-    left: 0;
-    right: 0;
-  }
-
-  .flip-lower-triangular .header_text {
-    top: 10rem;
-    left: 0;
-    right: 0;
-  }
-
-  .flip-lower-triangular .tag-line {
-    top: unset;
-    bottom: 18rem;
-    left: 0;
-    right: 0;
-  }
-
-  .flip-lower-triangular .first-page-form {
-    top: unset;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100% !important;
-  }
-
   .flip-diagonal .email-input-product-prelaucher{
     width: 95%;
   }
 
   .flip-diagonal .phone-input-product-prelaucher{
+    width: 95%;
+  }
+
+  .flip-diagonal .consent {
     width: 95%;
   }
 
@@ -668,14 +604,17 @@ input[type='tel']:focus {
     width: 95%;
   }
 
+  .transfer-diagonal .consent {
+    width: 95%;
+  }
+
   /* flip traverse diagonal layout */
 
   .section-layout.flip-transfer-diagonal {
     flex-direction: column;
-    position: relative;
   }
 
-  .flip-transfer-diagonal-background {
+  .flip-transfer-diagonal .transfer-diagonal-background {
     min-width: 50vw;
     min-height: 60vh;
     position: unset !important;
@@ -684,72 +623,491 @@ input[type='tel']:focus {
     clip-path: unset !important;
   }
 
-  .flip-transfer-lower-triangular {
-    min-width: 50vw !important;
-    min-height: 40vh !important;
-    height: unset !important;
-    width: unset !important;
-  }
-
-  .flip-transfer-lower-triangular .subheader_text {
-    top: 5rem;
-    left: 0;
-    right: 0;
-  }
-
-  .flip-transfer-lower-triangular .header_text {
-    top: 10rem;
-    left: 0;
-    right: 0;
-  }
-
-  .flip-transfer-lower-triangular .tag-line {
-    top: unset;
-    bottom: 18rem;
-    left: 0;
-    right: 0;
-  }
-
-  .flip-transfer-lower-triangular .first-page-form {
-    top: unset;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-  }
-
   .flip-transfer-diagonal .email-input-product-prelaucher{
+    width: 95%;
+  }
+
+  .flip-transfer-diagonal .phone-input-product-prelaucher{
+    width: 95%;
+  }
+
+  .flip-transfer-diagonal .consent {
     width: 95%;
   }
 }
 
-/* The snackbar - position it at the bottom and in the middle of the screen */
-#snackbar,
-#snackbar2,
-#snackbar3 {
-  visibility: hidden; /* Hidden by default. Visible on click */
-  min-width: 250px; /* Set a default minimum width */
-  margin-left: -125px; /* Divide value of min-width by 2 */
-  background-color: #333; /* Black background color */
-  color: #fff; /* White text color */
-  text-align: center; /* Centered text */
-  border-radius: 2px; /* Rounded borders */
-  padding: 16px; /* Padding */
-  position: fixed; /* Sit on top of the screen */
-  z-index: 1; /* Add a z-index if needed */
-  left: 50%; /* Center the snackbar */
-  bottom: 30px; /* 30px from the bottom */
+/* ============================== CSS styles for tablets ==================================== */
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+  /* general settings for tablet view */
+
+  .email-input-product-prelaucher {
+    width: 60%;
+  }
+
+  .phone-input-product-prelaucher {
+    width: 60%;
+  }
+
+  .consent {
+    width: 60%;
+    text-align: left;
+    margin: 15px auto;
+  }
+
+  .consent-label-product-prelaucher {
+    text-align: left;
+    line-height: 18px;
+    margin-left: 20px;
+  }
+
+  input[type=checkbox] {
+    position: absolute;
+  }
+
+  /* vertical layout */
+
+  .vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .vertical .consent {
+    width: 90%;
+  }
+
+  /* flip vertical layout */
+
+  .flip-vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .flip-vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .flip-vertical .consent {
+    width: 90%;
+  }
+
+  /* diagonal layout */
+
+  .lower-triangular .subheader_text {
+    top: 4rem;
+    left: -0.8rem;
+  }
+
+  .lower-triangular .header_text {
+    top: 7rem;
+    left: 0;
+  }
+
+  .lower-triangular .tag-line {
+    bottom: 19rem;
+    right: 2.5rem;
+  }
+
+  .lower-triangular .first-page-form {
+    bottom: 1rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip-diagonal layout */
+
+  .flip-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .flip-diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* traverse diagonal layout */
+
+  .transfer-lower-triangular .subheader_text {
+    bottom: 10rem;
+    left: 0.2rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .header_text {
+    bottom: 5rem;
+    left: 1rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .tag-line {
+    top: 5rem;
+    right: 3rem;
+  }
+
+  .transfer-lower-triangular .first-page-form {
+    top: 12rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .transfer-diagonal .email-input-product-prelaucher {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .transfer-diagonal .phone-input-product-prelaucher {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .transfer-diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip traverse diagonal layout */
+
+  .flip-transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .flip-transfer-diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
 }
 
-/* Show the snackbar when clicking on a button (class added with JavaScript) */
-#snackbar.show-bar,
-#snackbar2.show-bar,
-#snackbar3.show-bar {
-  visibility: visible; /* Show the snackbar */
-  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
-  However, delay the fade out process for 2.5 seconds */
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+/* =============================== CSS rules for desktops and laptops ================================ */
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+  .consent {
+    width: 50%;
+    text-align: left;
+    margin: 15px auto;
+  }
+
+  .consent-label-product-prelaucher {
+    text-align: left;
+    line-height: 18px;
+    margin-left: 20px;
+  }
+
+  input[type=checkbox] {
+    position: absolute;
+  }
+
+  /* vertical layout */
+
+  .vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .vertical .consent {
+    width: 90%;
+  }
+
+  /* flip vertical layout */
+
+  .flip-vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .flip-vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .flip-vertical .consent {
+    width: 90%;
+  }
+
+  /* diagonal layout */
+
+  .lower-triangular .subheader_text {
+    top: 8rem;
+    left: 0;
+  }
+
+  .lower-triangular .header_text {
+    top: 12rem;
+    left: 1rem;
+  }
+
+  .lower-triangular .tag-line {
+    bottom: 19rem;
+    right: 6.5rem;
+  }
+
+  .lower-triangular .first-page-form {
+    bottom: 1rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip-diagonal layout */
+
+  .flip-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .flip-diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* traverse diagonal layout */
+
+  .transfer-lower-triangular .subheader_text {
+    bottom: 10rem;
+    left: 0.2rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .header_text {
+    bottom: 5rem;
+    left: 1rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .tag-line {
+    top: 5rem;
+    right: 6.5rem;
+  }
+
+  .transfer-lower-triangular .first-page-form {
+    top: 12rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .transfer-diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip traverse diagonal layout */
+
+  .flip-transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .flip-transfer-diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+}
+
+/* ======================== CSS rules for large desktops and high-resolution displays ==================== */
+
+@media only screen and (min-width: 1200px) {
+
+  /* vertical layout */
+  .vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .vertical .consent {
+    width: 90%;
+  }
+
+  /* flip vertical layout */
+  .flip-vertical .email-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .flip-vertical .phone-input-product-prelaucher {
+    width: 90%;
+  }
+
+  .flip-vertical .consent {
+    width: 90%;
+  }
+
+  /* diagonal layout */
+  .lower-triangular .subheader_text {
+    top: 8rem;
+    left: 0;
+  }
+
+  .lower-triangular .header_text {
+    top: 13rem;
+    left: 1.2rem;
+  }
+
+  .lower-triangular .tag-line {
+    bottom: 19rem;
+    right: 6.5rem;
+  }
+
+  .lower-triangular .first-page-form {
+    bottom: 1rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip-diagonal layout */
+
+  .flip-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .flip-diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* traverse diagonal layout */
+
+  .transfer-lower-triangular .subheader_text {
+    bottom: 10rem;
+    left: 0.2rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .header_text {
+    bottom: 5rem;
+    left: 1.5rem;
+    right: unset;
+  }
+
+  .transfer-lower-triangular .tag-line {
+    top: 5rem;
+    right: 6.5rem;
+  }
+
+  .transfer-lower-triangular .first-page-form {
+    top: 15rem;
+    right: 3rem;
+    width: 60%;
+  }
+
+  .transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .transfer-diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  /* flip traverse diagonal layout */
+
+  .flip-transfer-diagonal .email-input-product-prelaucher{
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .flip-transfer-diagonal .phone-input-product-prelaucher{
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+
+  .flip-transfer-diagonal .consent {
+    width: 100%;
+    margin: 8px 0 !important;
+  }
 }
 
 /* Animations to fade the snackbar in and out */
@@ -794,525 +1152,5 @@ input[type='tel']:focus {
   to {
     bottom: 0;
     opacity: 0;
-  }
-}
-
-
-  .flip-transfer-diagonal .phone-input-product-prelaucher{
-    width: 95%;
-  }
-}
-
-/* ============================== CSS styles for tablets ==================================== */
-
-@media only screen and (min-width: 768px) and (max-width: 991px) {
-
-  /* general settings for tablet view */
-
-  .email-input-product-prelaucher {
-    width: 60%;
-  }
-
-  .phone-input-product-prelaucher {
-    width: 60%;
-  }
-
-  input {
-    text-align: left;
-  }
-
-  ::-webkit-input-placeholder {
-    text-align: left;
-  }
-
-  :-moz-placeholder {
-    text-align: left;
-  }
-
-  /* vertical layout */
-
-  .vertical .email-input-product-prelaucher {
-    width: 90%;
-  }
-
-  .vertical .phone-input-product-prelaucher {
-    width: 90%;
-  }
-
-  /* flip vertical layout */
-
-  .flip-vertical .email-input-product-prelaucher {
-    width: 90%;
-  }
-
-  .flip-vertical .phone-input-product-prelaucher {
-    width: 90%;
-  }
-
-  /* diagonal layout */
-
-  .lower-triangular .subheader_text {
-    top: 4rem;
-    left: -0.8rem;
-  }
-
-  .lower-triangular .header_text {
-    top: 7rem;
-    left: 0;
-  }
-
-  .lower-triangular .tag-line {
-    bottom: 19rem;
-    right: 2.5rem;
-  }
-
-  .lower-triangular .first-page-form {
-    bottom: 1rem;
-    right: 3rem;
-    width: 60%;
-  }
-
-  .diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-
-  /* flip-diagonal layout */
-
-  .flip-lower-triangular .subheader_text {
-    bottom: 5rem;
-    left: unset;
-    right: 0;
-  }
-
-  .flip-lower-triangular .header_text {
-    bottom: 0;
-    left: unset;
-    right: 0;
-  }
-
-  .flip-lower-triangular .tag-line {
-    bottom: unset;
-    top: 16rem;
-    left: 3rem;
-    right: unset;
-  }
-
-  .flip-lower-triangular .first-page-form {
-    bottom: unset;
-    top: 22rem;
-    left: 3rem;
-    right: 0;
-    width: 60% !important;
-  }
-
-  .flip-diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .flip-diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-
-  /* traverse diagonal layout */
-
-  .transfer-lower-triangular .subheader_text {
-    bottom: 10rem;
-    left: 0.2rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .header_text {
-    bottom: 5rem;
-    left: 1rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .tag-line {
-    top: 5rem;
-    right: 3rem;
-  }
-
-  .transfer-lower-triangular .first-page-form {
-    top: 12rem;
-    right: 3rem;
-    width: 60%;
-  }
-
-  .transfer-diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .transfer-diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-
-  /* flip traverse diagonal layout */
-
-  .flip-transfer-lower-triangular .subheader_text {
-    top: 5rem;
-    right: 0;
-  }
-
-  .flip-transfer-lower-triangular .header_text {
-    top: 8.5rem;
-    right: 0;
-  }
-
-  .flip-transfer-lower-triangular .tag-line {
-    bottom: 19rem;
-    left: 2.5rem;
-  }
-
-  .flip-transfer-lower-triangular .first-page-form {
-    bottom: 0;
-    left: 3rem;
-    width: 60%;
-  }
-
-  .flip-transfer-diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .flip-transfer-diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-}
-
-/* =============================== CSS rules for desktops and laptops ================================ */
-
-@media only screen and (min-width: 992px) and (max-width: 1199px) {
-
-  /* vertical layout */
-
-  .vertical .email-input-product-prelaucher {
-    width: 90%;
-  }
-
-  .vertical .phone-input-product-prelaucher {
-    width: 90%;
-  }
-
-  /* flip vertical layout */
-
-  .flip-vertical .email-input-product-prelaucher {
-    width: 90%;
-  }
-
-  .flip-vertical .phone-input-product-prelaucher {
-    width: 90%;
-  }
-
-  /* diagonal layout */
-
-  .lower-triangular .subheader_text {
-    top: 8rem;
-    left: 0;
-  }
-
-  .lower-triangular .header_text {
-    top: 12rem;
-    left: 1rem;
-  }
-
-  .lower-triangular .tag-line {
-    bottom: 19rem;
-    right: 6.5rem;
-  }
-
-  .lower-triangular .first-page-form {
-    bottom: 1rem;
-    right: 3rem;
-    width: 60%;
-  }
-
-  .diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-
-  /* flip-diagonal layout */
-
-  .flip-lower-triangular .subheader_text {
-    bottom: 5.5rem;
-    left: unset;
-    right: 0.5rem;
-  }
-
-  .flip-lower-triangular .header_text {
-    bottom: 1rem;
-    left: unset;
-    right: 1rem;
-  }
-
-  .flip-lower-triangular .tag-line {
-    bottom: unset;
-    top: 16rem;
-    left: 6.5rem;
-    right: unset;
-  }
-
-  .flip-lower-triangular .first-page-form {
-    bottom: unset;
-    top: 22.5rem;
-    left: 3rem;
-    right: 0;
-    width: 60% !important;
-  }
-
-  .flip-diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .flip-diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-
-  /* traverse diagonal layout */
-
-  .transfer-lower-triangular .subheader_text {
-    bottom: 10rem;
-    left: 0.2rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .header_text {
-    bottom: 5rem;
-    left: 1rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .tag-line {
-    top: 5rem;
-    right: 6.5rem;
-  }
-
-  .transfer-lower-triangular .first-page-form {
-    top: 12rem;
-    right: 3rem;
-    width: 60%;
-  }
-
-  .transfer-diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .transfer-diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-
-  /* flip traverse diagonal layout */
-
-  .flip-transfer-lower-triangular .subheader_text {
-    top: 5rem;
-    right: 0;
-  }
-
-  .flip-transfer-lower-triangular .header_text {
-    top: 8.5rem;
-    right: 1rem;
-  }
-
-  .flip-transfer-lower-triangular .tag-line {
-    bottom: 19rem;
-    left: 8rem;
-  }
-
-  .flip-transfer-lower-triangular .first-page-form {
-    bottom: 0;
-    left: 3rem;
-    width: 60%;
-  }
-
-  .flip-transfer-diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .flip-transfer-diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-}
-
-/* ======================== CSS rules for large desktops and high-resolution displays ==================== */
-
-@media only screen and (min-width: 1200px) {
-
-  /* vertical layout */
-  .vertical .email-input-product-prelaucher {
-    width: 90%;
-  }
-
-  .vertical .phone-input-product-prelaucher {
-    width: 90%;
-  }
-
-  /* flip vertical layout */
-  .flip-vertical .email-input-product-prelaucher {
-    width: 90%;
-  }
-
-  .flip-vertical .phone-input-product-prelaucher {
-    width: 90%;
-  }
-
-  /* diagonal layout */
-  .lower-triangular .subheader_text {
-    top: 8rem;
-    left: 0;
-  }
-
-  .lower-triangular .header_text {
-    top: 13rem;
-    left: 1.2rem;
-  }
-
-  .lower-triangular .tag-line {
-    bottom: 19rem;
-    right: 6.5rem;
-  }
-
-  .lower-triangular .first-page-form {
-    bottom: 1rem;
-    right: 3rem;
-    width: 60%;
-  }
-
-  .diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-
-  /* flip-diagonal layout */
-
-  .flip-lower-triangular .subheader_text {
-    bottom: 6.5rem;
-    left: unset;
-    right: 0.5rem;
-  }
-
-  .flip-lower-triangular .header_text {
-    bottom: 1rem;
-    left: unset;
-    right: 1rem;
-  }
-
-  .flip-lower-triangular .tag-line {
-    bottom: unset;
-    top: 19rem;
-    left: 6.5rem;
-    right: unset;
-  }
-
-  .flip-lower-triangular .first-page-form {
-    bottom: unset;
-    top: 28rem;
-    left: 3rem;
-    right: 0;
-    width: 60% !important;
-  }
-
-  .flip-diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .flip-diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-
-  /* traverse diagonal layout */
-
-  .transfer-lower-triangular .subheader_text {
-    bottom: 10rem;
-    left: 0.2rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .header_text {
-    bottom: 5rem;
-    left: 1.5rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .tag-line {
-    top: 5rem;
-    right: 6.5rem;
-  }
-
-  .transfer-lower-triangular .first-page-form {
-    top: 15rem;
-    right: 3rem;
-    width: 60%;
-  }
-
-  .transfer-diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .transfer-diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
-  }
-
-  /* flip traverse diagonal layout */
-
-  .flip-transfer-lower-triangular .subheader_text {
-    top: 5rem;
-    right: 0;
-  }
-
-  .flip-transfer-lower-triangular .header_text {
-    top: 9rem;
-    right: 1rem;
-  }
-
-  .flip-transfer-lower-triangular .tag-line {
-    bottom: 19rem;
-    left: 8rem;
-  }
-
-  .flip-transfer-lower-triangular .first-page-form {
-    bottom: 0;
-    left: 3rem;
-    width: 60%;
-  }
-
-  .flip-transfer-diagonal .email-input-product-prelaucher{
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .flip-transfer-diagonal .phone-input-product-prelaucher{
-    width: 100%;
-    margin: 8px 0 !important;
   }
 }

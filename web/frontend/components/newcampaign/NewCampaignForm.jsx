@@ -45,6 +45,8 @@ function NewCampaignForm() {
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
 
+  console.log('Edit Campaign Data', campaignById);
+
   // Get Date for next 6 days for the Campaign End Date
   let today = new Date();
   let getNextDate = new Date();
@@ -52,7 +54,9 @@ function NewCampaignForm() {
 
   // Local States of Components
   const [errorMessage, setErrorMessage] = useState(false);
-  const [editCampaignData, setEditCampaignData] = useState();
+  const [error, setError] = useState(false);
+
+  const [editCampaignData, setEditCampaignData] = useState({});
   const [globalSettings, setGlobalSettings] = useState();
   const [productsData, setProductsData] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
@@ -66,7 +70,14 @@ function NewCampaignForm() {
   const [randomTemplate, setRandomTemplate] = useState(); //Get Random Template from templateList
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
   const [showList, setShowList] = useState({});
-  const [expanded, setExpanded] = useState(Array(6).fill(false));
+  const [expanded, setExpanded] = useState([
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [klaviyoList, setKlaviyoList] = useState([]);
 
@@ -141,8 +152,9 @@ function NewCampaignForm() {
 
   // Get the Data with Campaigns ID for Edit campaign
   useEffect(() => {
-    if (campaignById) {
-      setEditCampaignData(campaignById);
+    if (campaignById !== undefined) {
+      setEditCampaignData({ ...campaignById });
+      console.log(editCampaignData, 'bysetting');
     }
   }, [campaignById]);
 
@@ -161,15 +173,11 @@ function NewCampaignForm() {
 
   useEffect(() => {
     if (globalSettings !== undefined) {
-      setNewCampaignData({
-        name: '',
-        product: '',
-        klaviyo_list_id: '',
-        template_id: 1,
-        start_date: startDate,
-        end_date: endDate,
+      setNewCampaignData((prevState) => ({
+        ...prevState,
+
         ...globalSettings,
-      });
+      }));
     }
   }, [globalSettings]);
 
@@ -191,7 +199,6 @@ function NewCampaignForm() {
   // Generate Random Templates Array with Template Ids
   useEffect(() => {
     const filtered_templates = [];
-
     if (templateList?.length > 0) {
       // Basic Template will remain unchanged
       const basicTemplate = templateList?.find(
@@ -202,47 +209,94 @@ function NewCampaignForm() {
       const variantTemplate = templateList?.filter(
         (template) => template?.campaign_image !== null
       );
+
+      // Select Templates for Edit a Campaign Form
       if (isEdit) {
         const editSelectTemplate = templateList?.filter(
           (template) => template?.id === editCampaignData?.template_id
         );
-        console.log(editSelectTemplate);
+        const filtered = templateList?.filter((template) =>
+          editCampaignData?.name
+            ?.toLowerCase()
+            .includes(template.campaign_name?.toLowerCase())
+        );
+
         if (editSelectTemplate[0].id !== basicTemplate?.id) {
-          filtered_templates.push(editSelectTemplate[0]);
-          filtered_templates.push(
-            ...variantTemplate
-              .slice(1)
-              .sort(() => 0.5 - Math.random())
-              .slice(0, 2)
-          );
-          // console.log(filtered_templates);
+          filtered_templates.push(basicTemplate);
+          if (filtered[0]?.id !== editSelectTemplate[0]?.id) {
+            filtered_templates.push(editSelectTemplate[0]);
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 1)
+            );
+          } else {
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 2)
+            );
+          }
         } else {
           filtered_templates.push(editSelectTemplate[0]);
-
           filtered_templates.push(
             ...variantTemplate
               .slice(1)
               .sort(() => 0.5 - Math.random())
               .slice(0, 2)
           );
-          // console.log(filtered_templates);
         }
-        const randomTemplates = [
-          (filtered_templates[0] = basicTemplate),
-          ...filtered_templates,
-        ];
+        const randomTemplates = [...filtered_templates];
+
         setRandomTemplate(randomTemplates);
         setSelectedTemplateData(editSelectTemplate[0]);
-      } else {
-        const randomTemplates = [
-          templateList[0],
-          ...templateList
-            .slice(1)
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 2),
-        ];
-        // console.log(randomTemplates);
-        setRandomTemplate(randomTemplates);
+      }
+      // Templates Selected Based on New Campaign (campaign-name)
+      else {
+        if (newCampaignData?.name !== '') {
+          setCampaignName(newCampaignData?.name);
+
+          //  Get Filtered Lists of templates bases on campaign name;
+          const filtered = templateList?.filter((template) =>
+            getCampaignName
+              ?.toLowerCase()
+              .includes(template.campaign_name?.toLowerCase())
+          );
+
+          if (filtered.length > 0 && filtered.length < 2) {
+            filtered_templates.push(basicTemplate);
+            filtered_templates.push(filtered[0]);
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 1)
+            );
+          } else {
+            filtered_templates.push(basicTemplate);
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 2)
+            );
+          }
+        } else {
+          if (newCampaignData?.name === '') {
+            filtered_templates.push(basicTemplate);
+            filtered_templates.push(
+              ...variantTemplate
+                .slice(1)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 2)
+            );
+          }
+        }
+        const randomTemplate = [...filtered_templates];
+        console.log(randomTemplate, 'randomly');
+        setRandomTemplate(randomTemplate);
       }
     }
   }, [templateList, getCampaignName]);
@@ -323,20 +377,6 @@ function NewCampaignForm() {
       window.removeEventListener('beforeunload', unloadCallback);
     };
   }, []);
-
-  // Create_templates_list
-  async function saveCampaignTemplate(data, template) {
-    await fetch('/api/create_template', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ data, template }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-  }
 
   //? Event handling functions
 
@@ -419,6 +459,22 @@ function NewCampaignForm() {
           setErrorName(false);
           setExpanded((prevExpand) =>
             prevExpand.map((state, i) => (i === index ? !state : false))
+          );
+        }
+      } else if (index == 3) {
+        console.log(newCampaignData?.discount_type);
+        if (
+          newCampaignData?.discount_type === 'percent' ||
+          newCampaignData?.discount_type === 'amount'
+        ) {
+          setError(false);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => (i === index ? !state : false))
+          );
+        } else {
+          setError(true);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => i === index - 1 && true)
           );
         }
       } else {
@@ -536,6 +592,43 @@ function NewCampaignForm() {
     }
   }
 
+  // Discounts API Call
+  async function generateDiscounts(newCampaignData) {
+    try {
+      const response = await fetch('/api/generate_discount', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ campaignData: newCampaignData }),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Template API Call
+  async function createTemplates(selectedTemplateData, newCampaignData) {
+    try {
+      const response = await fetch('/api/create_template', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          templateData: selectedTemplateData,
+          campaignData: newCampaignData,
+        }),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // Handle Get Url of Campaign name
   async function handleGetURL(imgFile) {
     try {
@@ -571,6 +664,7 @@ function NewCampaignForm() {
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
+
     // Editing Camapign Data Form
     if (isEdit) {
       setDraftModal(false);
@@ -592,12 +686,21 @@ function NewCampaignForm() {
     // Adding A New Campaign and Save in Database
     else {
       setDraftModal(false);
+      console.log(newCampaignData);
+      console.log(result);
       if (
         newCampaignData?.template_id !== null &&
         selectedTemplateData !== undefined
       ) {
+        await generateDiscounts(newCampaignData);
+        await createTemplates(selectedTemplateData, newCampaignData);
+
         // Now we need to pass the result as (selected tempalte + bgUrl)
-        await saveCampaignTemplate(newCampaignData, result); //Uncomment this line for create tempalte
+        console.log(newCampaignData);
+        console.log(result);
+        // await saveCampaignTemplate(newCampaignData, result); //Uncomment this line for create tempalte
+        await saveCampaignTemplate(newCampaignData, selectedTemplateData); //Uncomment this line for create tempalte
+
         setIsLoading(true);
         await fetch('/api/campaignsettings', {
           method: 'POST',
@@ -612,6 +715,8 @@ function NewCampaignForm() {
 
         setIsLoading(false);
       } else {
+        console.log(newCampaignData);
+        console.log(result);
         return;
       }
       navigate('/campaigns');
@@ -636,6 +741,8 @@ function NewCampaignForm() {
     }
   };
 
+  console.log(editCampaignData);
+  console.log(newCampaignData);
   return (
     <div className='new-campaign-container'>
       <div className='newcampaign-title'>
@@ -882,7 +989,11 @@ function NewCampaignForm() {
                             className='social-input'
                             type='checkbox'
                             name={`show_${link?.name}`}
-                            checked={editCampaignData[`show_${link?.name}`]}
+                            checked={
+                              editCampaignData !== undefined
+                                ? editCampaignData[`show_${link?.name}`]
+                                : null
+                            }
                             onChange={handleCheckboxChange}
                           />
                         ) : (
@@ -1142,9 +1253,14 @@ function NewCampaignForm() {
                   Note: Discount will not be applicable on Shipping. Each code
                   can be used by a customer only once.
                 </p>
+
                 <div className='rewards-settings-container'>
                   <h2 className='sub-heading'>Discount</h2>
                   <div className='discount-settings'>
+                    {error ? (
+                      <p className='error-message'>Select the Discount Type</p>
+                    ) : null}
+
                     <div>
                       {isEdit ? (
                         <input
@@ -1628,6 +1744,7 @@ function NewCampaignForm() {
                                 value={editCampaignData?.klaviyo_list_id}
                                 onChange={handleChange}
                               >
+                                <option value='Select'>Select</option>
                                 {klaviyoList?.map((list) => (
                                   <option
                                     key={list?.list_id}
@@ -1644,6 +1761,7 @@ function NewCampaignForm() {
                                 value={newCampaignData?.klaviyo_list_id}
                                 onChange={handleChange}
                               >
+                                <option value='Select'>Select</option>
                                 {klaviyoList?.map((list) => (
                                   <option
                                     key={list?.list_id}
@@ -1742,7 +1860,6 @@ function NewCampaignForm() {
                                   key={data?.id || template?.id}
                                   src={data?.image}
                                   alt={template?.campaign_image}
-                                  loading='lazy'
                                 />
                               )
                           )
