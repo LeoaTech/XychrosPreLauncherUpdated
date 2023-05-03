@@ -37,12 +37,9 @@ export default function referralsApiEndpoints(app, secret) {
         req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
       ip_address = ip_address.split(',')[0];
 
-      console.log(ip_address);
-      console.log(req.headers.referer);
-      console.log(req.query);
       let refererURL = req.headers.referer;
       refererURL = refererURL.split('?refer')[0];
-      console.log(refererURL);
+      // console.log(refererURL);
 
       const { email, phone, refer, campaign, shop } = req.query;
       let message = '';
@@ -60,9 +57,9 @@ export default function referralsApiEndpoints(app, secret) {
       );
       const campaignID = campaign_details.rows[0].campaign_id;
 
-      console.log(email);
-      console.log(refer);
-      console.log(campaignID);
+      // console.log(email);
+      // console.log(refer);
+      // console.log(campaignID);
 
       // check if email is valid
       let isemail_valid = await emailValidator.validate(email);
@@ -113,13 +110,15 @@ export default function referralsApiEndpoints(app, secret) {
             // if IP exists less than 2 times
 
             //add to Klaviyo List
-            let klaviyo_list = add_to_klaviyo_list(
+            let klaviyo_list = await add_to_klaviyo_list(
               email,
               phone,
               campaign_details,
               shop
             );
-            console.log(klaviyo_list);
+            // console.log(klaviyo_list);
+
+            // console.log('checked klaviyo list');
 
             count = count + 1;
             await pool.query(
@@ -139,14 +138,15 @@ export default function referralsApiEndpoints(app, secret) {
               email
             );
 
-            console.log(message);
+            // console.log(message);
             //send welcome email
             let send_message = await send_email(
               message,
               email,
               'You have Subscribed'
             );
-            console.log(send_message);
+            // console.log(send_message);
+
             //check referrer code and send reward unlock email or referral email
             const referrer_process = await find_referrer(
               refererURL,
@@ -156,6 +156,13 @@ export default function referralsApiEndpoints(app, secret) {
             );
           }
         } else {
+          //add to Klaviyo List
+          let klaviyo_list = await add_to_klaviyo_list(
+            email,
+            phone,
+            campaign_details,
+            shop
+          );
           // IP address does not exist
           let data = await pool.query(
             `INSERT INTO ip_addresses (address,count_ip,campaign_id,updated_at) VALUES('${ip_address}',${count},${campaignID}, now())`
@@ -185,7 +192,7 @@ export default function referralsApiEndpoints(app, secret) {
         }
       }
 
-      console.log(referralcode);
+      // console.log(referralcode);
 
       return res.status(307).json({ referral: referralcode });
 
@@ -242,7 +249,7 @@ export default function referralsApiEndpoints(app, secret) {
     try {
       const { referral_code, campaign_name } = req.body;
       const campaign_details = await pool.query(
-        `SELECT * from campaign_settings where campaign_name=${campaign_name}`
+        `SELECT * from campaign_settings where name=${campaign_name}`
       );
       const campaign_id = campaign_details.rows[0].campaign_id;
       const data = await pool.query(
@@ -253,7 +260,7 @@ export default function referralsApiEndpoints(app, secret) {
         'SELECT * FROM referrals WHERE referrer_id=$1',
         [data.rows[0].referral_code]
       );
-      console.log(data_.rows);
+      // console.log(data_.rows);
       if (data_.rows.length > 0) {
         return res.status(200).json({
           success: true,
@@ -268,9 +275,8 @@ export default function referralsApiEndpoints(app, secret) {
         });
       }
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: 'Something went wrong' });
+      console.log(error);
+      return res.status(500).json({ success: false, message: error });
     }
   });
 
@@ -280,7 +286,7 @@ export default function referralsApiEndpoints(app, secret) {
       const referrer = await pool.query(
         `SELECT * FROM referrals WHERE referral_code='${refer}' and campaign_id=${campaign.rows[0].campaign_id}`
       );
-      console.log(referrer.rows);
+      // console.log(referrer.rows);
       let referral_email_text = '';
       let reward_email_text = '';
       if (referrer.rows.length > 0) {
@@ -294,7 +300,7 @@ export default function referralsApiEndpoints(app, secret) {
           refer,
           total_referrals.rowCount
         );
-        console.log(referral_email_text);
+        // console.log(referral_email_text);
         await send_email(
           referral_email_text,
           referrer.rows[0].email,

@@ -35,19 +35,18 @@ export const add_to_klaviyo_list = async (
             accept: 'application/json',
             revision: '2023-02-22',
             'content-type': 'application/json',
-            Authorization: `'Klaviyo-API-Key ${apiKey}'`,
+            Authorization: `Klaviyo-API-Key ${apiKey}`,
           },
           data: {
             data: {
               type: 'profile-subscription-bulk-create-job',
               attributes: {
-                list_id: `'${campaign.klaviyo_list_id}'`,
-                custom_source: 'Marketing Event',
+                list_id: `${campaign.klaviyo_list_id}`,
                 subscriptions: [
                   {
                     channels: { email: ['MARKETING'], sms: ['MARKETING'] },
-                    email: `'${email}'`,
-                    phone_number: `'${phone}'`,
+                    email: `${email}`,
+                    phone_number: `${phone}`,
                   },
                 ],
               },
@@ -62,18 +61,17 @@ export const add_to_klaviyo_list = async (
             accept: 'application/json',
             revision: '2023-02-22',
             'content-type': 'application/json',
-            Authorization: `'Klaviyo-API-Key ${apiKey}'`,
+            Authorization: `Klaviyo-API-Key ${apiKey}`,
           },
           data: {
             data: {
               type: 'profile-subscription-bulk-create-job',
               attributes: {
-                list_id: `'${campaign.klaviyo_list_id}'`,
-                custom_source: 'Marketing Event',
+                list_id: `${campaign.klaviyo_list_id}`,
                 subscriptions: [
                   {
                     channels: { email: ['MARKETING'] },
-                    email: `'${email}'`,
+                    email: `${email}`,
                   },
                 ],
               },
@@ -82,10 +80,15 @@ export const add_to_klaviyo_list = async (
         };
       }
 
+      // console.log('In the klaviyo integration block');
+      // console.log(options);
+      // console.log(apiKey);
+
       axios
         .request(options)
         .then(function (response) {
           console.log(response.data);
+          return response.data;
         })
         .catch(function (error) {
           console.error(error);

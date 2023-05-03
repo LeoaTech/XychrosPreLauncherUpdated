@@ -1,51 +1,71 @@
 <script>
   let first_page_settings = {{ block.settings | json }};
-  window.onload = (e) => {
+
+  async function getbackground(campaign_name) {
+    return await fetch('/apps/xychrosupdated/api/geturl', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(
+        {campaign_name: campaign_name}
+      )
+    }).then(function(response) {
+      return response.json();
+    });
+  }
+
+  window.onload = async (e) => {
     var el = document.querySelector('.product-prelaunch');
     el.parentElement.style.padding = '0';
-    el.parentElement.style.margin = '0';
-    {% if block.settings.show_header_footer == false %}
+    el.parentElement.style.margin = '0';{% if block.settings.show_header_footer == false %}
       var node,
-      nodes = [];
-      
+        nodes = [];
+
       do {
-          var parent = el.parentNode;
+        var parent = el.parentNode;
 
-          // Collect element children
-          for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
-            node = parent.childNodes[i];
+        // Collect element children
+        for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
+          node = parent.childNodes[i];
 
-            // Collect only sibling nodes that are elements and not the current element
-            if (node.nodeType == 1 && node != el) {
-              nodes.push(node);
-            }
+          // Collect only sibling nodes that are elements and not the current element
+          if (node.nodeType == 1 && node != el) {
+            nodes.push(node);
           }
+        }
 
-          // Go up to parent
-          el = parent;
-          
-          // Stop when processed the body's child nodes
-        } while (el.tagName.toLowerCase() != 'body');
-        
-        // Hide the collected nodes
-        nodes.forEach(function(node) {
-          node.style.display = 'none';
-        });
-        
-    {% endif %}
+        // Go up to parent
+        el = parent;
 
+        // Stop when processed the body's child nodes
+      } while (el.tagName.toLowerCase() != 'body');
+
+      // Hide the collected nodes
+      nodes.forEach(function(node) {
+        node.style.display = 'none';
+      });{% endif %}
 
     let urlredirect = window.location.href;
     urlredirect = urlredirect.split('/pages')[0];
 
-    let image_background = 'https:' + first_page_settings.background_image;
-    console.log(image_background);
-    document.getElementById('background-image').style.backgroundImage = first_page_settings.background_overlay  + ',url(' + image_background + ')';
+    const campaign = document.getElementById('landing_campaign_name');
+    const campaign_name = campaign.innerHTML;
+    console.log(campaign_name)
 
+    const myBackground = await getbackground(campaign_name);
+
+    if (first_page_settings.background_image) {
+      let image_background = 'https:' + first_page_settings.background_image;
+      console.log(image_background);
+      document.getElementById('background-image').style.backgroundImage = first_page_settings.background_overlay + ',url(' + image_background + ')';
+    } else {
+      document.getElementById('background-image').style.backgroundImage = first_page_settings.background_overlay + ',url(' + myBackground.imageURL + ')';
+    }
 
     var form = document.getElementById('form-submission'),
-    actionPath = '',
-    formData = null;
+      actionPath = '',
+      formData = null;
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -74,8 +94,10 @@
         showSnackbar("snackbar");
       } else if (response.status == '307') {
         window.location.href = urlredirect + '/pages/' + first_page_settings.page + '?referralCode=' + data.referral;
+      } else if (response.status == '500') {
+        showSnackbar("snackbar3");
       } else {
-        showSnackbar("snackbar2");
+        showSnackbar('snackbar2');
       }
 
       return;
@@ -102,13 +124,19 @@
   }
   .consent-label-product-prelaucher {
     font-size: {{ block.settings.base_font_size | times: 0.25}}px;
-    color: {{ block.settings.main_color }};
+    color: {{ block.settings.accent_color }};
+  }
+  svg > path {
+    fill: {{ block.settings.accent_color }} !important;
   }
   .submit-button {
-    font-size: {{ block.settings.base_font_size | times: 0.44}}px;
+    font-size: {{ block.settings.base_font_size | times: 0.44}}
+    px;
     font-weight: 600 !important;
-    color: {{ block.settings.accent_color }} !important;
-    background: {{ block.settings.main_color }};
+    color: {{ block.settings.accent_color }}
+     !important;
+    background: {{ block.settings.main_color }}
+    ;
     border: 1px solid{{ block.settings.accent_color}};
   }
   .subheader_text {
@@ -138,12 +166,15 @@
     color: {{ block.settings.main_color }};
     font-size: {{ block.settings.base_font_size | times: 0.44}}px;
   }
-  ::placeholder{
-    color: {{ block.settings.main_color }};
-    font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+  ::placeholder {
+    color: {{ block.settings.main_color }}
+    ;
+    font-size: {{ block.settings.base_font_size | times: 0.35}}
+    px;
   }
   .text-layout {
-    background-color: {{ block.settings.main_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -180,46 +211,58 @@
   }
   @media screen and (max-width: 767px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size|times: 1}}px;
+      font-size: {{ block.settings.base_font_size|times: 1}}
+      px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size|times: 0.9}}px;
+      font-size: {{ block.settings.base_font_size|times: 0.9}}
+      px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size|times: 0.75}}px;
+      font-size: {{ block.settings.base_font_size|times: 0.75}}
+      px;
     }
   }
-  @media only screen and (min-width: 768px) and (max-width: 991px) {
+  @media only screen and (min-width: 768px) and(max-width: 991px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size|times: 1.3}}px;
+      font-size: {{ block.settings.base_font_size|times: 1.3}}
+      px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size}}px;
+      font-size: {{ block.settings.base_font_size}}
+      px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size|times: 0.9}}px;
+      font-size: {{ block.settings.base_font_size|times: 0.9}}
+      px;
     }
   }
-  @media only screen and (min-width: 992px) and (max-width: 1199px) {
+  @media only screen and (min-width: 992px) and(max-width: 1199px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size|times: 1.5}}px;
+      font-size: {{ block.settings.base_font_size|times: 1.5}}
+      px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size|times: 1.2}}px;
+      font-size: {{ block.settings.base_font_size|times: 1.2}}
+      px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size|times: 1}}px;
+      font-size: {{ block.settings.base_font_size|times: 1}}
+      px;
     }
   }
   @media only screen and (min-width: 1200px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size|times: 2}}px;
+      font-size: {{ block.settings.base_font_size|times: 2}}
+      px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size|times: 1.8}}px;
+      font-size: {{ block.settings.base_font_size|times: 1.8}}
+      px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size|times: 1.5}}px;
+      font-size: {{ block.settings.base_font_size|times: 1.5}}
+      px;
     }
   }
 </style>
@@ -239,15 +282,18 @@
         "id": "show_header_footer",
         "label": "Show Header & Footer",
         "default": true
-      }, {
+      },
+      {
         "label": "Campaign Name",
         "id": "campaign_name",
         "type": "text",
         "default": "MyCampaign"
-      }, {
+      },
+      {
         "type": "paragraph",
         "content": "Note: Do not change campaign name here as you have already named your campaign on merchants dashboard, updating it here would cause potential risks."
-      }, {
+      },
+      {
         "type": "color_background",
         "id": "background_overlay",
         "label": "Background Overlay",
@@ -304,12 +350,13 @@
         "label": "Background Image",
         "id": "background_image",
         "type": "image_picker"
-      }, 
+      },
+
       // {
-      //   "type": "font_picker",
-      //   "id": "font_family",
-      //   "label": "Font Family",
-      //   "default": "akko_n5"
+      // "type": "font_picker",
+      // "id": "font_family",
+      // "label": "Font Family",
+      // "default": "akko_n5"
       // }, 
       {
         "label": "Header",
@@ -339,6 +386,41 @@
       }, {
         "label": "Button Text",
         "id": "button_text",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "type": "checkbox",
+        "id": "show_social_icons",
+        "label": "Show Social Icons",
+        "default": true
+      }, {
+        "label": "Facebook",
+        "id": "facebook_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Instagram",
+        "id": "instagram_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Twitter",
+        "id": "twitter_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Tiktok",
+        "id": "tiktok_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Snapchat",
+        "id": "snapchat_link",
+        "type": "text",
+        "default": "Enter"
+      }, {
+        "label": "Discord",
+        "id": "discord_link",
         "type": "text",
         "default": "Enter"
       }, {

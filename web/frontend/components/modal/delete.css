@@ -1,7 +1,7 @@
 .modal {
   position: fixed;
   inset: 0; /* inset sets all 4 values (top right bottom left) much like how we set padding, margin etc., */
-  background-color: rgb(37 37 37 / 44%);
+  background-color: rgba(176, 176, 176, 0.13);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,6 +48,7 @@
 
 .action__btn-modal {
   display: flex;
+  justify-content: centers;
   align-items: center;
   gap: 2.5rem;
   margin-top: 25px;
@@ -74,12 +75,11 @@
   -o-border-radius: 12px;
 }
 
-/* .delete__btn:hover,
+.delete__btn:hover,
 .close__btn:hover {
-  background-color: #fbfafa;
-  border: 1px solid var(--secondary-color);
-  color: var(--secondary-color);
-} */
+  background-color: #402c65;
+  color: #fff;
+}
 
 @media screen and (max-width: 786px) {
   .delete-modal-container {
