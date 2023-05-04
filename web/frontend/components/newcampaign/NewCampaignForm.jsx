@@ -326,15 +326,7 @@ function NewCampaignForm() {
     setShowList(templates_show_list);
   }, [randomTemplate]);
 
-  // Call the GET URL API when user Select a template from tempalte Settings
 
-  useEffect(async () => {
-    if (selectedTemplateData !== undefined) {
-      let fileurl = await handleGetURL(selectedTemplateData?.campaign_image);
-      // Append the URL with selected Template Data
-      setResult({ ...selectedTemplateData, fileurl }); //selectedTemplateData + bgUrl
-    }
-  }, [selectedTemplateData]);
 
   // Get Klaviyo integration Lists from API
   async function getKlaviyoList() {
@@ -384,10 +376,10 @@ function NewCampaignForm() {
 
   // Create_templates_list
   async function saveCampaignTemplate(data, template) {
-    await fetch('/api/create_template', {
-      method: 'POST',
+    await fetch("/api/create_template", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ data, template }),
     })
@@ -561,13 +553,13 @@ function NewCampaignForm() {
     if (isEdit) {
       setEditCampaignData((prevcampaignData) => ({
         ...prevcampaignData,
-        collect_phone: value === 'phone',
+        collect_phone: value === "phone",
         discount_type: value,
       }));
     } else {
       setNewCampaignData((prevnewcampaignData) => ({
         ...prevnewcampaignData,
-        collect_phone: value === 'phone',
+        collect_phone: value === "phone",
         discount_type: value,
       }));
     }
@@ -589,7 +581,7 @@ function NewCampaignForm() {
         setExpanded((prevExpand) =>
           prevExpand.map((state, i) => (i === index ? !state : false))
         );
-      }, 3000);
+      }, 3700);
     }
   }
   // Handle Template Selection
@@ -609,47 +601,13 @@ function NewCampaignForm() {
     }
   }
 
-
-  // Discounts API Call
-  async function generateDiscounts(newCampaignData) {
-    try {
-      const response = await fetch("/api/generate_discount", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({campaignData: newCampaignData}),
-      });
-      const responseData = await response.json();
-      console.log(responseData);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  // Template API Call
-  async function createTemplates(selectedTemplateData, newCampaignData) {
-    try {
-      const response = await fetch("/api/create_template", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({templateData: selectedTemplateData, campaignData: newCampaignData}),
-      });
-      const responseData = await response.json();
-      console.log(responseData);
-    } catch (error) {
-      console.log(error);
-    }
-
   // Handle Get Url of Campaign name
   async function handleGetURL(imgFile) {
     try {
       const response = await fetch(`/api/geturl/?file=${imgFile}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
       const list = await response.json();
@@ -663,17 +621,16 @@ function NewCampaignForm() {
 
   // Create_templates_list
   async function saveCampaignTemplate(data, template) {
-    await fetch('/api/create_template', {
-      method: 'POST',
+    await fetch("/api/create_template", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ data, template }),
     })
       .then((res) => res.json())
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
-
   }
 
   // Save  New Campaign form  & Update Campaign Form
@@ -711,7 +668,6 @@ function NewCampaignForm() {
 
         // Now we need to pass the result as (selected tempalte + bgUrl)
         await saveCampaignTemplate(newCampaignData, selectedTemplateData); //Uncomment this line for create tempalte
-
         setIsLoading(true);
         await fetch('/api/campaignsettings', {
           method: 'POST',
@@ -1277,15 +1233,15 @@ function NewCampaignForm() {
                           checked={
                             editCampaignData?.discount_type === 'percent'
                           }
-                          onChange={handleRadioChange}
+                          onChange={handleDiscountRadioChange}
                         />
                       ) : (
                         <input
-                          className='social-radioInput'
-                          type='radio'
-                          name='discount_type'
-                          value='percent'
-                          checked={newCampaignData?.discount_type === 'percent'}
+                          className="social-radioInput"
+                          type="radio"
+                          name="discount_type"
+                          value="percent"
+                          checked={newCampaignData?.discount_type === "percent"}
                           onChange={handleRadioChange}
                         />
                       )}
@@ -1294,20 +1250,20 @@ function NewCampaignForm() {
                     <div>
                       {isEdit ? (
                         <input
-                          className='social-radioInput'
-                          type='radio'
-                          name='discount_type'
-                          value='amount'
-                          checked={editCampaignData?.discount_type === 'amount'}
+                          className="social-radioInput"
+                          type="radio"
+                          name="discount_type"
+                          value="amount"
+                          checked={editCampaignData?.discount_type === "amount"}
                           onChange={handleRadioChange}
                         />
                       ) : (
                         <input
-                          className='social-radioInput'
-                          type='radio'
-                          name='discount_type'
-                          value='amount'
-                          checked={newCampaignData?.discount_type === 'amount'}
+                          className="social-radioInput"
+                          type="radio"
+                          name="discount_type"
+                          value="amount"
+                          checked={newCampaignData?.discount_type === "amount"}
                           onChange={handleRadioChange}
                         />
                       )}{' '}
