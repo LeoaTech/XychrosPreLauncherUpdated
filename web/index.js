@@ -53,15 +53,18 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
   },
 });
 
+
+
+
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
 // See the ensureBilling helper to learn more about billing in this template.
 const BILLING_SETTINGS = {
-  required: false,
+  required: true,
   // This is an example configuration that would do a one-time charge for $5 (only USD is currently supported)
-  // chargeName: "My Shopify One-Time Charge",
-  // amount: 5.0,
-  // currencyCode: "USD",
-  // interval: BillingInterval.OneTime,
+  chargeName: "My Shopify Every Month Charge",
+  amount: 0.1,
+  currencyCode: "USD",
+  interval: BillingInterval.Every30Days,
 };
 
 // This sets up the mandatory GDPR webhooks. You’ll need to fill in the endpoint
@@ -75,7 +78,7 @@ setupGDPRWebHooks("/api/webhooks");
 // export for test use only
 export async function createServer(
   root = process.cwd(),
-  isProd = process.env.NODE_ENV === "production",
+  isProd = process.env.NODE_ENV == "production",
   billingSettings = BILLING_SETTINGS
 ) {
   const app = express();
@@ -106,12 +109,12 @@ export async function createServer(
   });
 
   // All endpoints after this point will require an active session
-  // app.use(
-  //   '/api/*',
-  //   verifyRequest(app, {
-  //     billing: billingSettings,
-  //   })
-  // );
+  app.use(
+    '/api/*',
+    verifyRequest(app, {
+      billing: billingSettings,
+    })
+  );
 
   // app.get('/api/products/count', async (req, res) => {
   //   const session = await Shopify.Utils.loadCurrentSession(
@@ -142,6 +145,8 @@ export async function createServer(
 
     res.status(200).send(countData);
   });
+
+
 
   // app.get('/api/products/create', async (req, res) => {
   //   const session = await Shopify.Utils.loadCurrentSession(

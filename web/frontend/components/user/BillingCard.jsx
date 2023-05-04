@@ -30,7 +30,7 @@ const BillingCard = ({ card, handleSubscription, isSubscribed }) => {
 
       <div className="price-tag">
         <p>${card.price}/month</p>
-        <button className={`subscribed-btn ${isSubscribed ? 'subscribed' : ''}`} disabled={isSubscribed}> {isSubscribed ? "Subscribed" : "Update"}</button>
+        <button className={`subscribed-btn ${isSubscribed ? 'subscribed' : ''}`} disabled={isSubscribed}> {isSubscribed ? "Subscribed" : card?.btnText}</button>
       </div>
     </div>
   );

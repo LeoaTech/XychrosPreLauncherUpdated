@@ -34,7 +34,7 @@ const PriceDetails = [
 
     ],
     price: 0,
-
+    btnText: "Subscribe"
   },
   {
     id: 2,
@@ -77,7 +77,7 @@ const PriceDetails = [
       }
     ],
     price: 4.99,
-
+    btnText: "Subscribe"
   },
   {
     id: 3,
@@ -118,7 +118,7 @@ const PriceDetails = [
       }
     ],
     price: 8.99,
-
+    btnText: "Subscribe"
   },
   {
     id: 4,
@@ -159,7 +159,7 @@ const PriceDetails = [
       }
     ],
     price: 19.99,
-
+    btnText: "Subscribe"
   },
   {
     id: 5,
@@ -200,7 +200,7 @@ const PriceDetails = [
       }
     ],
     price: 34.99,
-
+    btnText: "Subscribe"
   },
   {
     id: 6,
@@ -241,7 +241,7 @@ const PriceDetails = [
       }
     ],
     price: 59.99,
-
+    btnText: "Subscribe"
   },
   {
     id: 7,
@@ -282,7 +282,7 @@ const PriceDetails = [
       }
     ],
     price: 111.99,
-
+    btnText: "Subscribe"
   },
   {
     id: 8,
@@ -323,7 +323,7 @@ const PriceDetails = [
       }
     ],
     price: 159.99,
-
+    btnText: "Subscribe"
   },
   {
     id: 9,
@@ -364,7 +364,7 @@ const PriceDetails = [
       }
     ],
     price: 255.99,
-
+    btnText: "Subscribe"
   },
 
 ];
@@ -386,7 +386,8 @@ const UserProfile = () => {
   const [userDetails, setUserDetails] = useState(formData);
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [priceCard, setPriceCard] = useState(PriceDetails)
-  const [subscribedCardId, setSubscribedCardId] = useState(null);  //handle Biiling Card subscription ID
+  const [changeBtnText, setChangeBtnText] = useState("Subscribe")
+  const [subscribedCardId, setSubscribedCardId] = useState(1);  //handle Biiling Card subscription ID
   const [title, setTitle] = useState("");
   const [isLoading, setIsloading] = useState(false)
   const findTitle = () => {

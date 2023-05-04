@@ -1,427 +1,467 @@
-/* Settings Page  */
+  /* Settings Page  */
 
-.settings-container {
-  color: var(--primary-color);
-  padding: 5px 25px;
-  margin: 5px 25px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* Header Title */
-
-.settings-heading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.settings-heading h1 {
-  font-size: 30px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-/* Settings Save button */
-
-.settings-savebtn {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.saveSettingsbtn,
-.next-button,
-.prev-Btn {
-  height: 50px;
-  width: 100px;
-  background-color: var(--secondary-color);
-  border: none;
-  color: white;
-  float: right;
-  font-size: 25px;
-  font-weight: 500;
-  margin-top: 20px;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
-}
-
-.saveSettingsbtn {
-  width: 120px;
-  font-size: 23px;
-}
-
-.next-button,
-.prev-Btn {
-  font-size: 19px;
-  cursor: pointer;
-}
-
-.active-form {
-  color: #fff;
-}
-
-.inactive-form .next-button {
-  color: gray;
-}
-.inactive-form {
-  color: gray;
-}
-.global-settings {
-  background-color: #1b1a21;
-  padding: 22px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
-}
-
-.basic-settings,
-.referral-settings,
-.reward-settings,
-.email-drafts-settings,
-.integration--settings,
-.templates-settings {
-  margin: 0 40px;
-  padding: 0 40px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  cursor: pointer;
-}
-
-/* Card Heading */
-.main-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.main-title {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.toggle-card-btn {
-  font-weight: 700;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.toggle-next-btn {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-/* Basic Settings Card Block */
-
-.store__links,
-.collect__container {
-  margin: 20px 40px;
-  padding: 10px 40px;
-}
-
-.sub-title {
-  font-size: 20px;
-  font-weight: 300;
-}
-
-.stores__social_links {
-  margin: 10px 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  row-gap: 20px;
-  column-gap: 20px;
-}
-
-.social_card {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.check_input {
-  height: 25px;
-  width: 25px;
-  background-color: #333232 !important;
-  cursor: pointer;
-}
-.social-text-field {
-  height: 35px;
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  padding: 20px;
-  font-size: 19px;
-  background-color: #25242d;
-  color: #fff;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
-}
-
-.error-message {
-  color: red;
-}
-
-.collect__inputs {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.checkbox-input {
-  height: 20px;
-  width: 25px;
-}
-
-.collect__inputs label {
-  font-size: 19px;
-}
-
-/* Global Referral Settings */
-
-.referral-settings-container {
-  margin: 20px 40px;
-  padding: 20px 40px;
-}
-
-.subheading p {
-  font-size: 18px;
-  color: #dfd5d5;
-}
-
-.referrals-cards-block {
-  margin: 20px 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  column-gap: 25px;
-  row-gap: 20px;
-}
-
-/* Global settings for Rewards Tiers */
-
-.reward-setting-container {
-  margin: 20px 40px;
-  padding: 20px 40px;
-}
-
-.discount-card-block {
-  margin: 20px 0;
-  margin-bottom: 30px;
-}
-
-.discounts_input {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.social-radioInput {
-  height: 20px;
-  width: 18px;
-}
-
-.rewards-tiers-cardblocks {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  row-gap: 20px;
-  column-gap: 30px;
-}
-
-/* Global Integration Settings */
-
-.integrations-container {
-  margin: 20px 40px;
-  padding: 20px 40px;
-}
-
-.integrate-api-input {
-  margin: 20px 0;
-}
-.inputfield label {
-  font-size: 18px;
-}
-
-.inputfield label a {
-  color: var(--secondary-color);
-}
-
-.integrate-api-input .inputfield input {
-  width: 400px;
-  height: 40px;
-  border: none;
-  border-radius: 5px;
-  padding: 20px;
-  font-size: 19px;
-  background-color: #25242d;
-  color: #fff;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-}
-
-/* Templates Global Settings */
-
-.templates-container {
-  margin: 20px 40px;
-  padding: 20px 40px;
-}
-
-.templates-blocks-container {
-  margin-top: 25px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-/* ---------------------- Media  Queries  ---------------------------- */
-
-@media screen and (max-width: 1480px) {
-  .settings-container{
-    margin-left: 2%;
-  }
-  .stores__social_links {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .referrals-cards-block {
-    column-gap: 15px;
-    row-gap: 10px;
-  }
-  .rewards-tiers-cardblocks {
-    grid-template-columns: repeat(1, 1fr);
-  }
-}
-
-@media screen and (max-width: 1050px) {
-  .settings-container{
-    margin-left: 3%;
-  }
-  .basic-settings,
-  .referral-settings,
-  .reward-settings,
-  .email-drafts-settings,
-  .integration--settings,
-  .templates-settings {
-    margin: 0 15px;
-    padding: 0 13px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-
-  .store__links,
-  .collect__container,
-  .reward-setting-container,
-  .referral-settings-container,
-  .integrations-container,
-  .templates-container {
-    margin: 20px 15px;
-    padding: 10px 13px;
-  }
-  .subheading p {
-    line-height: 1.4;
-  }
-  .stores__social_links {
-    grid-template-columns: repeat(1, 1fr);
-  }
-  .integrate-api-input .inputfield input {
-    width: 100%;
-  }
-  .templates-blocks-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media screen and (max-width: 768px) {
   .settings-container {
-    padding: 5px 15px;
-    margin: 5px 15px;
-  }
-  .settings-heading h1{
-    font-size: 27px;
-  }
-  .basic-settings,
-  .referral-settings,
-  .reward-settings,
-  .email-drafts-settings,
-  .integration--settings,
-  .templates-settings {
-    margin: 0 10px;
-    padding: 0 9px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    color: var(--primary-color);
+    padding: 5px 25px;
+    margin: 5px 25px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
-  .main-title {
-    font-size: 20px;
+  /* Header Title */
+
+  .settings-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .settings-heading h1 {
+    font-size: 30px;
     font-weight: 700;
+    margin-bottom: 20px;
+    margin-top: 20px;
   }
 
-  .store__links,
-  .collect__container,
-  .reward-setting-container,
-  .referral-settings-container,
-  .integrations-container {
-    margin: 20px 15px;
-    padding: 10px 13px;
+  /* Settings Save button */
+
+  .settings-savebtn {
+    display: flex;
+    justify-content: flex-end;
   }
 
-  .stores__social_links,
-  .referrals-cards-block,
-  .rewards-tiers-cardblocks {
-    grid-template-columns: repeat(1, 1fr);
+  .saveSettingsbtn,
+  .next-button,
+  .prev-Btn {
+    height: 50px;
+    width: 100px;
+    background-color: var(--secondary-color);
+    border: none;
+    color: white;
+    float: right;
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 20px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
   }
-}
 
-@media screen and (max-width: 500px) {
-  .settings-container {
-    padding: 10px;
-    margin: 11px;
+  .saveSettingsbtn {
+    width: 120px;
+    font-size: 23px;
+  }
+
+  .next-button,
+  .prev-Btn {
+    font-size: 19px;
+    cursor: pointer;
+  }
+
+  .active-form {
+    color: #fff;
+  }
+
+  .inactive-form .next-button {
+    color: gray;
+  }
+
+  .inactive-form {
+    color: gray;
   }
 
   .global-settings {
-    padding: 10px;
+    background-color: #1b1a21;
+    padding: 22px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
   }
 
-  .sub-title {
-    font-size: 18.5px;
-    margin-bottom: 23px;
+  .basic-settings,
+  .referral-settings,
+  .reward-settings,
+  .email-drafts-settings,
+  .integration--settings,
+  .templates-settings {
+    margin: 0 40px;
+    padding: 0 40px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+
+  /* Card Heading */
+  .main-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .main-title {
+    font-size: 24px;
     font-weight: 700;
   }
 
+  .toggle-card-btn {
+    font-weight: 700;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .toggle-next-btn {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Basic Settings Card Block */
+
   .store__links,
-  .collect__container,
-  .referral-settings-container,
-  .templates-container {
-    margin: 20px 10px;
-    padding: 10px 11px;
+  .collect__container {
+    margin: 20px 40px;
+    padding: 10px 40px;
+  }
+
+  .sub-title {
+    font-size: 20px;
+    font-weight: 300;
   }
 
   .stores__social_links {
-    grid-template-columns: repeat(1, 1fr);
-    row-gap: 26px;
+    margin: 10px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 20px;
+    column-gap: 20px;
+  }
+
+  .social_card {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .check_input {
+    height: 25px;
+    width: 25px;
+    background-color: #333232 !important;
+    cursor: pointer;
+  }
+
+  .social-text-field {
+    height: 35px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 19px;
+    background-color: #25242d;
+    color: #fff;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+  }
+
+  .error-message {
+    color: red;
+  }
+
+  .collect__inputs {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .checkbox-input {
+    height: 20px;
+    width: 25px;
+  }
+
+  .collect__inputs label {
+    font-size: 19px;
+  }
+
+  /* Global Referral Settings */
+
+  .referral-settings-container {
+    margin: 20px 40px;
+    padding: 20px 40px;
+  }
+
+  .subheading p {
+    font-size: 18px;
+    color: #dfd5d5;
   }
 
   .referrals-cards-block {
-    margin: 5px 0;
-    grid-template-columns: repeat(1, 1fr);
+    margin: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 25px;
     row-gap: 20px;
   }
 
+  /* Global settings for Rewards Tiers */
+
+  .reward-setting-container {
+    margin: 20px 40px;
+    padding: 20px 40px;
+  }
+
+  .discount-card-block {
+    margin: 20px 0;
+    margin-bottom: 30px;
+  }
+
+  .discounts_input {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .social-radioInput {
+    height: 20px;
+    width: 18px;
+  }
+
+  .rewards-tiers-cardblocks {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 20px;
+    column-gap: 30px;
+  }
+
+  /* Global Integration Settings */
+
+  .integrations-container {
+    margin: 20px 40px;
+    padding: 20px 40px;
+  }
+
+  .integrate-api-input {
+    margin: 20px 0;
+
+  }
+
+ 
+  .inputfield label {
+    font-size: 18px;
+  }
+
+  .inputfield label a {
+    color: var(--secondary-color);
+  }
+
   .integrate-api-input .inputfield input {
-    width: 100%;
+    width: 400px;
+    height: 40px;
+    border: none;
+    border-radius: 14px;
+    padding: 20px;
+    font-size: 19px;
+    background-color: #25242d;
+    color: #fff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+  }
+
+  /* Templates Global Settings */
+
+  .templates-container {
+    margin: 20px 40px;
+    padding: 20px 40px;
   }
 
   .templates-blocks-container {
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 10px;
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
   }
-}
+
+  /* ---------------------- Media  Queries  ---------------------------- */
+
+  @media screen and (max-width: 1480px) {
+    .settings-container {
+      margin-left: 2%;
+    }
+
+    .stores__social_links {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .referrals-cards-block {
+      column-gap: 15px;
+      row-gap: 10px;
+    }
+
+    .rewards-tiers-cardblocks {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 1050px) {
+    .settings-container {
+      margin-left: 2%;
+    }
+
+    .basic-settings,
+    .referral-settings,
+    .reward-settings,
+    .email-drafts-settings,
+    .integration--settings,
+    .templates-settings {
+      margin: 0 15px;
+      padding: 0 13px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .store__links,
+    .collect__container,
+    .reward-setting-container,
+    .referral-settings-container,
+    .integrations-container,
+    .templates-container {
+      margin: 20px 15px;
+      padding: 10px 13px;
+    }
+
+    .settings-heading h1 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      margin-top: 10px;
+    }
+
+    .global-settings{
+      padding: 20px;
+    }
+
+    .main-title,
+    .toggle-card-btn {
+      font-size: 19.5px;
+      font-weight: 700;
+    }
+
+    .sub-title {
+      font-size: 18px;
+      font-weight: 300;
+    }
+    .subheading p {
+      line-height: 1.4;
+      font-size: 18px;
+    }
+
+    .stores__social_links {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .integrate-api-input .inputfield input {
+      width: 100%;
+      border-radius: 13px;
+      font-size: 15px;
+    }
+
+    .templates-blocks-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .settings-container {
+      padding: 5px 15px;
+      margin: 5px 15px;
+    }
+
+    .settings-heading h1 {
+      font-size: 27px;
+    }
+
+    .basic-settings,
+    .referral-settings,
+    .reward-settings,
+    .email-drafts-settings,
+    .integration--settings,
+    .templates-settings {
+      margin: 0 10px;
+      padding: 0 9px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .main-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .store__links,
+    .collect__container,
+    .reward-setting-container,
+    .referral-settings-container,
+    .integrations-container {
+      margin: 20px 15px;
+      padding: 10px 13px;
+    }
+
+    .stores__social_links,
+    .referrals-cards-block,
+    .rewards-tiers-cardblocks {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .settings-container {
+      padding: 10px;
+      margin: 11px;
+    }
+
+    .global-settings {
+      padding: 10px;
+    }
+
+    .sub-title {
+      font-size: 18.5px;
+      margin-bottom: 23px;
+      font-weight: 700;
+    }
+
+    .store__links,
+    .collect__container,
+    .referral-settings-container,
+    .templates-container {
+      margin: 20px 10px;
+      padding: 10px 11px;
+    }
+
+    .stores__social_links {
+      grid-template-columns: repeat(1, 1fr);
+      row-gap: 26px;
+    }
+
+    .referrals-cards-block {
+      margin: 5px 0;
+      grid-template-columns: repeat(1, 1fr);
+      row-gap: 20px;
+    }
+
+    .integrate-api-input .inputfield input {
+      width: 100%;
+    }
+
+    .templates-blocks-container {
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 10px;
+    }
+  }
