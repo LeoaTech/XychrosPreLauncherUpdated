@@ -1,8 +1,6 @@
 .pricing-details {
-  height: 900px;
-  max-height: auto;
-  min-width: 400px;
-  max-width: 500px;
+  height: 650px;
+  width: 480px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -14,6 +12,7 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
+
 }
 
 .pricing-details:first-child {
@@ -23,12 +22,12 @@
 .price-detail-block {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  margin: 20px;
+  padding: 5px 5px;
+  margin: 5px 5px;
 }
 
 .price-detail-block h3 {
-  font-size: 26px;
+  font-size: 18px;
   font-weight: 700;
   margin-bottom: 20px;
   display: flex;
@@ -36,10 +35,11 @@
 }
 
 .price-bottom h2 {
-  font-size: 29px;
-  margin: 20px 0;
+  font-size: 17px;
+  margin: 10px 0;
   font-weight: 700;
 }
+
 .pricing-features {
   display: flex;
   justify-content: flex-start;
@@ -48,23 +48,23 @@
 }
 
 .pricing-features p {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 500;
-  margin: 18px 0;
-  line-height: 1.1;
+  margin: 10px 0;
+  line-height: 1.2;
   word-break: keep-all;
 }
 
 .feature {
   display: flex;
-  gap: 15px;
+  gap: 5px;
   align-items: center;
 }
 
 .btn-subscribe {
-  height: 50px;
+  height: 40px;
   background-color: rgb(233, 229, 229);
-  width: 200px;
+  width: 120px;
   margin-bottom: 25px;
   display: flex;
   justify-content: center;
@@ -74,7 +74,7 @@
   border-radius: 25px;
   color: black;
   cursor: pointer;
-  font-size: 23px;
+  font-size: 18px;
   -webkit-border-radius: 25px;
   -moz-border-radius: 25px;
   -ms-border-radius: 25px;
@@ -83,25 +83,41 @@
 
 @media screen and (max-width: 786px) {
   .pricing-details {
-    min-height: 1000px;
-    max-height: fit-content;
-    min-width: 400px;
-    max-width: 450px;
+
+    height: 650px;
+    width: 460px;
   }
 }
 
 @media screen and (max-width: 500px) {
   .pricing-details {
-    min-height: 900px;
-    max-height: 100%;
-    min-width: 320px;
-    max-width: 370px;
+    height: fit-content;
+    width: 270px;
   }
 
-  .pricing-features p {
-    font-size: 17px;
-    font-weight: 500;
-    margin: 18px 0;
-    line-height: 1.02;
+  .pricing-details:first-child {
+    background-color: var(--secondary-color);
+    color: #fff !important;
   }
+
+  .price-detail-block {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 15px;
+    margin: 5px 15px;
+  }
+
+  .price-detail-block h3 {
+    font-size: 17px;
+
+    margin-bottom: 10px;
+
+  }
+
+  .price-bottom h2 {
+    font-size: 16px;
+    margin: 15px 5PX;
+
+  }
+
 }

@@ -20,6 +20,7 @@ let isProd;
  *
  * Learn more about billing in our documentation: https://shopify.dev/apps/billing
  */
+// Check if any subscription is active or not
 export default async function ensureBilling(
   session,
   { chargeName, amount, currencyCode, interval },
@@ -49,6 +50,9 @@ export default async function ensureBilling(
   return [hasPayment, confirmationUrl];
 }
 
+
+
+// Function to Check Active Payment(One-time, Recurring) 
 async function hasActivePayment(session, { chargeName, interval }) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
 
@@ -58,7 +62,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
     });
     const subscriptions =
       currentInstallations.body.data.currentAppInstallation.activeSubscriptions;
-
+    console.log("hasactive payment", subscriptions)
     for (let i = 0, len = subscriptions.length; i < len; i++) {
       if (
         subscriptions[i].name === chargeName &&
@@ -98,14 +102,15 @@ async function hasActivePayment(session, { chargeName, interval }) {
   return false;
 }
 
+
+// When user install the app , it requests for app subscription
 async function requestPayment(
   session,
   { chargeName, amount, currencyCode, interval }
 ) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
-  const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${
-    session.shop
-  }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
+  const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${session.shop
+    }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
 
   let data;
   if (isRecurring(interval)) {
@@ -124,7 +129,7 @@ async function requestPayment(
     });
     data = mutationResponse.body.data.appPurchaseOneTimeCreate;
   }
-
+  console.log("subscribe", data)
   if (data.userErrors.length) {
     throw new ShopifyBillingError(
       "Error while billing the store",
@@ -157,6 +162,7 @@ async function requestRecurringPayment(
         ],
         returnUrl,
         test: !isProd,
+
       },
     },
   });
@@ -210,6 +216,7 @@ export function ShopifyBillingError(message, errorData) {
   this.errorData = errorData;
 }
 ShopifyBillingError.prototype = new Error();
+
 
 const RECURRING_PURCHASES_QUERY = `
   query appSubscription {
