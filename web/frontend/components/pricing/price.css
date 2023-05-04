@@ -1,7 +1,7 @@
 .pricing-container {
-  margin-top: 30px;
+  margin-top: 10px;
   width: 100%;
-  padding: 15px;
+  padding: 10px;
   color: #fff;
 }
 
@@ -9,19 +9,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   margin-bottom: 20px;
 }
 
 .price-details-container {
-  height: 1000px;
+  height: 100%;
   width: 100%;
+ 
 }
+
 .price-block {
-  margin-top: 50px;
+  margin-top: 20px;
   display: flex;
-  gap: 35px;
+  gap: 10px;
+  
+
 }
 
 @media only screen and (max-width: 2190px) {
@@ -32,28 +36,34 @@
 
 @media only screen and (max-width: 768px) {
   .price-details-container {
-    /* overflow: auto; */
+    overflow: auto;
     padding-left: 0.11%;
   }
+
   .price-block {
-    margin-top: 50px;
+    margin-top: 20px;
     display: flex;
-    gap: 35px;
+    gap: 15px;
     flex-direction: column;
+  }
+
+  .pricing-title h2 {
+    font-size: 17px;
+
   }
 }
 
 @media only screen and (max-width: 500px) {
   .price-details-container {
-    padding: 13px;
-    /* overflow:none; */
-    /* overflow-x: hidden; */
+    padding: 10px;
+    margin: 0 20px;
     padding-left: 0.1%;
   }
+
   .price-block {
-    margin-top: 50px;
+    margin-top: 20px;
     display: flex;
-    gap: 35px;
+    gap: 10px;
     flex-direction: column;
   }
 }
