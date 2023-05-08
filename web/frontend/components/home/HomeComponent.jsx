@@ -8,16 +8,90 @@ import {
   fetchAllCampaigns,
 } from "../../app/features/campaigns/campaignSlice";
 import CountUp from "react-countup";
+import { useAuthenticatedFetch } from "../../hooks/useAuthenticatedFetch";
 
 const HomeComponent = () => {
   const List = useSelector(fetchAllCampaigns);
   const [getCampaigns, setCampaigns] = useState([]);
+  const [lastSixMonthsNames, setLastSixMonthsName] = useState([]);
+  const [LastSixMonthsData, setLastSixMonthsData] = useState([
+    0, 0, 0, 0, 0, 0,
+  ]);
+
+  const authenticated_fetch = useAuthenticatedFetch();
+
+  const [clicks, setClicks] = useState(0);
 
   useEffect(() => {
     if (List) {
       setCampaigns(List);
     }
   }, [List]);
+
+  const getClicks = async () => {
+    const response = await authenticated_fetch("/api/getClicks");
+    const data = await response.json();
+    if (response.status == 200) {
+      setClicks(data.clicks);
+    } else {
+      setClicks(0);
+    }
+  };
+
+  var monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  var today = new Date();
+  var d;
+  var month;
+
+  const getLastSixMonthsData = async () => {
+    const response = await authenticated_fetch("/api/lastSixmonthsdata");
+    let data = await response.json();
+    if (response.status == 200) {
+      data = data.data;
+      for (let i = 0; i < data.length; i++) {
+        let date = data[i].created_month;
+        date = date.slice(0, date.indexOf("T"));
+        if (
+          lastSixMonthsNames.includes(
+            monthNames[Number(date.split("-")[1]) - 1]
+          )
+        ) {
+          let element_index = lastSixMonthsNames.indexOf(
+            monthNames[Number(date.split("-")[1]) - 1]
+          );
+          LastSixMonthsData[element_index] = data[i].count;
+        }
+        // lastSixMonthsNames.push(monthNames[Number(date.split("-")[1]) - 1]);
+      }
+    } else {
+      setLastSixMonthsData([0, 0, 0, 0, 0, 0]);
+    }
+  };
+
+  useEffect(() => {
+    for (var i = 5; i >= 0; i -= 1) {
+      d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      month = monthNames[d.getMonth()];
+      console.log(month);
+      lastSixMonthsNames.push(month);
+    }
+    getClicks();
+    getLastSixMonthsData();
+  }, []);
 
   const LineChartOptions = {
     responsive: true,
@@ -98,11 +172,11 @@ const HomeComponent = () => {
   };
 
   const LineChartData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: lastSixMonthsNames,
     datasets: [
       {
         label: "Clicks",
-        data: [11, 73, 56, 32, 45, 9, 112],
+        data: LastSixMonthsData,
         borderColor: "#5447df",
         backgroundColor: "#5447df",
         borderDash: [10, 5],
@@ -249,7 +323,7 @@ const HomeComponent = () => {
           class="revenue-icon"
         />
         <SummaryCard
-          value="4551678"
+          value={clicks}
           title="Clicks"
           icon={arrow}
           class="clicks-icon"
