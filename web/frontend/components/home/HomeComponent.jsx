@@ -265,7 +265,6 @@ const HomeComponent = () => {
           class="revenue-icon"
         />
         <SummaryCard
-          value="4551678"
           value={clicks}
           title="Clicks"
           icon={arrow}
