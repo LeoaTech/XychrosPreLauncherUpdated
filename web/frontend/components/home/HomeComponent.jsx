@@ -8,10 +8,14 @@ import {
   fetchAllCampaigns,
 } from "../../app/features/campaigns/campaignSlice";
 import CountUp from "react-countup";
+import { useAuthenticatedFetch } from "../../hooks/useAuthenticatedFetch";
 
 const HomeComponent = () => {
   const List = useSelector(fetchAllCampaigns);
   const [getCampaigns, setCampaigns] = useState([]);
+  const authenticated_fetch = useAuthenticatedFetch();
+
+  const [clicks, setClicks] = useState(0);
 
   useEffect(() => {
     if (List) {
@@ -19,6 +23,18 @@ const HomeComponent = () => {
     }
   }, [List]);
 
+  const getClicks = async () => {
+    const response = await authenticated_fetch("/api/getClicks");
+    const data = await response.json();
+    if (response.status == 200) {
+      setClicks(data.clicks);
+    } else {
+      setClicks(0);
+    }
+  };
+  useEffect(() => {
+    getClicks();
+  }, []);
   const LineChartOptions = {
     responsive: true,
     animation: {
@@ -250,6 +266,7 @@ const HomeComponent = () => {
         />
         <SummaryCard
           value="4551678"
+          value={clicks}
           title="Clicks"
           icon={arrow}
           class="clicks-icon"
