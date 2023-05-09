@@ -30,6 +30,24 @@ let share_tiktok_referral = document.getElementById('rewards_tiktok_refferal');
 let share_whatsapp_referral = document.getElementById('rewards_whatsapp_refferal');
 let share_discord_referral = document.getElementById('rewards_discord_refferal');
 
+// Get Reward Targets, Reward Icons + Discount Values
+let tier_target1 = document.getElementById('tier1');
+let tier_target2 = document.getElementById('tier2');
+let tier_target3 = document.getElementById('tier3');
+let tier_target4 = document.getElementById('tier4');
+
+let reward_icon1 = document.getElementById('reward1');
+let reward_icon2 = document.getElementById('reward2');
+let reward_icon3 = document.getElementById('reward3');
+let reward_icon4 = document.getElementById('reward4');
+
+let tier_discount1 = document.getElementById('discount1');
+let tier_discount2 = document.getElementById('discount2');
+let tier_discount3 = document.getElementById('discount3');
+let tier_discount4 = document.getElementById('discount4');
+
+// --------------------------------------------------------------------------------- //
+
 // Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
   console.log('I came here');
@@ -225,6 +243,59 @@ const get_referrals = async () => {
         '0 friends have joined! Invite friends to Join';
       current_referrals.innerText = 0;
       remaining_referrals.innerText = `${data.referral_data.length}`;
+    }
+
+    // set rewards and tiers as per campaign settings 
+    const reward_1_tier = campaign_data.reward_1_tier;
+    const reward_2_tier = campaign_data.reward_2_tier;
+    const reward_3_tier = campaign_data.reward_3_tier || '';
+    const reward_4_tier = campaign_data.reward_4_tier || '';
+
+    let reward_1_discount = campaign_data.reward_1_discount;
+    let reward_2_discount = campaign_data.reward_2_discount;
+    let reward_3_discount = campaign_data.reward_3_discount || '';
+    let reward_4_discount = campaign_data.reward_4_discount || '';
+
+    if (campaign_data.discount_type == 'percent') {
+      reward_1_discount = `${reward_1_discount}% Off`;
+      reward_2_discount = `${reward_2_discount}% Off`;
+      if (reward_3_discount != '') {
+        reward_3_discount = `${reward_3_discount}% Off`;
+      }
+      if (reward_4_discount != '') {
+        reward_4_discount = `${reward_4_discount}% Off`;
+      }
+    }
+    else {
+      reward_1_discount = `$${reward_1_discount} Off`;
+      reward_2_discount = `$${reward_2_discount} Off`;
+      if (reward_3_discount != '') {
+        reward_3_discount = `$${reward_3_discount} Off`;
+      }
+      if (reward_4_discount != '') {
+        reward_4_discount = `$${reward_4_discount} Off`;
+      }
+    }
+
+    // reward targets and rewards icons according to tiers:
+    tier_target1.innerHTML = reward_1_tier;
+    tier_target2.innerHTML = reward_2_tier;
+
+    tier_discount1.innerHTML = reward_1_discount;
+    tier_discount2.innerHTML = reward_2_discount;
+
+    // if tier 3 and tier 4 are not null:
+    if (reward_3_tier != '') {
+      tier_target3.style = "";
+      tier_target3.innerHTML = reward_3_tier;
+      reward_icon3.style = "";
+      tier_discount3.innerHTML = reward_3_discount;
+    }
+    if (reward_4_tier != '') {
+      tier_target4.style = "";
+      tier_target4.innerHTML = reward_4_tier;
+      reward_icon4.style = "";
+      tier_discount4.innerHTML = reward_4_discount;
     }
 
   } else {

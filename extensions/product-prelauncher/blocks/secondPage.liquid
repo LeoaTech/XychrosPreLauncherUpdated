@@ -91,6 +91,7 @@
     background-color: #D9D9D9;
   }
   input[value] {
+    color: {{ block.settings.main_color }};
   }
   .copy-link-btn {
     border: 1px solid{{ block.settings.accent_color }};
@@ -104,14 +105,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     {% if block.settings.text_layout == 'left' %}
-      align-items: flex-start;
-      padding: 4vw;
+      text-align: left;
     {% elsif block.settings.text_layout == 'right' %}
-      align-items: flex-end;
-      padding: 4vw;
+      text-align: right;
     {% else %}
-      align-items: center;
+      text-align: center;
     {% endif %}
   }
   .gift-layout {
