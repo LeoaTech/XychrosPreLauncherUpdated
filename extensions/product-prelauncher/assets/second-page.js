@@ -22,6 +22,7 @@ console.log(urlData);
 
 // Get Socials Icons
 let share_email_referral = document.getElementById('rewards_email_refferal');
+let share_facebook_referral = document.getElementById('rewards_facebook_refferal');
 
 // Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
@@ -80,6 +81,24 @@ const get_referrals = async () => {
           const email_body = campaign_data.share_email_message + "\n" + my_referral_link;
           const mailtoUrl = 'mailto:' + '?subject=' + encodeURIComponent(email_subject) + '&body=' + encodeURIComponent(email_body);
           window.location.href = mailtoUrl;
+        });
+      }
+    }
+
+    // Share Referral Link via Facebook
+    if (campaign_data.share_facebook_referral === false) {
+      share_facebook_referral.style.display = "none";
+    } else {
+      const shareOnFacebook = function (postText) {
+        const facebookUrl = 'https://www.facebook.com/sharer/sharer.php';
+        const fburl = `${facebookUrl}?u=${encodeURIComponent(my_referral_link)}&quote=${encodeURIComponent(postText)}`;
+        window.open(fburl, '_blank', 'width=600,height=400');
+      };
+      if (share_facebook_referral) {
+        share_facebook_referral.addEventListener('click', function (e) {
+          e.preventDefault();
+          const facebook_message = campaign_data.share_facebook_message;
+          shareOnFacebook(facebook_message);
         });
       }
     }
@@ -150,9 +169,6 @@ function copyMessage() {
   let text = 'hi there this is to be copied...';
   navigator.clipboard.writeText(text);
   setTimeout(() => {
-    const fb = document.querySelector('.facebook');
-    fb.href = 'https://www.facebook.com/';
-
     const instagram = document.querySelector('.instagram');
     instagram.href = 'https://instagram.com/';
 
