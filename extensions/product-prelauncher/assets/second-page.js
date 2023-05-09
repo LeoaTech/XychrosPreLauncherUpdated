@@ -316,7 +316,7 @@ function mouseenter(x) {
 }
 
 function mouseleave(x) {
-  let childrenelements = x.children;
+  let childrenelements = x.querySelectorAll('.referral-count-detail');
   for (let i = 0; i < childrenelements.length; i++) {
     childrenelements[i].style.display = 'none';
   }
