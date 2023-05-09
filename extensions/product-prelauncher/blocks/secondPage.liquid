@@ -70,26 +70,20 @@
     width: 100vw;
   }
   .preheader_text {
-    color: {{ block.settings.accent_color }}
-    ;
-    font-size: {{ block.settings.base_font_size | times: 0.5}}
-    px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.5}}px;
     font-weight: 800;
     padding: 0 2%;
   }
   .header_text {
-    color: {{ block.settings.accent_color }}
-    ;
-    font-size: {{ block.settings.base_font_size}}
-    px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size}}px;
     font-weight: 800;
     padding: 0 2%;
   }
   .subheader_text {
-    color: {{ block.settings.accent_color }}
-    ;
-    font-size: {{ block.settings.base_font_size | times: 0.4}}
-    px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.4}}px;
     font-weight: 500;
     padding: 0 2%;
   }
@@ -97,15 +91,12 @@
     background-color: #D9D9D9;
   }
   input[value] {
-    color: {{ block.settings.accent_color }}
-    ;
+    color: {{ block.settings.main_color }};
   }
   .copy-link-btn {
     border: 1px solid{{ block.settings.accent_color }};
-    background-color: {{ block.settings.main_color }}
-    ;
-    color: {{ block.settings.accent_color }}
-    ;
+    background-color: {{ block.settings.main_color }};
+    color: {{ block.settings.accent_color }};
   }
   .img-layout {
     background-position: center;
@@ -114,65 +105,50 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     {% if block.settings.text_layout == 'left' %}
-      align-items: flex-start;
-      padding: 4vw;
+      text-align: left;
     {% elsif block.settings.text_layout == 'right' %}
-      align-items: flex-end;
-      padding: 4vw;
+      text-align: right;
     {% else %}
-      align-items: center;
+      text-align: center;
     {% endif %}
   }
   .gift-layout {
-    background-color: {{ block.settings.main_color }}
-    ;
+    background-color: {{ block.settings.main_color }};
   }
   .friends-joined {
-    color: {{ block.settings.accent_color }}
-    ;
+    color: {{ block.settings.accent_color }};
   }
   .timeline-headers {
-    color: {{ block.settings.main_color }}
-    ;
+    color: {{ block.settings.accent_color }};
   }
   .vertical-timeline-headers {
-    color: {{ block.settings.main_color }}
-    ;
+    color: {{ block.settings.accent_color }};
   }
   .reward-target {
     border: 1px solid{{ block.settings.accent_color }};
-    background-color: {{ block.settings.main_color }}
-    ;
-    color: {{ block.settings.accent_color }}
-    ;
+    background-color: {{ block.settings.main_color }};
+    color: {{ block.settings.accent_color }};
   }
   .vertical-reward-target {
     border: 1px solid{{ block.settings.accent_color }};
-    background-color: {{ block.settings.main_color }}
-    ;
-    color: {{ block.settings.accent_color }}
-    ;
+    background-color: {{ block.settings.main_color }};
+    color: {{ block.settings.accent_color }};
   }
   .referral-count-achieved {
-    background-color: {{ block.settings.accent_color }}
-    ;
-    color: {{ block.settings.main_color }}
-    ;
+    background-color: {{ block.settings.accent_color }};
+    color: {{ block.settings.main_color }};
   }
   .vertical-referral-count-achieved {
-    background-color: {{ block.settings.accent_color }}
-    ;
-    color: {{ block.settings.main_color }}
-    ;
+    background-color: {{ block.settings.accent_color }};
+    color: {{ block.settings.main_color }};
   }
   .reward-item-detail span {
-    color: {{ block.settings.accent_color }}
-    ;
+    color: {{ block.settings.accent_color }};
   }
   svg > path {
-    fill: {{ block.settings.main_color }}
-     !important;
+    fill: {{ block.settings.accent_color }} !important;
   }
 </style>
 
@@ -261,7 +237,7 @@
         "label": "Text Base Font Size",
         "id": "base_font_size",
         "type": "range",
-        "min": 24,
+        "min": 12,
         "max": 64,
         "step": 1,
         "unit": "px",
