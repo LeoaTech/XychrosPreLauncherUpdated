@@ -27,6 +27,7 @@ let share_twitter_referral = document.getElementById('rewards_twitter_refferal')
 let share_snapchat_referral = document.getElementById('rewards_snapchat_refferal');
 let share_instagram_referral = document.getElementById('rewards_instagram_refferal');
 let share_tiktok_referral = document.getElementById('rewards_tiktok_refferal');
+let share_whatsapp_referral = document.getElementById('rewards_whatsapp_refferal');
 
 // Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
@@ -178,6 +179,20 @@ const get_referrals = async () => {
       }
     }
 
+    // Share Referral Link via Whatsapp
+    if (campaign_data.share_whatsapp_referral === false) {
+      share_whatsapp_referral.style.display = "none";
+    } else {
+      if (share_whatsapp_referral) {
+        share_whatsapp_referral.addEventListener('click', function (e) {
+          e.preventDefault();
+          const whatsapp_message = campaign_data.share_whatsapp_message + "\n" + my_referral_link;
+          const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsapp_message)}`;
+          window.open(whatsappUrl, '_blank', 'width=600,height=400');
+        });
+      }
+    }
+
 
     // end of social media settings
 
@@ -230,16 +245,4 @@ function mouseleaveproduct(x) {
   for (let i = 1; i < childrenelements.length; i++) {
     childrenelements[i].style.display = 'none';
   }
-}
-// Sharing copied messages
-let message = 'Hello there!';
-
-const whatsapp = document.querySelector('.whatsapp');
-whatsapp.href = `https://wa.me/?text=${encodedMessage}`;
-
-function copyMessage() {
-  let text = 'hi there this is to be copied...';
-  navigator.clipboard.writeText(text);
-  setTimeout(() => {
-  }, 500);
 }
