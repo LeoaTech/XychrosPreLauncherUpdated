@@ -1,5 +1,7 @@
-//Get Referral count and referral link
+// Get Campaign Name
+const campaign_name = document.getElementById('review_campaign_name');
 
+// Get Referral Count and Referral Link Input Field
 let count_referrals = document.getElementById('count_referrals');
 let referral_div = document.getElementById('referral_rows');
 let current_referrals = document.getElementById('current_referrals');
@@ -7,16 +9,18 @@ let remaining_referrals = document.getElementById('remaining_referrals');
 
 let urlParams2 = new URL(window.location.href).searchParams;
 let user_code2 = urlParams2.get('referralCode');
-var copyCode = document.getElementById('code');
-// get campaign name
-const campaign_name = document.getElementById('review_campaign_name');
+let referral_inp_field = document.getElementById('code');
+// Get Referral Link Copy Button
+let copy_btn = document.getElementById("copy_referral_code_btn");
 
+// Generate Referral Link
 let urlData = window.location.href;
 urlData = urlData.split('/pages')[0];
 urlData = urlData + `/pages/${second_page_settings.page}?refer=${user_code2}`;
 console.log(urlData);
 
-// find referral details for rewards page
+
+// Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
   console.log('I came here');
   console.log(campaign_name.innerHTML);
@@ -32,13 +36,35 @@ const get_referrals = async () => {
     }),
   });
   const data = await response.json();
-
   console.log(data);
+
   if (response.status == 200) {
+
+    // get campaign data
     let campaign_data = data.campaign_data.rows[0];
     console.log(campaign_data);
-    copyCode.value = urlData;
-    copyCode.innerHTML = urlData;
+
+    // set inp field value equal to referral link
+    referral_inp_field.value = urlData;
+    referral_inp_field.innerHTML = urlData;
+    const my_referral_link = referral_inp_field.value;
+
+    // copy referral link to clipboard
+    if (referral_inp_field.value) {
+      copy_btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        referral_inp_field.select();
+        referral_inp_field.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(referral_inp_field.value);
+        var x = document.getElementById('snackbarCopy');
+        x.className = 'show';
+        setTimeout(function () {
+          x.className = x.className.replace('show', '');
+        }, 2000);
+      });
+    }
+
+    // set number of referrals joined 
     if (data.referral_data.length > 0) {
       count_referrals.innerText = `Total Referrals Joined: ${data.referral_data.length}`;
       current_referrals.innerText = `${data.referral_data.length}`;
@@ -50,6 +76,7 @@ const get_referrals = async () => {
       current_referrals.innerText = 0;
       remaining_referrals.innerText = `${data.referral_data.length}`;
     }
+
   } else {
     console.log(data);
   }
@@ -87,18 +114,6 @@ function mouseleaveproduct(x) {
     childrenelements[i].style.display = 'none';
   }
 }
-
-function copyToClipboard() {
-  copyCode.select();
-  copyCode.setSelectionRange(0, 99999);
-  navigator.clipboard.writeText(copyCode.value);
-  var x = document.getElementById('snackbarCopy');
-  x.className = 'show';
-  setTimeout(function () {
-    x.className = x.className.replace('show', '');
-  }, 2000);
-}
-
 // Sharing copied messages
 
 let link = encodeURI(window.location.href);

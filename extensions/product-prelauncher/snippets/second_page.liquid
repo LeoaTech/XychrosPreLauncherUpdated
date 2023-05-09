@@ -1,5 +1,5 @@
 <div class="section-layout {{ block.settings.layout }}">
-  
+
   <div class="hidden" id="review_campaign_name">{{ block.settings.campaign_name }}</div>
 
   {% comment %}Start of None Horizontal layout{% endcomment %}
@@ -15,8 +15,8 @@
           type="text"
           value=""
           class="referral-link-inp" />
-        <button class="copy-link-btn" onclick="copyToClipboard()">Copy</button>
-        <div id="snackbar">Copied to clipboard</div>
+        <button class="copy-link-btn" id="copy_referral_code_btn">Copy Link</button>
+        <div id="snackbarCopy">Copied to clipboard</div>
       </div>
       <div class="socials">
         {% comment %} Email {% endcomment %}
@@ -131,8 +131,8 @@
               type="text"
               value=""
               class="referral-link-inp" />
-            <button class="copy-link-btn" onclick="copyToClipboard()">Copy Link</button>
-            <div id="snackbar">Copied to clipboard</div>
+            <button class="copy-link-btn" id="copy_referral_code_btn">Copy Link</button>
+            <div id="snackbarCopy">Copied to clipboard</div>
           </div>
           <div class="socials">
             {% comment %} Email {% endcomment %}
@@ -241,8 +241,8 @@
           type="text"
           value=""
           class="referral-link-inp" />
-        <button class="copy-link-btn" onclick="copyToClipboard()">Copy Link</button>
-        <div id="snackbar">Copied to clipboard</div>
+        <button class="copy-link-btn" id="copy_referral_code_btn">Copy Link</button>
+        <div id="snackbarCopy">Copied to clipboard</div>
       </div>
       <div class="socials">
         {% comment %} Email {% endcomment %}
@@ -358,8 +358,8 @@
             type="text"
             value=""
             class="referral-link-inp" />
-          <button class="copy-link-btn" onclick="copyToClipboard()">Copy Link</button>
-          <div id="snackbar">Copied to clipboard</div>
+          <button class="copy-link-btn" id="copy_referral_code_btn">Copy Link</button>
+          <div id="snackbarCopy">Copied to clipboard</div>
         </div>
         <div class="socials">
           {% comment %} Email {% endcomment %}

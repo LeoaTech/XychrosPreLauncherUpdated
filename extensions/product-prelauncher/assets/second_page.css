@@ -41,7 +41,7 @@ input[type='text']:focus {
   padding: 1.5%;
 }
 
-#snackbar {
+#snackbarCopy {
   visibility: hidden;
   min-width: 250px;
   margin-left: -125px;
@@ -57,7 +57,7 @@ input[type='text']:focus {
   font-size: 17px;
 }
 
-#snackbar.show {
+#snackbarCopy.show {
   visibility: visible;
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
