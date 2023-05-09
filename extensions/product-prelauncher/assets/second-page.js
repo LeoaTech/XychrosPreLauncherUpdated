@@ -28,6 +28,7 @@ let share_snapchat_referral = document.getElementById('rewards_snapchat_refferal
 let share_instagram_referral = document.getElementById('rewards_instagram_refferal');
 let share_tiktok_referral = document.getElementById('rewards_tiktok_refferal');
 let share_whatsapp_referral = document.getElementById('rewards_whatsapp_refferal');
+let share_discord_referral = document.getElementById('rewards_discord_refferal');
 
 // Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
@@ -193,6 +194,23 @@ const get_referrals = async () => {
       }
     }
 
+    // Share Referral Link via Discord
+    if (campaign_data.share_discord_referral === false) {
+      share_discord_referral.style.display = "none";
+    } else {
+      function shareOnDiscord() {
+        const discordUrl = 'https://discord.com/channels/@me';
+        window.open(discordUrl, '_blank', 'width=600,height=400');
+      }
+      if (share_discord_referral) {
+        share_discord_referral.addEventListener('click', function (e) {
+          e.preventDefault();
+          const discord_message = campaign_data.share_discord_message + "\n" + my_referral_link;
+          navigator.clipboard.writeText(discord_message);
+          shareOnDiscord();
+        });
+      }
+    }
 
     // end of social media settings
 
