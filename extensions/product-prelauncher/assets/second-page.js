@@ -25,6 +25,7 @@ let share_email_referral = document.getElementById('rewards_email_refferal');
 let share_facebook_referral = document.getElementById('rewards_facebook_refferal');
 let share_twitter_referral = document.getElementById('rewards_twitter_refferal');
 let share_snapchat_referral = document.getElementById('rewards_snapchat_refferal');
+let share_instagram_referral = document.getElementById('rewards_instagram_refferal');
 
 // Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
@@ -140,6 +141,24 @@ const get_referrals = async () => {
       }
     }
 
+    // Share Referral Link via Instagram
+    if (campaign_data.share_instagram_referral === false) {
+      share_instagram_referral.style.display = "none";
+    } else {
+      function shareOnInstagram() {
+        const instagramUrl = 'https://www.instagram.com/';
+        window.open(instagramUrl, '_blank', 'width=600,height=400');
+      }
+      if (share_instagram_referral) {
+        share_instagram_referral.addEventListener('click', function (e) {
+          e.preventDefault();
+          const instagram_message = campaign_data.share_instagram_message + "\n" + my_referral_link;
+          navigator.clipboard.writeText(instagram_message);
+          shareOnInstagram();
+        });
+      }
+    }
+
 
     // end of social media settings
 
@@ -203,8 +222,6 @@ function copyMessage() {
   let text = 'hi there this is to be copied...';
   navigator.clipboard.writeText(text);
   setTimeout(() => {
-    const instagram = document.querySelector('.instagram');
-    instagram.href = 'https://instagram.com/';
 
     const tiktok = document.querySelector('.tiktok');
     tiktok.href = 'https://www.tiktok.com/en/';
