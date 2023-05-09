@@ -26,6 +26,7 @@ let share_facebook_referral = document.getElementById('rewards_facebook_refferal
 let share_twitter_referral = document.getElementById('rewards_twitter_refferal');
 let share_snapchat_referral = document.getElementById('rewards_snapchat_refferal');
 let share_instagram_referral = document.getElementById('rewards_instagram_refferal');
+let share_tiktok_referral = document.getElementById('rewards_tiktok_refferal');
 
 // Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
@@ -159,6 +160,24 @@ const get_referrals = async () => {
       }
     }
 
+    // Share Referral Link via Tiktok
+    if (campaign_data.share_tiktok_referral === false) {
+      share_tiktok_referral.style.display = "none";
+    } else {
+      function shareOnTiktok() {
+        const tiktokUrl = 'https://www.tiktok.com/';
+        window.open(tiktokUrl, '_blank', 'width=600,height=400');
+      }
+      if (share_tiktok_referral) {
+        share_tiktok_referral.addEventListener('click', function (e) {
+          e.preventDefault();
+          const tiktok_message = campaign_data.share_tiktok_message + "\n" + my_referral_link;
+          navigator.clipboard.writeText(tiktok_message);
+          shareOnTiktok();
+        });
+      }
+    }
+
 
     // end of social media settings
 
@@ -222,8 +241,5 @@ function copyMessage() {
   let text = 'hi there this is to be copied...';
   navigator.clipboard.writeText(text);
   setTimeout(() => {
-
-    const tiktok = document.querySelector('.tiktok');
-    tiktok.href = 'https://www.tiktok.com/en/';
   }, 500);
 }
