@@ -23,6 +23,7 @@ console.log(urlData);
 // Get Socials Icons
 let share_email_referral = document.getElementById('rewards_email_refferal');
 let share_facebook_referral = document.getElementById('rewards_facebook_refferal');
+let share_twitter_referral = document.getElementById('rewards_twitter_refferal');
 
 // Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
@@ -103,6 +104,23 @@ const get_referrals = async () => {
       }
     }
 
+    // Share Referral Link via Twitter
+    if (campaign_data.share_twitter_referral === false) {
+      share_twitter_referral.style.display = "none";
+    } else {
+      function shareOnTwitter(tweetText) {
+        const twitterUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweetText) + '&url=' + encodeURIComponent(my_referral_link);
+        window.open(twitterUrl, '_blank', 'width=600,height=400');
+      }
+      if (share_twitter_referral) {
+        share_twitter_referral.addEventListener('click', function (e) {
+          e.preventDefault();
+          const twitter_message = campaign_data.share_twitter_message;
+          shareOnTwitter(twitter_message);
+        });
+      }
+    }
+
 
     // end of social media settings
 
@@ -158,9 +176,6 @@ function mouseleaveproduct(x) {
 }
 // Sharing copied messages
 let message = 'Hello there!';
-
-const twitter = document.querySelector('.twitter');
-twitter.href = `https://twitter.com/share?url=${encodedMessage}`;
 
 const whatsapp = document.querySelector('.whatsapp');
 whatsapp.href = `https://wa.me/?text=${encodedMessage}`;
