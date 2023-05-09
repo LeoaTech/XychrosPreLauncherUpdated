@@ -10,6 +10,7 @@ let remaining_referrals = document.getElementById('remaining_referrals');
 let urlParams2 = new URL(window.location.href).searchParams;
 let user_code2 = urlParams2.get('referralCode');
 let referral_inp_field = document.getElementById('code');
+
 // Get Referral Link Copy Button
 let copy_btn = document.getElementById("copy_referral_code_btn");
 
@@ -19,6 +20,8 @@ urlData = urlData.split('/pages')[0];
 urlData = urlData + `/pages/${second_page_settings.page}?refer=${user_code2}`;
 console.log(urlData);
 
+// Get Socials Icons
+let share_email_referral = document.getElementById('rewards_email_refferal');
 
 // Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
@@ -63,6 +66,26 @@ const get_referrals = async () => {
         }, 2000);
       });
     }
+
+    // share referral link on social media as per campaign settings
+
+    // Share Referral Link via Email
+    if (campaign_data.share_email_referral === false) {
+      share_email_referral.style.display = "none";
+    } else {
+      if (share_email_referral) {
+        share_email_referral.addEventListener('click', function (e) {
+          e.preventDefault();
+          const email_subject = 'Email Subject';
+          const email_body = campaign_data.share_email_message + "\n" + my_referral_link;
+          const mailtoUrl = 'mailto:' + '?subject=' + encodeURIComponent(email_subject) + '&body=' + encodeURIComponent(email_body);
+          window.location.href = mailtoUrl;
+        });
+      }
+    }
+
+
+    // end of social media settings
 
     // set number of referrals joined 
     if (data.referral_data.length > 0) {
@@ -115,16 +138,7 @@ function mouseleaveproduct(x) {
   }
 }
 // Sharing copied messages
-
-let link = encodeURI(window.location.href);
-let subject = 'Subject';
 let message = 'Hello there!';
-
-subject = encodeURIComponent(subject);
-encodedMessage = encodeURIComponent(message);
-
-const email = document.querySelector('.email');
-email.href = `mailto:?&subject=${'subject of email'}&body=${encodedMessage}`;
 
 const twitter = document.querySelector('.twitter');
 twitter.href = `https://twitter.com/share?url=${encodedMessage}`;
