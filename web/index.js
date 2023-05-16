@@ -46,6 +46,8 @@ Shopify.Context.initialize({
   SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(DB_PATH),
 });
 
+// App Uninstall Webhook to delete current app install session
+
 Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
   path: "/api/webhooks",
   webhookHandler: async (_topic, shop, _body) => {
@@ -59,7 +61,7 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
 // See the ensureBilling helper to learn more about billing in this template.
 const BILLING_SETTINGS = {
-  required: true,
+  required: false,   //initially false ---komal
   // This is an example configuration that would do a one-time charge for $5 (only USD is currently supported)
   chargeName: "My Shopify Every Month Charge",
   amount: 0.1,
