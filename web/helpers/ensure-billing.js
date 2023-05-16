@@ -1,5 +1,6 @@
 import { Shopify } from "@shopify/shopify-api";
 
+
 export const BillingInterval = {
   OneTime: "ONE_TIME",
   Every30Days: "EVERY_30_DAYS",
@@ -12,7 +13,7 @@ const RECURRING_INTERVALS = [
 ];
 
 let isProd;
-
+let subscribeId = '';  //subscribedId
 /**
  * You may want to charge merchants for using your app. This helper provides that function by checking if the current
  * merchant has an active one-time payment or subscription named `chargeName`. If no payment is found,
@@ -37,6 +38,7 @@ export default async function ensureBilling(
 
   if (await hasActivePayment(session, { chargeName, interval })) {
     hasPayment = true;
+
   } else {
     hasPayment = false;
     confirmationUrl = await requestPayment(session, {
@@ -51,9 +53,9 @@ export default async function ensureBilling(
 }
 
 
-
 // Function to Check Active Payment(One-time, Recurring) 
 async function hasActivePayment(session, { chargeName, interval }) {
+
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
 
   if (isRecurring(interval)) {
@@ -62,15 +64,22 @@ async function hasActivePayment(session, { chargeName, interval }) {
     });
     const subscriptions =
       currentInstallations.body.data.currentAppInstallation.activeSubscriptions;
-    console.log("hasactive payment", subscriptions)
+
+    // if (subscriptions.length > 0) {
+    //   const subscriptionId = await getCurrentSubscriptionId(client);
+    //   subscribeId = subscriptionId;
+    // }
+
     for (let i = 0, len = subscriptions.length; i < len; i++) {
       if (
         subscriptions[i].name === chargeName &&
         (!isProd || !subscriptions[i].test)
       ) {
+
         return true;
       }
     }
+
   } else {
     let purchases;
     let endCursor = null;
@@ -103,6 +112,8 @@ async function hasActivePayment(session, { chargeName, interval }) {
 }
 
 
+
+
 // When user install the app , it requests for app subscription
 async function requestPayment(
   session,
@@ -129,7 +140,6 @@ async function requestPayment(
     });
     data = mutationResponse.body.data.appPurchaseOneTimeCreate;
   }
-  console.log("subscribe", data)
   if (data.userErrors.length) {
     throw new ShopifyBillingError(
       "Error while billing the store",
@@ -139,6 +149,8 @@ async function requestPayment(
 
   return data.confirmationUrl;
 }
+
+
 
 async function requestRecurringPayment(
   client,
@@ -204,6 +216,53 @@ async function requestSinglePayment(
   return mutationResponse;
 }
 
+// Cancel Subscription Billing Model
+
+// Get Current App installation subscriptionID (requires for app installation function)
+
+async function getCurrentSubscriptionId(client) {
+  const currentInstallations = await client.query({
+    data: RECURRING_PURCHASES_QUERY,
+  });
+  const subscriptions =
+    currentInstallations?.body?.data?.currentAppInstallation?.activeSubscriptions;
+  return subscriptions?.length > 0 ? subscriptions[0]?.id : null
+}
+
+//   Request Cancel App Subscription function
+
+async function requestCancelSubscription(session, myId) {
+  const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
+
+  const mutationResponse = await client.query({
+    data: {
+      query: CANCEL_MUTATION,
+      variables: {
+        id: myId,
+      },
+    },
+  });
+  let data = mutationResponse?.body?.data?.appSubscriptionCancel;
+  if (data?.userErrors.length) {
+    throw new ShopifyBillingError(
+      "Error while billing the store",
+      data.userErrors
+    );
+  }
+  return mutationResponse?.body?.data?.appSubscriptionCancel;
+}
+
+//   
+export async function cancelAppSubscription(session) {
+  if (subscribeId !== '') {
+    await requestCancelSubscription(session, subscribeId);
+    console.log("Subscription cancelled successfully.");
+  } else {
+    console.log("No active subscription found.");
+  }   
+}
+
+
 function isRecurring(interval) {
   return RECURRING_INTERVALS.includes(interval);
 }
@@ -217,16 +276,33 @@ export function ShopifyBillingError(message, errorData) {
 }
 ShopifyBillingError.prototype = new Error();
 
-
 const RECURRING_PURCHASES_QUERY = `
   query appSubscription {
     currentAppInstallation {
       activeSubscriptions {
-        name, test
+        name, test,status,id
       }
     }
   }
 `;
+
+// Cancel Subscription Plan Mutation
+const CANCEL_MUTATION = `mutation AppSubscriptionCancel($id: ID! ) {
+  appSubscriptionCancel(
+    id: $id 
+    ) {
+    userErrors {
+      field
+      message
+    }
+    appSubscription {
+      id
+      status
+    }
+  }
+}`
+
+
 
 const ONE_TIME_PURCHASES_QUERY = `
   query appPurchases($endCursor: String) {
@@ -266,6 +342,7 @@ const RECURRING_PURCHASE_MUTATION = `
     }
   }
 `;
+
 
 const ONE_TIME_PURCHASE_MUTATION = `
   mutation test(
