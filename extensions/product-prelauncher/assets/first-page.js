@@ -34,7 +34,7 @@ const update_clicks = async () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        campaign_name: "My Campaign 2903",
+        campaign_name: first_page_settings.campaign_name,
       }),
     }
   );
