@@ -21,6 +21,7 @@ import integrationApi from "./middleware/klaviyo-api.js";
 import discountApiEndpoint from './middleware/discount-api.js';
 import userDetailsApiEndPoint from "./middleware/userdetails-api.js";
 import getUrlApi from "./middleware/geturl-api.js";
+import pricingPlansApiEndpoints from "./middleware/get-pricing-plans-api.js";
 
 const USE_ONLINE_TOKENS = false;
 
@@ -188,6 +189,7 @@ export async function createServer(
   userDetailsApiEndPoint(app)
   getUrlApi(app)
   discountApiEndpoint(app);
+  pricingPlansApiEndpoints(app)
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
