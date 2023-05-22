@@ -6,36 +6,39 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useStateContext } from "../../contexts/ContextProvider";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteCampaign,
   fetchAllCampaigns,
   fetchCampaign,
-  removeCampaign,
+  updateCampaign
 } from "../../app/features/campaigns/campaignSlice";
 import { useAuthenticatedFetch } from "../../hooks";
 
 export default function CampaignsComponent() {
+  const fetch = useAuthenticatedFetch();
   const { setIsEdit } = useStateContext();
   const dispatch = useDispatch();
-  const List = useSelector((state) => state.campaign.campaigns);
+  const List = useSelector(fetchAllCampaigns);
   const [getCampaigns, setCampaigns] = useState([]);
   const [editData, setEditData] = useState([]);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   // Get Campaigns with Id (descending Order)
   useEffect(() => {
     if (List?.length > 0) {
-      const myImmutableArray = Object.freeze(List);
-
-      const sortedArray = [...myImmutableArray].sort((a, b) => b.campaign_id - a.campaign_id);
-      setCampaigns(sortedArray);
+      // const myImmutableArray = Object.freeze(List);
+      // const sortedArray = [...myImmutableArray].sort((a, b) => b.campaign_id - a.campaign_id);
+      // console.log(sortedArray, "array")
+      setCampaigns(List);
     }
   }, [dispatch, List]);
 
-
-
-
+  // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(getCampaigns?.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = getCampaigns?.slice(startIndex, endIndex);
 
   // Handle Previous Page Click events
   const handlePrevClick = () => {
@@ -46,37 +49,47 @@ export default function CampaignsComponent() {
     setCurrentPage((currentPage) => currentPage + 1);
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = getCampaigns?.slice(startIndex, endIndex);
-
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
-
-  const fetch = useAuthenticatedFetch();
-
+  //HANDLE DELETE CAMPAIGN FUNCTION
   const handleDelete = async (id) => {
     setDeleteId(id);
+    try {
+      const deletedCampaign = getCampaigns.find(
+        (campaign) => campaign.campaign_id === id
+      );
+      console.log("campaign", deletedCampaign);
 
-    await fetch(`/api/campaignsettings/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        dispatch(deleteCampaign(data[0]));
-      })
-      .catch((err) => console.log(err));
+      const response = await fetch(`/api/campaignsettings/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...deletedCampaign,
+          is_deleted: true,
+        }),
+      });
 
-    const newData = await getCampaigns?.filter(
-      (campaign) => campaign.campaign_id !== id
-    );
-    await dispatch(fetchCampaign(newData));
-    setCampaigns(newData);
+      if (response.ok) {
+        try {
+          const deletedData = await response.json();
+          console.log("Deleted", deletedData);
+          dispatch(updateCampaign(deletedCampaign));
+          const newData = getCampaigns.filter(
+            (campaign) => campaign.campaign_id !== id
+          );
+          console.log("new Data", newData);
+          await dispatch(fetchCampaign(newData));
+          setCampaigns(newData);
+        } catch (error) {
+          throw new Error("Invalid JSON response");
+        }
+      } else {
+        throw new Error("Failed to delete campaign");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
-
   const handleEdit = (id) => {
     setIsEdit(true);
     setEditData(getCampaigns?.filter((data) => data?.campaign_id === id))
