@@ -2,13 +2,30 @@ import { useEffect } from "react";
 import { SideBar, Header, Pricing, MainPage } from "../components/index";
 import { useStateContext } from "../contexts/ContextProvider";
 import "../index.css";
+import useFetchPricingPlans from "../constant/fetchPricingPlans";
+import { fetchpricing } from "../app/features/pricing/pricing";
+import { useDispatch } from "react-redux";
 
 const PricePage = () => {
   const { activeMenu } = useStateContext();
-   // Page render Scroll to Top
-   useEffect(()=>{
+  const dispatch = useDispatch()
+  // Page render Scroll to Top
+  useEffect(() => {
     window.scrollTo(0, 0);
-  },[])
+  }, [])
+  const response = useFetchPricingPlans("/api/pricing-plans", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  console.log(response)
+
+  useEffect(() => {
+    if (response.length > 0) {
+      dispatch(fetchpricing(response));
+    }
+  }, [dispatch, response]);
   return (
     <div className="app">
       {activeMenu ? (
