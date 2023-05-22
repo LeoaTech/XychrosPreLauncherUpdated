@@ -2,7 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import campaignReducer from "./features/campaigns/campaignSlice";
 import settingsReducer from "./features/settings/settingsSlice";
 import productReducer from "./features/productSlice";
-import userReducer from "./features/users/userSlice"
+import userReducer from "./features/users/userSlice";
+import priceReducer from "./features/pricing/pricing"
 // All Slices will be added there
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
     campaign: campaignReducer,
     settings: settingsReducer,
     products: productReducer,
-    users: userReducer
+    users: userReducer,
+    pricing:priceReducer
   },
 });
