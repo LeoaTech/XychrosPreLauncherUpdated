@@ -1,34 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsCheck2 } from "react-icons/bs";
 import "./pricingblock.css";
 
-const PricingBlock = ({ title, features }) => {
+const PricingBlock = ({ id, title, price, features, handlePlanSubscribe, isLoading, isSubscribed }) => {
+
   return (
     <div className="pricing-details">
       <div className="price-detail-block">
-        <h3>{title}</h3>
-        {features?.map((feature) => {
-          return (
-            <div className="pricing-features">
-              <div key={feature.id} className="feature">
-                <BsCheck2
-                  style={{
-                    height: "24",
-                    width: "24",
-                    // paddingRight: "5px",
-                  }}
-                />
-                <p>{feature?.feature}</p>
-              </div>
-            </div>
-          );
-        })}
+        {title && <h3>{title}</h3>}
+        <ul className="pricing-features">
+          {features && Object.entries(features).map(([key, value]) => (
+            <li className="feature" key={key}>
+              <BsCheck2
+                style={{
+                  height: "24",
+                  width: "24",
+                }}
+              />{value}
+            </li>
+          ))}
+        </ul>
       </div>
       <div className="price-bottom">
-        <h2>{"$1000/month"}</h2>
-        <button className="btn-subscribe">Subscribe</button>
+        {price && <h2>${`${price}/month`}</h2>}
+        <button className="btn-subscribe" disabled={isSubscribed} onClick={() => handlePlanSubscribe(id)}>{isSubscribed ? isLoading ? "Saving.." : "Subscribed" : "Subscribe"}</button>
       </div>
     </div>
+
   );
 };
 
