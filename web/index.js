@@ -8,7 +8,7 @@ import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import { setupGDPRWebHooks } from "./gdpr.js";
 import redirectToAuth from "./helpers/redirect-to-auth.js";
-import { BillingInterval } from "./helpers/ensure-billing.js";
+import ensureBilling, { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 import cors from "cors";
 import campaignApiEndpoints from "./middleware/campaign-api.js";
@@ -22,6 +22,7 @@ import discountApiEndpoint from './middleware/discount-api.js';
 import userDetailsApiEndPoint from "./middleware/userdetails-api.js";
 import getUrlApi from "./middleware/geturl-api.js";
 import pricingPlansApiEndpoints from "./middleware/get-pricing-plans-api.js";
+import SubscribePlanApiEndPoint from "./middleware/subscribe-plan-api.js";
 
 const USE_ONLINE_TOKENS = false;
 
@@ -89,11 +90,10 @@ export async function createServer(
   app.set("use-online-tokens", USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
 
+
   applyAuthMiddleware(app, {
     billing: billingSettings,
   });
-
-  //campaignApiEndpoints(app);
 
   // Do not call app.use(express.json()) before processing webhooks with
   // Shopify.Webhooks.Registry.process().
@@ -112,12 +112,12 @@ export async function createServer(
   });
 
   // All endpoints after this point will require an active session
-  app.use(
-    '/api/*',
-    verifyRequest(app, {
-      billing: billingSettings,
-    })
-  );
+  // app.use(
+  //   '/api/*',
+  //   verifyRequest(app, {
+  //     billing: billingSettings,
+  //   })
+  // );
 
   // app.get('/api/products/count', async (req, res) => {
   //   const session = await Shopify.Utils.loadCurrentSession(
@@ -151,6 +151,8 @@ export async function createServer(
 
 
 
+
+
   // app.get('/api/products/create', async (req, res) => {
   //   const session = await Shopify.Utils.loadCurrentSession(
   //     req,
@@ -180,6 +182,56 @@ export async function createServer(
       extended: true,
     })
   );
+
+  // POST Request for Subscribing Paid Plan
+
+  app.post('/api/subscribe-plan', async (req, res) => {
+    try {
+      const session = await Shopify.Utils.loadCurrentSession(
+        req,
+        res,
+        app.get('use-online-tokens')
+      )
+
+
+      // console.log(req.body, "Subscribe ")
+      const { billing_required, currency_code, plan_name, price } = req.body
+      const plan_settings = {
+        ...BILLING_SETTINGS,
+        required: billing_required,
+        chargeName: plan_name,
+        amount: price,
+        currencyCode: currency_code,
+      };
+
+      console.log("plan", plan_settings)
+      if (plan_settings.required) {
+
+        const [hasPayment, confirmationUrl] = await ensureBilling(
+          session,
+          plan_settings
+        );
+
+        console.log(confirmationUrl, "URL")
+
+        if (!hasPayment) {
+          console.log(res, "Response")
+          return res.redirect(confirmationUrl);
+        } else {
+          return res.json("You have already subscribed to this plan");
+
+        }
+      }
+      applyAuthMiddleware(app, { billing: plan_settings })
+
+
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  )
+
+  // End of Subscription Plan Request
   campaignApiEndpoints(app);
   referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
   createTemplateApiEndpoint(app);
@@ -190,6 +242,8 @@ export async function createServer(
   getUrlApi(app)
   discountApiEndpoint(app);
   pricingPlansApiEndpoints(app)
+  // SubscribePlanApiEndPoint(app);
+
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
