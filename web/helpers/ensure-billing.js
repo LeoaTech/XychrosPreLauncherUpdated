@@ -1,4 +1,5 @@
 import { Shopify } from "@shopify/shopify-api";
+import { Subscription } from "klaviyo-api";
 
 
 export const BillingInterval = {
@@ -27,6 +28,7 @@ export default async function ensureBilling(
   { chargeName, amount, currencyCode, interval },
   isProdOverride = process.env.NODE_ENV === "production"
 ) {
+
   if (!Object.values(BillingInterval).includes(interval)) {
     throw `Unrecognized billing interval '${interval}'`;
   }
@@ -36,8 +38,12 @@ export default async function ensureBilling(
   let hasPayment;
   let confirmationUrl = null;
 
+
+
   if (await hasActivePayment(session, { chargeName, interval })) {
+
     hasPayment = true;
+    console.log("when payment Active True")
 
   } else {
     hasPayment = false;
@@ -47,6 +53,8 @@ export default async function ensureBilling(
       currencyCode,
       interval,
     });
+    console.log("Payment Active is False", hasPayment)
+
   }
 
   return [hasPayment, confirmationUrl];
@@ -65,6 +73,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
     const subscriptions =
       currentInstallations.body.data.currentAppInstallation.activeSubscriptions;
 
+    console.log("Active payment Subscription ", subscriptions)
     // if (subscriptions.length > 0) {
     //   const subscriptionId = await getCurrentSubscriptionId(client);
     //   subscribeId = subscriptionId;
@@ -259,7 +268,7 @@ export async function cancelAppSubscription(session) {
     console.log("Subscription cancelled successfully.");
   } else {
     console.log("No active subscription found.");
-  }   
+  }
 }
 
 
