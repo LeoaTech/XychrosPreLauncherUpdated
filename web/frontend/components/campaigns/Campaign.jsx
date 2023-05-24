@@ -20,9 +20,17 @@ export default function CampaignsComponent() {
   const [getCampaigns, setCampaigns] = useState([]);
   const [editData, setEditData] = useState([]);
 
+  // Get Campaigns with Id (descending Order)
   useEffect(() => {
-    setCampaigns(List);
+    if (List?.length > 0) {
+      const myImmutableArray = Object.freeze(List);
+
+      const sortedArray = [...myImmutableArray].sort((a, b) => b.campaign_id - a.campaign_id);
+      setCampaigns(sortedArray);
+    }
   }, [dispatch, List]);
+
+
 
 
   const [currentPage, setCurrentPage] = useState(1);

@@ -8,7 +8,7 @@
   border-radius: 10px;
   margin: 10px 14px;
   display: flex;
-  padding: 15px 15px;
+  padding: 4px 15px;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
@@ -35,9 +35,9 @@
     width: 110px;
     margin: 10px 5px;
     display: flex;
-    padding: 5px 13px;
+    padding: 4px 13px;
     justify-content: space-between;
-    /* align-items: center; */
+    align-items: center;
     flex-wrap: wrap;
   }
 
