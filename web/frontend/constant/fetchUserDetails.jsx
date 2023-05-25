@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useAuthenticatedFetch } from "../hooks";
+import { useQuery } from 'react-query';
+import { useAuthenticatedFetch } from '../hooks';
 
 const useFetchUserDetails = (url) => {
-  const [data, setData] = useState([]);
   const fetchData = useAuthenticatedFetch();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      await fetchData(url)
-        .then((response) => {
-          if (response.ok) return response.json();
-          throw new Error("something went wrong while requesting user Data");
-        })
-        .then((user) => {
-          setData(user);
-          return user;
-        })
-        .catch((err) => {
-          console.log(err);
-          return err;
-        });
-    };
-    fetchUser();
-  }, [url]);
+  const fetchUserDetails = async () => {
+    const response = await fetchData(url);
+    if (!response.ok) {
+      throw new Error('Something went wrong while requesting User details List');
+    }
+    return response.json();
+  };
 
-  return data;
+  const { data, error } = useQuery('users', fetchUserDetails);
+
+  if (error) {
+    console.log(error);
+    // Handle the error case if needed
+
+    return error;
+  }
+
+  return data || []; // Return empty array as default if data is not available yet
 };
 
 export default useFetchUserDetails;

@@ -1,31 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useAuthenticatedFetch } from "../hooks";
+import { useQuery } from 'react-query';
+import { useAuthenticatedFetch } from '../hooks';
 
-const  useFetchPricingPlans = (url) => {
-  const [data, setData] = useState([]);
+const useFetchPricingPlans = (url) => {
   const fetchData = useAuthenticatedFetch();
 
-  useEffect(() => {
-    const fetchPricing = async () => {
-      await fetchData(url)
-        .then((response) => {
-          if (response.ok) return response.json();
-          throw new Error("something went wrong while requesting Pricing Data");
-        })
-        .then((pricing) => {
-          setData(pricing);
-          return pricing;
-        })
-        .catch((err) => {
-          console.log(err);
-          return err;
-        });
-    };
-    fetchPricing();
-  }, [url]);
+  const fetchPricing = async () => {
+    const response = await fetchData(url);
+    if (!response.ok) {
+      throw new Error('Something went wrong while requesting Pricing Details List');
+    }
+    return response.json();
+  };
 
-  return data;
+  const { data, error } = useQuery('pricing', fetchPricing);
+
+  if (error) {
+    console.log(error);
+    // Handle the error case if needed
+
+    return error;
+  }
+
+  return data || []; // Return empty array as default if data is not available yet
 };
 
-export default  useFetchPricingPlans;
+export default useFetchPricingPlans;
+
+
+
