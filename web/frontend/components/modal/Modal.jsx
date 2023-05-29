@@ -58,9 +58,13 @@ const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
     // document.body.style.overflow = "unset";
   };
 
-  let finalData = fulldata.filter(
-    (one) => one.referrer_id == `${values.referral_code}`
-  );
+  let finalData = [];
+  console.log(values);
+  if (values) {
+    finalData = fulldata.filter(
+      (one) => one.referrer_id == values.referral_code
+    );
+  }
 
   return openModal ? (
     <div className='modal'>
@@ -83,16 +87,18 @@ const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
             <strong>Date of Joining:</strong> {values?.created_at}
           </p>
 
-          <div className='referral_detail-table'>
-            <div style={{ maxHeight: '200px' }}>
-              <DataTable
-                customStyles={customStyles}
-                data={finalData}
-                columns={modalColumns}
-                pagination
-              />
+          {finalData ? (
+            <div className='referral_detail-table'>
+              <div style={{ maxHeight: '200px' }}>
+                <DataTable
+                  customStyles={customStyles}
+                  data={finalData}
+                  columns={modalColumns}
+                  pagination
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
         </section>
 
         <button
