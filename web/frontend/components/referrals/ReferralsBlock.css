@@ -2,7 +2,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   gap: 30px;
 }
 
@@ -13,9 +12,8 @@
   cursor: pointer;
 }
 
-
 .deletebtn:hover,
-.actionbtn:hover{
+.actionbtn:hover {
   color: var(--secondary-text-color);
 }
 
@@ -34,8 +32,6 @@
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
 }
-
-
 
 /* .rdt_TableHeadRow,
 .rdt_TableCol,
@@ -65,10 +61,10 @@
   border-left: 1px solid rgb(214, 212, 212);
 } */
 
-[data-column-id="id"].rdt_TableCol {
-  max-width: 20px;
+[data-column-id='id'].rdt_TableCol {
+  /* max-width: 20px; */
   border-top-left-radius: 10px;
 }
-[data-column-id="details"].rdt_TableCol {
+[data-column-id='details'].rdt_TableCol {
   border-top-right-radius: 10px;
 }

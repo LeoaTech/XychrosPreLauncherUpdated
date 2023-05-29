@@ -1,17 +1,17 @@
 export const referralColumns = [
   {
-    name: 'ID',
-    selector: 'id',
+    name: 'Joining Date',
+    selector: (row) => row.created_at,
     sortable: true,
-    id: 'id',
+    id: 'date',
     style: {
       fontSize: 17,
-      maxWidth: '20px',
+      // maxWidth: '20px',
     },
   },
   {
     name: 'Referral Email',
-    selector: 'email',
+    selector: (row) => row.email,
     sortable: true,
     headerClassName: 'datatable__header',
     style: {
@@ -20,7 +20,7 @@ export const referralColumns = [
   },
   {
     name: 'Referral Code',
-    selector: 'referral_code',
+    selector: (row) => row.referral_code,
     sortable: true,
     style: {
       fontSize: 17,
@@ -28,7 +28,7 @@ export const referralColumns = [
   },
   {
     name: 'Campaign Name',
-    selector: 'campaign_name',
+    selector: (row) => row.campaign_name,
     sortable: true,
     style: {
       textAlign: 'center',
@@ -39,7 +39,7 @@ export const referralColumns = [
   ,
   {
     name: 'Friends Joined',
-    selector: 'friends_joined',
+    selector: (row) => row.friends_joined,
     sortable: true,
     style: {
       textAlign: 'center',
@@ -51,18 +51,18 @@ export const referralColumns = [
 
 export const modalColumns = [
   {
-    name: 'ID',
-    selector: 'id',
-    id: 'id',
+    name: 'Referral Code',
+    selector: (row) => row.referral_code,
+    id: 'referral_code',
     sortable: true,
     style: {
       fontSize: 15,
-      maxWidth: '12px',
+      // maxWidth: '12px',
     },
   },
   {
     name: 'Email',
-    selector: 'email',
+    selector: (row) => row.email,
     sortable: true,
     style: {
       fontSize: 15,
@@ -71,7 +71,7 @@ export const modalColumns = [
   },
   {
     name: 'Date of Joining',
-    selector: 'date',
+    selector: (row) => row.created_at,
     sortable: true,
     id: 'date',
     defaultValue: new Date(),

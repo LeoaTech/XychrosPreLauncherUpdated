@@ -6,8 +6,9 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { ShowModal, DeleteModal } from '../modal/index';
 import DataTable from 'react-data-table-component';
 import { customStyles } from './customStyles';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { fetchAllReferrals } from '../../app/features/referrals/referralSlice';
+import { fetchReferralById } from '../../app/features/referrals/referralSlice';
 
 const ReferralsBlock = (props) => {
   const [openModal, setOpenModal] = React.useState(false);
@@ -65,14 +66,14 @@ const ReferralsBlock = (props) => {
             >
               <BiShow />
             </div>
-            <div className='deletebtn'>
+            {/* <div className='deletebtn'>
               <RiDeleteBin6Line
                 onClick={(e) => {
                   setDeleteModal(true);
                   setModalData(row.id);
                 }}
               />
-            </div>
+            </div> */}
           </div>
         );
       },
@@ -95,6 +96,7 @@ const ReferralsBlock = (props) => {
           openModal={openModal}
           setOpenModal={setOpenModal}
           values={modalData}
+          fulldata={props.tableData}
         />
       </div>
 

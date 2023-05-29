@@ -19,9 +19,9 @@ export const referralSlice = createSlice({
 //export const fetchAllReferrals = (state) => state.referral.referrals;
 export const fetchAllReferrals = (state) => state.referrals.referrals;
 //  Get Referrals By Code
-export const fetchReferralById = (state, campaignId, referralCode) =>
-  state.referral.referrals.find(
-    (campaign) => campaign.campaign_id === campaignId
+export const fetchReferralById = (state, referralCode) =>
+  state.referrals.referrals.find(
+    (referrals) => referrals.referrer_id === referralCode
   );
 
 // All Action of the campaign
