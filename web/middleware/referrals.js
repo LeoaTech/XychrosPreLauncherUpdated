@@ -244,7 +244,7 @@ export default function referralsApiEndpoints(app, secret) {
     }
   });
 
-  // get customer information for Shopify FrontEnd
+  // get customer information for Shopify FrontEnd (Rewards Page)
   app.post('/api/get_referrals', async (req, res, next) => {
     try {
       const { referral_code, campaign_name } = req.body;
@@ -364,11 +364,28 @@ export default function referralsApiEndpoints(app, secret) {
     }
   };
 
-  // Rewards Page API
-
   // get referrals for Merchant dashboard
 
-  // get users
+  // get referral count for summary cards
+  app.get('/api/getallreferralcount', async (req, res) => {
+    try {
+      const session = await Shopify.Utils.loadCurrentSession(
+        req,
+        res,
+        app.get('use-online-tokens')
+      );
+
+      const referrals = await pool.query(
+        // 'SELECT r.*, c.name as campaign_name FROM referrals r INNER JOIN campaign_settings c ON r.campaign_id = c.campaign_id WHERE c.shop_id = $1',
+        'SELECT r.referral_code, r.email, r.referrer_id, r.created_at, j.mycount as friends_joined , r.campaign_id, c.name as campaign_name FROM referrals r left join ( SELECT referrer_id, count(referrer_id) as mycount FROM referrals group by referrer_id ) j on r.referral_code = j.referrer_id INNER JOIN campaign_settings c ON r.campaign_id = c.campaign_id WHERE c.shop_id = $1',
+        [session?.shop]
+      );
+      // console.log(referrals.rows);
+      return res.status(200).json(referrals.rows);
+    } catch (err) {
+      return res.status(500).json(err.message);
+    }
+  });
 
   //get all users
 }

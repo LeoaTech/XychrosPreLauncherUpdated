@@ -22,13 +22,14 @@ export default function getUrlApi(app) {
         `select t.image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
       );
 
-      // const { file } = req.query;
-      // const imageUrl = `/assets/shopify_assets/${file}`;
-      // const imagePath = imageUrl?.substring(imageUrl?.indexOf('/web'));
-      //res.status(200).send({ url: imagePath, message: 'i came to the URL' });
+      const campaign_details = await pool.query(
+        `SELECT * from campaign_settings where name='${campaign}' and shop_id = '${shop}'`
+      );
+
       res.status(200).json({
         success: true,
         imageURL: imageURL.rows[0].image_url,
+        campaign_data: campaign_details.rows[0],
       });
     } catch (error) {
       console.log(error);
