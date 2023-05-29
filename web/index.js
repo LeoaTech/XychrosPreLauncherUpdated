@@ -116,7 +116,7 @@ export async function createServer(
     })
   );
 
-  getUrlApi(app);
+  getUrlApi(app, process.env.SHOPIFY_API_SECRET);
 
   // All endpoints after this point will require an active session
   app.use(
@@ -127,7 +127,7 @@ export async function createServer(
   );
 
   campaignApiEndpoints(app);
-  referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
+  referralsApiEndpoints(app);
   createTemplateApiEndpoint(app);
   globalSettingsApiEndPoint(app);
   templatesApiEndpoints(app);
