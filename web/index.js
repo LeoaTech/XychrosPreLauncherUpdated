@@ -105,63 +105,6 @@ export async function createServer(
     }
   });
 
-  // All endpoints after this point will require an active session
-  // app.use(
-  //   '/api/*',
-  //   verifyRequest(app, {
-  //     billing: billingSettings,
-  //   })
-  // );
-
-  // app.get('/api/products/count', async (req, res) => {
-  //   const session = await Shopify.Utils.loadCurrentSession(
-  //     req,
-  //     res,
-  //     app.get('use-online-tokens')
-  //   );
-  //   const { Product } = await import(
-  //     `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
-  //   );
-
-  //   const countData = await Product.count({ session });
-  //   res.status(200).send(countData);
-  // });
-
-  app.get('/api/2022-10/products.json', async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get('use-online-tokens')
-    );
-    const { Product } = await import(
-      `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
-    );
-
-    const countData = await Product.all({ session });
-    // console.log(countData);
-
-    res.status(200).send(countData);
-  });
-
-  // app.get('/api/products/create', async (req, res) => {
-  //   const session = await Shopify.Utils.loadCurrentSession(
-  //     req,
-  //     res,
-  //     app.get('use-online-tokens')
-  //   );
-  //   let status = 200;
-  //   let error = null;
-
-  //   try {
-  //     await productCreator(session);
-  //   } catch (e) {
-  //     console.log(`Failed to process products/create: ${e.message}`);
-  //     status = 500;
-  //     error = e.message;
-  //   }
-  //   res.status(status).send({ success: status === 200, error });
-  // });
-
   // All endpoints after this point will have access to a request.body
   // attribute, as a result of the express.json() middleware
   app.use(cors());
@@ -172,14 +115,24 @@ export async function createServer(
       extended: true,
     })
   );
+
+  getUrlApi(app, process.env.SHOPIFY_API_SECRET);
+
+  // All endpoints after this point will require an active session
+  app.use(
+    '/api/*',
+    verifyRequest(app, {
+      billing: billingSettings,
+    })
+  );
+
   campaignApiEndpoints(app);
-  referralsApiEndpoints(app, process.env.SHOPIFY_API_SECRET);
+  referralsApiEndpoints(app);
   createTemplateApiEndpoint(app);
   globalSettingsApiEndPoint(app);
   templatesApiEndpoints(app);
   integrationApi(app); //Klaviyo Integration API
   userDetailsApiEndPoint(app);
-  getUrlApi(app);
   discountApiEndpoint(app);
 
   app.use((req, res, next) => {
