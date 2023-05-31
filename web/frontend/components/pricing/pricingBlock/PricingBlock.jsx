@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { BsCheck2 } from "react-icons/bs";
 import "./pricingblock.css";
 
-const PricingBlock = ({ id, title, price, features, handlePlanSubscribe, isLoading, isSubscribed }) => {
+const PricingBlock = ({ id, title, price, features, handlePlanSubscribe, isLoading, isSubscribed,subscribedPlanId }) => {
+  const isDisabled = subscribedPlanId === id;
 
   return (
     <div className="pricing-details">
@@ -23,7 +24,7 @@ const PricingBlock = ({ id, title, price, features, handlePlanSubscribe, isLoadi
       </div>
       <div className="price-bottom">
         {price && <h2>${`${price}/month`}</h2>}
-        <button className="btn-subscribe" disabled={isSubscribed} onClick={() => handlePlanSubscribe(id)}>{isSubscribed ? isLoading ? "Saving.." : "Subscribed" : "Subscribe"}</button>
+        <button className={isDisabled ? "btn-subscribe disabled":"btn-subscribe"} disabled={isDisabled} onClick={() => handlePlanSubscribe(id)}>{isSubscribed ? isLoading ? "Saving.." : "Subscribed" : "Subscribe"}</button>
       </div>
     </div>
 
