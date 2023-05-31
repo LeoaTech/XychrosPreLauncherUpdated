@@ -10,15 +10,19 @@ import { fetchProducts } from "../app/features/productSlice";
 import useFetchAllProducts from "../constant/fetchProducts";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import { fetchSettings } from "../app/features/settings/settingsSlice";
+import { fetchSavePlan } from "../app/features/current_plan/current_plan";
+import useFetchCurrentPlan from "../constant/fetchCurrentPlan";
+import useFetchPricingPlans from "../constant/fetchPricingPlans";
 
 export default function HomePage() {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
   const dispatch = useDispatch();
   // Page render Scroll to Top
-  useEffect(()=>{
+  useEffect(() => {
     window.scrollTo(0, 0);
-  },[])
+  }, [])
+
   const campaigns = useFetchCampaignsData("/api/getcampaigns", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -32,6 +36,38 @@ export default function HomePage() {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
+  const pricingPlans = useFetchPricingPlans("/api/pricing-plans", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }); 
+  const activePlan = useFetchCurrentPlan("/api/get-current-app", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+
+  const freePlan = pricingPlans?.find((plan) => plan?.plan_name === 'Free')
+
+  let planName;
+  useEffect(() => {
+    if (activePlan) {
+      planName = activePlan?.name
+
+      if (Object.keys(activePlan).length > 0) {
+        const saveCurrentPlan = pricingPlans?.find((plan) => plan?.plan_name === planName);
+        let currentActivePlan = { ...saveCurrentPlan, subscribe_id: activePlan?.id, status: activePlan?.status, billing_required: true }
+        dispatch(fetchSavePlan(currentActivePlan));
+      } else {
+        dispatch(fetchSavePlan(freePlan));
+      }
+    }
+  }, [dispatch, activePlan]);
+
+
 
   useEffect(() => {
     if (settings) {
