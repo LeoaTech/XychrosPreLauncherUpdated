@@ -6,7 +6,7 @@ import useFetchPricingPlans from "../constant/fetchPricingPlans";
 import { fetchpricing } from "../app/features/pricing/pricing";
 import { useDispatch } from "react-redux";
 import useFetchCurrentPlan from "../constant/fetchCurrentPlan";
-import { UpdateCurrentPlan, fetchSavePlan } from "../app/features/current_plan/current_plan";
+import {  fetchSavePlan } from "../app/features/current_plan/current_plan";
 
 const PricePage = () => {
   const { activeMenu } = useStateContext();
