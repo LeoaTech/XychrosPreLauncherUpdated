@@ -4,23 +4,36 @@ import { Redirect } from '@shopify/app-bridge/actions/index.js';
 
 import './price.css';
 import PricingBlock from './pricingBlock/PricingBlock';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllpricing } from '../../app/features/pricing/pricing';
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 import { useAuthenticatedFetch } from '../../hooks';
+import { fetchCurrentPlan, fetchSavePlan } from '../../app/features/current_plan/current_plan';
 
 const PriceComponent = () => {
   const priceData = useSelector(fetchAllpricing);
+  const activePlan = useSelector(fetchCurrentPlan);
+
   const [pricePlans, setPricePlans] = useState();
   const [isLoading, setIsloading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedPlanId, setSubscribedPlanId] = useState(null); //handle Biiling Card subscription ID
-
+  const [mydata, setMyData] = useState({})
   const app = useAppBridge();
   const redirect = Redirect.create(app);
+  console.log(activePlan, "plan in reducer");
 
+
+  const dispatch = useDispatch()
   const fetchAuth = useAuthenticatedFetch();
 
+  useEffect(() => {
+    if (activePlan) {
+      console.log(activePlan, "plan");
+      setSubscribedPlanId(activePlan?.id);
+
+    }
+  }, [activePlan, dispatch])
   useEffect(() => {
     if (priceData.length > 0) {
       setPricePlans(priceData);
@@ -43,11 +56,12 @@ const PriceComponent = () => {
   };
 
   const handlePlanSubscribe = async (id) => {
-    // setIsloading(true);
+    setIsloading(true);
+    setSubscribedPlanId(id);
+
     if (pricePlans) {
       const data = pricePlans?.find((price) => price.id === id);
       // console.log(data, "handle function")
-      setSubscribedPlanId(id);
       setIsSubscribed(true);
       if (data?.plan_name !== 'Free') {
         const response = await fetchAuth('/api/subscribe-plan', {
@@ -64,10 +78,10 @@ const PriceComponent = () => {
             url: subscribe_data.confirmationUrl,
             newContext: false,
           });
-          // await dispatch(SavePlan(subscribe_data));
-          // setIsloading(false)
+          setSubscribedPlanId(id);
+          setIsloading(false)
         } else {
-          // console.log(response);
+          console.log(response);
           // window.location.href = response.confirmationUrl;
           return;
         }
@@ -81,16 +95,12 @@ const PriceComponent = () => {
         });
         if (response.ok) {
           const subscribe_data = await response.json();
-          console.log(subscribe_data, 'Client selected already');
-          redirect.dispatch(Redirect.Action.REMOTE, {
-            url: subscribe_data.confirmationUrl,
-            newContext: true,
-          });
-
-          // await dispatch(SavePlan(subscribe_data));
+          console.log(subscribe_data, 'Free Tier');
+          dispatch(fetchSavePlan(data));
+          setSubscribedPlanId(id);
           setIsloading(false);
         } else {
-          // console.log(response);
+          console.log(response);
           // window.location.href = response.confirmationUrl;
           return;
         }
@@ -127,13 +137,11 @@ const PriceComponent = () => {
               <div
                 key={index}
                 style={{
-                  transform: `translateX(-${
-                    currentCardIndex * (cardWidth + 10)
-                  }px)`,
+                  transform: `translateX(-${currentCardIndex * (cardWidth + 10)
+                    }px)`,
                 }}
-                className={`pricing-card ${
-                  index === currentCardIndex ? 'active' : ''
-                }`}
+                className={`pricing-card ${index === currentCardIndex ? 'active' : ''
+                  }`}
               >
                 <PricingBlock
                   id={price?.id}
@@ -144,6 +152,7 @@ const PriceComponent = () => {
                   isLoading={isLoading}
                   handlePlanSubscribe={handlePlanSubscribe}
                   isSubscribed={price.id === subscribedPlanId}
+                  subscribedPlanId={subscribedPlanId}
                 />
               </div>
             );
