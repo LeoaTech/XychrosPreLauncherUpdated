@@ -1,5 +1,14 @@
 import { Shopify } from "@shopify/shopify-api";
-import { Subscription } from "klaviyo-api";
+
+import NewPool from "pg";
+const { Pool } = NewPool;
+const pool = new Pool({
+  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
+});
+
+pool.connect((err, result) => {
+  if (err) throw err;
+});
 
 
 export const BillingInterval = {
@@ -14,7 +23,7 @@ const RECURRING_INTERVALS = [
 ];
 
 let isProd;
-let subscribeId = '';  //subscribedId
+var subscribeId;
 /**
  * You may want to charge merchants for using your app. This helper provides that function by checking if the current
  * merchant has an active one-time payment or subscription named `chargeName`. If no payment is found,
@@ -38,14 +47,10 @@ export default async function ensureBilling(
   let hasPayment;
   let confirmationUrl = null;
 
-
-
   if (await hasActivePayment(session, { chargeName, interval })) {
-
     hasPayment = true;
-    console.log("when payment Active True")
-
-  } else {
+  }
+  else {
     hasPayment = false;
     confirmationUrl = await requestPayment(session, {
       chargeName,
@@ -53,10 +58,7 @@ export default async function ensureBilling(
       currencyCode,
       interval,
     });
-    console.log("Payment Active is False", hasPayment)
-
   }
-
   return [hasPayment, confirmationUrl];
 }
 
@@ -73,12 +75,10 @@ async function hasActivePayment(session, { chargeName, interval }) {
     const subscriptions =
       currentInstallations.body.data.currentAppInstallation.activeSubscriptions;
 
-    console.log("Active payment Subscription ", subscriptions)
-    // if (subscriptions.length > 0) {
-    //   const subscriptionId = await getCurrentSubscriptionId(client);
-    //   subscribeId = subscriptionId;
-    // }
-
+    if (subscriptions.length > 0) {
+      let ID = await getCurrentSubscriptionId(client);
+      subscribeId = ID;
+    }
     for (let i = 0, len = subscriptions.length; i < len; i++) {
       if (
         subscriptions[i].name === chargeName &&
@@ -88,7 +88,6 @@ async function hasActivePayment(session, { chargeName, interval }) {
         return true;
       }
     }
-
   } else {
     let purchases;
     let endCursor = null;
@@ -116,12 +115,8 @@ async function hasActivePayment(session, { chargeName, interval }) {
       endCursor = purchases.pageInfo.endCursor;
     } while (purchases.pageInfo.hasNextPage);
   }
-
   return false;
 }
-
-
-
 
 // When user install the app , it requests for app subscription
 async function requestPayment(
@@ -225,11 +220,13 @@ async function requestSinglePayment(
   return mutationResponse;
 }
 
+
+
 // Cancel Subscription Billing Model
 
 // Get Current App installation subscriptionID (requires for app installation function)
 
-async function getCurrentSubscriptionId(client) {
+export async function getCurrentSubscriptionId(client) {
   const currentInstallations = await client.query({
     data: RECURRING_PURCHASES_QUERY,
   });
@@ -242,7 +239,6 @@ async function getCurrentSubscriptionId(client) {
 
 async function requestCancelSubscription(session, myId) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
-
   const mutationResponse = await client.query({
     data: {
       query: CANCEL_MUTATION,
@@ -251,23 +247,160 @@ async function requestCancelSubscription(session, myId) {
       },
     },
   });
+
   let data = mutationResponse?.body?.data?.appSubscriptionCancel;
+
   if (data?.userErrors.length) {
     throw new ShopifyBillingError(
       "Error while billing the store",
       data.userErrors
     );
   }
-  return mutationResponse?.body?.data?.appSubscriptionCancel;
+  return data;
 }
 
-//   
+
+// Get Current App Installation data
+
+export async function GetCurrentAppInstallation(session) {
+  const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
+
+  const currentInstallations = await client.query({
+    data: RECURRING_PURCHASES_QUERY,
+  });
+  const price_plans = await pool.query(
+    `SELECT * FROM  pricing_plans`,
+  );
+
+  // Check if subscriptions data exists already for this shop in DB
+  const planExists = await pool.query(
+    `select * from subscriptions_list where shop_id =$1`,
+    [session?.shop]
+  );
+
+  const subscriptions =
+    currentInstallations?.body?.data?.currentAppInstallation?.activeSubscriptions;
+
+  let date = new Date()
+
+  let myPlan = price_plans?.rows.find((plan) => plan?.plan_name === subscriptions[0]?.name);
+  myPlan["billing_required"] = true;
+  const { plan_name, price, billing_required } = myPlan;
+
+  if (!subscriptions) {
+    return "No Subscriptions Active, Your are currently using Free Tier."
+  }
+  else {
+    if (subscriptions.length > 0) {
+      if (planExists?.rowCount === 0) {
+        try {
+          const savePlan = await pool.query(
+            `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, status, shop_id,billing_required) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [
+              plan_name,
+              price,
+              date.toISOString(),
+              subscriptions[0]?.id,
+              subscriptions[0]?.status,
+              session?.shop,
+              billing_required
+            ]
+          );
+        } catch (err) {
+          console.log(err)
+        }
+      }
+      else {
+        try {
+          const updatePlan = await pool.query(
+            `UPDATE subscriptions_list SET
+             plan_name=$1, 
+             price=$2,
+             created_at=$3,
+             subscription_id=$4,
+             status=$5,
+             billing_required=$6, 
+             shop_id=$7`
+            ,
+            [plan_name, price, date.toISOString(), subscriptions[0]?.id, subscriptions[0]?.status, billing_required, session?.shop]);
+        } catch (error) {
+          return error
+        }
+      }
+      return subscriptions[0];
+    }
+  }
+}
+
+// Cancel App Subscriptions & save Data to DB 
 export async function cancelAppSubscription(session) {
-  if (subscribeId !== '') {
-    await requestCancelSubscription(session, subscribeId);
-    console.log("Subscription cancelled successfully.");
+  const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
+
+  let currentId = await getCurrentSubscriptionId(client);
+
+  if (currentId) {
+    let cancel_plan = await requestCancelSubscription(session, currentId);
+    console.log(cancel_plan, "cancel result");
+    let date = new Date();
+    if (cancel_plan.userErrors.length) {
+      throw new ShopifyBillingError(
+        "Error while cancel the store subscription",
+        cancel_plan?.userErrors
+      );
+    } else {
+      try {
+        let cancelSubscription = cancel_plan?.appSubscription;
+
+        const planExists = await pool.query(
+          `select * from subscriptions_list where shop_id =$1`,
+          [session?.shop]
+        );
+        let planData = planExists?.rows[0];
+        planData["billing_required"] = false;
+        const { plan_name, price, billing_required } = planData
+
+        if (planExists?.rowCount === 0) {
+          try {
+            const savePlan = await pool.query(
+              `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, status, shop_id, billing_required) VALUES ($1, $2, $3, $4, $5, $6,$7)`,
+              [
+                plan_name,
+                price,
+                date.toISOString(),
+                cancelSubscription?.id,
+                cancelSubscription?.status,
+                session?.shop,
+                billing_required
+              ]
+            );
+          } catch (err) {
+            return err;
+          }
+        }
+        else {
+          try {
+            const updatePlan = await pool.query(
+              `UPDATE subscriptions_list SET
+             plan_name=$1, 
+             price=$2,
+             created_at=$3,
+             subscription_id=$4,
+             status=$5, 
+             billing_required=$6,
+             shop_id=$7`
+              ,
+              [plan_name, price, date.toISOString(), cancelSubscription?.id, cancelSubscription?.status, billing_required, session?.shop]);
+          } catch (error) {
+            return error;
+          }
+        }
+      } catch (error) {
+        return error
+      }
+      return cancel_plan;
+    }
   } else {
-    console.log("No active subscription found.");
+    return "No Active Subscriptions Found";
   }
 }
 
@@ -344,6 +477,9 @@ const RECURRING_PURCHASE_MUTATION = `
       test: $test
     ) {
       confirmationUrl
+      appSubscription {
+        id,status
+      }
       userErrors {
         field
         message
@@ -352,6 +488,21 @@ const RECURRING_PURCHASE_MUTATION = `
   }
 `;
 
+
+const APP_SUBSCRIPTIONS_UPDATE_MUTATION = `
+mutation($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
+  webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
+    webhookSubscription {
+      id
+      topic
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+`
 
 const ONE_TIME_PURCHASE_MUTATION = `
   mutation test(
@@ -370,6 +521,9 @@ const ONE_TIME_PURCHASE_MUTATION = `
       userErrors {
         field
         message
+      }
+      appSubscription {
+        id
       }
     }
   }
