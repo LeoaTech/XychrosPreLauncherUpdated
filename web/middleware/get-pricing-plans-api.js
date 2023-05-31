@@ -7,7 +7,6 @@ const pool = new Pool({
 
 pool.connect((err, result) => {
     if (err) throw err;
-    console.log("Connected");
 });
 
 export default function pricingPlansApiEndpoints(app) {
@@ -21,7 +20,7 @@ export default function pricingPlansApiEndpoints(app) {
             return res.status(200).json(price_plans.rows);
 
         } catch (error) {
-            console.log(error)
+            return res.status(500).json(error)
         }
     })
 
