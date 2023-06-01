@@ -13,9 +13,9 @@ const PricingBlock = ({ title, features }) => {
               <div key={feature.id} className="feature">
                 <BsCheck2
                   style={{
-                    height: "30px",
-                    width: "35px",
-                    paddingRight: "5px",
+                    height: "24",
+                    width: "24",
+                    // paddingRight: "5px",
                   }}
                 />
                 <p>{feature?.feature}</p>

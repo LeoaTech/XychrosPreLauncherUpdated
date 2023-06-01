@@ -1,17 +1,18 @@
-import SummaryCard from "../ui/SummaryCard";
-import { Marketing, subscriber, Sale, arrow } from "../../assets/index";
-import CampaignBlock from "./CampaignBlock";
-import Pagination from "../ui/Pagination";
-import React, { useState, useEffect, Fragment } from "react";
-import { useStateContext } from "../../contexts/ContextProvider";
-import { useDispatch, useSelector } from "react-redux";
+import SummaryCard from '../ui/SummaryCard';
+import { Marketing, subscriber, Sale, arrow } from '../../assets/index';
+import CampaignBlock from './CampaignBlock';
+import Pagination from '../ui/Pagination';
+import React, { useState, useEffect, Fragment } from 'react';
+import { useStateContext } from '../../contexts/ContextProvider';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteCampaign,
   fetchAllCampaigns,
   fetchCampaign,
   removeCampaign,
-} from "../../app/features/campaigns/campaignSlice";
-import { useAuthenticatedFetch } from "../../hooks";
+} from '../../app/features/campaigns/campaignSlice';
+import { useAuthenticatedFetch } from '../../hooks';
+import { fetchAllReferrals } from '../../app/features/referrals/referralSlice';
 
 export default function CampaignsComponent() {
   const { setIsEdit } = useStateContext();
@@ -19,11 +20,26 @@ export default function CampaignsComponent() {
   const List = useSelector((state) => state.campaign.campaigns);
   const [getCampaigns, setCampaigns] = useState([]);
   const [editData, setEditData] = useState([]);
+  const ReferralList = useSelector(fetchAllReferrals);
+  const [getReferrals, setReferrals] = useState([]);
 
+  // Get Campaigns with Id (descending Order)
   useEffect(() => {
-    setCampaigns(List);
+    if (List?.length > 0) {
+      const myImmutableArray = Object.freeze(List);
+
+      const sortedArray = [...myImmutableArray].sort(
+        (a, b) => b.campaign_id - a.campaign_id
+      );
+      setCampaigns(sortedArray);
+    }
   }, [dispatch, List]);
 
+  useEffect(() => {
+    if (ReferralList) {
+      setReferrals(ReferralList);
+    }
+  }, [ReferralList]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
@@ -51,9 +67,9 @@ export default function CampaignsComponent() {
     setDeleteId(id);
 
     await fetch(`/api/campaignsettings/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
       .then((res) => res.json())
@@ -71,42 +87,42 @@ export default function CampaignsComponent() {
 
   const handleEdit = (id) => {
     setIsEdit(true);
-    setEditData(getCampaigns?.filter((data) => data?.campaign_id === id))
+    setEditData(getCampaigns?.filter((data) => data?.campaign_id === id));
   };
 
   return (
-    <div className="home-container">
-      <div className="summary-blocks">
+    <div className='home-container'>
+      <div className='summary-blocks'>
         <SummaryCard
           value={getCampaigns?.length}
-          title="Campaigns"
+          title='Campaigns'
           icon={Marketing}
-          class="campaign-icon"
+          class='campaign-icon'
         />
         <SummaryCard
-          value="543678"
-          title="Referrals"
+          value={getReferrals.length}
+          title='Referrals'
           icon={subscriber}
-          class="referral-icon"
+          class='referral-icon'
         />
         <SummaryCard
-          value="$253,467"
-          title="Revenue"
+          value='$253,467'
+          title='Revenue'
           icon={Sale}
-          class="revenue-icon"
+          class='revenue-icon'
         />
         <SummaryCard
-          value="4551678"
-          title="Clicks"
+          value='4551678'
+          title='Clicks'
           icon={arrow}
-          class="clicks-icon"
+          class='clicks-icon'
         />
       </div>
-      <div className="campaigns">
+      <div className='campaigns'>
         {getCampaigns?.length > 0 ? (
           <>
-            {" "}
-            <div className="campaigns-blocks">
+            {' '}
+            <div className='campaigns-blocks'>
               {currentItems?.map((campaign) => (
                 <CampaignBlock
                   key={campaign?.campaign_id}
@@ -118,22 +134,27 @@ export default function CampaignsComponent() {
                   setDeleteModal={setDeleteModal}
                   handleDelete={handleDelete}
                   handleEdit={handleEdit}
-
                 />
               ))}
             </div>
             {/* Pagination */}
-            <div className="pagination-content">
+            <div className='pagination-content'>
               {currentPage > 1 && (
-                <button className="prev-btn" onClick={handlePrevClick}>
+                <button
+                  className='prev-btn'
+                  onClick={handlePrevClick}
+                >
                   Prev
                 </button>
               )}
-              <span className="pagination-text">
+              <span className='pagination-text'>
                 Page {currentPage} of {totalPages}
               </span>
               {currentPage < totalPages && (
-                <button className="next-btn" onClick={handleNextClick}>
+                <button
+                  className='next-btn'
+                  onClick={handleNextClick}
+                >
                   Next
                 </button>
               )}
@@ -142,13 +163,13 @@ export default function CampaignsComponent() {
         ) : (
           <h1
             style={{
-              color: "#fff",
+              color: '#fff',
               fontSize: 29,
               margin: 20,
-              height: "50vh",
-              display: "Flex",
-              justifyContent: "center",
-              alignItems: "center",
+              height: '50vh',
+              display: 'Flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             No Campaigns Data

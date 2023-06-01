@@ -41,7 +41,7 @@ input[type='text']:focus {
   padding: 1.5%;
 }
 
-#snackbar {
+#snackbarCopy {
   visibility: hidden;
   min-width: 250px;
   margin-left: -125px;
@@ -57,7 +57,7 @@ input[type='text']:focus {
   font-size: 17px;
 }
 
-#snackbar.show {
+#snackbarCopy.show {
   visibility: visible;
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
@@ -146,7 +146,7 @@ input[type='text']:focus {
 
 .nonevertical .friends-joined {
   padding-bottom: 0;
-  margin: 2vh 0;
+  margin: 4vh 0;
 }
 
 .nonevertical .vertical-reward-targets {
@@ -226,7 +226,7 @@ input[type='text']:focus {
 .timeline-progress {
   height: 100%;
   background-color: #011936;
-  width: 18%;
+  width: 0%;
 }
 
 .timeline-items {
@@ -255,7 +255,7 @@ input[type='text']:focus {
 .referral-count-achieved {
   position: relative;
   top: 1vh;
-  left: 16vh;
+  left: -4vh;
   width: 35px;
   height: 35px;
   border-radius: 45px;
@@ -331,10 +331,6 @@ input[type='text']:focus {
   padding: 40px 0;
 }
 
-.vertical.spaced {
-  width: 100%;
-}
-
 .spaced {
   text-align: center;
 }
@@ -383,7 +379,7 @@ input[type='text']:focus {
 .vertical-timeline-progress {
   width: 100%;
   background-color: #011936;
-  height: 25%;
+  height: 0%;
 }
 
 .vertical-timeline-items {
@@ -552,7 +548,6 @@ input[type='text']:focus {
   }
 
   .timeline-progress {
-    height: 25%;
     width: 100%;
   }
   
@@ -768,9 +763,9 @@ input[type='text']:focus {
     width: 95%;
   }
 
-  .referral-count-achieved {
+  /* .referral-count-achieved {
     left: 10vh;
-  }
+  } */
 
   .reward-targets {
     gap: 5.8rem;
@@ -866,17 +861,9 @@ input[type='text']:focus {
 
   .referral-count-achieved {
     top: 0.5vh;
-    left: 30vh;
-  }
-
-  .horizontal .referral-count-achieved {
-    top: 0.5vh;
-    left: 30vh;
-  }
-
-  .nonehorizontal .referral-count-achieved {
-    top: 0.5vh;
-    left: 18.5vh;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
   }
 
   .timeline-group {
