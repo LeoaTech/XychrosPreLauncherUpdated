@@ -18,7 +18,8 @@
   window.onload = async (e) => {
     var el = document.querySelector('.product-prelaunch');
     el.parentElement.style.padding = '0';
-    el.parentElement.style.margin = '0';{% if block.settings.show_header_footer == false %}var node,
+    el.parentElement.style.margin = '0';{% if block.settings.show_header_footer == false %}
+      var node,
         nodes = [];
 
       do {
@@ -43,7 +44,9 @@
       // Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
-      });{% endif %}let urlredirect = window.location.href;
+      });{% endif %}
+
+    let urlredirect = window.location.href;
     urlredirect = urlredirect.split('/pages')[0];
 
     const campaign = document.getElementById('landing_campaign_name');
@@ -53,6 +56,107 @@
     const myBackground = await getbackground(campaign_name);
     const campaign_details = myBackground.campaign_data;
     console.log(campaign_details);
+
+    // Get Store Social Icons
+    let share_facebook = document.getElementById('store-facebook-link');
+    let share_instagram = document.getElementById('store-instagram-link');
+    let share_twitter = document.getElementById('store-twitter-link');
+    let share_tiktok = document.getElementById('store-tiktok-link');
+    let share_snapchat = document.getElementById('store-snapchat-link');
+    let share_discord = document.getElementById('store-discord-link');
+
+    // we have to show only checked social icons on landing page, hence:
+    
+    // Facebook
+    if (campaign_details.show_facebook_link === false) {
+      if (share_facebook) {
+        share_facebook.style.display = "none";
+      }
+    } else {
+      if (share_facebook) {
+        share_facebook.addEventListener('click', function (e) {
+          e.preventDefault();
+          const storefacebookUrl = campaign_details.facebook_link;
+          window.location.href = storefacebookUrl;
+        });
+      }
+    }
+
+    // Instagram
+    if (campaign_details.show_instagram_link === false) {
+      if (share_instagram) {
+        share_instagram.style.display = "none";
+      }
+    } else {
+      if (share_instagram) {
+        share_instagram.addEventListener('click', function (e) {
+          e.preventDefault();
+          const storeinstagramUrl = campaign_details.instagram_link;
+          window.location.href = storeinstagramUrl;
+        });
+      }
+    }
+
+    // Twitter
+    if (campaign_details.show_twitter_link === false) {
+      if (share_twitter) {
+        share_twitter.style.display = "none";
+      }
+    } else {
+      if (share_twitter) {
+        share_twitter.addEventListener('click', function (e) {
+          e.preventDefault();
+          const storetwitterUrl = campaign_details.twitter_link;
+          window.location.href = storetwitterUrl;
+        });
+      }
+    }
+
+    // Tiktok
+    if (campaign_details.show_tiktok_link === false) {
+      if (share_tiktok) {
+        share_tiktok.style.display = "none";
+      }
+    } else {
+      if (share_tiktok) {
+        share_tiktok.addEventListener('click', function (e) {
+          e.preventDefault();
+          const storetiktokUrl = campaign_details.tiktok_link;
+          window.location.href = storetiktokUrl;
+        });
+      }
+    }
+
+    // Snapchat
+    if (campaign_details.show_snapchat_link === false) {
+      if (share_snapchat) {
+        share_snapchat.style.display = "none";
+      }
+    } else {
+      if (share_snapchat) {
+        share_snapchat.addEventListener('click', function (e) {
+          e.preventDefault();
+          const storesnapchatUrl = campaign_details.snapchat_link;
+          window.location.href = storesnapchatUrl;
+        });
+      }
+    }
+
+    // Discord
+    if (campaign_details.show_discord_link === false) {
+      if (share_discord) {
+        share_discord.style.display = "none";
+      }
+    } else {
+      if (share_discord) {
+        share_discord.addEventListener('click', function (e) {
+          e.preventDefault();
+          const storediscordUrl = campaign_details.discord_link;
+          window.location.href = storediscordUrl;
+        });
+      }
+    }
+
     if (first_page_settings.background_image) {
       let image_background = 'https:' + first_page_settings.background_image;
       console.log(image_background);
@@ -121,48 +225,36 @@
     width: 100vw;
   }
   .consent-label-product-prelaucher {
-    font-size: {{ block.settings.base_font_size | times: 0.25}}
-    px;
-    color: {{ block.settings.accent_color }}
-    ;
+    font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+    color: {{ block.settings.accent_color }};
   }
   svg > path {
-    fill: {{ block.settings.accent_color }}
-     !important;
+    fill: {{ block.settings.accent_color }} !important;
   }
   .submit-button {
-    font-size: {{ block.settings.base_font_size | times: 0.44}}
-    px;
+    font-size: {{ block.settings.base_font_size | times: 0.35}}px;
     font-weight: 600 !important;
-    color: {{ block.settings.accent_color }}
-     !important;
-    background: {{ block.settings.main_color }}
-    ;
+    color: {{ block.settings.accent_color }}!important;
+    background: {{ block.settings.main_color }};
     border: 1px solid{{ block.settings.accent_color}};
   }
   .subheader_text {
-    color: {{ block.settings.accent_color }}
-    ;
-    font-size: {{ block.settings.base_font_size | times: 0.5}}
-    px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.5}}px;
     font-weight: 400;
     padding: 0 3%;
     text-align: center;
   }
   .header_text {
-    color: {{ block.settings.accent_color }}
-    ;
-    font-size: {{ block.settings.base_font_size}}
-    px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size}}px;
     font-weight: 600;
     padding: 0 2%;
     text-align: center;
   }
   .tag-line {
-    color: {{ block.settings.accent_color }}
-    ;
-    font-size: {{ block.settings.base_font_size | times: 0.44}}
-    px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.4}}px;
     font-weight: 600;
     margin: 10px auto;
     padding: 0 2%;
@@ -170,20 +262,15 @@
   }
   input[value] {
     font-weight: 400;
-    color: {{ block.settings.main_color }}
-    ;
-    font-size: {{ block.settings.base_font_size | times: 0.44}}
-    px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.35}}px;
   }
   ::placeholder {
-    color: {{ block.settings.main_color }}
-    ;
-    font-size: {{ block.settings.base_font_size | times: 0.35}}
-    px;
+    color: {{ block.settings.accent_color }};
+    font-size: {{ block.settings.base_font_size | times: 0.35}}px;
   }
   .text-layout {
-    background-color: {{ block.settings.main_color }}
-    ;
+    background-color: {{ block.settings.main_color }};
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -197,12 +284,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     {% if block.settings.text_layout == 'left' %}
-      align-items: flex-start;
+      text-align: left;
     {% elsif block.settings.text_layout == 'right' %}
-      align-items: flex-end;
+      text-align: right;
     {% else %}
-      align-items: center;
+      text-align: center;
     {% endif %}
   }
   .none-layout {
@@ -220,58 +308,85 @@
   }
   @media screen and (max-width: 767px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size|times: 1}}
-      px;
+      font-size: {{ block.settings.base_font_size| times: 0.60}}px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size|times: 0.9}}
-      px;
+      font-size: {{ block.settings.base_font_size| times: 0.40}}px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size|times: 0.75}}
-      px;
+      font-size: {{ block.settings.base_font_size| times: 0.35}}px;
+    }
+    input[value] {
+      font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+    }
+    ::placeholder {
+      font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+    }
+    .submit-button {
+      font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+    }
+    .consent-label-product-prelaucher {
+      font-size: {{ block.settings.base_font_size | times: 0.15}}px;
     }
   }
-  @media only screen and (min-width: 768px) and(max-width: 991px) {
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size|times: 1.3}}
-      px;
+      font-size: {{ block.settings.base_font_size| times: 0.80}}px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size}}
-      px;
+      font-size: {{ block.settings.base_font_size| times: 0.50}}px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size|times: 0.9}}
-      px;
+      font-size: {{ block.settings.base_font_size| times: 0.40}}px;
+    }
+    input[value] {
+      font-size: {{ block.settings.base_font_size | times: 0.30}}px;
+    }
+    ::placeholder {
+      font-size: {{ block.settings.base_font_size | times: 0.30}}px;
+    }
+    .submit-button {
+      font-size: {{ block.settings.base_font_size | times: 0.30}}px;
     }
   }
-  @media only screen and (min-width: 992px) and(max-width: 1199px) {
+  @media only screen and (min-width: 992px) and (max-width: 1199px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size|times: 1.5}}
-      px;
+      font-size: {{ block.settings.base_font_size | times: 0.90}}px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size|times: 1.2}}
-      px;
+      font-size: {{ block.settings.base_font_size | times: 0.60}}px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size|times: 1}}
-      px;
+      font-size: {{ block.settings.base_font_size | times: 0.50}}px;
+    }
+    input[value] {
+      font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+    }
+    ::placeholder {
+      font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+    }
+    .submit-button {
+      font-size: {{ block.settings.base_font_size | times: 0.35}}px;
     }
   }
   @media only screen and (min-width: 1200px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size|times: 2}}
-      px;
+      font-size: {{ block.settings.base_font_size}}px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size|times: 1.8}}
-      px;
+      font-size: {{ block.settings.base_font_size| times: 0.85}}px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size|times: 1.5}}
-      px;
+      font-size: {{ block.settings.base_font_size| times: 0.65}}px;
+    }
+    input[value] {
+      font-size: {{ block.settings.base_font_size | times: 0.40}}px;
+    }
+    ::placeholder {
+      font-size: {{ block.settings.base_font_size | times: 0.40}}px;
+    }
+    .submit-button {
+      font-size: {{ block.settings.base_font_size | times: 0.40}}px;
     }
   }
 </style>
@@ -359,7 +474,15 @@
         "label": "Background Image",
         "id": "background_image",
         "type": "image_picker"
-      }, {
+      },
+
+      // {
+      // "type": "font_picker",
+      // "id": "font_family",
+      // "label": "Font Family",
+      // "default": "akko_n5"
+      // }, 
+      {
         "label": "Header",
         "id": "header_text",
         "type": "text",
@@ -395,40 +518,10 @@
         "label": "Show Social Icons",
         "default": true
       }, {
-        "label": "Facebook",
-        "id": "facebook_link",
-        "type": "text",
-        "default": "Enter"
-      }, {
-        "label": "Instagram",
-        "id": "instagram_link",
-        "type": "text",
-        "default": "Enter"
-      }, {
-        "label": "Twitter",
-        "id": "twitter_link",
-        "type": "text",
-        "default": "Enter"
-      }, {
-        "label": "Tiktok",
-        "id": "tiktok_link",
-        "type": "text",
-        "default": "Enter"
-      }, {
-        "label": "Snapchat",
-        "id": "snapchat_link",
-        "type": "text",
-        "default": "Enter"
-      }, {
-        "label": "Discord",
-        "id": "discord_link",
-        "type": "text",
-        "default": "Enter"
-      }, {
         "label": "Text Base Font Size",
         "id": "base_font_size",
         "type": "range",
-        "min": 24,
+        "min": 12,
         "max": 64,
         "step": 1,
         "unit": "px",

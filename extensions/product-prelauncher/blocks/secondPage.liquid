@@ -69,23 +69,29 @@
     display: block !important;
     width: 100vw;
   }
-  .preheader_text {
+  .rewards_preheader_text {
     color: {{ block.settings.accent_color }};
     font-size: {{ block.settings.base_font_size | times: 0.5}}px;
     font-weight: 800;
     padding: 0 2%;
   }
-  .header_text {
+  .rewards_header_text {
     color: {{ block.settings.accent_color }};
     font-size: {{ block.settings.base_font_size}}px;
     font-weight: 800;
     padding: 0 2%;
   }
-  .subheader_text {
+  .rewards_subheader_text {
     color: {{ block.settings.accent_color }};
     font-size: {{ block.settings.base_font_size | times: 0.4}}px;
     font-weight: 500;
     padding: 0 2%;
+  }
+  .rewards-none-horizontal .rewards_subheader_text {
+    padding: 2% 2%;
+  }
+  .rewards-horizontal .rewards_subheader_text {
+    padding: unset !important;
   }
   .referral-link-inp {
     background-color: #D9D9D9;
@@ -98,7 +104,7 @@
     background-color: {{ block.settings.main_color }};
     color: {{ block.settings.accent_color }};
   }
-  .img-layout {
+  .rewards-img-layout {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -147,8 +153,56 @@
   .reward-item-detail span {
     color: {{ block.settings.accent_color }};
   }
-  svg > path {
+  .rewards_socials svg > path {
     fill: {{ block.settings.accent_color }} !important;
+  }
+  @media screen and (max-width: 767px) {
+    .rewards_preheader_text {
+      font-size: {{ block.settings.base_font_size | times: 0.36}}px;
+      padding: 5% 2% 0% 2%;
+    }
+    .rewards-horizontal .rewards_preheader_text {
+      padding: 0% 2% 0% 2% !important;
+    }
+    .rewards_header_text {
+      font-size: {{ block.settings.base_font_size| times: 0.5}}px;
+    }
+    .rewards_subheader_text {
+      font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+    }
+  }
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
+    .rewards_preheader_text {
+      font-size: {{ block.settings.base_font_size | times: 0.40}}px;
+    }
+    .rewards_header_text {
+      font-size: {{ block.settings.base_font_size | times: 0.75}}px;
+    }
+    .rewards_subheader_text {
+      font-size: {{ block.settings.base_font_size | times: 0.30}}px;
+    }
+  }
+  @media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .rewards_preheader_text {
+      font-size: {{ block.settings.base_font_size | times: 0.45}}px;
+    }
+    .rewards_header_text {
+      font-size: {{ block.settings.base_font_size | times: 0.85}}px;
+    }
+    .rewards_subheader_text {
+      font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    .rewards_preheader_text {
+      font-size: {{ block.settings.base_font_size | times: 0.5}}px;
+    }
+    .rewards_header_text {
+      font-size: {{ block.settings.base_font_size}}px;
+    }
+    .rewards_subheader_text {
+      font-size: {{ block.settings.base_font_size | times: 0.40}}px;
+    }
   }
 </style>
 
@@ -200,10 +254,10 @@
         "label": "Screen Divider",
         "options": [
           {
-            "value": "nonehorizontal",
+            "value": "none-horizontal",
             "label": "None-Horizontal"
           }, {
-            "value": "nonevertical",
+            "value": "none-vertical",
             "label": "None-Vertical"
           }, {
             "value": "horizontal",
