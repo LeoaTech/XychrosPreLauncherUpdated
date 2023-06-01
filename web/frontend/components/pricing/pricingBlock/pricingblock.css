@@ -1,11 +1,10 @@
 .pricing-details {
-  height: 650px;
-  width: 480px;
+  height: 500px;
+  width: 280px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--secondary-text-color);
   border: none;
   border-radius: 10px;
   -webkit-border-radius: 10px;
@@ -15,15 +14,17 @@
 
 }
 
-.pricing-details:first-child {
-  background-color: var(--secondary-color);
-}
+/* .pricing-details:first-child {
+
+} */
 
 .price-detail-block {
   display: flex;
   flex-direction: column;
-  padding: 5px 5px;
-  margin: 5px 5px;
+  padding: 15px 5px;
+  margin: 10px 5px;
+
+
 }
 
 .price-detail-block h3 {
@@ -41,24 +42,27 @@
 }
 
 .pricing-features {
+  margin-top: 20px;
   display: flex;
+  flex-direction: column;
+  width: 250px;
   justify-content: flex-start;
   align-items: flex-start;
-  position: relative;
 }
 
 .pricing-features p {
   font-size: 15px;
   font-weight: 500;
-  margin: 10px 0;
-  line-height: 1.2;
+  margin: 10px 10px;
+  line-height: 1.6;
+  
   word-break: keep-all;
 }
 
 .feature {
   display: flex;
-  gap: 5px;
-  align-items: center;
+  gap: 10px;
+
 }
 
 .btn-subscribe {
@@ -81,25 +85,37 @@
   -o-border-radius: 25px;
 }
 
+
+.btn-subscribe:hover,
+.btn-subscribe:focus {
+  background-color: #fff;
+  /* color: var(--secondary-color); */
+  font-weight: 500;
+}
+
 @media screen and (max-width: 786px) {
   .pricing-details {
-
-    height: 650px;
-    width: 460px;
+    height: 550px;
+    width: 230px;
   }
+  .pricing-features {
+    
+    width: 200px;
+   
+  }
+  
 }
 
 @media screen and (max-width: 500px) {
   .pricing-details {
-    height: fit-content;
-    width: 270px;
+    height: 550px;
+    width: 230px;
   }
-
-  .pricing-details:first-child {
-    background-color: var(--secondary-color);
-    color: #fff !important;
+  .pricing-features {
+    
+    width: 200px;
+   
   }
-
   .price-detail-block {
     display: flex;
     flex-direction: column;

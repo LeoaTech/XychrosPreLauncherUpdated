@@ -29,17 +29,19 @@ export const campaignSlice = createSlice({
       state.campaigns.push(action.payload);
     },
     deleteCampaign: (state, action) => {
+      console.log("action payload", action.payload)
+      const { campaign_id } = action.payload;
       const updatedData = state.campaigns.filter(
-        (campaign) => campaign.id !== action.payload
+        (campaign) => campaign.id !== campaign_id
       );
-      state.campaigns = updatedData;
+      state.campaigns = [...updatedData,action.payload];
     },
   },
 });
 
 // Get All Campaigns
 
-export const fetchAllCampaigns = (state) => state.campaign.campaigns;
+export const fetchAllCampaigns = (state) => state.campaign.campaigns.filter((campaign) => campaign?.is_deleted === false);
 //  Get Camapign By ID
 export const fetchCampaignById = (state, campaignId) =>
   state.campaign.campaigns.find(

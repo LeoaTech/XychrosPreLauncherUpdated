@@ -642,7 +642,6 @@ function NewCampaignForm() {
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
-
     // Editing Camapign Data Form
     if (isEdit) {
       setDraftModal(false);
@@ -669,10 +668,11 @@ function NewCampaignForm() {
         newCampaignData?.template_id !== null &&
         selectedTemplateData !== undefined
       ) {
+        setIsLoading(true);
+
         await generateDiscounts(newCampaignData);
         await createTemplates(selectedTemplateData, newCampaignData);
 
-        setIsLoading(true);
         await fetch('/api/campaignsettings', {
           method: 'POST',
           headers: {
@@ -686,8 +686,8 @@ function NewCampaignForm() {
 
         setIsLoading(false);
       } else {
-        console.log(newCampaignData);
-        console.log(result);
+        // console.log(newCampaignData);
+        // console.log(result);
         return;
       }
       navigate('/campaigns');
