@@ -1,24 +1,21 @@
 // Get Campaign Name
 const campaign_name = document.getElementById('review_campaign_name');
 
-// Get Referral Count and Referral Link Input Field
-let count_referrals = document.getElementById('count_referrals');
-let referral_div = document.getElementById('referral_rows');
-let current_referrals = document.getElementById('current_referrals');
-let remaining_referrals = document.getElementById('remaining_referrals');
-
+// Get Referral Code from url params
 let urlParams2 = new URL(window.location.href).searchParams;
 let user_code2 = urlParams2.get('referralCode');
-let referral_inp_field = document.getElementById('code');
 
-// Get Referral Link Copy Button
-let copy_btn = document.getElementById("copy_referral_code_btn");
-
-// Generate Referral Link
+// Generate Referral Link to be shared
 let urlData = window.location.href;
 urlData = urlData.split('/pages')[0];
 urlData = urlData + `/pages/${second_page_settings.page}?refer=${user_code2}`;
 console.log(urlData);
+
+// Get Referral Link Input Field
+let referral_inp_field = document.getElementById('code');
+
+// Get Referral Link Copy Button
+let copy_btn = document.getElementById("copy_referral_code_btn");
 
 // Get Socials Icons
 let share_email_referral = document.getElementById('rewards_email_refferal');
@@ -29,6 +26,20 @@ let share_instagram_referral = document.getElementById('rewards_instagram_reffer
 let share_tiktok_referral = document.getElementById('rewards_tiktok_refferal');
 let share_whatsapp_referral = document.getElementById('rewards_whatsapp_refferal');
 let share_discord_referral = document.getElementById('rewards_discord_refferal');
+
+// Get Referral Count Tagline
+let count_referrals = document.getElementById('count_referrals');
+
+// Timeline Header ?
+let referral_div = document.getElementById('referral_rows');
+
+// Get Current Referrals Container from Timeline Progress
+let referral_count_container_h = document.getElementById('referral-count-achieved') // for horizontal layout
+let referral_count_container_v = document.getElementById('vertical-referral-count-achieved') // for vertical layout
+
+// Get Current and Remaining Referral Value Elements from Timeline Progress 
+let current_referrals = document.getElementById('current_referrals');
+let remaining_referrals = document.getElementById('remaining_referrals');
 
 // Get Reward Targets, Reward Icons + Discount Values
 let tier_target1 = document.getElementById('tier1');
@@ -232,11 +243,14 @@ const get_referrals = async () => {
 
     // end of social media settings
 
-    // set number of referrals joined 
     if (data.referral_data.length > 0) {
+      // set number of referrals joined in referral count tagline
       count_referrals.innerText = `Total Referrals Joined: ${data.referral_data.length}`;
+
+      // set current referrals in timeline progress
       current_referrals.innerText = `${data.referral_data.length}`;
 
+      // set remaining referrals in timeline progress
       // remaining_referrals.innerText = `${.length}`;
     } else {
       count_referrals.innerText =
@@ -281,21 +295,37 @@ const get_referrals = async () => {
     tier_target1.innerHTML = reward_1_tier;
     tier_target2.innerHTML = reward_2_tier;
 
-    tier_discount1.innerHTML = reward_1_discount;
-    tier_discount2.innerHTML = reward_2_discount;
+    if (tier_discount1) {
+      tier_discount1.innerHTML = reward_1_discount;
+    }
+    if (tier_discount2) {
+      tier_discount2.innerHTML = reward_2_discount;
+    }
 
     // if tier 3 and tier 4 are not null:
     if (reward_3_tier != '') {
-      tier_target3.style = "";
-      tier_target3.innerHTML = reward_3_tier;
-      reward_icon3.style = "";
-      tier_discount3.innerHTML = reward_3_discount;
+      if (tier_target3) {
+        tier_target3.style = "";
+        tier_target3.innerHTML = reward_3_tier;
+      }
+      if (reward_icon3) {
+        reward_icon3.style = "";
+      }
+      if (tier_discount3) {
+        tier_discount3.innerHTML = reward_3_discount;
+      }
     }
     if (reward_4_tier != '') {
-      tier_target4.style = "";
-      tier_target4.innerHTML = reward_4_tier;
-      reward_icon4.style = "";
-      tier_discount4.innerHTML = reward_4_discount;
+      if (tier_target4) {
+        tier_target4.style = "";
+        tier_target4.innerHTML = reward_4_tier;
+      }
+      if (reward_icon4) {
+        reward_icon4.style = "";
+      }
+      if (tier_discount4) {
+        tier_discount4.innerHTML = reward_4_discount;
+      }
     }
 
   } else {
@@ -316,7 +346,7 @@ function mouseenter(x) {
 }
 
 function mouseleave(x) {
-  let childrenelements = x.querySelectorAll('.referral-count-detail');
+  let childrenelements = x.querySelectorAll('.count-detail');
   for (let i = 0; i < childrenelements.length; i++) {
     childrenelements[i].style.display = 'none';
   }

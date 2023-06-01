@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { useAuthenticatedFetch } from "../hooks";
+import { useQuery } from 'react-query';
+import { useAuthenticatedFetch } from '../hooks';
 
 const useFetchTemplates = (url) => {
-  const [data, setData] = useState([]);
   const fetchData = useAuthenticatedFetch();
 
-  useEffect(() => {
-    const fetchTemplate = async () => {
-      await fetchData(url)
-        .then((response) => {
-          if (response.ok) return response.json();
-          throw new Error("something went wrong while requesting templates");
-        })
-        .then((templates) => {
-          setData(templates);
-          return templates;
-        })
-        .catch((err) => {
-          console.log(err);
-          return err;
-        });
-    };
-    fetchTemplate();
-  }, [url]);
+  const fetchTemplates = async () => {
+    const response = await fetchData(url);
+    if (!response.ok) {
+      throw new Error('Something went wrong while requesting Templates List');
+    }
+    return response.json();
+  };
 
-  return data;
+  const { data, error } = useQuery('templates', fetchTemplates);
+
+  if (error) {
+    console.log(error);
+
+    // Handle the error case if needed
+
+    return error;
+  }
+
+  return data || []; // Return empty array as default if data is not available yet
 };
+
 
 export default useFetchTemplates;

@@ -60,6 +60,15 @@ export function setupGDPRWebHooks(path) {
     },
   });
 
+  Shopify.Webhooks.Registry.addHandler("APP_SUBSCRIPTIONS_UPDATE", {
+    path,
+    webhookHandler: async (topic, shop, body) => {
+
+      const payload = JSON.parse(body);
+      console.log(payload, "Update Subscriptions payload")
+    },
+  });
+
   /**
    * 48 hours after a store owner uninstalls your app, Shopify invokes this
    * webhook.

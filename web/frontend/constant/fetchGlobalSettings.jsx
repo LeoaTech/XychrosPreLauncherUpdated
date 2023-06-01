@@ -1,31 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useAuthenticatedFetch } from "../hooks";
 
-const useFetchSettings = (url) => {
-  const [data, setData] = useState([]);
+import { useQuery } from 'react-query';
+import { useAuthenticatedFetch } from '../hooks';
+
+const useFetchSettingsData = (url) => {
   const fetchData = useAuthenticatedFetch();
 
-  useEffect(() => {
-    const fetchSettings = async () => {
-      await fetchData(url)
-        .then((response) => {
-          if (response.ok) return response.json();
-          throw new Error("something went wrong while requesting posts");
-        })
-        .then((globalSettings) => {
-          setData(globalSettings);
-          return globalSettings;
-        })
-        .catch((err) => {
-          console.log(err);
-          return err;
-        });
-    };
-    fetchSettings();
-  }, [url]);
+  const fetchSettings = async () => {
+    const response = await fetchData(url);
+    if (!response.ok) {
+      throw new Error('Something went wrong while requesting Global Settings');
+    }
+    return response.json();
+  };
 
-  return data;
+  const { data, error } = useQuery('settings', fetchSettings);
+
+  if (error) {
+    console.log(error);
+    // Handle the error case if needed
+
+    return error;
+  }
+
+  return data || []; // Return empty array as default if data is not available yet
 };
 
-export default useFetchSettings;
+export default useFetchSettingsData;

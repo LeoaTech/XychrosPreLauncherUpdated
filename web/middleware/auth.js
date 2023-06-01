@@ -6,7 +6,7 @@ import redirectToAuth from "../helpers/redirect-to-auth.js";
 
 export default function applyAuthMiddleware(
   app,
-  { billing = { required: true } } = { billing: { required: true } }
+  { billing = { required: false } } = { billing: { required: false } }
 ) {
   app.get("/api/auth", async (req, res) => {
     return redirectToAuth(req, res, app)
