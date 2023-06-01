@@ -1,17 +1,19 @@
-import SummaryCard from "../ui/SummaryCard";
-import "./home.css";
-import { Marketing, Sale, subscriber, arrow } from "../../assets/index";
-import Charts from "../ui/Charts";
-import React, { useState, useEffect, Fragment, useContext } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchAllCampaigns,
-} from "../../app/features/campaigns/campaignSlice";
-import CountUp from "react-countup";
+import SummaryCard from '../ui/SummaryCard';
+import './home.css';
+import { Marketing, Sale, subscriber, arrow } from '../../assets/index';
+import Charts from '../ui/Charts';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllCampaigns } from '../../app/features/campaigns/campaignSlice';
+import { fetchAllReferrals } from '../../app/features/referrals/referralSlice';
+import CountUp from 'react-countup';
 
 const HomeComponent = () => {
   const List = useSelector(fetchAllCampaigns);
+  const ReferralList = useSelector(fetchAllReferrals);
+
   const [getCampaigns, setCampaigns] = useState([]);
+  const [getReferrals, setReferrals] = useState([]);
 
   useEffect(() => {
     if (List) {
@@ -19,19 +21,25 @@ const HomeComponent = () => {
     }
   }, [List]);
 
+  useEffect(() => {
+    if (ReferralList) {
+      setReferrals(ReferralList);
+    }
+  }, [ReferralList]);
+
   const LineChartOptions = {
     responsive: true,
     animation: {
-      easing: "easeInOutQuad",
+      easing: 'easeInOutQuad',
       duration: 520,
     },
     scales: {
       x: {
         grid: {
-          color: "#fff",
+          color: '#fff',
         },
         ticks: {
-          color: "#fff",
+          color: '#fff',
         },
       },
       y: {
@@ -39,11 +47,11 @@ const HomeComponent = () => {
           display: true,
         },
         grid: {
-          color: "#fff",
+          color: '#fff',
         },
         ticks: {
-          color: "#fff",
-          crossAlign: "far",
+          color: '#fff',
+          crossAlign: 'far',
           beginAtZero: true,
         },
       },
@@ -57,19 +65,19 @@ const HomeComponent = () => {
       display: false,
     },
     point: {
-      backgroundColor: "white",
+      backgroundColor: 'white',
     },
     tooltips: {
-      titleFontFamily: "Open Sans",
-      backgroundColor: "rgba(0,0,0,0.3)",
-      titleFontColor: "red",
+      titleFontFamily: 'Open Sans',
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      titleFontColor: 'red',
       caretSize: 5,
       cornerRadius: 2,
       xPadding: 10,
       yPadding: 10,
     },
     labels: {
-      color: "#FFFFFF",
+      color: '#FFFFFF',
 
       // This more specific font property overrides the global property
       font: {
@@ -81,9 +89,9 @@ const HomeComponent = () => {
         propagate: true,
       },
       legend: {
-        position: "bottom",
+        position: 'bottom',
         labels: {
-          color: "#FFFFFF",
+          color: '#FFFFFF',
 
           // This more specific font property overrides the global property
           font: {
@@ -98,30 +106,30 @@ const HomeComponent = () => {
   };
 
   const LineChartData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
       {
-        label: "Clicks",
+        label: 'Clicks',
         data: [11, 73, 56, 32, 45, 9, 112],
-        borderColor: "#5447df",
-        backgroundColor: "#5447df",
+        borderColor: '#5447df',
+        backgroundColor: '#5447df',
         borderDash: [10, 5],
-        fill: "",
+        fill: '',
       },
 
       {
-        label: "Campaigns",
+        label: 'Campaigns',
         data: [45, -23, 89, 23, 110, 34, 65],
-        borderColor: "#E0777D",
-        backgroundColor: "#E0777D",
-        fill: "+2",
+        borderColor: '#E0777D',
+        backgroundColor: '#E0777D',
+        fill: '+2',
       },
       {
-        label: "Referrals",
+        label: 'Referrals',
         data: [21, 34, 61, 38, 45, 87, 12],
-        borderColor: "#A1F6F5",
-        backgroundColor: "#A1F6F5",
-        fill: "origin",
+        borderColor: '#A1F6F5',
+        backgroundColor: '#A1F6F5',
+        fill: 'origin',
       },
     ],
   };
@@ -130,9 +138,9 @@ const HomeComponent = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: "right",
+        position: 'right',
         labels: {
-          color: "#FFFFFF",
+          color: '#FFFFFF',
 
           // This more specific font property overrides the global property
           font: {
@@ -147,13 +155,13 @@ const HomeComponent = () => {
   };
 
   const DonutChartData = {
-    labels: ["Product 1", "product 2", "Product 3", "Product 4"],
+    labels: ['Product 1', 'product 2', 'Product 3', 'Product 4'],
     datasets: [
       {
-        label: "# of Votes",
+        label: '# of Votes',
         data: [30, 20, 10, 5],
-        backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
-        borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
+        backgroundColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
+        borderColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
         borderWidth: 1,
       },
     ],
@@ -173,25 +181,25 @@ const HomeComponent = () => {
           },
         },
         grid: {
-          color: "#fff",
+          color: '#fff',
         },
         pointLabels: {
-          color: "#fff",
+          color: '#fff',
         },
         ticks: {
-          color: "#fff",
-          backdropColor: "transparent",
-          fontWeight: "bold",
+          color: '#fff',
+          backdropColor: 'transparent',
+          fontWeight: 'bold',
         },
       },
     },
 
     plugins: {
       legend: {
-        position: "bottom",
+        position: 'bottom',
 
         labels: {
-          color: "#FFFFFF",
+          color: '#FFFFFF',
           font: {
             size: 14,
           },
@@ -204,83 +212,99 @@ const HomeComponent = () => {
   };
 
   const RadarChartData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
       {
-        label: "Referrals",
+        label: 'Referrals',
         data: [1, 3, 56, 78, 55, 23, 98],
-        borderColor: "rgba(161, 246, 245, 0.7)",
-        backgroundColor: "rgba(161, 246, 245, 0.6)",
+        borderColor: 'rgba(161, 246, 245, 0.7)',
+        backgroundColor: 'rgba(161, 246, 245, 0.6)',
       },
       {
-        label: "Revenue",
+        label: 'Revenue',
         data: [11, 53, 26, 38, 43, 67, 23],
-        borderColor: "rgba(245, 102, 128, 0.8)",
-        backgroundColor: "rgba(245, 102, 128, 0.5)",
+        borderColor: 'rgba(245, 102, 128, 0.8)',
+        backgroundColor: 'rgba(245, 102, 128, 0.5)',
       },
       {
-        label: "Clicks",
+        label: 'Clicks',
         data: [86, 78, 65, 59, 65, 99],
-        borderColor: "rgba(84, 71, 223, 0.7)",
-        backgroundColor: "rgba(84, 71, 223, 0.4)",
+        borderColor: 'rgba(84, 71, 223, 0.7)',
+        backgroundColor: 'rgba(84, 71, 223, 0.4)',
       },
     ],
   };
 
+  console.log(getCampaigns.length);
+
+  console.log(getReferrals.length);
+
   return (
-    <div className="home-container">
-      <div className="summary-blocks">
+    <div className='home-container'>
+      <div className='summary-blocks'>
         <SummaryCard
-          value={<CountUp start={0} end={getCampaigns.length} duration={1.4} />}
-          title="Campaigns"
+          value={
+            <CountUp
+              start={0}
+              end={getCampaigns.length}
+              duration={1.4}
+            />
+          }
+          title='Campaigns'
           icon={Marketing}
-          class="campaign-icon"
+          class='campaign-icon'
         />
         <SummaryCard
-          value="543678"
-          title="Referrals"
+          value={
+            <CountUp
+              start={0}
+              end={getReferrals.length}
+              duration={1.4}
+            />
+          }
+          title='Referrals'
           icon={subscriber}
-          class="referral-icon"
+          class='referral-icon'
         />
         <SummaryCard
-          value="$253,467"
-          title="Revenue"
+          value='$253,467'
+          title='Revenue'
           icon={Sale}
-          class="revenue-icon"
+          class='revenue-icon'
         />
         <SummaryCard
-          value="4551678"
-          title="Clicks"
+          value='4551678'
+          title='Clicks'
           icon={arrow}
-          class="clicks-icon"
+          class='clicks-icon'
         />
       </div>
 
       {/* Charts */}
-      <div className="single-chart">
+      <div className='single-chart'>
         <Charts
-          type="line"
-          header="Total Revenue"
-          value="$253467"
-          subheader="Last 7 months Data"
+          type='line'
+          header='Total Revenue'
+          value='$253467'
+          subheader='Last 7 months Data'
           LineChartOptions={LineChartOptions}
           LineChartData={LineChartData}
         />
       </div>
-      <div className="dual-charts">
+      <div className='dual-charts'>
         <Charts
-          type="radar"
-          header="Product Launch"
-          value="$2456.76"
-          subheader="August 1st, 2022 - September 5th, 2022"
+          type='radar'
+          header='Product Launch'
+          value='$2456.76'
+          subheader='August 1st, 2022 - September 5th, 2022'
           RadarChartOptions={RadarChartOptions}
           RadarChartData={RadarChartData}
         />
         <Charts
-          type="donut"
-          header="Revenue"
-          value="$15,456.98"
-          subheader="Last 4 campaigns"
+          type='donut'
+          header='Revenue'
+          value='$15,456.98'
+          subheader='Last 4 campaigns'
           DonutChartOptions={DonutChartOptions}
           DonutChartData={DonutChartData}
         />

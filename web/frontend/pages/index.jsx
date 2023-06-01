@@ -13,6 +13,8 @@ import { fetchSettings } from "../app/features/settings/settingsSlice";
 import { fetchSavePlan } from "../app/features/current_plan/current_plan";
 import useFetchCurrentPlan from "../constant/fetchCurrentPlan";
 import useFetchPricingPlans from "../constant/fetchPricingPlans";
+import useFetchReferralsData from '../constant/fetchReferralsData';
+import { fetchReferrals } from '../app/features/referrals/referralSlice';
 
 export default function HomePage() {
   const { activeMenu } = useStateContext();
@@ -21,20 +23,24 @@ export default function HomePage() {
   // Page render Scroll to Top
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [])
-
-  const campaigns = useFetchCampaignsData("/api/getcampaigns", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  const product = useFetchAllProducts("/api/2022-10/products.json", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
+  }, []);
+  const campaigns = useFetchCampaignsData('/api/getcampaigns', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
   });
 
-  const settings = useFetchSettings("/api/updatesettings", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
+  const referrals = useFetchReferralsData('/api/getallreferralcount', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  const product = useFetchAllProducts('/api/2022-10/products.json', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  const settings = useFetchSettings('/api/updatesettings', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
   });
   const pricingPlans = useFetchPricingPlans("/api/pricing-plans", {
     method: "GET",
@@ -87,33 +93,39 @@ export default function HomePage() {
     }
   }, [dispatch, product]);
 
+  useEffect(() => {
+    if (referrals) {
+      dispatch(fetchReferrals(referrals));
+    }
+  }, [dispatch, referrals]);
+
   return (
-    <div className="app">
+    <div className='app'>
       {activeMenu ? (
-        <div className="header">
+        <div className='header'>
           <Header />
         </div>
       ) : (
-        <div className="header">
+        <div className='header'>
           <Header />
         </div>
       )}
-      <div className="main-app">
+      <div className='main-app'>
         {activeMenu ? (
           <>
-            <div className="sidebar">
+            <div className='sidebar'>
               <SideBar />
             </div>
-            <div className="main-container">
+            <div className='main-container'>
               <HomeComponent />
             </div>
           </>
         ) : (
           <>
-            <div className="sidebar closed">
+            <div className='sidebar closed'>
               <SideBar />
             </div>
-            <div className="main-container full">
+            <div className='main-container full'>
               <HomeComponent />
             </div>
           </>

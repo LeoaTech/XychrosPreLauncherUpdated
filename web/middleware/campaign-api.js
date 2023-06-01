@@ -29,6 +29,7 @@ export default function campaignApiEndpoints(app) {
         'select * from campaign_settings where shop_id = $1 ',
         [session?.shop]
       );
+      // console.log(campaigns.rows);
       return res.status(200).json(campaigns.rows);
     } catch (err) {
       return res.status(500).json(err.message);
