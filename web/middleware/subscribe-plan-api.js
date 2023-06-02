@@ -96,7 +96,6 @@ export default function SubscribePlanApiEndPoint(myApp) {
 
         if (planExists?.rowCount > 0) {
           const result = await cancelAppSubscription(session);
-          console.log(result, "On Cancel")
           return res.status(200).json(result);
         } else {
           try {
