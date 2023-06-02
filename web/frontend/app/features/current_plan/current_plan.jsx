@@ -2,13 +2,13 @@ import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {
   current_plan: {
-    id: 1,
-    plan_name: "Free",
-    price: "0.00",
-    features:
-      { feature1: '1 Active Campaign Created', feature2: '50 Emails Collected', feature3: 'Anti Fraud' },
-    billing_required: false,
-    currency_code: "USD"
+    // id: 1,
+    // plan_name: "Free",
+    // price: "0.00",
+    // features:
+    //   { feature1: '1 Active Campaign Created', feature2: '50 Emails Collected', feature3: 'Anti Fraud' },
+    // billing_required: false,
+    // currency_code: "USD"
   },
 };
 
