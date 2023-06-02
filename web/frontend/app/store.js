@@ -17,7 +17,7 @@ export const store = configureStore({
     products: productReducer,
     users: userReducer,
     pricing: priceReducer,
-    current_plan: currentPlanReducer
+    current_plan: currentPlanReducer,
     referrals: referralReducer,
   },
 });
