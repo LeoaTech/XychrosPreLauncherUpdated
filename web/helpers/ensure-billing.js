@@ -381,7 +381,6 @@ export async function cancelAppSubscription(session) {
               false
             ]
           );
-          console.log("Save", savePlan)
           return savePlan?.rows[0];
         } catch (err) {
           return err;
@@ -401,7 +400,6 @@ export async function cancelAppSubscription(session) {
            shop_id=$7 RETURNING *`
             ,
             ['Free', 0.00, date.toISOString(), '', cancelSubscription?.status, false, session?.shop]);
-          console.log("Update", updatePlan)
           return updatePlan?.rows[0];
         } catch (error) {
           return error;
