@@ -37,14 +37,13 @@ export default function SubscribePlanApiEndPoint(myApp) {
       );
       try {
         const getCurrent = await GetCurrentAppInstallation(session);
-        console.log(getCurrent, "Get Response")
         const planExists = await pool.query(
           `select * from subscriptions_list where shop_id =$1`,
           [session?.shop]
         );
         return res.status(200).json(planExists?.rows[0]);
       } catch (error) {
-        console.log(error)
+        return res.json(error);
       }
     } catch (err) {
       return res.status(500).json(err.message);
