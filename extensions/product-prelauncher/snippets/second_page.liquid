@@ -1,13 +1,13 @@
-<div class="section-layout {{ block.settings.layout }}">
+<div class="rewards-section-layout rewards-{{ block.settings.layout}}">
 
   <div class="hidden" id="review_campaign_name">{{ block.settings.campaign_name }}</div>
 
   {% comment %}Start of None Horizontal layout{% endcomment %}
-  {% if block.settings.layout == 'nonehorizontal' %}
-    <div id='second-background-image' class="img-layout none-full">
-      <div class="preheader_text">{{ block.settings.preheader_text }}</div>
-      <div class="header_text">{{ block.settings.header_text }}</div>
-      <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+  {% if block.settings.layout == 'none-horizontal' %}
+    <div id='second-background-image' class="rewards-img-layout rewards-none-full">
+      <div class="rewards_preheader_text">{{ block.settings.preheader_text }}</div>
+      <div class="rewards_header_text">{{ block.settings.header_text }}</div>
+      <div class="rewards_subheader_text">{{ block.settings.subheader_text }}</div>
       <div id="referral-link" class="refferal-container">
         <input
           id="code"
@@ -18,7 +18,7 @@
         <button class="copy-link-btn" id="copy_referral_code_btn">Copy Link</button>
         <div id="snackbarCopy">Copied to clipboard</div>
       </div>
-      <div class="socials">
+      <div class="rewards_socials">
         <a href="#" id="rewards_email_refferal">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
           </svg>
@@ -70,10 +70,11 @@
                 </div>
                 <div
                   class="referral-count-achieved"
+                  id="referral-count-achieved"
                   onmouseenter="mouseenter(this)"
                   onmouseleave="mouseleave(this)">
                   <span id="current_referrals">0</span>
-                  <div class="referral-count-detail" style="display: none;">
+                  <div class="referral-count-detail count-detail" style="display: none;">
                     Invite
                     <span id="remaining_referrals">{}</span>
                     more friends to unlock next reward!
@@ -117,14 +118,14 @@
   {% comment %}End of None Horizontal layout{% endcomment %}
 
   {% comment %}Start of None Vertical layout{% endcomment %}
-  {% if block.settings.layout == 'nonevertical' %}
-    <div id='second-background-image' class="img-layout none-full">
+  {% if block.settings.layout == 'none-vertical' %}
+    <div id='second-background-image' class="rewards-img-layout rewards-none-full">
       <div class="hidden">this div is hidden</div>
-      <div class="none-gift-layout none-half spaced-evenly">
-        <div class="vertical spaced">
-          <div class="preheader_text">{{ block.settings.preheader_text }}</div>
-          <div class="header_text">{{ block.settings.header_text }}</div>
-          <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+      <div class="none-gift-layout reward-none-half rewards-spaced-evenly">
+        <div class="rewards-vertical rewards-spaced">
+          <div class="rewards_preheader_text">{{ block.settings.preheader_text }}</div>
+          <div class="rewards_header_text">{{ block.settings.header_text }}</div>
+          <div class="rewards_subheader_text">{{ block.settings.subheader_text }}</div>
           <div id="referral-link" class="refferal-container">
             <input
               id="code"
@@ -135,7 +136,7 @@
             <button class="copy-link-btn" id="copy_referral_code_btn">Copy Link</button>
             <div id="snackbarCopy">Copied to clipboard</div>
           </div>
-          <div class="socials">
+          <div class="rewards_socials">
             <a href="#" id="rewards_email_refferal">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
               </svg>
@@ -163,25 +164,19 @@
             </a>
           </div>
         </div>
-        <div class="spaced friends-joined" id="count_referrals">0 friends have joined! Invite friends to Join</div>
+        <div class="rewards-spaced friends-joined" id="count_referrals">0 friends have joined! Invite friends to Join</div>
         <div class="vertical-timeline-headers">
           <div>Friends Joined</div>
           <div>Rewards</div>
         </div>
-        <div class="spaced vertical-timeline">
+        <div class="rewards-spaced vertical-timeline">
           <div class="vertical-timeline-progress">&nbsp;</div>
           <div class="vertical-timeline-items">
             <div>
               <div class="vertical-timeline-item-block">
                 <div class="vertical-reward-targets">
-                  <div
-                    class="vertical-reward-target"
-                    id="tier1"
-                    style="display: none;">{}</div>
-                  <div
-                    class="vertical-reward-target"
-                    id="tier2"
-                    style="display: none;">{}</div>
+                  <div class="vertical-reward-target" id="tier1">{}</div>
+                  <div class="vertical-reward-target" id="tier2">{}</div>
                   <div
                     class="vertical-reward-target"
                     id="tier3"
@@ -193,10 +188,11 @@
                 </div>
                 <div
                   class="vertical-referral-count-achieved"
+                  id="vertical-referral-count-achieved"
                   onmouseenter="mouseenter(this)"
                   onmouseleave="mouseleave(this)">
                   <span id="current_referrals">0</span>
-                  <div class="vertical-referral-count-detail" style="display: none;">
+                  <div class="vertical-referral-count-detail count-detail" style="display: none;">
                     Invite
                     <span id="remaining_referrals">{}</span>
                     more friends to unlock next reward!
@@ -237,10 +233,10 @@
 
   {% comment %}Start of Horizontal layout{% endcomment %}
   {% if block.settings.layout == 'horizontal' %}
-    <div id='second-background-image' class="img-layout full">
-      <div class="preheader_text">{{ block.settings.preheader_text }}</div>
-      <div class="header_text">{{ block.settings.header_text }}</div>
-      <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+    <div id='second-background-image' class="rewards-img-layout full">
+      <div class="rewards_preheader_text">{{ block.settings.preheader_text }}</div>
+      <div class="rewards_header_text">{{ block.settings.header_text }}</div>
+      <div class="rewards_subheader_text">{{ block.settings.subheader_text }}</div>
       <div id="referral-link" class="refferal-container">
         <input
           id="code"
@@ -251,7 +247,7 @@
         <button class="copy-link-btn" id="copy_referral_code_btn">Copy Link</button>
         <div id="snackbarCopy">Copied to clipboard</div>
       </div>
-      <div class="socials">
+      <div class="rewards_socials">
         <a href="#" id="rewards_email_refferal">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
           </svg>
@@ -304,10 +300,11 @@
               </div>
               <div
                 class="referral-count-achieved"
+                id="referral-count-achieved"
                 onmouseenter="mouseenter(this)"
                 onmouseleave="mouseleave(this)">
                 <span id="current_referrals">0</span>
-                <div class="referral-count-detail" style="display: none;">
+                <div class="referral-count-detail count-detail" style="display: none;">
                   Invite
                   <span id="remaining_referrals">{}</span>
                   more friends to unlock next reward!
@@ -351,14 +348,14 @@
 
   {% comment %}Start of Vertical layout{% endcomment %}
   {% if block.settings.layout == 'vertical' %}
-    <div id='second-background-image' class="img-layout half">
+    <div id='second-background-image' class="rewards-img-layout half">
       <div class="hidden">this div is hidden</div>
     </div>
-    <div class="gift-layout half spaced-evenly">
-      <div class="vertical spaced">
-        <div class="preheader_text">{{ block.settings.preheader_text }}</div>
-        <div class="header_text">{{ block.settings.header_text }}</div>
-        <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+    <div class="gift-layout half rewards-spaced-evenly">
+      <div class="vertical rewards-spaced">
+        <div class="rewards_preheader_text">{{ block.settings.preheader_text }}</div>
+        <div class="rewards_header_text">{{ block.settings.header_text }}</div>
+        <div class="rewards_subheader_text">{{ block.settings.subheader_text }}</div>
         <div id="referral-link" class="refferal-container">
           <input
             id="code"
@@ -369,7 +366,7 @@
           <button class="copy-link-btn" id="copy_referral_code_btn">Copy Link</button>
           <div id="snackbarCopy">Copied to clipboard</div>
         </div>
-        <div class="socials">
+        <div class="rewards_socials">
           <a href="#" id="rewards_email_refferal">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
             </svg>
@@ -397,16 +394,12 @@
           </a>
         </div>
       </div>
-      <div class="spaced friends-joined" id="count_referrals">0 friends have joined! Invite friends to Join</div>
+      <div class="rewards-spaced friends-joined" id="count_referrals">0 friends have joined! Invite friends to Join</div>
       <div class="vertical-timeline-headers">
-        <div>
-          <h3>Friends Joined</h3>
-          <div id="referral_rows"></div>
-        </div>
-
+        <div>Friends Joined</div>
         <div>Rewards</div>
       </div>
-      <div class="spaced vertical-timeline">
+      <div class="rewards-spaced vertical-timeline">
         <div class="vertical-timeline-progress">&nbsp;</div>
         <div class="vertical-timeline-items">
           <div>
@@ -425,10 +418,11 @@
               </div>
               <div
                 class="vertical-referral-count-achieved"
+                id="vertical-referral-count-achieved"
                 onmouseenter="mouseenter(this)"
                 onmouseleave="mouseleave(this)">
                 <span id="current_referrals">0</span>
-                <div class="vertical-referral-count-detail" style="display: none;">
+                <div class="vertical-referral-count-detail count-detail" style="display: none;">
                   Invite
                   <span id="remaining_referrals">{}</span>
                   more friends to unlock next reward!

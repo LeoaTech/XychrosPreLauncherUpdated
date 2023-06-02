@@ -395,6 +395,14 @@ input[type='tel']:focus {
     position: absolute !important;
   }
 
+  .social_icons {
+    gap: unset !important;
+  }
+
+  .submit-button-product-prelaunch {
+    width: 50%;
+  }
+
   /* flip-horizontal layout */
 
   .section-layout.flip-horizontal {
@@ -664,6 +672,10 @@ input[type='tel']:focus {
 
   input[type=checkbox] {
     position: absolute;
+  }
+
+  .social_icons {
+    gap: unset !important;
   }
 
   /* vertical layout */
