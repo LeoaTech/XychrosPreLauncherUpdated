@@ -85,6 +85,17 @@
   -o-border-radius: 25px;
 }
 
+.btn-subscribe.disabled{
+  cursor:not-allowed;
+  background-color: rgb(184, 184, 184);
+
+}
+
+.btn-subscribe.disabled:hover,
+.btn-subscribe.disabled:focus{
+  background-color: rgb(184, 184, 184);
+
+}
 
 .btn-subscribe:hover,
 .btn-subscribe:focus {
