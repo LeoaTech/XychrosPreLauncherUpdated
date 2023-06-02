@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { useAppBridge } from '@shopify/app-bridge-react';
+import { useAppBridge, useNavigate } from '@shopify/app-bridge-react';
 import { Redirect } from '@shopify/app-bridge/actions/index.js';
-
 import './price.css';
 import PricingBlock from './pricingBlock/PricingBlock';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,22 +17,21 @@ const PriceComponent = () => {
   const [isLoading, setIsloading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedPlanId, setSubscribedPlanId] = useState(null); //handle Biiling Card subscription ID
-  const [mydata, setMyData] = useState({})
+
   const app = useAppBridge();
   const redirect = Redirect.create(app);
   console.log(activePlan, "plan in reducer");
 
-
+  const navigate = useNavigate();
   const dispatch = useDispatch()
   const fetchAuth = useAuthenticatedFetch();
 
   useEffect(() => {
     if (activePlan) {
-      console.log(activePlan, "plan");
-      setSubscribedPlanId(activePlan?.id);
-
+      let planId = priceData?.find((plan) => plan?.plan_name === activePlan?.plan_name);
+      setSubscribedPlanId(planId?.id);
     }
-  }, [activePlan, dispatch])
+  }, [activePlan, priceData])
   useEffect(() => {
     if (priceData.length > 0) {
       setPricePlans(priceData);
@@ -61,7 +59,7 @@ const PriceComponent = () => {
 
     if (pricePlans) {
       const data = pricePlans?.find((price) => price.id === id);
-      // console.log(data, "handle function")
+
       setIsSubscribed(true);
       if (data?.plan_name !== 'Free') {
         const response = await fetchAuth('/api/subscribe-plan', {
@@ -81,8 +79,6 @@ const PriceComponent = () => {
           setSubscribedPlanId(id);
           setIsloading(false)
         } else {
-          console.log(response);
-          // window.location.href = response.confirmationUrl;
           return;
         }
       } else {
@@ -94,14 +90,14 @@ const PriceComponent = () => {
           body: JSON.stringify(data),
         });
         if (response.ok) {
+          console.log(response, "Cancel response")
           const subscribe_data = await response.json();
           console.log(subscribe_data, 'Free Tier');
-          dispatch(fetchSavePlan(data));
+          dispatch(fetchSavePlan(subscribe_data));
           setSubscribedPlanId(id);
           setIsloading(false);
+          navigate("/");
         } else {
-          console.log(response);
-          // window.location.href = response.confirmationUrl;
           return;
         }
       }
