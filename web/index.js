@@ -8,7 +8,7 @@ import applyAuthMiddleware from './middleware/auth.js';
 import verifyRequest from './middleware/verify-request.js';
 import { setupGDPRWebHooks } from './gdpr.js';
 import redirectToAuth from './helpers/redirect-to-auth.js';
-import ensureBilling, { BillingInterval, GetCurrentAppInstallation } from './helpers/ensure-billing.js';
+import { BillingInterval } from './helpers/ensure-billing.js';
 import { AppInstallations } from './app_installations.js';
 import cors from 'cors';
 import campaignApiEndpoints from './middleware/campaign-api.js';
@@ -23,16 +23,8 @@ import userDetailsApiEndPoint from './middleware/userdetails-api.js';
 import getUrlApi from './middleware/geturl-api.js';
 import pricingPlansApiEndpoints from './middleware/get-pricing-plans-api.js';
 import SubscribePlanApiEndPoint from './middleware/subscribe-plan-api.js';
-import NewPool from "pg";
-const { Pool } = NewPool;
-const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
-});
 
-pool.connect((err, result) => {
-  if (err) throw err;
-  // console.log("Connected");
-});
+
 
 const USE_ONLINE_TOKENS = false;
 
@@ -128,31 +120,6 @@ export async function createServer(
     }
   });
 
-
-
-  // API to Get Current Installation App Subscription Data  (30th May 2020)
-  app.get('/api/get-current-app', async (req, res) => {
-    try {
-      const session = await Shopify.Utils.loadCurrentSession(
-        req,
-        res,
-        app.get('use-online-tokens')
-      );
-
-      const getPlan = await GetCurrentAppInstallation(session);
-      if (getPlan) {
-        if (Object.keys(getPlan).length > 0) {
-          return res.status(200).json(getPlan);
-        } else {
-          return res.status(200).json("No Current Subscription");
-        }
-      }
-
-    } catch (err) {
-      return res.status(500).json(err);
-    }
-  }
-  )
 
 
 
