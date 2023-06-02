@@ -11,7 +11,7 @@ import useFetchAllProducts from "../constant/fetchProducts";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import { fetchSettings } from "../app/features/settings/settingsSlice";
 import { fetchSavePlan } from "../app/features/current_plan/current_plan";
-import useFetchCurrentPlan from "../constant/fetchCurrentPlan";
+import useFetchBillingModel from "../constant/fetchBillingModel";
 import useFetchPricingPlans from "../constant/fetchPricingPlans";
 import useFetchReferralsData from '../constant/fetchReferralsData';
 import { fetchReferrals } from '../app/features/referrals/referralSlice';
