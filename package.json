@@ -1,6 +1,9 @@
 {
   "name": "xychros-product-pre-launcher",
   "version": "1.0.0",
+  "engines": {
+    "node": "18.x"
+  },
   "main": "web/index.js",
   "license": "UNLICENSED",
   "scripts": {
