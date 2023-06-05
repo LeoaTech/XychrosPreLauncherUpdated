@@ -3,6 +3,7 @@
   width: 280px;
   display: flex;
   flex-direction: column;
+
   justify-content: space-between;
   align-items: center;
   border: none;
@@ -87,21 +88,25 @@
 
 .btn-subscribe.disabled{
   cursor:not-allowed;
-  background-color: rgb(184, 184, 184);
-
+  background-color: rgb(208, 208, 208);
 }
 
 .btn-subscribe.disabled:hover,
 .btn-subscribe.disabled:focus{
-  background-color: rgb(184, 184, 184);
-
+  background-color: rgb(208, 208, 208);
+  box-shadow: 0px 0px 0px 0px #1b1a1a;
+  
 }
+
 
 .btn-subscribe:hover,
 .btn-subscribe:focus {
   background-color: #fff;
   /* color: var(--secondary-color); */
-  font-weight: 500;
+  /* font-weight: 500; */
+  box-shadow: 1px 0.5px 4px 3px #bab9b9;
+  color:var(--secondary-text-color)
+
 }
 
 @media screen and (max-width: 786px) {

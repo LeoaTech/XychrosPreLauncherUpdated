@@ -10,8 +10,8 @@ import { useAuthenticatedFetch } from '../../hooks';
 import { fetchCurrentPlan, fetchSavePlan } from '../../app/features/current_plan/current_plan';
 
 const PriceComponent = () => {
-  const priceData = useSelector(fetchAllpricing);
-  const activePlan = useSelector(fetchCurrentPlan);
+  const priceData = useSelector(fetchAllpricing);   //Get all Pricing Details Cards
+  const activePlan = useSelector(fetchCurrentPlan);   //Current Active Plan
 
   const [pricePlans, setPricePlans] = useState();
   const [isLoading, setIsloading] = useState(false);
@@ -32,12 +32,16 @@ const PriceComponent = () => {
       setSubscribedPlanId(planId?.id);
     }
   }, [activePlan, priceData])
+
+
   useEffect(() => {
     if (priceData.length > 0) {
       setPricePlans(priceData);
     }
   }, [priceData]);
 
+
+  // Handle Card Next and Prev events
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const maxCardIndex = pricePlans?.length - 1;
   const cardWidth = 280;
@@ -53,6 +57,7 @@ const PriceComponent = () => {
     }
   };
 
+  // Handle Subscription plan Event
   const handlePlanSubscribe = async (id) => {
     setIsloading(true);
     setSubscribedPlanId(id);
@@ -61,6 +66,8 @@ const PriceComponent = () => {
       const data = pricePlans?.find((price) => price.id === id);
 
       setIsSubscribed(true);
+
+      // Subscribed To Paid Tiers
       if (data?.plan_name !== 'Free') {
         const response = await fetchAuth('/api/subscribe-plan', {
           method: 'POST',
@@ -81,7 +88,7 @@ const PriceComponent = () => {
         } else {
           return;
         }
-      } else {
+      } else {   //Subscribed to Free Tier
         const response = await fetchAuth('/api/subscribe-plan', {
           method: 'POST',
           headers: {
@@ -90,9 +97,7 @@ const PriceComponent = () => {
           body: JSON.stringify(data),
         });
         if (response.ok) {
-          console.log(response, "Cancel response")
           const subscribe_data = await response.json();
-          console.log(subscribe_data, 'Free Tier');
           dispatch(fetchSavePlan(subscribe_data));
           setSubscribedPlanId(id);
           setIsloading(false);
@@ -128,7 +133,7 @@ const PriceComponent = () => {
           </div>
         )}
         <div className='price-block'>
-          {pricePlans?.map((price, index) => {
+          {pricePlans?.length ? pricePlans?.map((price, index) => {
             return (
               <div
                 key={index}
@@ -152,7 +157,8 @@ const PriceComponent = () => {
                 />
               </div>
             );
-          })}
+          }) : <div class="spinner"></div>
+          }
         </div>
       </div>
     </div>
