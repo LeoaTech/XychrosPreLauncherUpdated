@@ -5,6 +5,8 @@ import "../index.css";
 import useFetchUserDetails from "../constant/fetchUserDetails";
 import { useDispatch } from "react-redux";
 import { SaveUser } from "../app/features/users/userSlice";
+import useFetchPricingPlans from "../constant/fetchPricingPlans";
+import { fetchpricing } from "../app/features/pricing/pricing";
 
 
 
@@ -14,6 +16,14 @@ const UserProfilePage = () => {
   const userDetails = useFetchUserDetails("/api/userprofile", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+  });
+
+
+  const response = useFetchPricingPlans("/api/pricing-plans", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 
   // Page render Scroll to Top
@@ -26,6 +36,14 @@ const UserProfilePage = () => {
       dispatch(SaveUser(userDetails));
     }
   }, [userDetails]);
+
+   // Get All Pricing Details with Features
+   useEffect(() => {
+    if (response.length > 0) {
+      dispatch(fetchpricing(response));
+    }
+  }, [dispatch, response]);
+
   return (
     <div className="app">
       {activeMenu ? (
