@@ -27,6 +27,6 @@ export const currentPlanSlice = createSlice({
 
 
 export const fetchCurrentPlan = (state) => state.current_plan.current_plan;
-
+export const fetchCurrentTier = (state) => state.current_plan?.current_plan?.plan_name
 export const { fetchSavePlan } = currentPlanSlice.actions;
 export default currentPlanSlice.reducer;
