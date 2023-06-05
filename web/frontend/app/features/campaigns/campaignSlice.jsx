@@ -54,6 +54,9 @@ export const fetchCampaignByName = (state) => {
   return result;
 };
 
+
+export const getTotalCampaigns = (state) => state.campaign.campaigns?.length || [];
+
 // All Action of the campaign
 
 export const {
