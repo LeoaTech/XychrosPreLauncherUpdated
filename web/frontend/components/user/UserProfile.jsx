@@ -92,8 +92,8 @@ const UserProfile = () => {
   const billingPlan = useSelector(fetchCurrentPlan);
   const dispatch = useDispatch();
 
-  // console.log("Price card Data", priceData);
-  // console.log("bill", billingPlan)
+  console.log("Price card Data", priceData);
+  console.log("bill", billingPlan)
 
   const [subscribeMessage, setSubscribeMessage] = useState("")
   const fetch = useAuthenticatedFetch();
@@ -163,17 +163,22 @@ const UserProfile = () => {
 
   // Get Current Plan and Set Billing Details in TableData
   useEffect(() => {
-    if (billingPlan) {
+    if (billingPlan !== undefined) {
       let cardId = priceData?.find((plan) => plan?.plan_name === billingPlan?.plan_name)
-      let currentPlan = { ...billingPlan, created_at: new Date(billingPlan?.created_at).toUTCString() }
       setPriceCard([{ ...cardId }])
-      setTableData([currentPlan])
       setSubscribedCardId(cardId?.id)
       setUserDetails({ ...userDetails, billing_id: subscribedCardId })
       setSubscribeMessage(`Subscribed to ${billingPlan?.plan_name} price card. Billed and reset every month on the ${new Date(billingPlan?.created_at).getDate()} at ${new Date(billingPlan?.created_at).getHours()}:${new Date(billingPlan?.created_at).getMinutes()}:${new Date(billingPlan?.created_at).getSeconds()}`)
 
     }
   }, [billingPlan, priceData])
+
+  useEffect(() => {
+    if (billingPlan) {
+      let currentPlan = { ...billingPlan, created_at: new Date(billingPlan?.created_at).toLocaleString() }
+      setTableData([currentPlan])
+    }
+  }, [billingPlan])
   // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -288,7 +293,7 @@ const UserProfile = () => {
           <h3>Billing Details</h3>
           <p>{subscribeMessage}</p>
 
-          <div className="carousel" >
+          {priceCard?.length > 0 ? <div className="carousel" >
             <div className="billing-cards" style={{
             }}>
               {priceCard?.length > 0 ? priceCard?.map((card, index) => {
@@ -316,7 +321,7 @@ const UserProfile = () => {
               />
             </div>
 
-          </div>
+          </div> : <div className="spinner"></div>}
 
           {/* <div className="billing-details-block">
           </div> */}
