@@ -159,6 +159,8 @@ const SideBar = () => {
               </NavLink>
             )}
 
+            {/* Hide the FAQ Page Link (Temporary)*/}
+{/* 
             {mobileMenu && (
               <NavLink
                 to="/faq"
@@ -172,7 +174,7 @@ const SideBar = () => {
                 </span>
                 <p className="icon-text">FAQ</p>
               </NavLink>
-            )}
+            )} */}
             {mobileMenu && (
               <NavLink
                 to="/price"
