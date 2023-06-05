@@ -1,18 +1,18 @@
 import { useQuery } from 'react-query';
 import { useAuthenticatedFetch } from '../hooks';
 
-const useFetchUserDetails = (url) => {
+const useFetchPricingPlans = (url) => {
   const fetchData = useAuthenticatedFetch();
 
-  const fetchUserDetails = async () => {
+  const fetchPricing = async () => {
     const response = await fetchData(url);
     if (!response.ok) {
-      throw new Error('Something went wrong while requesting User details List');
+      throw new Error('Something went wrong while requesting Pricing Details List');
     }
     return response.json();
   };
 
-  const { data, error } = useQuery('users', fetchUserDetails);
+  const { data, error } = useQuery('pricing', fetchPricing);
 
   if (error) {
     console.log(error);
@@ -24,4 +24,7 @@ const useFetchUserDetails = (url) => {
   return data || []; // Return empty array as default if data is not available yet
 };
 
-export default useFetchUserDetails;
+export default useFetchPricingPlans;
+
+
+
