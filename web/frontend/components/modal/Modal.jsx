@@ -3,23 +3,21 @@ import DataTable from 'react-data-table-component';
 import { modalColumns, referralRows } from '../referrals/dummyData';
 
 // Data Table custom styles
-const customStyles = {
+const referralsStyles = {
   headCells: {
     style: {
       fontSize: '15px',
       fontWeight: 'bold',
-      // paddingLeft: "0 8px",
+      paddingLeft: "0 8px",
       justifyContent: 'center',
       color: '#232227',
       backgroundColor: '#FCFCFC',
 
-      // border:"1px solid gray",
-
+      border: '1px solid gray',
       borderBottom: 'none',
       borderTop: 'none',
 
-      borderRight: '1px solid gray',
-      // borderLeft: "1px solid gray",
+
     },
   },
   cells: {
@@ -27,10 +25,7 @@ const customStyles = {
       textAlign: 'center',
       alignItems: 'center',
       justifyContent: 'center',
-      // border:" none",
-      // borderRight: "1px solidgray",
-      // borderLeft: "1px solid gray",
-      // borderBottom: "1px solid gray",
+      border: " 1px solid gray",
     },
   },
   rows: {
@@ -55,7 +50,6 @@ const customStyles = {
 const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
   const handleClose = () => {
     setOpenModal((prev) => !prev);
-    // document.body.style.overflow = "unset";
   };
 
   let finalData = [];
@@ -89,9 +83,9 @@ const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
 
           {finalData ? (
             <div className='referral_detail-table'>
-              <div style={{ maxHeight: '200px' }}>
+              <div >
                 <DataTable
-                  customStyles={customStyles}
+                  customStyles={referralsStyles}
                   data={finalData}
                   columns={modalColumns}
                   pagination
@@ -105,7 +99,7 @@ const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
           className='btn__close'
           onClick={handleClose}
         >
-          CLOSE
+          Close
         </button>
       </div>
     </div>

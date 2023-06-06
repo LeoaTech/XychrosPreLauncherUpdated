@@ -6,371 +6,94 @@ import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai'
 import { useAuthenticatedFetch } from "../../hooks";
 import { fetchUserDetails, SaveUser } from "../../app/features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchCurrentPlan } from "../../app/features/current_plan/current_plan";
+import { fetchAllpricing } from "../../app/features/pricing/pricing";
+import DataTable from "react-data-table-component";
 
-
-// Pricing Card Details   
-const PriceDetails = [
-  {
-    id: 1,
-    title: "Free",
-    feature: [
-      {
-        id: 1,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#000" }} />,
-        title: "1 Active Campaign Created",
-      },
-      {
-        id: 2,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#000" }} />,
-        title: "50 Emails Collected",
-      }, {
-
-        id: 3,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#000" }} />,
-
-        title: "Anti Fraud"
-      },
-
-
-    ],
-    price: 0,
-    btnText: "Subscribe"
+// Billing Details Table Custom Styles
+const billingStyles = {
+  headCells: {
+    style: {
+      fontSize: "15px",
+      fontWeight: "semi-bold",
+      paddingLeft: "0 4px",
+      justifyContent: "center",
+      color: "#FCFCFC",
+      backgroundColor: "#232227",
+      // width: "20px"
+    },
   },
-  {
-    id: 2,
-    title: "Tier 1",
-    feature: [
-      {
-        id: 1,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "2 Active Campaigns ",
-      },
-      {
-        id: 2,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "150 Emails Collected",
-      },
-      {
-
-        id: 3,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Anti Fraud"
-      },
-      {
-        id: 4,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Double Opt In"
-      }, {
-        id: 5,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Klaviyo Integration"
-      }, {
-        id: 6,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Custom Landing Pages"
-      }
-    ],
-    price: 4.99,
-    btnText: "Subscribe"
+  cells: {
+    style: {
+      textAlign: "center",
+      alignItems: "center",
+      justifyContent: "center",
+      border: "none",
+      borderLeft: "1px solid #fff",
+      borderRight: "1px solid #fcfcfc",
+      borderBottom: "1px solid #fff",
+    },
   },
-  {
-    id: 3,
-    title: "Tier 2",
-    feature: [
-      {
-        id: 1,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-        title: "Unlimited Active Campaigns",
-      },
-      {
-        id: 2,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "450 Emails Collected",
-      },
-      {
-        id: 3,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Anti Fraud"
-      },
-      {
-        id: 4,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Double Opt In"
-      }, {
-        id: 5,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Klaviyo Integration"
-      }, {
-        id: 6,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Custom Landing Pages"
-      }
-    ],
-    price: 8.99,
-    btnText: "Subscribe"
+  rows: {
+    style: {
+      backgroundColor: "#232229",
+      color: "#ECECEC",
+      // textAlign: "center",
+    },
+    highlightOnHoverStyle: {
+      color: "#f3f3f3",
+      backgroundColor: "gray",
+      transitionDuration: "0.15s",
+      transitionProperty: "background-color",
+      borderBottomColor: "white",
+      outlineStyle: "solid",
+      outlineWidth: "1px",
+      outlineColor: "lightgray",
+    },
   },
-  {
-    id: 4,
-    title: "Tier 3",
-    feature: [
-      {
-        id: 1,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-        title: "Unlimited Active Campaigns",
+  pagination: {
+    style: {
+      color: "white",
+      fontSize: "13px",
+      minHeight: "56px",
+      backgroundColor: "#232229",
+      border: "1px solid #fff",
+      borderTop: "none",
+    },
+    pageButtonsStyle: {
+      borderRadius: "50%",
+      height: "20px",
+      width: "30px",
+      padding: "4px",
+      margin: "px",
+      cursor: "pointer",
+      transition: "0.4s",
+      color: "#fcfcfc",
+      fill: "f3f3f3",
+      backgroundColor: "transparent",
+      "&:disabled": {
+        cursor: "unset",
+        color: "#fff",
+        fill: "#fff",
       },
-      {
-        id: 2,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "975 Emails Collected",
+      "&:hover:not(:disabled)": {
+        backgroundColor: "#fcfcfc",
       },
-      {
-        id: 3,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Anti Fraud"
+      "&:focus": {
+        outline: "none",
+        backgroundColor: "#fff",
       },
-      {
-        id: 4,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Double Opt In"
-      }, {
-        id: 5,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Klaviyo Integration"
-      }, {
-        id: 6,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Custom Landing Pages"
-      }
-    ],
-    price: 19.99,
-    btnText: "Subscribe"
+    },
   },
-  {
-    id: 5,
-    title: "Tier 4",
-    feature: [
-      {
-        id: 1,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-        title: "Unlimited Active Campaigns",
-      },
-      {
-        id: 2,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "1500 Emails Collected",
-      },
-      {
-        id: 3,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Anti Fraud"
-      },
-      {
-        id: 4,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Double Opt In"
-      }, {
-        id: 5,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Klaviyo Integration"
-      }, {
-        id: 6,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Custom Landing Pages"
-      }
-    ],
-    price: 34.99,
-    btnText: "Subscribe"
-  },
-  {
-    id: 6,
-    title: "Tier 5",
-    feature: [
-      {
-        id: 1,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-        title: "Unlimited Active Campaigns",
-      },
-      {
-        id: 2,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "2000 Emails Collected",
-      },
-      {
-        id: 3,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Anti Fraud"
-      },
-      {
-        id: 4,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Double Opt In"
-      }, {
-        id: 5,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Klaviyo Integration"
-      }, {
-        id: 6,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Custom Landing Pages"
-      }
-    ],
-    price: 59.99,
-    btnText: "Subscribe"
-  },
-  {
-    id: 7,
-    title: "Tier 6",
-    feature: [
-      {
-        id: 1,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-        title: "Unlimited Active Campaigns",
-      },
-      {
-        id: 2,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "3500 Emails Collected",
-      },
-      {
-        id: 3,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Anti Fraud"
-      },
-      {
-        id: 4,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Double Opt In"
-      }, {
-        id: 5,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Klaviyo Integration"
-      }, {
-        id: 6,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Custom Landing Pages"
-      }
-    ],
-    price: 111.99,
-    btnText: "Subscribe"
-  },
-  {
-    id: 8,
-    title: "Tier 7",
-    feature: [
-      {
-        id: 1,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-        title: "Unlimited Active Campaigns",
-      },
-      {
-        id: 2,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "5000 Emails Collected",
-      },
-      {
-        id: 3,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Anti Fraud"
-      },
-      {
-        id: 4,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Double Opt In"
-      }, {
-        id: 5,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Klaviyo Integration"
-      }, {
-        id: 6,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Custom Landing Pages"
-      }
-    ],
-    price: 159.99,
-    btnText: "Subscribe"
-  },
-  {
-    id: 9,
-    title: "Tier 8",
-    feature: [
-      {
-        id: 1,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-        title: "Unlimited Active Campaigns",
-      },
-      {
-        id: 2,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "6500+ Emails Collected",
-      },
-      {
-        id: 3,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Anti Fraud"
-      },
-      {
-        id: 4,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Double Opt In"
-      }, {
-        id: 5,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Klaviyo Integration"
-      }, {
-        id: 6,
-        icon: <BsCheck2 style={{ height: 21, width: 21, color: "#fff" }} />,
-
-        title: "Custom Landing Pages"
-      }
-    ],
-    price: 255.99,
-    btnText: "Subscribe"
-  },
-
-];
+}
 const UserProfile = () => {
   const data = useSelector(fetchUserDetails);
+  const priceData = useSelector(fetchAllpricing);
+  const billingPlan = useSelector(fetchCurrentPlan);
   const dispatch = useDispatch();
+
+  console.log("Price card Data", priceData);
+  console.log("bill", billingPlan)
 
   const [subscribeMessage, setSubscribeMessage] = useState("")
   const fetch = useAuthenticatedFetch();
@@ -385,56 +108,84 @@ const UserProfile = () => {
 
   const [userDetails, setUserDetails] = useState(formData);
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const [priceCard, setPriceCard] = useState(PriceDetails)
-  const [changeBtnText, setChangeBtnText] = useState("Subscribe")
-  const [subscribedCardId, setSubscribedCardId] = useState(1);  //handle Biiling Card subscription ID
-  const [title, setTitle] = useState("");
+  const [subscribedCardId, setSubscribedCardId] = useState(null)
+  const [priceCard, setPriceCard] = useState([])
+  const [tableData, setTableData] = useState([])
   const [isLoading, setIsloading] = useState(false)
-  const findTitle = () => {
-    for (let card of priceCard) {
-      if (card.id === userDetails?.billing_id) {
-        return card.title;
-      }
+
+  // Billing Table Columns
+  const billingColumns = [
+    {
+      name: 'Name',
+      selector: (row) => row.plan_name,
+      sortable: true,
+      id: 'charge_name',
+      style: {
+        fontSize: 17,
+      },
+    },
+    {
+      name: 'Amount',
+      selector: (row) => row.price,
+      sortable: true,
+      id: 'charge_amount',
+
+      style: {
+        fontSize: 17,
+
+      },
+    },
+    {
+      name: 'Charged Date',
+      selector: (row) => row.created_at,
+      sortable: true,
+      id: 'charge_date',
+      style: {
+        fontSize: 15,
+      },
     }
-  }
+  ]
+  console.log(subscribedCardId)
 
-  useEffect(() => {
-    let mytitle = findTitle();
-    setTitle(mytitle)
-
-  }, [userDetails?.billing_id])
-
+  // Get user Details From DB(if any) and Set Values in States
   useEffect(() => {
     if (data?.length > 0) {
       const mydata = data[0];
       let name = mydata?.username?.split(" ");
       if (name?.length > 0) {
         setUserDetails({ ...mydata, firstname: name[0], lastname: name[1], store_url: mydata?.store_url });
-        setSubscribedCardId(mydata?.billing_id)
-        setSubscribeMessage(`Subscribed to ${title}  price card. Billed and reset every month on the ${new Date().getDate()} at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
       }
     } else {
       return;
     }
-  }, [data]);
+  }, [data, subscribedCardId]);
+  console.log(userDetails, "old")
 
+  // Get Current Plan and Set Billing Details in TableData
+  useEffect(() => {
+    if (billingPlan !== undefined) {
+      let cardId = priceData?.find((plan) => plan?.plan_name === billingPlan?.plan_name)
+      setPriceCard([{ ...cardId }])
+      setSubscribedCardId(cardId?.id)
+      setUserDetails({ ...userDetails, billing_id: subscribedCardId })
+      setSubscribeMessage(`Subscribed to ${billingPlan?.plan_name} price card. Billed and reset every month on the ${new Date(billingPlan?.created_at).getDate()} at ${new Date(billingPlan?.created_at).getHours()}:${new Date(billingPlan?.created_at).getMinutes()}:${new Date(billingPlan?.created_at).getSeconds()}`)
 
+    }
+  }, [billingPlan, priceData])
+
+  useEffect(() => {
+    if (billingPlan) {
+      let currentPlan = { ...billingPlan, created_at: new Date(billingPlan?.created_at).toLocaleString() }
+      setTableData([currentPlan])
+    }
+  }, [billingPlan])
+  // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-
-  // Handle Price Card Subscription
-  const handleSubscription = (id) => {
-    setSubscribedCardId(id);   // Update the ID 
-    const newtitle = findTitle();
-    setTitle(newtitle)
-    setIsSubscribed(true);
-    setUserDetails((prevState) => ({ ...prevState, billing_id: id }));
-    setSubscribeMessage(`Subscribed to ${title}  pricecard. Billed and reset every month on the ${new Date().getDate()} at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
-  };
-
+  console.log(userDetails, "new")
 
   // Save User Account Details
 
@@ -470,24 +221,6 @@ const UserProfile = () => {
         .then((data) => dispatch(SaveUser(data)))
         .catch((err) => console.log(err));
       setIsloading(false)
-    }
-  };
-
-
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const maxCardIndex = PriceDetails?.length - 1;
-  const cardWidth = 300;
-
-
-  const handleNext = () => {
-    if (currentCardIndex < maxCardIndex) {
-      setCurrentCardIndex(currentCardIndex + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentCardIndex > 0) {
-      setCurrentCardIndex(currentCardIndex - 1);
     }
   };
 
@@ -557,32 +290,41 @@ const UserProfile = () => {
 
         {/* Billing Details with All Pricing Cards */}
         <div className="billing-details">
-          <button class="next-btn" onClick={handleNext}><AiOutlineArrowRight /></button>
-          <button class="prev-btn" onClick={handlePrevious}><AiOutlineArrowLeft /></button>
           <h3>Billing Details</h3>
           <p>{subscribeMessage}</p>
-          <div className="carousel" >
+
+          {priceCard?.length > 0 ? <div className="carousel" >
             <div className="billing-cards" style={{
             }}>
-              {priceCard?.map((card, index) => {
+              {priceCard?.length > 0 ? priceCard?.map((card, index) => {
                 return (
                   <div key={index}
                     style={{
-                      transform: `translateX(-${currentCardIndex * (cardWidth + 10)}px)`,
                     }}
-                    className={`billing-card ${index === currentCardIndex ? 'active' : ''}`}>
+                    className="billing-card">
                     <BillingCard
                       className="card"
                       key={card.id}
                       card={card}
-                      handleSubscription={handleSubscription}
-                      isSubscribed={card.id === subscribedCardId}
                     />
                   </div>
                 );
-              })}
+              }) : <div class="spinner"></div>}
             </div>
-          </div>
+            <div className="billing_table">
+              <DataTable
+                columns={billingColumns}
+                data={tableData}
+                customStyles={billingStyles}
+                pagination
+                highlightOnHover
+              />
+            </div>
+
+          </div> : <div className="spinner"></div>}
+
+          {/* <div className="billing-details-block">
+          </div> */}
         </div>
 
         {/* Save the Data  */}

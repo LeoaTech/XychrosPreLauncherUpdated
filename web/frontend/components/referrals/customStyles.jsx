@@ -1,10 +1,12 @@
 export const customStyles = {
     headCells: {
       style: {
-        fontSize: "20px",
-        fontWeight: "bold",
-        paddingLeft: "0 8px",
+        fontSize: "15px",
+        fontWeight: "semi-bold",
+        paddingLeft: "0 6px",
         justifyContent: "center",
+        textAlign: "center",
+        alignItems: "center",
         color: "#FCFCFC",
         backgroundColor: "#232227",
       },
@@ -18,6 +20,8 @@ export const customStyles = {
         borderLeft: "1px solid #fff",
         borderRight: "1px solid #fcfcfc",
         borderBottom: "1px solid #fff",
+        paddingLeft: "0 4px",
+
       },
     },
     rows: {
@@ -25,6 +29,7 @@ export const customStyles = {
         backgroundColor: "#232229",
         color: "#ECECEC",
         textAlign: "center",
+
       },
       highlightOnHoverStyle: {
         color: "#f3f3f3",

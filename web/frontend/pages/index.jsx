@@ -11,7 +11,7 @@ import useFetchAllProducts from "../constant/fetchProducts";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import { fetchSettings } from "../app/features/settings/settingsSlice";
 import { fetchSavePlan } from "../app/features/current_plan/current_plan";
-import useFetchCurrentPlan from "../constant/fetchCurrentPlan";
+import useFetchBillingModel from "../constant/fetchBillingModel";
 import useFetchPricingPlans from "../constant/fetchPricingPlans";
 import useFetchReferralsData from '../constant/fetchReferralsData';
 import { fetchReferrals } from '../app/features/referrals/referralSlice';
@@ -42,13 +42,8 @@ export default function HomePage() {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
-  const pricingPlans = useFetchPricingPlans("/api/pricing-plans", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }); 
-  const activePlan = useFetchCurrentPlan("/api/get-current-app", {
+
+  const billing = useFetchBillingModel("/api/subscribe-plan", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -56,24 +51,11 @@ export default function HomePage() {
   });
 
 
-  const freePlan = pricingPlans?.find((plan) => plan?.plan_name === 'Free')
-
-  let planName;
   useEffect(() => {
-    if (activePlan) {
-      planName = activePlan?.name
-
-      if (Object.keys(activePlan).length > 0) {
-        const saveCurrentPlan = pricingPlans?.find((plan) => plan?.plan_name === planName);
-        let currentActivePlan = { ...saveCurrentPlan, subscribe_id: activePlan?.id, status: activePlan?.status, billing_required: true }
-        dispatch(fetchSavePlan(currentActivePlan));
-      } else {
-        dispatch(fetchSavePlan(freePlan));
-      }
+    if (billing) {
+      dispatch(fetchSavePlan(billing))   //Save Current Billing Details in App Store
     }
-  }, [dispatch, activePlan]);
-
-
+  }, [dispatch, billing]);
 
   useEffect(() => {
     if (settings) {

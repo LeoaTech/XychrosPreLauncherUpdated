@@ -1,8 +1,5 @@
 import { Shopify } from '@shopify/shopify-api';
-import ensureBilling, {
-  BillingInterval,
-  cancelAppSubscription,
-} from '../helpers/ensure-billing.js';
+import ensureBilling, { BillingInterval, GetCurrentAppInstallation, cancelAppSubscription } from '../helpers/ensure-billing.js';
 import applyAuthMiddleware from './auth.js';
 import NewPool from 'pg';
 import verifyRequest from './verify-request.js';
@@ -35,21 +32,16 @@ export default function SubscribePlanApiEndPoint(myApp) {
         res,
         myApp.get('use-online-tokens')
       );
-      console.log(session);
       try {
-        if (session) {
-          const planExists = await pool.query(
-            `select * from subscriptions_list where shop_id =$1`,
-            [session?.shop]
-          );
-
-          console.log(planExists?.rows, 'Exists');
-          return res.status(200).json(planExists?.rows);
-        } else {
-          return;
-        }
+        const getCurrent = await GetCurrentAppInstallation(session);
+        const planExists = await pool.query(
+          `select * from subscriptions_list where shop_id =$1`,
+          [session?.shop]
+        );
+        return res.status(200).json(planExists?.rows[0]);
       } catch (error) {
-        console.log(error);
+        return res.json(error);
+
       }
     } catch (err) {
       return res.status(500).json(err.message);
@@ -82,17 +74,43 @@ export default function SubscribePlanApiEndPoint(myApp) {
           plan_settings
         );
 
-        console.log(confirmationUrl, 'URL');
-
         if (!hasPayment) {
           return res.json({ confirmationUrl: confirmationUrl });
         } else {
           return res.json('You have already subscribed to this plan');
         }
       } else {
-        // Subscribed to Free Plan
-        const result = await cancelAppSubscription(session);
-        return res.status(200).json(result?.appSubscription);
+
+        let date = new Date();
+        const planExists = await pool.query(
+
+          `select * from subscriptions_list where shop_id =$1`,
+          [session?.shop]
+        );
+
+        if (planExists?.rowCount > 0) {
+          const result = await cancelAppSubscription(session);
+          return res.status(200).json(result);
+        } else {
+          try {
+            const savePlan = await pool.query(
+              `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id, billing_required) VALUES ($1, $2, $3, $4, $5, $6,$7) RETURNING *`,
+              [
+                plan_settings?.chargeName,
+                plan_settings?.amount,
+                date.toISOString(),
+                '',
+                '',
+                session?.shop,
+                plan_settings?.required
+              ]
+            );
+            return res.status(200).json(savePlan?.rows[0])
+          } catch (err) {
+            return err;
+          }
+        }
+
       }
     } catch (err) {
       console.log(err);

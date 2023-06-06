@@ -1,25 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ImAttachment } from "react-icons/im";
 import "./support.css";
 const SupportComponent = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    // Simulating the form loading process
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 400); // Replace this with the actual form loading logic
+  }, []);
   return (
     <div className="support-container">
       <div className="top-description">
-        <p>
+        {/* <p>
           Visit our <Link to="/help">Help Centre</Link> for troubleshooting and
           how-to articles.{" "}
-        </p>
+        </p> */}
         <p>
-          For an urgent inquiry fill out the form below or{" "}
-          <Link to="/chat">chat with our team</Link>.
+          For an urgent inquiry fill out the form below
+          {/* or{" "} */}
+          {/* <Link to="/chat">chat with our team</Link>. */}
         </p>
       </div>
 
       <div className="support-form">
         <div className="section-form">
           <h2>Support Form</h2>
-          <form>
+          {/* <form>
             <div className="file-links">
               <div className="link-input">
                 <label htmlFor=""> Store URL</label>
@@ -43,7 +51,17 @@ const SupportComponent = () => {
             </div>
 
             <div className="submit-btn">Submit</div>
-          </form>
+          </form> */}
+          {isLoading ? <div className="spinner"></div> : <iframe className="support-google-form"
+            src="https://docs.google.com/forms/d/e/1FAIpQLSfRkYidDN7u-hrv12dl_p5Qh_pyqLpU3J9geH9ggwIYku6Olw/viewform?embedded=true"
+            width="640"
+            height="670"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+
+          >Loading…</iframe>
+          }
         </div>
       </div>
     </div>
