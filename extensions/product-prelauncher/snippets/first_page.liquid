@@ -6,11 +6,12 @@
   <div id="snackbar2">Email is not valid</div>
   <div id="snackbar3">Something went wrong</div>
 
-  {% if block.settings.layout == 'none' %}
+  {% if block.settings.layout == 'none-horizontal' or block.settings.layout == 'none-vertical' %}
     <div id='background-image' class="none-layout none-parent-container">
-      <div class="subheader_text">{{ block.settings.subheader_text }}</div>
-      <div class="header_text">{{ block.settings.header_text }}</div>
+      <div class="hidden">this div is hidden</div>
       <div class="none">
+        <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+        <div class="header_text">{{ block.settings.header_text }}</div>
         <div class="spaced">
           <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
           <form
