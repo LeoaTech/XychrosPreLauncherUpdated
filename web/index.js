@@ -8,7 +8,10 @@ import applyAuthMiddleware from './middleware/auth.js';
 import verifyRequest from './middleware/verify-request.js';
 import { setupGDPRWebHooks } from './gdpr.js';
 import redirectToAuth from './helpers/redirect-to-auth.js';
-import ensureBilling, { BillingInterval, GetCurrentAppInstallation } from './helpers/ensure-billing.js';
+import ensureBilling, {
+  BillingInterval,
+  GetCurrentAppInstallation,
+} from './helpers/ensure-billing.js';
 import { AppInstallations } from './app_installations.js';
 import cors from 'cors';
 import campaignApiEndpoints from './middleware/campaign-api.js';
@@ -23,10 +26,10 @@ import userDetailsApiEndPoint from './middleware/userdetails-api.js';
 import getUrlApi from './middleware/geturl-api.js';
 import pricingPlansApiEndpoints from './middleware/get-pricing-plans-api.js';
 import SubscribePlanApiEndPoint from './middleware/subscribe-plan-api.js';
-import NewPool from "pg";
+import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
+  connectionString: `${process.env.DATABASE_URL}`,
 });
 
 pool.connect((err, result) => {
@@ -44,7 +47,7 @@ const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
 // const DB_PATH = `${process.cwd()}/database.sqlite`;
 
-const DB_PATH = 'postgres://postgres:postgres@localhost:5432/prelauncher';
+const DB_PATH = `${process.env.DATABASE_URL}`;
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -58,7 +61,6 @@ Shopify.Context.initialize({
   SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(DB_PATH),
 });
 
-
 // App Uninstall Webhook to delete current app install session
 
 Shopify.Webhooks.Registry.addHandler('APP_UNINSTALLED', {
@@ -68,12 +70,11 @@ Shopify.Webhooks.Registry.addHandler('APP_UNINSTALLED', {
   },
 });
 
-
 Shopify.Webhooks.Registry.addHandler('APP_SUBSCRIPTIONS_UPDATE', {
   path: '/api/webhooks',
   webhookHandler: async (_topic, shop, _body) => {
     const payload = JSON.parse(_body);
-    console.log(payload, "Update Result")
+    console.log(payload, 'Update Result');
   },
 });
 
@@ -81,7 +82,7 @@ Shopify.Webhooks.Registry.addHandler('APP_SUBSCRIPTIONS_UPDATE', {
 // See the ensureBilling helper to learn more about billing in this template.
 
 const BILLING_SETTINGS = {
-  required: false, //initially false 
+  required: false, //initially false
   // This is an example configuration that would do a one-time charge for $5 (only USD is currently supported)
   chargeName: 'My Shopify Every Month Charge',
   amount: 0.1,
@@ -128,8 +129,6 @@ export async function createServer(
     }
   });
 
-
-
   // API to Get Current Installation App Subscription Data  (30th May 2020)
   app.get('/api/get-current-app', async (req, res) => {
     try {
@@ -144,17 +143,13 @@ export async function createServer(
         if (Object.keys(getPlan).length > 0) {
           return res.status(200).json(getPlan);
         } else {
-          return res.status(200).json("No Current Subscription");
+          return res.status(200).json('No Current Subscription');
         }
       }
-
     } catch (err) {
       return res.status(500).json(err);
     }
-  }
-  )
-
-
+  });
 
   //  API to get All Products in my Shopify Store
 
@@ -174,7 +169,6 @@ export async function createServer(
     res.status(200).send(countData);
   });
 
-  
   // All endpoints after this point will have access to a request.body
   // attribute, as a result of the express.json() middleware
   app.use(cors());
@@ -186,7 +180,6 @@ export async function createServer(
     })
   );
 
-
   SubscribePlanApiEndPoint(app);
   getUrlApi(app, process.env.SHOPIFY_API_SECRET);
 
@@ -197,7 +190,6 @@ export async function createServer(
       billing: billingSettings,
     })
   );
-
 
   campaignApiEndpoints(app);
   referralsApiEndpoints(app);
@@ -225,7 +217,6 @@ export async function createServer(
   });
 
   if (isProd) {
-
     const compression = await import('compression').then(
       ({ default: fn }) => fn
     );
