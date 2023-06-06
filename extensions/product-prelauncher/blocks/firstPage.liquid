@@ -2,7 +2,7 @@
   let first_page_settings = {{ block.settings | json }};
 
   async function getbackground(campaign_name) {
-    return await fetch('/apps/xychrosupdated/api/geturl', {
+    return await fetch('/apps/product-prelauncher/api/geturl', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -303,7 +303,14 @@
     align-items: center;
     text-align: center;
   }
-  .none-layout .header_text {
+  .none-vertical .none-layout {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  .none-horizontal .header_text {
+    margin-bottom: 10rem;
+  }
+  .none-vertical .header_text {
     margin-bottom: 10rem;
   }
   @media screen and (max-width: 767px) {
@@ -438,8 +445,12 @@
         "label": "Screen Divider",
         "options": [
           {
-            "value": "none",
-            "label": "None"
+            "value": "none-horizontal",
+            "label": "None Horizontal"
+          },
+          {
+            "value": "none-vertical",
+            "label": "None Vertical"
           },
           {
             "value": "horizontal",
@@ -469,7 +480,7 @@
             "label": "Flip Traverse Diagonal"
           }
         ],
-        "default": "none"
+        "default": "none-horizontal"
       }, {
         "label": "Background Image",
         "id": "background_image",

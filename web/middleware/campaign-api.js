@@ -3,7 +3,7 @@ import { Shopify } from '@shopify/shopify-api';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+  connectionString: `${process.env.DATABASE_URL}`,
 });
 
 pool.connect((err, result) => {
@@ -432,7 +432,7 @@ export default function campaignApiEndpoints(app) {
         welcome_email,
         template_id,
         discount_type,
-        is_deleted
+        is_deleted,
       } = req.body;
       const campaigns = await pool.query(
         `UPDATE campaign_settings SET 

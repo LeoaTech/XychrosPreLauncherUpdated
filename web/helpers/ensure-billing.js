@@ -1,24 +1,22 @@
-import { Shopify } from "@shopify/shopify-api";
+import { Shopify } from '@shopify/shopify-api';
 
-import NewPool from "pg";
+import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
+  connectionString: `${process.env.DATABASE_URL}`,
 });
 
 pool.connect((err, result) => {
   if (err) throw err;
 });
-
 const price_plans = await pool.query(
   `SELECT * FROM  pricing_plans`,
 );
 
-
 export const BillingInterval = {
-  OneTime: "ONE_TIME",
-  Every30Days: "EVERY_30_DAYS",
-  Annual: "ANNUAL",
+  OneTime: 'ONE_TIME',
+  Every30Days: 'EVERY_30_DAYS',
+  Annual: 'ANNUAL',
 };
 
 const RECURRING_INTERVALS = [
@@ -39,9 +37,8 @@ let date = new Date();
 export default async function ensureBilling(
   session,
   { chargeName, amount, currencyCode, interval },
-  isProdOverride = process.env.NODE_ENV === "production"
+  isProdOverride = process.env.NODE_ENV === 'production'
 ) {
-
   if (!Object.values(BillingInterval).includes(interval)) {
     throw `Unrecognized billing interval '${interval}'`;
   }
@@ -53,8 +50,7 @@ export default async function ensureBilling(
 
   if (await hasActivePayment(session, { chargeName, interval })) {
     hasPayment = true;
-  }
-  else {
+  } else {
     hasPayment = false;
     confirmationUrl = await requestPayment(session, {
       chargeName,
@@ -66,10 +62,8 @@ export default async function ensureBilling(
   return [hasPayment, confirmationUrl];
 }
 
-
-// Function to Check Active Payment(One-time, Recurring) 
+// Function to Check Active Payment(One-time, Recurring)
 async function hasActivePayment(session, { chargeName, interval }) {
-
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
 
   if (isRecurring(interval)) {
@@ -84,7 +78,6 @@ async function hasActivePayment(session, { chargeName, interval }) {
         subscriptions[i].name === chargeName &&
         (!isProd || !subscriptions[i].test)
       ) {
-
         return true;
       }
     }
@@ -106,7 +99,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
         if (
           node.name === chargeName &&
           (!isProd || !node.test) &&
-          node.status === "ACTIVE"
+          node.status === 'ACTIVE'
         ) {
           return true;
         }
@@ -124,8 +117,9 @@ async function requestPayment(
   { chargeName, amount, currencyCode, interval }
 ) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
-  const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${session.shop
-    }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
+  const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${
+    session.shop
+  }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
 
   let data;
   if (isRecurring(interval)) {
@@ -146,15 +140,13 @@ async function requestPayment(
   }
   if (data.userErrors.length) {
     throw new ShopifyBillingError(
-      "Error while billing the store",
+      'Error while billing the store',
       data.userErrors
     );
   }
 
   return data.confirmationUrl;
 }
-
-
 
 async function requestRecurringPayment(
   client,
@@ -178,14 +170,13 @@ async function requestRecurringPayment(
         ],
         returnUrl,
         test: !isProd,
-
       },
     },
   });
 
   if (mutationResponse.body.errors && mutationResponse.body.errors.length) {
     throw new ShopifyBillingError(
-      "Error while billing the store",
+      'Error while billing the store',
       mutationResponse.body.errors
     );
   }
@@ -205,20 +196,21 @@ async function requestSinglePayment(
         name: chargeName,
         price: { amount, currencyCode },
         returnUrl,
-        test: process.env.NODE_ENV !== "production",
+        test: process.env.NODE_ENV !== 'production',
       },
     },
   });
 
   if (mutationResponse.body.errors && mutationResponse.body.errors.length) {
     throw new ShopifyBillingError(
-      "Error while billing the store",
+      'Error while billing the store',
       mutationResponse.body.errors
     );
   }
 
   return mutationResponse;
 }
+
 
 // Get Current App Installation data
 
@@ -309,6 +301,7 @@ export async function GetCurrentAppInstallation(session) {
 
 // ------------ Cancel Subscription Billing Model-------------//
 
+
 // Get Current App installation subscriptionID (requires for app installation function)
 
 export async function getCurrentSubscriptionId(client) {
@@ -316,8 +309,9 @@ export async function getCurrentSubscriptionId(client) {
     data: RECURRING_PURCHASES_QUERY,
   });
   const subscriptions =
-    currentInstallations?.body?.data?.currentAppInstallation?.activeSubscriptions;
-  return subscriptions?.length > 0 ? subscriptions[0]?.id : null
+    currentInstallations?.body?.data?.currentAppInstallation
+      ?.activeSubscriptions;
+  return subscriptions?.length > 0 ? subscriptions[0]?.id : null;
 }
 
 //   Request Cancel App Subscription function
@@ -337,7 +331,7 @@ async function requestCancelSubscription(session, myId) {
 
   if (data?.userErrors.length) {
     throw new ShopifyBillingError(
-      "Error while billing the store",
+      'Error while billing the store',
       data.userErrors
     );
   }
@@ -367,6 +361,7 @@ export async function cancelAppSubscription(session) {
       );
     } else {
 
+
       if (planExists?.rowCount === 0) {
         try {
           const savePlan = await pool.query(
@@ -379,14 +374,14 @@ export async function cancelAppSubscription(session) {
               '',
               session?.shop,
               false
+
             ]
           );
           return savePlan?.rows[0];
         } catch (err) {
           return err;
         }
-      }
-      else {
+      } else {
         try {
           const updatePlan = await pool.query(
             `UPDATE subscriptions_list SET
@@ -401,6 +396,7 @@ export async function cancelAppSubscription(session) {
             ,
             ['Free', 0.00, date.toISOString(), '', cancelSubscription?.status, false, session?.shop]);
           return updatePlan?.rows[0];
+
         } catch (error) {
           return error;
         }
@@ -421,22 +417,22 @@ export async function cancelAppSubscription(session) {
           session?.shop,
           false
         ]
-      );
 
+      );
       return savePlan?.rows[0];
     } catch (err) {
       return err;
     }
+
   }
 }
-
 
 function isRecurring(interval) {
   return RECURRING_INTERVALS.includes(interval);
 }
 
 export function ShopifyBillingError(message, errorData) {
-  this.name = "ShopifyBillingError";
+  this.name = 'ShopifyBillingError';
   this.stack = new Error().stack;
 
   this.message = message;
@@ -468,9 +464,7 @@ const CANCEL_MUTATION = `mutation AppSubscriptionCancel($id: ID! ) {
       status
     }
   }
-}`
-
-
+}`;
 
 const ONE_TIME_PURCHASES_QUERY = `
   query appPurchases($endCursor: String) {
@@ -514,7 +508,6 @@ const RECURRING_PURCHASE_MUTATION = `
   }
 `;
 
-
 const APP_SUBSCRIPTIONS_UPDATE_MUTATION = `
 mutation($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
   webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
@@ -528,7 +521,7 @@ mutation($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscri
     }
   }
 }
-`
+`;
 
 const ONE_TIME_PURCHASE_MUTATION = `
   mutation test(

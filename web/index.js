@@ -26,6 +26,7 @@ import SubscribePlanApiEndPoint from './middleware/subscribe-plan-api.js';
 
 
 
+
 const USE_ONLINE_TOKENS = false;
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -36,7 +37,7 @@ const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
 // const DB_PATH = `${process.cwd()}/database.sqlite`;
 
-const DB_PATH = 'postgres://postgres:postgres@localhost:5432/prelauncher';
+const DB_PATH = `${process.env.DATABASE_URL}`;
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -50,7 +51,6 @@ Shopify.Context.initialize({
   SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(DB_PATH),
 });
 
-
 // App Uninstall Webhook to delete current app install session
 
 Shopify.Webhooks.Registry.addHandler('APP_UNINSTALLED', {
@@ -60,12 +60,11 @@ Shopify.Webhooks.Registry.addHandler('APP_UNINSTALLED', {
   },
 });
 
-
 Shopify.Webhooks.Registry.addHandler('APP_SUBSCRIPTIONS_UPDATE', {
   path: '/api/webhooks',
   webhookHandler: async (_topic, shop, _body) => {
     const payload = JSON.parse(_body);
-    console.log(payload, "Update Result")
+    console.log(payload, 'Update Result');
   },
 });
 
@@ -73,7 +72,7 @@ Shopify.Webhooks.Registry.addHandler('APP_SUBSCRIPTIONS_UPDATE', {
 // See the ensureBilling helper to learn more about billing in this template.
 
 const BILLING_SETTINGS = {
-  required: false, //initially false 
+  required: false, //initially false
   // This is an example configuration that would do a one-time charge for $5 (only USD is currently supported)
   chargeName: 'My Shopify Every Month Charge',
   amount: 0.1,
@@ -122,7 +121,6 @@ export async function createServer(
 
 
 
-
   //  API to get All Products in my Shopify Store
 
   app.get('/api/2022-10/products.json', async (req, res) => {
@@ -141,7 +139,6 @@ export async function createServer(
     res.status(200).send(countData);
   });
 
-  
   // All endpoints after this point will have access to a request.body
   // attribute, as a result of the express.json() middleware
   app.use(cors());
@@ -153,7 +150,6 @@ export async function createServer(
     })
   );
 
-
   SubscribePlanApiEndPoint(app);
   getUrlApi(app, process.env.SHOPIFY_API_SECRET);
 
@@ -164,7 +160,6 @@ export async function createServer(
       billing: billingSettings,
     })
   );
-
 
   campaignApiEndpoints(app);
   referralsApiEndpoints(app);
@@ -192,7 +187,6 @@ export async function createServer(
   });
 
   if (isProd) {
-
     const compression = await import('compression').then(
       ({ default: fn }) => fn
     );
