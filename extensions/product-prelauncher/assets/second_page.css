@@ -107,6 +107,12 @@ input[type='text']:focus {
   height: 100vh;
 }
 
+.rewards-none-horizontal .rewards_socials {
+  margin: 10px 0;
+  width: 50%;
+  justify-content: space-evenly;
+}
+
 /* ============================== none vertical =============================== */
 
 .rewards-section-layout.rewards-none-vertical {
@@ -205,6 +211,12 @@ input[type='text']:focus {
 .full {
   width: 100vw;
   height: 50vh;
+}
+
+.rewards-horizontal .rewards_socials {
+  margin: 10px 0;
+  width: 50%;
+  justify-content: space-evenly;
 }
 
 .timeline-group {
