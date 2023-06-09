@@ -437,13 +437,16 @@ input[type='text']:focus {
   margin-top: 1.2rem;
 }
 
+.rewards-vertical .vertical-reward-targets {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
 .rewards-vertical .vertical-rewards {
   display: flex;
   flex-direction: column;
-  position: relative;
-  left: 14.5vh;
-  top: 0vh;
-  gap: 2.5rem;
+  justify-content: space-evenly;
 }
 
 .vertical-referral-count-achieved {
@@ -483,19 +486,30 @@ input[type='text']:focus {
 }
 
 .vertical-reward-item-detail {
+
+.rewards-none-vertical .vertical-reward-targets {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-evenly;
 }
 
-.vertical-reward-item-detail img {
-  width: 55px;
-  height: 55px;
+.rewards-none-vertical .vertical-rewards {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
-.vertical-reward-item-detail span {
-  font-size: 14px;
-  font-weight: bold;
+.rewards-none-vertical .vertical-referral-count-achieved {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 45px;
+  left: -1.8vh;
+  top: 0vh;
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 34px;
 }
 
 /* .vertical-timeline-contain {
