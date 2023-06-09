@@ -712,9 +712,8 @@ input[type='text']:focus {
   .vertical-mobile {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
     position: absolute;
-    top: 10vh;
+    top: 8vh;
   }
 
   .rewards-vertical .rewards_socials {
