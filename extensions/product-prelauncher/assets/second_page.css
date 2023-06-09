@@ -86,7 +86,7 @@ input[type='text']:focus {
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 
@@ -94,112 +94,6 @@ input[type='text']:focus {
   font-size: 24px;
   font-weight: 600;
   margin: 5vh 0;
-}
-
-/* ============================== none rewards-horizontal =============================== */
-
-.rewards-section-layout.rewards-none-horizontal {
-  flex-direction: column;
-}
-
-.rewards-none-full {
-  width: 100vw;
-  height: 100vh;
-}
-
-.rewards-none-horizontal .rewards_socials {
-  margin: 10px 0;
-  width: 50%;
-  justify-content: space-evenly;
-}
-
-/* ============================== none vertical =============================== */
-
-.rewards-section-layout.rewards-none-vertical {
-  flex-direction: column;
-}
-
-.rewards-none-vertical .rewards-img-layout {
-  flex-direction: row;
-  justify-content: flex-end;
-}
-
-.reward-none-half {
-  width: 60vw;
-  height: 100vh;
-}
-
-.rewards-none-vertical .refferal-container {
-  width: 100%;
-}
-
-.rewards-none-vertical .referral-link-inp {
-  width: 80%;
-}
-
-.rewards-none-vertical .copy-link-btn {
-  right: 5rem;
-}
-
-.rewards-none-vertical .rewards_socials {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  padding: 0 10%;
-  justify-content: space-around;
-}
-
-.rewards-none-vertical .friends-joined {
-  padding-bottom: 0;
-  margin: 4vh 0;
-}
-
-.rewards-none-vertical .vertical-reward-targets {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  right: 28vh;
-  gap: 2.5rem;
-  top: 27vh;
-}
-
-.rewards-none-vertical .vertical-rewards {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  left: 20vh;
-  top: 2.5vh;
-  gap: 2.7rem;
-}
-
-.rewards-none-vertical .vertical-referral-count-achieved {
-  position: relative;
-  width: 35px;
-  height: 35px;
-  border-radius: 45px;
-  left: -1.5vh;
-  top: 0vh;
-  text-align: center;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 34px;
-}
-
-.rewards-none-vertical .vertical-referral-count-detail {
-  position: absolute;
-  top: -35px;
-  left: 9px;
-  transform: translateX(-50%);
-  background-color: #011936;
-  width: 227px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  text-align: left;
-  color: #fff;
-  font-size: 10px;
-  height: 35px;
-  font-weight: normal;
-  line-height: 22px;
 }
 
 /* ============================== rewards-horizontal layout ============================== */
@@ -265,7 +159,7 @@ input[type='text']:focus {
 
 .reward-targets {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
 .reward-target {
@@ -309,7 +203,7 @@ input[type='text']:focus {
 
 .rewards {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
 .reward-item-detail {
@@ -340,33 +234,23 @@ input[type='text']:focus {
   color: #ccc;
 } */
 
-/* ============================== vertical layout =============================== */
+/* ============================== none rewards-horizontal =============================== */
 
-.rewards-section-layout.rewards-vertical {
-  flex-direction: row;
+.rewards-section-layout.rewards-none-horizontal {
+  flex-direction: column;
 }
 
-.half {
-  min-width: 50vw;
-  min-height: 100vh;
+.rewards-none-full {
+  width: 100vw;
+  height: 100vh;
 }
 
-.rewards-spaced-evenly {
-  /* justify-content: space-evenly; */
-  padding: 30px 0;
+.rewards-none-horizontal .rewards_socials {
+  margin: 10px 0;
+  width: 50%;
+  justify-content: space-evenly;
 }
 
-.rewards-spaced {
-  text-align: center;
-}
-
-.rewards-vertical .refferal-container {
-  width: 100%;
-}
-
-.rewards-vertical .referral-link-inp {
-  width: 80%;
-}
 /* ============================== vertical and none-vertical layouts =============================== */
 
 /* general */
@@ -388,11 +272,16 @@ input[type='text']:focus {
   position: relative;
 }
 
+.vertical-timeline-container {
+  width: 100%;
+  height: 100%;
+}
+
 .vertical-timeline {
   width: 5px;
-  height: 45%;
   background-color: #ccc;
   margin: 0 0 0 5rem;
+  position: relative;
 }
 
 .vertical-timeline-progress {
@@ -402,29 +291,15 @@ input[type='text']:focus {
 }
 
 .vertical-timeline-items {
-  margin-left: -5px;
-  margin-right: -5px;
-  margin-top: -12px;
   height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  width: 100%;
 }
 
 .vertical-timeline-item-block {
-  position: relative;
-  top: -15rem;
-  right: 0;
-  left: 0;
-}
-
-.rewards-vertical .vertical-reward-targets {
+  height: 100%;
+  width: 100%;
   display: flex;
-  position: relative;
-  flex-direction: column;
-  right: 22vh;
-  gap: 2.5rem;
-  top: 24vh;
+  justify-content: space-evenly;
 }
 
 .vertical-reward-target {
@@ -435,6 +310,83 @@ input[type='text']:focus {
   font-size: 22px;
   font-weight: 600;
   margin-top: 1.2rem;
+}
+
+.vertical-timeline-item-name {
+  position: relative;
+  top: -3vh;
+  left: 24vw;
+}
+
+.vertical-reward-item-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vertical-reward-item-detail img {
+  width: 55px;
+  height: 55px;
+}
+
+.vertical-reward-item-detail span {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* .vertical-timeline-contain {
+  position: absolute;
+  top: -75px;
+  left: 200%;
+  transform: translateX(-50%);
+  background-color: #011936;
+  width: 100px;
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-align: center;
+  color: #ccc;
+}
+
+.vertical-timeline-item .vertical-timeline-contain {
+  color: #fff;
+  background-color: #011936;
+} */
+
+/* vertical */
+
+.rewards-section-layout.rewards-vertical {
+  flex-direction: row;
+}
+
+.half {
+  min-width: 50vw;
+  min-height: 100vh;
+}
+
+.rewards-vertical .refferal-container {
+  width: 100%;
+}
+
+.rewards-vertical .referral-link-inp {
+  width: 80%;
+}
+
+.rewards-vertical .copy-link-btn {
+  right: 5rem;
+}
+
+.rewards-vertical .rewards_socials {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0 10%;
+  justify-content: space-around;
+}
+
+.rewards-vertical .friends-joined {
+  padding-bottom: 0;
+  margin: 2vh 0;
 }
 
 .rewards-vertical .vertical-reward-targets {
@@ -449,20 +401,20 @@ input[type='text']:focus {
   justify-content: space-evenly;
 }
 
-.vertical-referral-count-achieved {
-  position: relative;
+.rewards-vertical .vertical-referral-count-achieved {
+  position: absolute;
   width: 35px;
   height: 35px;
   border-radius: 45px;
-  left: -1.5vh;
-  top: 0vh;
+  left: -1.8vh;
+  top: -1vh;
   text-align: center;
   font-weight: 600;
   font-size: 20px;
   line-height: 34px;
 }
 
-.vertical-referral-count-detail {
+.rewards-vertical .vertical-referral-count-detail {
   position: absolute;
   top: -52px;
   left: 10px;
@@ -479,13 +431,46 @@ input[type='text']:focus {
   line-height: 22px;
 }
 
-.vertical-timeline-item-name {
-  position: relative;
-  top: -3vh;
-  left: 24vw;
+/* none vertical */
+
+.rewards-section-layout.rewards-none-vertical {
+  flex-direction: column;
 }
 
-.vertical-reward-item-detail {
+.rewards-none-vertical .rewards-img-layout {
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.reward-none-half {
+  width: 60vw;
+  height: 100vh;
+}
+
+.rewards-none-vertical .refferal-container {
+  width: 100%;
+}
+
+.rewards-none-vertical .referral-link-inp {
+  width: 80%;
+}
+
+.rewards-none-vertical .copy-link-btn {
+  right: 5rem;
+}
+
+.rewards-none-vertical .rewards_socials {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0 10%;
+  justify-content: space-around;
+}
+
+.rewards-none-vertical .friends-joined {
+  padding-bottom: 0;
+  margin: 4vh 0;
+}
 
 .rewards-none-vertical .vertical-reward-targets {
   display: flex;
@@ -512,24 +497,22 @@ input[type='text']:focus {
   line-height: 34px;
 }
 
-/* .vertical-timeline-contain {
+.rewards-none-vertical .vertical-referral-count-detail {
   position: absolute;
-  top: -75px;
-  left: 200%;
+  top: -35px;
+  left: 9px;
   transform: translateX(-50%);
   background-color: #011936;
-  width: 100px;
-  margin: 10px;
+  width: 227px;
   padding: 5px 10px;
   border-radius: 15px;
-  text-align: center;
-  color: #ccc;
-}
-
-.vertical-timeline-item .vertical-timeline-contain {
+  text-align: left;
   color: #fff;
-  background-color: #011936;
-} */
+  font-size: 10px;
+  height: 35px;
+  font-weight: normal;
+  line-height: 22px;
+}
 
 
 /* ============================= CSS Styles for Mobile Devices =============================== */
@@ -572,14 +555,6 @@ input[type='text']:focus {
   .rewards-horizontal .gift-layout {
     height: 60vh;
   }
-
-  /* .rewards-none-full {
-    height: fit-content;
-  } */
-
-  /* .rewards-horizontal .full {
-    height: 60vh;
-  } */
 
   .timeline-group {
     flex-direction: column;
@@ -670,28 +645,10 @@ input[type='text']:focus {
 
   /* general */
 
-  .rewards-section-layout.rewards-vertical {
-    flex-direction: column-reverse;
-  }
-
-  .rewards-spaced-evenly {
-    justify-content: unset;
-    padding: unset;
-  }
-
-  .half {
-    min-width: 100vw;
-    min-height: 50vh;
-  }
-
-  .reward-none-half {
-    width: 100vw;
-  }
-
   .vertical-timeline-headers {
     width: unset;
     justify-content: unset;
-    gap: 10rem;
+    gap: 12rem;
     font-size: 18px;
   }
 
@@ -722,16 +679,9 @@ input[type='text']:focus {
     width: 25%;
   }
 
-  .rewards-none-vertical .vertical-reward-targets {
-    right: 19vh;
-    top: 24vh;
-  }
-
   .rewards-none-vertical  .vertical-referral-count-achieved {
     width: 30px;
     height: 30px;
-    left: -1.2vh;
-    top: 0vh;
     font-size: 18px;
     line-height: 30px;
   }
@@ -744,13 +694,28 @@ input[type='text']:focus {
     height: 50px;
   }
 
-  .rewards-none-vertical .vertical-rewards {
-    left: 11vh;
-    gap: 3rem;
-    top: 2vh;
+  /* vertical */
+
+  .rewards-section-layout.rewards-vertical {
+    flex-direction: column;
   }
 
-  /* vertical */
+  .half {
+    min-width: 100vw;
+    min-height: 50vh;
+  }
+
+  .reward-none-half {
+    width: 100vw;
+  }
+
+  .vertical-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: absolute;
+    top: 10vh;
+  }
 
   .rewards-vertical .rewards_socials {
     justify-content: space-evenly;
@@ -770,19 +735,32 @@ input[type='text']:focus {
     width: 25%;
   }
 
-  .rewards-vertical .vertical-reward-targets {
-    right: 18vh;
-    top: 18vh;
-    gap: 1.4rem;
+  .rewards-vertical .friends-joined {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 52vh;
+  }
+
+  .rewards-vertical .vertical-timeline-headers {
+    position: absolute;
+    gap: 12rem;
+    top: 64vh;
+  }
+
+  .vertical-timeline-container {
+    margin-top: 15vh;
+  }
+
+  .rewards-vertical .vertical-timeline {
+    margin: 0 0 0 7rem;
   }
 
   .rewards-vertical .vertical-referral-count-achieved {
-      width: 30px;
-      height: 30px;
-      left: -1vh;
-      top: -2vh;
-      font-size: 18px;
-      line-height: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    line-height: 30px;
   }
 
   .rewards-vertical .vertical-referral-count-detail {
@@ -791,38 +769,6 @@ input[type='text']:focus {
     width: 174px;
     text-align: center;
     height: 50px;
-  }
-  
-  .rewards-vertical .vertical-rewards {
-    left: 11.5vh;
-    top: -2vh;
-    gap: 1.5rem;
-  }
-
-  .rewards-vertical .friends-joined {
-    position: relative;
-    right: 0;
-    left: 0;
-    top: 10rem;
-  }
-
-  .rewards-vertical .vertical-timeline-headers {
-    position: relative;
-    right: 0;
-    left: 0;
-    gap: 10rem;
-    top: 10rem;
-  }
-
-  .rewards-vertical .vertical-timeline {
-    width: 5px;
-    height: 45%;
-    background-color: #ccc;
-    margin: 0 0 0 7rem;
-    position: absolute;
-    right: 0;
-    left: 16rem;
-    top: 46rem;
   }
 }
 
@@ -873,7 +819,6 @@ input[type='text']:focus {
   }
 
   .referral-count-achieved {
-    top: 1.5vh;
     width: 32px;
     height: 32px;
     font-size: 18px;
@@ -895,6 +840,7 @@ input[type='text']:focus {
 
   .vertical-timeline-headers {
     font-size: 18px;
+    width: 80%;
   }
 
   .vertical-reward-item-detail img {
@@ -913,30 +859,12 @@ input[type='text']:focus {
   .rewards-none-vertical .copy-link-btn {
     right: 2.5rem;
   }
-  
-  .rewards-none-vertical .vertical-timeline-headers {
-    width: 85%;
-  }
-
-  .rewards-none-vertical .vertical-reward-targets {
-    right: 26vh;
-    gap: 2.5rem;
-    top: 26vh;
-  }
 
   .rewards-none-vertical .vertical-referral-count-achieved {
     width: 32px;
     height: 32px;
-    left: -1.5vh;
-    top: 2vh;
     font-size: 17px;
     line-height: 32px;
-  }
-
-  .rewards-none-vertical .vertical-rewards {
-    left: 18vh;
-    top: 4vh;
-    gap: 3rem;
   }
 
   .rewards-none-vertical .vertical-referral-count-detail {
@@ -956,27 +884,12 @@ input[type='text']:focus {
     right: 2rem;
   }
 
-  .rewards-vertical .vertical-timeline-headers {
-    width: 85%;
-  }
-
-  .rewards-vertical .vertical-reward-targets {
-    right: 20vh;
-    top: 24vh;
-    gap: 1.6rem;
-  }
-
   .rewards-vertical .vertical-referral-count-achieved {
     width: 32px;
     height: 32px;
-    top: 2vh;
+    left: -1.5vh;
     font-size: 17px;
     line-height: 32px;
-  }
-
-  .rewards-vertical .vertical-rewards {
-    left: 13.5vh;
-    top: 3vh;
   }
 }
 
@@ -992,7 +905,6 @@ input[type='text']:focus {
   /* rewards-none-horizontal and rewards-horizontal */
 
   .referral-count-achieved {
-    top: 0.5vh;
     width: 40px;
     height: 40px;
     line-height: 40px;
@@ -1006,57 +918,29 @@ input[type='text']:focus {
 
   /* general */
 
+  .vertical-timeline-headers {
+    width: 68%;
+  }
+
   .vertical-reward-item-detail img {
     width: 60px;
     height: 60px;
   }
 
-  /* none vertical */
-
-  .rewards-none-vertical .vertical-timeline-headers {
-    width: 65%;
-  }
-
-  .rewards-none-vertical .vertical-reward-targets {
-    right: 26.5vh;
-    gap: 3.8rem;
-    top: 13vh;
-  }
+  /* none-vertical */
 
   .rewards-none-vertical .vertical-referral-count-achieved {
     width: 35px;
     height: 35px;
-    left: -1vh;
-    top: -6vh;
     line-height: 35px;
-  }
-
-  .rewards-none-vertical .vertical-rewards {
-    left: 20vh;
-    top: -5vh;
-    gap: 3.2rem;
   }
 
   /* vertical */
 
-  .rewards-vertical .vertical-reward-targets {
-    right: 23vh;
-    gap: 2.8rem;
-    top: 12vh;
-  }
-
   .rewards-vertical .vertical-referral-count-achieved {
     width: 35px;
     height: 35px;
-    left: -1vh;
-    top: -5vh;
     line-height: 35px;
-  }
-
-  .rewards-vertical .vertical-rewards {
-    left: 18vh;
-    top: -5vh;
-    gap: 2.4rem;
   }
 }
 

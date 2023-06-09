@@ -169,28 +169,24 @@
           <div>Friends Joined</div>
           <div>Rewards</div>
         </div>
-        <div class="rewards-spaced vertical-timeline">
-          <div class="vertical-timeline-progress">&nbsp;</div>
+        <div class="rewards-spaced vertical-timeline-container">
           <div class="vertical-timeline-items">
-            <div>
-              <div class="vertical-timeline-item-block">
-                <div class="vertical-reward-targets">
-                  <div class="vertical-reward-target" id="tier1">{}</div>
-                  <div class="vertical-reward-target" id="tier2">{}</div>
-                  <div
-                    class="vertical-reward-target"
-                    id="tier3"
-                    style="display: none;">{}</div>
-                  <div
-                    class="vertical-reward-target"
-                    id="tier4"
-                    style="display: none;">{}</div>
-                </div>
+            <div class="vertical-timeline-item-block">
+              <div class="vertical-reward-targets">
+                <div class="vertical-reward-target" id="tier1">{}</div>
+                <div class="vertical-reward-target" id="tier2">{}</div>
                 <div
-                  class="vertical-referral-count-achieved"
-                  id="vertical-referral-count-achieved"
-                  onmouseenter="mouseenter(this)"
-                  onmouseleave="mouseleave(this)">
+                  class="vertical-reward-target"
+                  id="tier3"
+                  style="display: none;">{}</div>
+                <div
+                  class="vertical-reward-target"
+                  id="tier4"
+                  style="display: none;">{}</div>
+              </div>
+              <div class="vertical-timeline">
+                <div class="vertical-timeline-progress">&nbsp;</div>
+                <div class="vertical-referral-count-achieved" id="vertical-referral-count-achieved" onmouseenter="mouseenter(this)" onmouseleave="mouseleave(this)">
                   <span id="current_referrals">0</span>
                   <div class="vertical-referral-count-detail count-detail" style="display: none;">
                     Invite
@@ -198,29 +194,29 @@
                     more friends to unlock next reward!
                   </div>
                 </div>
-                <div class="vertical-rewards">
-                  <div class="vertical-reward-item-detail" id="reward1">
-                    {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                    {{ imageDropdown | asset_url | img_tag }}
-                  </div>
-                  <div class="vertical-reward-item-detail" id="reward2">
-                    {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                    {{ imageDropdown | asset_url | img_tag }}
-                  </div>
-                  <div
-                    class="vertical-reward-item-detail"
-                    id="reward3"
-                    style="display: none;">
-                    {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                    {{ imageDropdown | asset_url | img_tag }}
-                  </div>
-                  <div
-                    class="vertical-reward-item-detail"
-                    id="reward4"
-                    style="display: none;">
-                    {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                    {{ imageDropdown | asset_url | img_tag }}
-                  </div>
+              </div>
+              <div class="vertical-rewards">
+                <div class="vertical-reward-item-detail" id="reward1">
+                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                  {{ imageDropdown | asset_url | img_tag }}
+                </div>
+                <div class="vertical-reward-item-detail" id="reward2">
+                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                  {{ imageDropdown | asset_url | img_tag }}
+                </div>
+                <div
+                  class="vertical-reward-item-detail"
+                  id="reward3"
+                  style="display: none;">
+                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                  {{ imageDropdown | asset_url | img_tag }}
+                </div>
+                <div
+                  class="vertical-reward-item-detail"
+                  id="reward4"
+                  style="display: none;">
+                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                  {{ imageDropdown | asset_url | img_tag }}
                 </div>
               </div>
             </div>
@@ -352,7 +348,7 @@
       <div class="hidden">this div is hidden</div>
     </div>
     <div class="gift-layout half rewards-spaced-evenly">
-      <div class="vertical rewards-spaced">
+      <div class="rewards-spaced vertical-mobile">
         <div class="rewards_preheader_text">{{ block.settings.preheader_text }}</div>
         <div class="rewards_header_text">{{ block.settings.header_text }}</div>
         <div class="rewards_subheader_text">{{ block.settings.subheader_text }}</div>
@@ -399,28 +395,24 @@
         <div>Friends Joined</div>
         <div>Rewards</div>
       </div>
-      <div class="rewards-spaced vertical-timeline">
-        <div class="vertical-timeline-progress">&nbsp;</div>
+      <div class="rewards-spaced vertical-timeline-container">
         <div class="vertical-timeline-items">
-          <div>
-            <div class="vertical-timeline-item-block">
-              <div class="vertical-reward-targets">
-                <div class="vertical-reward-target" id="tier1">{}</div>
-                <div class="vertical-reward-target" id="tier2">{}</div>
-                <div
-                  class="vertical-reward-target"
-                  id="tier3"
-                  style="display: none;">{}</div>
-                <div
-                  class="vertical-reward-target"
-                  id="tier4"
-                  style="display: none;">{}</div>
-              </div>
+          <div class="vertical-timeline-item-block">
+            <div class="vertical-reward-targets">
+              <div class="vertical-reward-target" id="tier1">{}</div>
+              <div class="vertical-reward-target" id="tier2">{}</div>
               <div
-                class="vertical-referral-count-achieved"
-                id="vertical-referral-count-achieved"
-                onmouseenter="mouseenter(this)"
-                onmouseleave="mouseleave(this)">
+                class="vertical-reward-target"
+                id="tier3"
+                style="display: none;">{}</div>
+              <div
+                class="vertical-reward-target"
+                id="tier4"
+                style="display: none;">{}</div>
+            </div>
+            <div class="vertical-timeline">
+              <div class="vertical-timeline-progress">&nbsp;</div>
+              <div class="vertical-referral-count-achieved" id="vertical-referral-count-achieved" onmouseenter="mouseenter(this)" onmouseleave="mouseleave(this)">
                 <span id="current_referrals">0</span>
                 <div class="vertical-referral-count-detail count-detail" style="display: none;">
                   Invite
@@ -428,29 +420,29 @@
                   more friends to unlock next reward!
                 </div>
               </div>
-              <div class="vertical-rewards">
-                <div class="vertical-reward-item-detail" id="reward1">
-                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
-                </div>
-                <div class="vertical-reward-item-detail" id="reward2">
-                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
-                </div>
-                <div
-                  class="vertical-reward-item-detail"
-                  id="reward3"
-                  style="display: none;">
-                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
-                </div>
-                <div
-                  class="vertical-reward-item-detail"
-                  id="reward4"
-                  style="display: none;">
-                  {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
-                </div>
+            </div>
+            <div class="vertical-rewards">
+              <div class="vertical-reward-item-detail" id="reward1">
+                {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                {{ imageDropdown | asset_url | img_tag }}
+              </div>
+              <div class="vertical-reward-item-detail" id="reward2">
+                {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                {{ imageDropdown | asset_url | img_tag }}
+              </div>
+              <div
+                class="vertical-reward-item-detail"
+                id="reward3"
+                style="display: none;">
+                {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                {{ imageDropdown | asset_url | img_tag }}
+              </div>
+              <div
+                class="vertical-reward-item-detail"
+                id="reward4"
+                style="display: none;">
+                {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
+                {{ imageDropdown | asset_url | img_tag }}
               </div>
             </div>
           </div>
