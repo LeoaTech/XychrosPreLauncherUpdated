@@ -367,22 +367,16 @@ input[type='text']:focus {
 .rewards-vertical .referral-link-inp {
   width: 80%;
 }
+/* ============================== vertical and none-vertical layouts =============================== */
 
-.rewards-vertical .copy-link-btn {
-  right: 5rem;
+/* general */
+
+.rewards-spaced-evenly {
+  padding: 10% 0;
 }
 
-.rewards-vertical .rewards_socials {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  padding: 0 10%;
-  justify-content: space-around;
-}
-
-.rewards-vertical .friends-joined {
-  padding-bottom: 0;
-  margin: 2vh 0;
+.rewards-spaced {
+  text-align: center;
 }
 
 .vertical-timeline-headers {
