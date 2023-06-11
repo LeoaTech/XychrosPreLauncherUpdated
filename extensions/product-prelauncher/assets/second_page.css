@@ -96,22 +96,9 @@ input[type='text']:focus {
   margin: 5vh 0;
 }
 
-/* ============================== rewards-horizontal layout ============================== */
+/* ============================== rewards-horizontal ad none-horizontal layout ============================== */
 
-.rewards-section-layout.rewards-horizontal {
-  flex-direction: column;
-}
-
-.full {
-  width: 100vw;
-  height: 50vh;
-}
-
-.rewards-horizontal .rewards_socials {
-  margin: 10px 0;
-  width: 50%;
-  justify-content: space-evenly;
-}
+/* general */
 
 .timeline-group {
   width: 90%;
@@ -133,28 +120,34 @@ input[type='text']:focus {
   text-align: left;
 }
 
+.timeline-container {
+  width: 80%;
+}
+
+.timeline-items {
+  height: 100%;
+}
+
+.timeline-item-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+}
+
 .timeline {
-  margin: 10vh 0 0 0;
+  width: 100%;
   height: 5px;
-  width: 95%;
   background-color: #ccc;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .timeline-progress {
   height: 100%;
   background-color: #011936;
   width: 0%;
-}
-
-.timeline-items {
-  margin-top: -65px;
-}
-
-.timeline-item-block {
-  display: flex;
-  flex-direction: column;
 }
 
 .reward-targets {
@@ -172,8 +165,8 @@ input[type='text']:focus {
 }
 
 .referral-count-achieved {
-  position: relative;
-  top: 0.5vh;
+  position: absolute;
+  top: -2.5vh;
   left: -4vh;
   width: 35px;
   height: 35px;
@@ -234,7 +227,24 @@ input[type='text']:focus {
   color: #ccc;
 } */
 
-/* ============================== none rewards-horizontal =============================== */
+/* horizontal */
+
+.rewards-section-layout.rewards-horizontal {
+  flex-direction: column;
+}
+
+.full {
+  width: 100vw;
+  height: 50vh;
+}
+
+.rewards-horizontal .rewards_socials {
+  margin: 10px 0;
+  width: 50%;
+  justify-content: space-evenly;
+}
+
+/* none-horizontal */
 
 .rewards-section-layout.rewards-none-horizontal {
   flex-direction: column;
@@ -552,49 +562,44 @@ input[type='text']:focus {
   
   /* rewards-none-horizontal and rewards-horizontal */
 
-  .rewards-horizontal .gift-layout {
-    height: 60vh;
-  }
+  /* general */
 
   .timeline-group {
     flex-direction: column;
     width: 100%;
+    height: 100%;
   }
 
   .timeline-headers {
-    position: unset;
-    margin: 0 2vh;
+    margin: 0 0;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    gap: 5rem;
-    width: 95%;
+    width: 100%;
   }
 
   .timeline-headers div {
     font-size: 18px;
   }
 
-  .timeline {
-    margin: -30px 0px 30px 54vw;
-    height: 30vh;
-    width: 5px;
+  .timeline-container {
+    width: 100%;
+    height: 100%;
   }
 
-  .timeline-items {
-    margin-top: unset;
-  }
-  
   .timeline-item-block {
-    position: relative;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+  }
+
+  .timeline {
+    height: 100%;
+    width: 5px;
   }
 
   .reward-targets {
     flex-direction: column;
-    position: absolute;
-    top: -30vh;
-    left: -21vh;
-    gap: 2rem;
   }
 
   .reward-target {
@@ -604,18 +609,11 @@ input[type='text']:focus {
   }
 
   .referral-count-achieved {
-    position: absolute;
-    top: -30vh;
-    left: -2.2vh;
+    left: -2vh;
     width: 30px;
     height: 30px;
     font-size: 16px;
     line-height: 30px;
-  }
-
-  .rewards-horizontal .referral-count-achieved {
-    top: -31vh;
-    left: -2vh;
   }
 
   .referral-count-detail {
@@ -626,10 +624,6 @@ input[type='text']:focus {
 
   .rewards {
     flex-direction: column;
-    position: absolute;
-    top: -30vh;
-    right: -20vh;
-    gap: 1.2rem;
   }
 
   .reward-item-detail span {
@@ -639,6 +633,12 @@ input[type='text']:focus {
   .reward-item-detail img {
     width: 42px;
     height: 42px;
+  }
+
+  /* none-horizontal */
+
+  .rewards-none-horizontal .none-gift-layout {
+    height: 50%;
   }
 
   /* none-vertical and vertical */
@@ -782,6 +782,8 @@ input[type='text']:focus {
 
   /* rewards-none-horizontal and rewards-horizontal  */
 
+  /* general */
+
   .refferal-container {
     width: 60%;
   }
@@ -799,18 +801,6 @@ input[type='text']:focus {
     font-size: 20px;
   }
 
-  .timeline {
-    width: 95%;
-  }
-
-  /* .referral-count-achieved {
-    left: 10vh;
-  } */
-
-  .reward-targets {
-    gap: 5.8rem;
-  }
-
   .reward-target {
     width: 35px;
     height: 35px;
@@ -822,10 +812,6 @@ input[type='text']:focus {
     height: 32px;
     font-size: 18px;
     line-height: 32px;
-  }
-
-  .rewards {
-    gap: 6rem;
   }
 
   .reward-item-detail img {
@@ -902,6 +888,8 @@ input[type='text']:focus {
   }
 
   /* rewards-none-horizontal and rewards-horizontal */
+
+  /* general */
 
   .referral-count-achieved {
     width: 40px;
