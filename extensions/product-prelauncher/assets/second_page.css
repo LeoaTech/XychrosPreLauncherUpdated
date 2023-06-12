@@ -271,6 +271,7 @@ input[type='text']:focus {
 
 .rewards-spaced {
   text-align: center;
+  width: 100%;
 }
 
 .vertical-timeline-headers {
@@ -284,7 +285,7 @@ input[type='text']:focus {
 
 .vertical-timeline-container {
   width: 100%;
-  height: 100%;
+  height: 50%;
 }
 
 .vertical-timeline {
@@ -374,6 +375,10 @@ input[type='text']:focus {
   min-height: 100vh;
 }
 
+.rewards-vertical .gift-layout {
+  justify-content: center;
+}
+
 .rewards-vertical .refferal-container {
   width: 100%;
 }
@@ -455,6 +460,10 @@ input[type='text']:focus {
 .reward-none-half {
   width: 60vw;
   height: 100vh;
+}
+
+.rewards-none-vertical .gift-layout {
+  justify-content: center;
 }
 
 .rewards-none-vertical .refferal-container {
@@ -747,7 +756,7 @@ input[type='text']:focus {
     top: 64vh;
   }
 
-  .vertical-timeline-container {
+  .rewards-vertical .vertical-timeline-container {
     margin-top: 15vh;
   }
 
