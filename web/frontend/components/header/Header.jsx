@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { CgNotes } from "react-icons/cg";
-import { HiOutlineUser } from "react-icons/hi";
+import { FaUser} from "react-icons/fa";
 import "./header.css";
 
 import { useStateContext } from "../../contexts/ContextProvider";
@@ -124,7 +124,7 @@ const Header = () => {
               <div
                 className="userProfile"
               >
-                <HiOutlineUser
+                <FaUser
                   style={{ height: 20, width: 22, color: "#fff" }}
                 />
               </div>
