@@ -40,7 +40,7 @@ const Referrals = () => {
           icon={subscriber}
           class='referral-icon'
         />
-        <SummaryCard
+        {/* <SummaryCard
           value='$253,467'
           title='Revenue'
           icon={Sale}
@@ -51,7 +51,7 @@ const Referrals = () => {
           title='Clicks'
           icon={arrow}
           class='clicks-icon'
-        />
+        /> */}
       </div>
 
       <div className='referral_table'>
