@@ -492,7 +492,7 @@ function NewCampaignForm() {
 
   // Handle Discount Codes Validation on Next Button click 
   const handleDiscountValidation = (index) => {
-
+   
   }
 
   // Validation of  Required fields of the Form
@@ -1161,6 +1161,7 @@ function NewCampaignForm() {
                               {isEdit ? (
                                 <textarea
                                   className='referral-input'
+                                  name={`share_${link?.title}_message`}
                                   rows={4}
                                   value={
                                     editCampaignData[`share_${link?.title}_message`]
@@ -1170,6 +1171,7 @@ function NewCampaignForm() {
                               ) : (
                                 <textarea
                                   className='referral-input'
+                                  name={`share_${link?.title}_message`}
                                   rows={4}
                                   value={
                                     newCampaignData[`share_${link?.title}_message`]
