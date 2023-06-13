@@ -1,0 +1,204 @@
+.home-container h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.intro-section,
+.about-section,
+.contact-us-section {
+    padding: 20px 30px;
+    margin: 30px;
+    color: #fff;
+    display: flex;
+    margin-right: 2%;
+}
+
+.about-section {
+    flex-direction: row-reverse;
+}
+
+.contact-us-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+.intro-card,
+.about-card,
+.contact-us-card {
+    background-color: var(--secondary-text-color);
+    border-radius: 12px;
+    padding: 25px 7rem;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.6;
+    word-break: keep-all;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.contact-us-card {
+    background-color: #CCC7F8;
+    height: 300px;
+    color: #4F4F4F;
+    padding: 25px;
+
+}
+
+@media screen and (max-width: 1480px) {
+
+    .intro-section,
+    .about-section,
+    .contact-us-section {
+        padding: 20px;
+        margin: 25px;
+    }
+
+    .intro-card,
+    .about-card,
+    .contact-us-card {
+        padding: 25px 3rem;
+        font-size: 27px;
+    }
+
+    .contact-us-card {
+        padding: 20px;
+    }
+
+}
+
+@media screen and (max-width: 1280px) {
+
+    .home-container h2 {
+        font-size: 24px;
+    }
+
+    .intro-section,
+    .about-section,
+    .contact-us-section {
+        padding: 17px;
+        margin: 16px;
+        color: #fff;
+        display: flex;
+        margin-right: 0%;
+    }
+
+    .intro-card,
+    .about-card,
+    .contact-us-card {
+        padding: 10px 1.5rem;
+        font-size: 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .contact-us-card {
+        padding: 13px 0.5rem;
+        height: 200px;
+    }
+}
+
+@media screen and (max-width: 1050px) {
+
+    .intro-section,
+    .about-section,
+    .contact-us-section {
+        padding: 17px;
+        margin: 20px;
+        color: #fff;
+        display: flex;
+        margin-right: 0%;
+    }
+
+    .intro-card,
+    .about-card,
+    .contact-us-card {
+
+        padding: 10px 1rem;
+        font-size: 19px;
+
+    }
+
+    .contact-us-card {
+        height: 200px;
+        padding: 10px;
+    }
+}
+
+@media screen and (max-width: 786px) {
+
+    .intro-section,
+    .about-section,
+    .contact-us-section {
+        padding: 12px;
+        margin: 14px;
+        margin-left: 2%;
+    }
+
+    .intro-card,
+    .about-card,
+    .contact-us-card {
+        padding: 10px 1.5rem;
+        font-size: 17px;
+
+    }
+    .contact-us-card {
+        height: 200px;
+        padding: 10px;
+    }
+
+    .intro-section img ,.about-section img{
+        height: 200px;
+        width: 300px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+
+    .home-container h2{
+        font-size: 17px;
+    }
+    .intro-section,
+    .about-section,
+    .contact-us-section {
+        padding: 17px;
+        margin: 20px;
+        color: #fff;
+        display: flex;
+        flex-direction: column-reverse;
+        gap:1rem;
+        justify-content: center;
+        align-items: center;
+        margin-right: 0%;
+    }
+
+    .intro-card,
+    .about-card,
+    .contact-us-card {
+        height: 200px;
+
+        padding: 10px 1rem;
+        font-size: 19px;
+
+    }
+
+    .contact-us-card {
+        height: 200px;
+        padding: 10px;
+    }
+    .intro-section img ,.about-section img{
+        height: 200px;
+        width: 250px;
+    }
+}
