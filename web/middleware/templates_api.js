@@ -46,6 +46,8 @@ export default function templatesApiEndpoints(app) {
       //   templates: templates.rows,
       // };
 
+      // console.log(templates?.rows, "Templates")
+
       const combinedData = templates.rows.map((template, index) => {
         const rewardPage = reward_page.rows[index];
         return {
@@ -91,6 +93,7 @@ export default function templatesApiEndpoints(app) {
           landing_text_position: template?.text_position,
           landing_input_position: template?.input_position,
           landing_phone_placeholder_text: template?.phone_placeholder_text,
+          landing_welcome_image_url: template?.welcome_image_url
         };
       });
 
