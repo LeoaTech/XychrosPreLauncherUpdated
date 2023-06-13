@@ -435,7 +435,31 @@ const templateApiCalls = async (
   // update templates with page handles returned by create page functions
   await updateFirstPageTemplate(templateSuffix1, secondpage_handle);
   await updateSecondPageTemplate(templateSuffix2, firstpage_handle);
-};
+
+  // generate template links
+  const landingTemplateLink = `https://${shopURL}/admin/themes/${themeid}/editor?previewPath=${encodeURIComponent('/pages/' + firstpage_handle)}`;
+  const rewardsTemplateLink = `https://${shopURL}/admin/themes/${themeid}/editor?previewPath=${encodeURIComponent('/pages/' + secondpage_handle)}`;
+
+  // generate page links
+  const landingPageLink = `https://${shopURL}/pages/${firstpage_handle}`;
+  const rewardsPageLink = `https://${shopURL}/pages/${secondpage_handle}`;
+
+  // return campaign details
+  const campaignDetails = {
+    campaign_id: campaignData.id,
+    campaign_name: campaignData.name,
+    discount_code_1: campaignData.reward_1_code,
+    discount_code_2: campaignData.reward_2_code,
+    discount_code_3: campaignData.reward_3_code,
+    discount_code_4: campaignData.reward_4_code,
+    landing_template_link: landingTemplateLink,
+    landing_page_link: landingPageLink,
+    rewards_template_link: rewardsTemplateLink,
+    rewards_page_link: rewardsPageLink
+  };
+
+  return campaignDetails;
+}
 
 // --------------------------------------- API ------------------------------------
 
@@ -452,11 +476,8 @@ export default function createTemplateApiEndpoint(app) {
       // console.log(accessToken, shop);
       // console.log(templateData);
       // console.log(campaignData);
-      await templateApiCalls(accessToken, shop, templateData, campaignData);
-      return res.status(200).json({
-        success: true,
-        message: 'Templates and Pages Created Successfully',
-      });
+      const campaign_details = await templateApiCalls(accessToken, shop, templateData, campaignData);
+      return res.status(200).json({ success: true, data: campaign_details, message: "Templates and Pages Created Successfully" });
     } catch (error) {
       return res.status(400).json({
         success: false,
