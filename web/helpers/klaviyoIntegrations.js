@@ -3,7 +3,7 @@ import axios from 'axios';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+  connectionString: `${process.env.DATABASE_URL}`,
 });
 
 export const add_to_klaviyo_list = async (

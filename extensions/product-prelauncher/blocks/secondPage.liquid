@@ -2,7 +2,7 @@
   let second_page_settings = {{ block.settings | json }};
 
   async function getbackground(campaign_name) {
-    return await fetch('/apps/xychrosupdated/api/geturl', {
+    return await fetch('/apps/product-prelauncher/api/geturl', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -70,25 +70,31 @@
     width: 100vw;
   }
   .rewards_preheader_text {
-    color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size | times: 0.5}}px;
+    color: {{ block.settings.accent_color }}
+    ;
+    font-size: {{ block.settings.base_font_size | times: 0.5}}
+    px;
     font-weight: 800;
     padding: 0 2%;
   }
   .rewards_header_text {
-    color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size}}px;
+    color: {{ block.settings.accent_color }}
+    ;
+    font-size: {{ block.settings.base_font_size}}
+    px;
     font-weight: 800;
     padding: 0 2%;
   }
   .rewards_subheader_text {
-    color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size | times: 0.4}}px;
+    color: {{ block.settings.accent_color }}
+    ;
+    font-size: {{ block.settings.base_font_size | times: 0.4}}
+    px;
     font-weight: 500;
     padding: 0 2%;
   }
   .rewards-none-horizontal .rewards_subheader_text {
-    padding: 2% 2%;
+    padding: 2%;
   }
   .rewards-horizontal .rewards_subheader_text {
     padding: unset !important;
@@ -97,12 +103,15 @@
     background-color: #D9D9D9;
   }
   input[value] {
-    color: {{ block.settings.main_color }};
+    color: {{ block.settings.main_color }}
+    ;
   }
   .copy-link-btn {
     border: 1px solid{{ block.settings.accent_color }};
-    background-color: {{ block.settings.main_color }};
-    color: {{ block.settings.accent_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .rewards-img-layout {
     background-position: center;
@@ -121,87 +130,111 @@
     {% endif %}
   }
   .gift-layout {
-    background-color: {{ block.settings.main_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
   }
   .friends-joined {
-    color: {{ block.settings.accent_color }};
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .timeline-headers {
-    color: {{ block.settings.accent_color }};
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .vertical-timeline-headers {
-    color: {{ block.settings.accent_color }};
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .reward-target {
     border: 1px solid{{ block.settings.accent_color }};
-    background-color: {{ block.settings.main_color }};
-    color: {{ block.settings.accent_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .vertical-reward-target {
     border: 1px solid{{ block.settings.accent_color }};
-    background-color: {{ block.settings.main_color }};
-    color: {{ block.settings.accent_color }};
+    background-color: {{ block.settings.main_color }}
+    ;
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .referral-count-achieved {
-    background-color: {{ block.settings.accent_color }};
-    color: {{ block.settings.main_color }};
+    background-color: {{ block.settings.accent_color }}
+    ;
+    color: {{ block.settings.main_color }}
+    ;
   }
   .vertical-referral-count-achieved {
-    background-color: {{ block.settings.accent_color }};
-    color: {{ block.settings.main_color }};
+    background-color: {{ block.settings.accent_color }}
+    ;
+    color: {{ block.settings.main_color }}
+    ;
   }
   .reward-item-detail span {
-    color: {{ block.settings.accent_color }};
+    color: {{ block.settings.accent_color }}
+    ;
   }
   .rewards_socials svg > path {
-    fill: {{ block.settings.accent_color }} !important;
+    fill: {{ block.settings.accent_color }}
+     !important;
   }
   @media screen and (max-width: 767px) {
     .rewards_preheader_text {
       font-size: {{ block.settings.base_font_size | times: 0.36}}px;
-      padding: 5% 2% 0% 2%;
     }
     .rewards-horizontal .rewards_preheader_text {
-      padding: 0% 2% 0% 2% !important;
+      padding: 0 2% !important;
     }
     .rewards_header_text {
-      font-size: {{ block.settings.base_font_size| times: 0.5}}px;
+      font-size: {{ block.settings.base_font_size| times: 0.5}}
+      px;
     }
     .rewards_subheader_text {
-      font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.25}}
+      px;
     }
   }
-  @media only screen and (min-width: 768px) and (max-width: 991px) {
+  @media only screen and (min-width: 768px) and(max-width: 991px) {
     .rewards_preheader_text {
-      font-size: {{ block.settings.base_font_size | times: 0.40}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.40}}
+      px;
     }
     .rewards_header_text {
-      font-size: {{ block.settings.base_font_size | times: 0.75}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.75}}
+      px;
     }
     .rewards_subheader_text {
-      font-size: {{ block.settings.base_font_size | times: 0.30}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.30}}
+      px;
     }
   }
-  @media only screen and (min-width: 992px) and (max-width: 1199px) {
+  @media only screen and (min-width: 992px) and(max-width: 1199px) {
     .rewards_preheader_text {
-      font-size: {{ block.settings.base_font_size | times: 0.45}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.45}}
+      px;
     }
     .rewards_header_text {
-      font-size: {{ block.settings.base_font_size | times: 0.85}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.85}}
+      px;
     }
     .rewards_subheader_text {
-      font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.35}}
+      px;
     }
   }
   @media only screen and (min-width: 1200px) {
     .rewards_preheader_text {
-      font-size: {{ block.settings.base_font_size | times: 0.5}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.5}}
+      px;
     }
     .rewards_header_text {
-      font-size: {{ block.settings.base_font_size}}px;
+      font-size: {{ block.settings.base_font_size}}
+      px;
     }
     .rewards_subheader_text {
-      font-size: {{ block.settings.base_font_size | times: 0.40}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.40}}
+      px;
     }
   }
 </style>
