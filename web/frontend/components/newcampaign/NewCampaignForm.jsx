@@ -492,7 +492,59 @@ function NewCampaignForm() {
 
   // Handle Discount Codes Validation on Next Button click 
   const handleDiscountValidation = (index) => {
-   
+    const duplicateTiers = []; // Array to store tier IDs with duplicate discount codes
+
+    const userDiscountCodes = RewardData.map((reward) => {
+      const rewardId = reward.id;
+      const inputName = `reward_${rewardId}_code`;
+      return newCampaignData[inputName];
+    });
+
+    // Check Duplicates Discount codes and push the Tiers IDs in duplicateTiers array
+    userDiscountCodes?.forEach((code, index) => {
+      if (discountList?.includes(code)) {
+        duplicateTiers.push(index + 1); // Push the tier ID (index + 1) to the array
+      }
+    });
+
+
+    // Step 3: Handle duplicate discount codes
+    if (duplicateTiers?.length > 0) {
+      // Display error message on the corresponding tiers' cards
+      if (duplicateTiers?.includes(1)) {
+        setDiscountCode1(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      } if (duplicateTiers?.includes(2)) {
+        setDiscountCode2(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      } if (duplicateTiers?.includes(3)) {
+        setDiscountCode3(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      } if (duplicateTiers?.includes(4)) {
+        setDiscountCode4(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      }
+
+      return; // Stop further processing
+    } else {
+      // No Duplicate discount Code
+      setDiscountCode1(false);
+      setDiscountCode2(false);
+      setDiscountCode3(false);
+      setDiscountCode4(false);
+      // Open Next Form .... and Proceed
+      setExpanded((prevExpand) =>
+        prevExpand.map((state, i) => (i === index ? !state : false))
+      );
+    }
   }
 
   // Validation of  Required fields of the Form
