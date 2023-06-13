@@ -1381,7 +1381,7 @@ function NewCampaignForm() {
                                       name={`reward_${reward?.id}_tier`}
                                       value={editCampaignData[`reward_${reward?.id}_tier`]}
                                       onChange={handleChange}
-                                      disabled={reward?.id > 1 && !editCampaignData[`reward_${reward?.id - 1}_tier`]}
+                                      disabled={isEdit}
                                     />
                                   ) : (
                                     <input
@@ -1405,7 +1405,7 @@ function NewCampaignForm() {
                                       name={`reward_${reward?.id}_discount`}
                                       value={editCampaignData[`reward_${reward?.id}_discount`]}
                                       onChange={handleChange}
-                                      disabled={reward?.id > 1 && !editCampaignData[`reward_${reward?.id - 1}_discount`]}
+                                      disabled={isEdit}
                                     />
                                   ) : (
                                     <input
@@ -1429,7 +1429,7 @@ function NewCampaignForm() {
                                       name={`reward_${reward?.id}_code`}
                                       value={editCampaignData[`reward_${reward?.id}_code`]}
                                       onChange={handleChange}
-                                      disabled={reward?.id > 1 && !editCampaignData[`reward_${reward?.id - 1}_code`]}
+                                      disabled={isEdit}
                                     />
                                   ) : (
                                     <input
@@ -1881,6 +1881,7 @@ function NewCampaignForm() {
                                 : 'template-card-block'
                             }
                             onClick={() => handleTemplateSelect(template)}
+                            disabled={isEdit}
                           >
                             {template?.id === 1 ? (
                               <h3>
