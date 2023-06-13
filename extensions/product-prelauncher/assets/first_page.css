@@ -128,9 +128,9 @@ input[type='tel']:focus {
   margin: 10px auto;
 }
 
-/* none layout */
+/* none-horizontal layout */
 
-.section-layout.none {
+.section-layout.none-horizontal {
   flex-direction: column;
 }
 
@@ -143,6 +143,28 @@ input[type='tel']:focus {
   display: flex;
   flex-direction: column;
   width: 100vw;
+}
+
+/* none-vertical layout */
+
+.none-vertical .none {
+  width: 60vw;
+}
+
+.none-vertical .email-input-product-prelaucher {
+  width: 80%;
+}
+
+.none-vertical .phone-input-product-prelaucher {
+  width: 80%;
+}
+
+.none-vertical .social_icons {
+  width: 70%;
+}
+
+.none-vertical .consent {
+  width: 70%;
 }
 
 /* horizontal layout */
@@ -401,6 +423,17 @@ input[type='tel']:focus {
 
   .submit-button-product-prelaunch {
     width: 50%;
+  }
+
+  /* none vertical layout */
+
+  .none-vertical .none-layout {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .none-vertical .none {
+    width: 100vw;
   }
 
   /* flip-horizontal layout */
