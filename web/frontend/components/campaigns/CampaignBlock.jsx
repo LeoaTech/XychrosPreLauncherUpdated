@@ -6,9 +6,12 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { DeleteModal } from "../modal/index";
 import "./CampaignBlock.css";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
 import AlertInfoModal from "../modal/AlertInfoModal";
+import { getTotalCampaigns } from "../../app/features/campaigns/campaignSlice";
+import { useSelector } from "react-redux";
+import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
 
 export default function CampaignBlock({
   data,
@@ -26,15 +29,37 @@ export default function CampaignBlock({
 
   let startDate = new Date(start_date).toLocaleDateString();
   let endDate = new Date(end_date).toLocaleDateString();
+  const totalCampaigns = useSelector(getTotalCampaigns);
+  const currentTier = useSelector(fetchCurrentTier
+  );
   const [deleteEndData, setDeleteEndDate] = useState(null);
-  const [isToggled, setIsToggled] = useState(product === "" ? false : true);
+  const [isToggled, setIsToggled] = useState(false);
+
+  // const [subscriptionPlan, setSubscriptionPlan] = useState('')
+  // const [activeCampaign, setActiveCampaign] = useState(null);
+
+  const now = new Date();
+
+  useEffect(() => {
+    if (new Date(start_date) > now) {
+      setIsToggled(false);
+    } else if (new Date(end_date) >= now) {
+      setIsToggled(true);
+    }
+    else {
+      setIsToggled(false);
+
+    }
+
+  }, [start_date,end_date])
+
+
+
 
   function checkAndDeleteCampaign(campaignDate) {
     // Convert the campaign date string to a Date object
     const campaignDateObj = new Date(campaignDate);
-
     // Get the current date
-    const now = new Date();
     // Check if the campaign date has expired
     if (campaignDateObj < now && !isToggled) {
       setDeleteModal(true);
@@ -58,7 +83,11 @@ export default function CampaignBlock({
               <ToggleSwitch
                 rounded={true}
                 isToggled={isToggled}
-                onToggle={() => setIsToggled((prev) => !prev)}
+                id={campaign_id}
+                start_date={start_date}
+                end_date={end_date}
+              // subscriptionPlan={subscriptionPlan}
+              // activeCampaign={activeCampaign}
               />
             </span>
           </div>

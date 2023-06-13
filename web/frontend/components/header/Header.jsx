@@ -107,7 +107,9 @@ const Header = () => {
             />
           </Link>
 
-          <Link to="/faq">
+          {/* Uncomment this Line when FAQ page is ready */}
+
+          {/* <Link to="/faq">
             <NavButton
               title="FAQs"
               color="#fff"
@@ -116,7 +118,7 @@ const Header = () => {
               }
               icon={<CgNotes style={{ height: 20, width: 24 }} />}
             />
-          </Link>
+          </Link> */}
           <div>
             <Link to="/userprofile">
               <div

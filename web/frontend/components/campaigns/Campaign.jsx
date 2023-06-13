@@ -26,15 +26,16 @@ export default function CampaignsComponent() {
   const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([]);
 
+
   // Get Campaigns with Id (descending Order)
   useEffect(() => {
     if (List?.length > 0) {
-      // const myImmutableArray = Object.freeze(List);
-      // const sortedArray = [...myImmutableArray].sort((a, b) => b.campaign_id - a.campaign_id);
-      // console.log(sortedArray, "array")
       setCampaigns(List);
+
     }
   }, [dispatch, List]);
+
+
 
   useEffect(() => {
     if (ReferralList) {
@@ -42,7 +43,7 @@ export default function CampaignsComponent() {
     }
   }, [ReferralList]);
 
-   // PAGINATION
+  // PAGINATION
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
@@ -102,23 +103,6 @@ export default function CampaignsComponent() {
     }
 
 
-//     await fetch(`/api/campaignsettings/${id}`, {
-//       method: 'DELETE',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     })
-//       .then((res) => res.json())
-//       .then((data) => {
-//         dispatch(deleteCampaign(data[0]));
-//       })
-//       .catch((err) => console.log(err));
-
-//     const newData = await getCampaigns?.filter(
-//       (campaign) => campaign.campaign_id !== id
-//     );
-//     await dispatch(fetchCampaign(newData));
-//     setCampaigns(newData);
   };
   const handleEdit = (id) => {
     setIsEdit(true);

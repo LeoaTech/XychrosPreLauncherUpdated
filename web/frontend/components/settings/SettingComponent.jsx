@@ -22,12 +22,19 @@ const SettingComponent = () => {
 
   // Get Default Settings Data
   useEffect(() => {
-    if (defaultSettings) {
+    if (defaultSettings !== undefined) {
       setSettingsData(defaultSettings);
     }
   }, [defaultSettings]);
 
-  const [currentExpanded, setCurrentExpanded] = useState(Array(6).fill(false));
+  const [currentExpanded, setCurrentExpanded] = useState([
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);;
 
   // Next Button
   const renderButton = (id) => {
@@ -188,7 +195,9 @@ const SettingComponent = () => {
                             className="check_input"
                             type="checkbox"
                             name={`show_${storeLink?.name}`}
-                            checked={settingsData[`show_${storeLink?.name}`]}
+                            checked={settingsData !== undefined
+                              ?
+                              settingsData[`show_${storeLink?.name}`] : null}
                             onChange={handleCheckboxChange}
                           />
                           <span className="store-social-icons">
@@ -198,17 +207,18 @@ const SettingComponent = () => {
                             className="social-text-field"
                             type="text"
                             name={`${storeLink?.name}`}
-                            value={settingsData[`${storeLink?.name}`]}
+                            value={settingsData !== undefined
+                              ?settingsData[`${storeLink?.name}`]:null}
                             onChange={handleChange}
                           />
                         </div>
                         <div>
-                          {settingsData[`show_${storeLink?.name}`] === true &&
+                          {settingsData !== undefined ?settingsData[`show_${storeLink?.name}`] === true &&
                             settingsData[`${storeLink?.name}`] === "" && (
                               <p className="error-message">
                                 Please Fill the Input field also{" "}
                               </p>
-                            )}
+                            ):null}
                         </div>
                       </div>
                     ))}

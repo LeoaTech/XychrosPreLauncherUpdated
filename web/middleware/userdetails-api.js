@@ -3,8 +3,8 @@ import { Shopify } from '@shopify/shopify-api';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
-  });
+  connectionString: `${process.env.DATABASE_URL}`,
+});
 
 // pool.connect((err, result) => {
 //   if (err) throw err;
@@ -66,7 +66,6 @@ export default function userDetailsApiEndPoint(app) {
         app.get('use-online-tokens')
       );
 
-
       const { email, firstname, lastname, billing_id } = req.body;
       const fullName = `${firstname} ${lastname}`;
       const updateUser = await pool.query(
@@ -79,7 +78,6 @@ export default function userDetailsApiEndPoint(app) {
           RETURNING *`,
         [fullName, email, billing_id, session?.shop]
       );
-
 
       res.status(200).json(updateUser?.rows);
     } catch (err) {

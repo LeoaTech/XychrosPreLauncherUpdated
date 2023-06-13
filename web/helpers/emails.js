@@ -3,7 +3,7 @@ import { sendemail } from './sendEmails.js';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+  connectionString: `${process.env.DATABASE_URL}`,
 });
 
 export const replace_welcome_email_text = async (

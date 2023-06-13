@@ -3,10 +3,10 @@ export const referralColumns = [
     name: 'Joining Date',
     selector: (row) => row.created_at,
     sortable: true,
-    id: 'date',
+    id: 'join_date',
     style: {
       fontSize: 17,
-      // maxWidth: '20px',
+      // maxWidth: '40px',
     },
   },
   {
@@ -41,10 +41,13 @@ export const referralColumns = [
     name: 'Friends Joined',
     selector: (row) => row.friends_joined,
     sortable: true,
+    id: 'friends_joined',
     style: {
       textAlign: 'center',
       alignItems: 'center',
       fontSize: 17,
+      maxWidth: '12px',
+
     },
   },
 ];
