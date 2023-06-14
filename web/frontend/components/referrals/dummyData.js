@@ -4,6 +4,7 @@ export const referralColumns = [
     selector: (row) => row.created_at,
     sortable: true,
     id: 'join_date',
+    format: (row) => moment(row.created_at).format('lll'),
     style: {
       fontSize: 17,
       // maxWidth: '40px',
@@ -47,7 +48,6 @@ export const referralColumns = [
       alignItems: 'center',
       fontSize: 17,
       maxWidth: '12px',
-
     },
   },
 ];
@@ -77,6 +77,7 @@ export const modalColumns = [
     selector: (row) => row.created_at,
     sortable: true,
     id: 'date',
+    format: (row) => moment(row.created_at).format('lll'),
     defaultValue: new Date(),
     style: {
       textAlign: 'center',
