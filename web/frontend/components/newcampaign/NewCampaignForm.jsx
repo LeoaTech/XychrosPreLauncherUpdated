@@ -21,6 +21,7 @@ import {
   fetchCampaignByName,
   addNewCampaign,
   getTotalCampaigns,
+  fetchCampaignsDiscount,
 } from '../../app/features/campaigns/campaignSlice';
 import { storeLinks } from './dummySocial';
 import { RewardData } from './rewardTier/RewardData';
@@ -43,6 +44,8 @@ function NewCampaignForm() {
 
   // Get Values from Redux-Store
   const campaignName = useSelector(fetchCampaignByName); //Get the Campaign Name to verify unique campaign name
+  const campaignsDiscountCode = useSelector(fetchCampaignsDiscount);
+
   const settings = useSelector(fetchAllSettings); //Settings Data
   const products = useSelector(fetchAllProducts); //Get all products of Shop
   const totalCampaigns = useSelector(getTotalCampaigns);
@@ -52,11 +55,6 @@ function NewCampaignForm() {
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
 
-  console.log('Edit Campaign Data', campaignById);
-  console.log('Total Campaign Data', totalCampaigns);
-  console.log('Total Campaign Data', currentTier);
-
-
   // Get Tomorrow Date and  Date for next 6 days for the Campaign End Date 
   let today = new Date();
   let getStartDate = new Date()
@@ -65,22 +63,28 @@ function NewCampaignForm() {
   getStartDate.setDate(today.getDate() + 1)
 
   // Local States of Components
+
   const [errorMessage, setErrorMessage] = useState(false);
   const [error, setError] = useState(false);
+  const [errorName, setErrorName] = useState(false);
+  const [discountCode1, setDiscountCode1] = useState(false);
+  const [discountCode2, setDiscountCode2] = useState(false);
+  const [discountCode3, setDiscountCode3] = useState(false);
+  const [discountCode4, setDiscountCode4] = useState(false);
 
   const [editCampaignData, setEditCampaignData] = useState({});
+  const [discountList, setDiscountList] = useState([])
   const [globalSettings, setGlobalSettings] = useState();
   const [productsData, setProductsData] = useState([]);
   const [startDate, setStartDate] = useState(getStartDate);
   const [endDate, setEndDate] = useState(getNextDate);
-  const [errorName, setErrorName] = useState(false);
+
   const [draftModal, setDraftModal] = useState(false);
   const [showPrompt, confirmNavigation, cancelNavigation] =
     useCallbackPrompt(draftModal);
   const [templateList, setTemplateList] = useState([]); //To store all templates received from Template API
   const [randomTemplate, setRandomTemplate] = useState(); //Get Random Template from templateList
   const [selectedTemplateData, setSelectedTemplateData] = useState(); //Store the selected template data
-  const [showList, setShowList] = useState({});
   const [expanded, setExpanded] = useState([
     true,
     false,
@@ -92,7 +96,8 @@ function NewCampaignForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [klaviyoList, setKlaviyoList] = useState([]);
   const [myPlan, setMyPlan] = useState('');
-  const [TotalCampaign, setTotalCampaign] = useState()
+  const [TotalCampaign, setTotalCampaign] = useState();
+
   //? New Campaign Form Data Fields
   const [newCampaignData, setNewCampaignData] = useState({
     collect_phone: globalSettings?.collect_phone,
@@ -153,7 +158,10 @@ function NewCampaignForm() {
   });
 
   const [getCampaignName, setCampaignName] = useState();
-  // Check if page URL is New Camapign or Campaign/id then render the form
+
+
+
+  // Check if page URL is New Camapign or Campaign/id then render the form 
   useEffect(() => {
     if (window.location.pathname === `/campaigns/${campaignsid}`) {
       setIsEdit(true);
@@ -162,11 +170,22 @@ function NewCampaignForm() {
     }
   }, [isEdit]);
 
+
+
+  // Get All Campaigns Discount Code List
+  useEffect(() => {
+    if (campaignsDiscountCode?.length > 0) {
+      // Use Set to remove duplicates and convert back to an array
+      let uniqueCodes = [...new Set(campaignsDiscountCode)];
+      setDiscountList(uniqueCodes)
+    }
+  }, [campaignsDiscountCode])
+
+
   // Get the Data with Campaigns ID for Edit campaign
   useEffect(() => {
     if (campaignById !== undefined) {
       setEditCampaignData({ ...campaignById });
-      console.log(editCampaignData, 'bysetting');
     }
   }, [campaignById]);
 
@@ -176,6 +195,7 @@ function NewCampaignForm() {
       setGlobalSettings(settings[0]);
     }
   }, [settings]);
+
   // get the Products in select box
   useEffect(() => {
     if (products?.length > 0) {
@@ -183,11 +203,11 @@ function NewCampaignForm() {
     }
   }, [products]);
 
+  // Get New Campaign Form pre-filled fields From Global Settings
   useEffect(() => {
     if (globalSettings !== undefined) {
       setNewCampaignData((prevState) => ({
         ...prevState,
-
         ...globalSettings,
       }));
     }
@@ -205,8 +225,10 @@ function NewCampaignForm() {
   useEffect(() => {
     if (templateData?.length > 0) {
       setTemplateList(templateData);
+
     }
   }, [templateData]);
+
 
   // Generate Random Templates Array with Template Ids
   useEffect(() => {
@@ -307,34 +329,13 @@ function NewCampaignForm() {
           }
         }
         const randomTemplate = [...filtered_templates];
-        console.log(randomTemplate, 'randomly');
         setRandomTemplate(randomTemplate);
       }
     }
   }, [templateList, getCampaignName]);
 
-  //  Template images with their names [Hardcoded Images]  06-APR-2023 (Updated Soon)
-  useEffect(() => {
-    const templates_show_list = [];
 
-    randomTemplate?.map((template) => {
-      const name = template?.campaign_image?.substring(
-        0,
-        template?.campaign_image?.lastIndexOf('.')
-      );
-      const imgUrl = `/assets/shopify_assets/${template?.campaign_image}`;
-
-      const imagePath = imgUrl?.substring(imgUrl?.indexOf('/web'));
-      templates_show_list.push({
-        id: template?.id,
-        name: template?.campaign_image,
-        image: imagePath,
-      });
-    });
-    setShowList(templates_show_list);
-  }, [randomTemplate]);
-
-  //  Get Current Tier 
+  //  Get Current Subscription Plan Name
   useEffect(() => {
     if (currentTier !== "") {
       setMyPlan(currentTier);
@@ -359,7 +360,7 @@ function NewCampaignForm() {
 
       setKlaviyoList(list);
     } catch (err) {
-      console.log(err);
+      return err;
     }
   }
 
@@ -376,7 +377,9 @@ function NewCampaignForm() {
     }
   }, [newCampaignData?.klaviyo_api_key, globalSettings?.klaviyo_api_key]);
 
-  //? When user try to reload or change the page
+
+
+  //? When user try to reload or change the route to other page
   useEffect(() => {
     const unloadCallback = (event) => {
       event.preventDefault();
@@ -412,7 +415,9 @@ function NewCampaignForm() {
     </div>
   ));
 
-  // Render Next Button on each form
+
+
+  // Display Next Button on each form
   const renderButton = (id) => {
     return (
       <button
@@ -454,7 +459,7 @@ function NewCampaignForm() {
         );
       }
     }
-    // New campaign form
+    // New campaign form 
     else {
       const isValid = validateForm();
       if (index === 1 && isValid === false) {
@@ -475,23 +480,9 @@ function NewCampaignForm() {
             prevExpand.map((state, i) => (i === index ? !state : false))
           );
         }
-      } else if (index == 3) {
-        console.log(newCampaignData?.discount_type);
-        if (
-          newCampaignData?.discount_type === 'percent' ||
-          newCampaignData?.discount_type === 'amount'
-        ) {
-          setError(false);
-          setExpanded((prevExpand) =>
-            prevExpand.map((state, i) => (i === index ? !state : false))
-          );
-        } else {
-          setError(true);
-          setExpanded((prevExpand) =>
-            prevExpand.map((state, i) => i === index - 1 && true)
-          );
-        }
-      } else {
+      }
+
+      else {
         setExpanded((prevExpand) =>
           prevExpand.map((state, i) => (i === index ? !state : false))
         );
@@ -499,7 +490,64 @@ function NewCampaignForm() {
     }
   };
 
-  // Validate Required fields of the Form
+  // Handle Discount Codes Validation on Next Button click 
+  const handleDiscountValidation = (index) => {
+    const duplicateTiers = []; // Array to store tier IDs with duplicate discount codes
+
+    const userDiscountCodes = RewardData.map((reward) => {
+      const rewardId = reward.id;
+      const inputName = `reward_${rewardId}_code`;
+      return newCampaignData[inputName];
+    });
+
+    // Check Duplicates Discount codes and push the Tiers IDs in duplicateTiers array
+    userDiscountCodes?.forEach((code, index) => {
+      if (discountList?.includes(code)) {
+        duplicateTiers.push(index + 1); // Push the tier ID (index + 1) to the array
+      }
+    });
+
+
+    // Step 3: Handle duplicate discount codes
+    if (duplicateTiers?.length > 0) {
+      // Display error message on the corresponding tiers' cards
+      if (duplicateTiers?.includes(1)) {
+        setDiscountCode1(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      } if (duplicateTiers?.includes(2)) {
+        setDiscountCode2(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      } if (duplicateTiers?.includes(3)) {
+        setDiscountCode3(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      } if (duplicateTiers?.includes(4)) {
+        setDiscountCode4(true);
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+      }
+
+      return; // Stop further processing
+    } else {
+      // No Duplicate discount Code
+      setDiscountCode1(false);
+      setDiscountCode2(false);
+      setDiscountCode3(false);
+      setDiscountCode4(false);
+      // Open Next Form .... and Proceed
+      setExpanded((prevExpand) =>
+        prevExpand.map((state, i) => (i === index ? !state : false))
+      );
+    }
+  }
+
+  // Validation of  Required fields of the Form
   const validateForm = () => {
     const requiredFields = document.querySelectorAll(
       'input[required], select[required]'
@@ -634,7 +682,6 @@ function NewCampaignForm() {
         body: JSON.stringify({ campaignData: newCampaignData }),
       });
       const responseData = await response.json();
-      console.log(responseData);
     } catch (error) {
       console.log(error);
     }
@@ -654,7 +701,8 @@ function NewCampaignForm() {
         }),
       });
       const responseData = await response.json();
-      console.log(responseData);
+
+
     } catch (error) {
       console.log(error);
     }
@@ -706,10 +754,10 @@ function NewCampaignForm() {
           .then((data) => dispatch(addNewCampaign(data)))
           .catch((err) => console.log(err));
 
+
         setIsLoading(false);
       } else {
-        // console.log(newCampaignData);
-        // console.log(result);
+
         return;
       }
       navigate('/campaigns');
@@ -734,11 +782,9 @@ function NewCampaignForm() {
     }
   };
 
-  console.log(editCampaignData);
-  console.log(newCampaignData);
   return (
     <>
-      {(myPlan === 'Free' && TotalCampaign <= 1) || (myPlan === 'Tier1' && TotalCampaign <= 2) ?
+      {(myPlan === 'Free' && !isEdit) || (myPlan === 'Tier1' && !isEdit) ?
         <div className="upgrade-container">
           <p>Upgrade Your Account </p>
           <button className='upgrade-btn' onClick={() => navigate("/price")}>Upgrade Plan</button>
@@ -1167,6 +1213,7 @@ function NewCampaignForm() {
                               {isEdit ? (
                                 <textarea
                                   className='referral-input'
+                                  name={`share_${link?.title}_message`}
                                   rows={4}
                                   value={
                                     editCampaignData[`share_${link?.title}_message`]
@@ -1176,6 +1223,7 @@ function NewCampaignForm() {
                               ) : (
                                 <textarea
                                   className='referral-input'
+                                  name={`share_${link?.title}_message`}
                                   rows={4}
                                   value={
                                     newCampaignData[`share_${link?.title}_message`]
@@ -1331,22 +1379,18 @@ function NewCampaignForm() {
                                       className='small-inputfield'
                                       type='number'
                                       name={`reward_${reward?.id}_tier`}
-                                      value={
-                                        editCampaignData[
-                                        `reward_${reward?.id}_tier`
-                                        ]
-                                      }
+                                      value={editCampaignData[`reward_${reward?.id}_tier`]}
                                       onChange={handleChange}
+                                      disabled={isEdit}
                                     />
                                   ) : (
                                     <input
                                       className='small-inputfield'
                                       type='number'
                                       name={`reward_${reward?.id}_tier`}
-                                      value={
-                                        newCampaignData[`reward_${reward?.id}_tier`]
-                                      }
+                                      value={newCampaignData[`reward_${reward?.id}_tier`]}
                                       onChange={handleChange}
+                                      disabled={reward?.id > 1 && !newCampaignData[`reward_${reward?.id - 1}_tier`]}
                                     />
                                   )}
                                 </div>
@@ -1359,24 +1403,18 @@ function NewCampaignForm() {
                                       className='small-inputfield'
                                       type='number'
                                       name={`reward_${reward?.id}_discount`}
-                                      value={
-                                        editCampaignData[
-                                        `reward_${reward?.id}_discount`
-                                        ]
-                                      }
+                                      value={editCampaignData[`reward_${reward?.id}_discount`]}
                                       onChange={handleChange}
+                                      disabled={isEdit}
                                     />
                                   ) : (
                                     <input
                                       className='small-inputfield'
                                       type='number'
                                       name={`reward_${reward?.id}_discount`}
-                                      value={
-                                        newCampaignData[
-                                        `reward_${reward?.id}_discount`
-                                        ]
-                                      }
+                                      value={newCampaignData[`reward_${reward?.id}_discount`]}
                                       onChange={handleChange}
+                                      disabled={reward?.id > 1 && !newCampaignData[`reward_${reward?.id - 1}_discount`]}
                                     />
                                   )}
                                 </div>
@@ -1389,25 +1427,30 @@ function NewCampaignForm() {
                                       className='large-field'
                                       type='text'
                                       name={`reward_${reward?.id}_code`}
-                                      value={
-                                        editCampaignData[
-                                        `reward_${reward?.id}_code`
-                                        ]
-                                      }
+                                      value={editCampaignData[`reward_${reward?.id}_code`]}
                                       onChange={handleChange}
+                                      disabled={isEdit}
                                     />
                                   ) : (
                                     <input
                                       className='large-field'
                                       type='text'
                                       name={`reward_${reward?.id}_code`}
-                                      value={
-                                        newCampaignData[`reward_${reward?.id}_code`]
-                                      }
+                                      value={newCampaignData[`reward_${reward?.id}_code`]}
                                       onChange={handleChange}
+                                      disabled={reward?.id > 1 && !newCampaignData[`reward_${reward?.id - 1}_code`]}
                                     />
                                   )}
                                 </div>
+
+                              </div>
+                              <div>
+
+                                {discountCode1 === true && reward?.id === 1 && <h6 className='discount_error_text'>{`Discount Code for Tier ${reward?.id} Already Exists`}</h6>}
+                                {discountCode2 === true && reward?.id === 2 && <h6 className='discount_error_text'>{`Discount Code for Tier ${reward?.id} Already Exists`}</h6>}
+                                {discountCode3 === true && reward?.id === 3 && <h6 className='discount_error_text'>{`Discount Code for Tier ${reward?.id} Already Exists`}</h6>}
+                                {discountCode4 === true && reward?.id === 4 && <h6 className='discount_error_text'>{`Discount Code for Tier ${reward?.id} Already Exists`}</h6>}
+
                               </div>
                             </div>
                           </div>
@@ -1426,7 +1469,7 @@ function NewCampaignForm() {
                       </button>
                       <button
                         className='nextBtn'
-                        onClick={() => handleNext(3)}
+                        onClick={() => handleDiscountValidation(3)}
                       >
                         Next
                       </button>
@@ -1838,24 +1881,14 @@ function NewCampaignForm() {
                                 : 'template-card-block'
                             }
                             onClick={() => handleTemplateSelect(template)}
+                            disabled={isEdit}
                           >
                             {template?.id === 1 ? (
                               <h3>
                                 Build a custom template in the Shopify Theme Editor{' '}
                               </h3>
                             ) : (
-                              template?.id > 1 &&
-                              showList?.map(
-                                (data) =>
-                                  data?.image !== null &&
-                                  data?.name === template?.campaign_image && (
-                                    <img
-                                      key={data?.id || template?.id}
-                                      src={data?.image}
-                                      alt={template?.campaign_image}
-                                    />
-                                  )
-                              )
+                              template?.id > 1 && <img key={template?.id} src={template?.landing_welcome_image_url} alt={template?.campaign_name} />
                             )}
                           </div>
                         ))}
@@ -1864,8 +1897,8 @@ function NewCampaignForm() {
 
                     <div className='laststep'>
                       <p>
-                        After the Campaign is created, you will be navigated to your
-                        Shopify Theme Editor to finalize your settings.
+                        After the Campaign is created, you will be navigated to Campaigns Table
+                        Where You can Edit or Finalize Your Campaigns Settings.
                       </p>
                     </div>
                   </div>
@@ -1880,6 +1913,7 @@ function NewCampaignForm() {
                       <button
                         className='saveFormBtn'
                         type='submit'
+                        disabled={isLoading}
                       >
                         {isEdit ? (
                           <>{isLoading ? 'Updating...' : 'Update Campaign'}</>
