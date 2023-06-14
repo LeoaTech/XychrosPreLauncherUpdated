@@ -19,19 +19,13 @@ export const referralSlice = createSlice({
 //export const fetchAllReferrals = (state) => state.referral.referrals;
 export const fetchAllReferrals = (state) => state.referrals.referrals;
 //  Get Referrals By Code
-export const fetchReferralById = (state, referralCode) =>
-  state.referrals.referrals.find(
-    (referrals) => referrals.referrer_id === referralCode
-  );
+export const fetchReferralById = (state, campaign_id) =>
+  state?.referrals?.referrals?.filter(
+    (referrals) => referrals?.campaign_id === campaign_id
+  )?.length || 0;
 
-// All Action of the campaign
+// All Action of the referrals
 
-export const {
-  fetchReferrals,
-  // updateCampaign,
-  // deleteCampaign,
-  // addNewCampaign,
-  // removeCampaign,
-} = referralSlice.actions;
+export const { fetchReferrals } = referralSlice.actions;
 
 export default referralSlice.reducer;
