@@ -47,7 +47,6 @@ export const referralColumns = [
       alignItems: 'center',
       fontSize: 17,
       maxWidth: '12px',
-
     },
   },
 ];

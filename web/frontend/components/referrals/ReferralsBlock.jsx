@@ -1,6 +1,7 @@
 import './ReferralsBlock.css';
 import * as React from 'react';
 import { referralRows, referralColumns } from './dummyData';
+import moment from 'moment';
 import { BiShow } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { ShowModal, DeleteModal } from '../modal/index';
@@ -87,7 +88,7 @@ const ReferralsBlock = (props) => {
   ];
   return (
     <>
-      {props?.tableData.length > 0 ?
+      {props?.tableData.length > 0 ? (
         <div className='datatable'>
           <DataTable
             customStyles={customStyles}
@@ -97,16 +98,21 @@ const ReferralsBlock = (props) => {
             highlightOnHover
           />
         </div>
-        : <h2 style={{
-          color: '#fff',
-          fontSize: 29,
-          margin: 20,
-          height: '50vh',
-          display: 'Flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>No Referral Data</h2>
-      }
+      ) : (
+        <h2
+          style={{
+            color: '#fff',
+            fontSize: 29,
+            margin: 20,
+            height: '50vh',
+            display: 'Flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          No Referral Data
+        </h2>
+      )}
       <div style={{ borderRadius: '15px' }}>
         <ShowModal
           openModal={openModal}
