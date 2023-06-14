@@ -82,12 +82,12 @@
   display: flex;
   /* flex-wrap: no-wrap; */
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-stsart;
   gap: 1rem;
 }
 
 .billing-cards {
-  /* margin-top: 30px; */
+  margin-top: 30px;
   display: flex;
   gap: 20px;
   /* padding-bottom: 15px; */

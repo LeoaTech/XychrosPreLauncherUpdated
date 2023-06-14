@@ -1,15 +1,13 @@
 import SummaryCard from '../ui/SummaryCard';
 import { Marketing, subscriber, Sale, arrow } from '../../assets/index';
 import CampaignBlock from './CampaignBlock';
-import Pagination from '../ui/Pagination';
 import React, { useState, useEffect, Fragment } from 'react';
 import { useStateContext } from '../../contexts/ContextProvider';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchAllCampaigns,
   fetchCampaign,
-  updateCampaign,
-  removeCampaign,
+  updateCampaign
 } from '../../app/features/campaigns/campaignSlice';
 import { useAuthenticatedFetch } from '../../hooks';
 import { fetchAllReferrals } from '../../app/features/referrals/referralSlice';
@@ -23,6 +21,8 @@ export default function CampaignsComponent() {
   const [editData, setEditData] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [campaignName, setCampaignName] = useState('');
+
   const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([]);
 
@@ -31,12 +31,11 @@ export default function CampaignsComponent() {
   useEffect(() => {
     if (List?.length > 0) {
       setCampaigns(List);
-
     }
   }, [dispatch, List]);
 
 
-
+// Get Referrals List
   useEffect(() => {
     if (ReferralList) {
       setReferrals(ReferralList);
@@ -51,7 +50,6 @@ export default function CampaignsComponent() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = getCampaigns?.slice(startIndex, endIndex);
-
   // Handle Previous Page Click events
   const handlePrevClick = () => {
     setCurrentPage((currentPage) => currentPage - 1);
@@ -64,11 +62,13 @@ export default function CampaignsComponent() {
   //HANDLE DELETE CAMPAIGN FUNCTION
   const handleDelete = async (id) => {
     setDeleteId(id);
+
     try {
       const deletedCampaign = getCampaigns.find(
         (campaign) => campaign.campaign_id === id
       );
-      console.log("campaign", deletedCampaign);
+
+      setCampaignName(deletedCampaign?.name)
 
       const response = await fetch(`/api/campaignsettings/${id}`, {
         method: "PATCH",
@@ -86,12 +86,14 @@ export default function CampaignsComponent() {
           const deletedData = await response.json();
           console.log("Deleted", deletedData);
           dispatch(updateCampaign(deletedCampaign));
-          const newData = getCampaigns.filter(
-            (campaign) => campaign.campaign_id !== id
+          const newData = getCampaigns?.filter(
+            (campaign) => campaign?.campaign_id !== id
           );
           console.log("new Data", newData);
           await dispatch(fetchCampaign(newData));
-          setCampaigns(newData);
+
+          setCampaigns([...newData]);
+
         } catch (error) {
           throw new Error("Invalid JSON response");
         }
@@ -101,9 +103,9 @@ export default function CampaignsComponent() {
     } catch (err) {
       console.log(err);
     }
-
-
   };
+
+  // Handle Edit Campaign Data
   const handleEdit = (id) => {
     setIsEdit(true);
     setEditData(getCampaigns?.filter((data) => data?.campaign_id === id));
@@ -124,7 +126,7 @@ export default function CampaignsComponent() {
           icon={subscriber}
           class='referral-icon'
         />
-        <SummaryCard
+        {/* <SummaryCard
           value='$253,467'
           title='Revenue'
           icon={Sale}
@@ -135,7 +137,7 @@ export default function CampaignsComponent() {
           title='Clicks'
           icon={arrow}
           class='clicks-icon'
-        />
+        /> */}
       </div>
       <div className='campaigns'>
         {getCampaigns?.length > 0 ? (
@@ -149,6 +151,8 @@ export default function CampaignsComponent() {
                   data={campaign}
                   deleteId={deleteId}
                   setDeleteId={setDeleteId}
+                  campaignName={campaignName}
+                  setCampaignName={setCampaignName}
                   deleteModal={deleteModal}
                   setDeleteModal={setDeleteModal}
                   handleDelete={handleDelete}

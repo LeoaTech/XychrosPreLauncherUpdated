@@ -1,6 +1,7 @@
 import SummaryCard from '../ui/SummaryCard';
-import './home.css';
-import { Marketing, Sale, subscriber, arrow } from '../../assets/index';
+import './HomeComponent.css';
+import "./home.css"
+import { Marketing, Sale, subscriber, arrow, intro, about } from '../../assets/index';
 import Charts from '../ui/Charts';
 import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -235,13 +236,40 @@ const HomeComponent = () => {
     ],
   };
 
-  console.log(getCampaigns.length);
 
-  console.log(getReferrals.length);
 
   return (
     <div className='home-container'>
-      <div className='summary-blocks'>
+      <h2>Welcome to Viral Launch!</h2>
+      <div className="intro-section">
+        <div className="intro-card">
+          <p>New to Viral Launch? Get up to speed with everything about your product/service launch!</p>
+
+        </div>
+        <img src={intro} alt="INTRO" />
+      </div>
+
+      <div className="about-section">
+        <div className="about-card">
+          <p>Create a new campaign and get your email database filled even before you launch!</p>
+        </div>
+        <img src={about} alt="About" />
+      </div>
+      <div className="contact-us-section">
+        <div className="contact-us-card">
+          <p>Contact Us for further assistance and Feedback!</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HomeComponent;
+
+
+// OLD HOMEPAGE FILE
+
+{/* <div className='summary-blocks'>
         <SummaryCard
           value={
             <CountUp
@@ -278,10 +306,10 @@ const HomeComponent = () => {
           icon={arrow}
           class='clicks-icon'
         />
-      </div>
+      </div> */}
 
-      {/* Charts */}
-      <div className='single-chart'>
+{/* Charts */ }
+{/* <div className='single-chart'>
         <Charts
           type='line'
           header='Total Revenue'
@@ -308,9 +336,4 @@ const HomeComponent = () => {
           DonutChartOptions={DonutChartOptions}
           DonutChartData={DonutChartData}
         />
-      </div>
-    </div>
-  );
-};
-
-export default HomeComponent;
+      </div> */}

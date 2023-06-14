@@ -9,7 +9,7 @@ import {
   MdOutlinePriceChange,
 } from "react-icons/md";
 import { CgNotes } from "react-icons/cg";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaUser} from "react-icons/fa";
 import { HiSpeakerphone } from "react-icons/hi";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { RiCustomerServiceLine } from "react-icons/ri";
@@ -62,11 +62,11 @@ const SideBar = () => {
     {
       title: "Support",
       path: "/support",
-      icon: (
-        <RiCustomerServiceLine
+      icon:
+        <img src={CustomerSupport} alt="customer-support"
           style={{ color: "#fff", height: 24, width: 24 }}
         />
-      ),
+
     },
   ];
 
@@ -153,14 +153,14 @@ const SideBar = () => {
                 }
               >
                 <span className="icon-img">
-                  <HiOutlineUser />{" "}
+                  <FaUser />{" "}
                 </span>
                 <p className="icon-text">User Profile</p>
               </NavLink>
             )}
 
             {/* Hide the FAQ Page Link (Temporary)*/}
-{/* 
+            {/* 
             {mobileMenu && (
               <NavLink
                 to="/faq"
