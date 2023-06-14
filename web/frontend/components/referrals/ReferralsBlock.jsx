@@ -1,7 +1,7 @@
 import './ReferralsBlock.css';
 import * as React from 'react';
 import { referralRows, referralColumns } from './dummyData';
-import moment from 'moment';
+import format from 'date-fns/format';
 import { BiShow } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { ShowModal, DeleteModal } from '../modal/index';
