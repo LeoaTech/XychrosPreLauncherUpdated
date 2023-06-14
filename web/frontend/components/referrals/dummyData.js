@@ -1,9 +1,12 @@
+import format from 'date-fns/format';
+
 export const referralColumns = [
   {
     name: 'Joining Date',
     selector: (row) => row.created_at,
     sortable: true,
     id: 'join_date',
+    format: (row) => format(new Date(row.created_at), 'Pp'),
     style: {
       fontSize: 17,
       // maxWidth: '40px',
@@ -76,6 +79,7 @@ export const modalColumns = [
     selector: (row) => row.created_at,
     sortable: true,
     id: 'date',
+    format: (row) => format(new Date(row.created_at), 'Pp'),
     defaultValue: new Date(),
     style: {
       textAlign: 'center',
