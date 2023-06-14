@@ -3,7 +3,7 @@ import { Shopify } from '@shopify/shopify-api';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost:5432/prelauncher',
+  connectionString: `${process.env.DATABASE_URL}`,
 });
 
 export default function referralsApiEndpoints(app, secret) {

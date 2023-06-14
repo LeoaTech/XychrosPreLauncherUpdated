@@ -53,6 +53,12 @@ const ReferralsBlock = (props) => {
       name: 'Details',
       selector: 'details',
       id: 'details',
+      style: {
+        textAlign: 'center',
+        alignItems: 'center',
+        fontSize: 17,
+        maxWidth: '12px',
+      },
       cell: (row) => {
         return (
           <div className='cellAction'>
@@ -81,16 +87,26 @@ const ReferralsBlock = (props) => {
   ];
   return (
     <>
-      <div className='datatable'>
-        <DataTable
-          customStyles={customStyles}
-          columns={referralColumns.concat(actionColumns)}
-          data={props.tableData}
-          pagination
-          highlightOnHover
-        />
-      </div>
-
+      {props?.tableData.length > 0 ?
+        <div className='datatable'>
+          <DataTable
+            customStyles={customStyles}
+            columns={referralColumns.concat(actionColumns)}
+            data={props?.tableData}
+            pagination
+            highlightOnHover
+          />
+        </div>
+        : <h2 style={{
+          color: '#fff',
+          fontSize: 29,
+          margin: 20,
+          height: '50vh',
+          display: 'Flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>No Referral Data</h2>
+      }
       <div style={{ borderRadius: '15px' }}>
         <ShowModal
           openModal={openModal}

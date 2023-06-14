@@ -1,11 +1,12 @@
 .card-block {
-  height: 400px;
-  width: 260px;
+  height: 370px;
+  width: 280px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  padding: 20px;
+  border: none;
+  box-shadow: 1px 0.5px 4px 1px #796d6d;
+  padding: 15px;
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -22,7 +23,7 @@
 
 .feature {
   display: flex;
-  /* justify-content: flex-start; */
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -36,7 +37,7 @@
 
 .feature p {
   color: rgb(194, 187, 187);
-  font-size: 14spx;
+  font-size: 14px;
 }
 
 .card-content .card-slug {
@@ -80,11 +81,10 @@
   -o-border-radius: 25px;
 }
 
-.subscribed-btn.subscribed {
+.subscribed-btn {
   height: 40px;
   background-color: #635da1;
-
-  width: 120px;
+  width: 170px;
   display: flex;
   justify-content: center;
   border: none;
@@ -93,7 +93,7 @@
   border-radius: 25px;
   color: rgb(252, 252, 252);
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   -webkit-border-radius: 25px;
   -moz-border-radius: 25px;
   -ms-border-radius: 25px;
@@ -102,19 +102,104 @@
 }
 
 .subscribed-btn:hover {
-  background-color: #cfcbcb;
+  background-color: #eee8e8;
+  color: black;
+  font-size: 16.5px;
+  box-shadow: 1px 0.5px 4px 3px #7f7d7d;
+
+
+}
+
+
+@media screen and (max-widht:1480px) {
+  .card-block {
+    height: 370px;
+    width: 270px;
+    /* width: 100%; */
+    line-height: 1.2;
+    padding: 15px;
+
+  }
+
+}
+
+@media screen and (max-widht:1250px) {
+  .card-block {
+    height: 370px;
+    width: 260px;
+    line-height: 1.2;
+    padding: 15px;
+
+  }
+
 }
 
 @media screen and (max-width: 1050px) {
   .card-block {
     height: 100%;
-    width: 250px;
+    width: 216px;
+  }
+
+  .card-block h2 {
+    font-size: 19px;
+  }
+
+  .price-tag p {
+    font-size: 18px;
+  }
+
+  .subscribed-btn {
+    font-size: 16px;
   }
 }
 
+@media screen and (max-width: 786px) {
+  .card-block {
+    height: 100%;
+    width: 240px;
+  }
+
+  .card-block h2 {
+    font-size: 19px;
+  }
+
+  .feature{
+    font-size: 17px;
+  }
+
+  .price-tag p {
+    font-size: 17px;
+  }
+
+  .subscribed-btn {
+    font-size: 17px;
+  }
+}
+
+
+
 @media screen and (max-width: 500px) {
   .card-block {
-    height: 300px;
-    width: 270px;
+    height: 100%;
+    margin: 0 5px;
+    width: 100%;
+  }
+  .card-block h2 {
+    font-size: 15px;
+  }
+
+  .feature{
+    font-size: 14px;
+  }
+
+  .card-content .feature p{
+    font-size: 11px;
+  }
+  .price-tag p {
+    font-size: 14px;
+  }
+
+  .subscribed-btn {
+    font-size: 15px;
   }
 }

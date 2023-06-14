@@ -20,6 +20,7 @@ import {
   fetchCampaignById,
   fetchCampaignByName,
   addNewCampaign,
+  getTotalCampaigns,
 } from '../../app/features/campaigns/campaignSlice';
 import { storeLinks } from './dummySocial';
 import { RewardData } from './rewardTier/RewardData';
@@ -29,6 +30,9 @@ import { fetchAllProducts } from '../../app/features/productSlice';
 import useFetchTemplates from '../../constant/fetchTemplates';
 import { useCallbackPrompt } from '../../hooks/useNavigatingPrompt';
 import SaveDraft from '../modal/SaveDraft';
+import { fetchCurrentTier } from '../../app/features/current_plan/current_plan';
+
+
 
 function NewCampaignForm() {
   const { isEdit, setIsEdit } = useStateContext();
@@ -41,16 +45,24 @@ function NewCampaignForm() {
   const campaignName = useSelector(fetchCampaignByName); //Get the Campaign Name to verify unique campaign name
   const settings = useSelector(fetchAllSettings); //Settings Data
   const products = useSelector(fetchAllProducts); //Get all products of Shop
+  const totalCampaigns = useSelector(getTotalCampaigns);
+  const currentTier = useSelector(fetchCurrentTier);
+
   const campaignById = useSelector(
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
 
   console.log('Edit Campaign Data', campaignById);
+  console.log('Total Campaign Data', totalCampaigns);
+  console.log('Total Campaign Data', currentTier);
 
-  // Get Date for next 6 days for the Campaign End Date
+
+  // Get Tomorrow Date and  Date for next 6 days for the Campaign End Date 
   let today = new Date();
+  let getStartDate = new Date()
   let getNextDate = new Date();
   getNextDate.setDate(today.getDate() + 6);
+  getStartDate.setDate(today.getDate() + 1)
 
   // Local States of Components
   const [errorMessage, setErrorMessage] = useState(false);
@@ -59,7 +71,7 @@ function NewCampaignForm() {
   const [editCampaignData, setEditCampaignData] = useState({});
   const [globalSettings, setGlobalSettings] = useState();
   const [productsData, setProductsData] = useState([]);
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(getStartDate);
   const [endDate, setEndDate] = useState(getNextDate);
   const [errorName, setErrorName] = useState(false);
   const [draftModal, setDraftModal] = useState(false);
@@ -79,7 +91,8 @@ function NewCampaignForm() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [klaviyoList, setKlaviyoList] = useState([]);
-
+  const [myPlan, setMyPlan] = useState('');
+  const [TotalCampaign, setTotalCampaign] = useState()
   //? New Campaign Form Data Fields
   const [newCampaignData, setNewCampaignData] = useState({
     collect_phone: globalSettings?.collect_phone,
@@ -321,7 +334,16 @@ function NewCampaignForm() {
     setShowList(templates_show_list);
   }, [randomTemplate]);
 
+  //  Get Current Tier 
+  useEffect(() => {
+    if (currentTier !== "") {
+      setMyPlan(currentTier);
+    }
 
+    if (totalCampaigns) {
+      setTotalCampaign(totalCampaigns)
+    }
+  }, [currentTier, totalCampaigns])
 
   // Get Klaviyo integration Lists from API
   async function getKlaviyoList() {
@@ -715,1168 +737,1179 @@ function NewCampaignForm() {
   console.log(editCampaignData);
   console.log(newCampaignData);
   return (
-    <div className='new-campaign-container'>
-      <div className='newcampaign-title'>
-        <h1>{isEdit ? 'Edit Campaign' : 'New Campaign'}</h1>
-      </div>
+    <>
+      {(myPlan === 'Free' && TotalCampaign <= 1) || (myPlan === 'Tier1' && TotalCampaign <= 2) ?
+        <div className="upgrade-container">
+          <p>Upgrade Your Account </p>
+          <button className='upgrade-btn' onClick={() => navigate("/price")}>Upgrade Plan</button>
+        </div> :
+        <div className='new-campaign-container'>
+          <div className='newcampaign-title'>
+            <h1>{isEdit ? 'Edit Campaign' : 'New Campaign'}</h1>
+          </div>
 
-      <SaveDraft
-        openModal={showPrompt}
-        confirmNavigation={confirmNavigation}
-        cancelNavigation={cancelNavigation}
-        handleSaveDraft={handleSaveDraft}
-      />
+          <SaveDraft
+            openModal={showPrompt}
+            confirmNavigation={confirmNavigation}
+            cancelNavigation={cancelNavigation}
+            handleSaveDraft={handleSaveDraft}
+          />
 
-      <form onSubmit={handleSaveClick}>
-        {/* Basic Settings Input Form Section  */}
-        <section className='newcampaign-settings'>
-          <div
-            className={`basic-form-settings ${expanded[0] ? 'active-card' : 'inactive-card'
-              }`}
-            onClick={() => handleExpand(0)}
-          >
-            <div className='card-header'>
-              <h2 className='card-title'>Basic Settings</h2>
-              <span
-                className='toggle-btn'
+          <form onSubmit={handleSaveClick}>
+            {/* Basic Settings Input Form Section  */}
+            <section className='newcampaign-settings'>
+              <div
+                className={`basic-form-settings ${expanded[0] ? 'active-card' : 'inactive-card'
+                  }`}
                 onClick={() => handleExpand(0)}
               >
-                {expanded[0] ? (
-                  <IoIosArrowUp
-                    style={{ strokeWidth: '70', fill: '#fff' }}
+                <div className='card-header'>
+                  <h2 className='card-title'>Basic Settings</h2>
+                  <span
+                    className='toggle-btn'
                     onClick={() => handleExpand(0)}
-                  />
-                ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                    onClick={() => handleExpand(0)}
-                  />
-                )}
-              </span>
-            </div>
-          </div>
-          {expanded[0] && (
-            <>
-              <div className='campaign-form'>
-                <div className='input-form-groups'>
-                  <div className='form-group'>
-                    <div className='inputfield'>
-                      <label htmlFor='name'>Campaign Name</label>
-                      {isEdit ? (
-                        <>
-                          <input
-                            type='text'
-                            name='name'
-                            id='name'
-                            value={editCampaignData?.name}
-                            onChange={handleChange}
-                          />{' '}
-                          {errorName && (
-                            <p className='error-message'>
-                              "Campaign Name already Exists"
-                            </p>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <input
-                            type='text'
-                            name='name'
-                            id='name'
-                            placeholder='Campaign Name'
-                            value={newCampaignData?.name}
-                            onChange={handleChange}
-                            required
-                          />
-                          {errorName && (
-                            <p className='error-message'>
-                              Campaign Name already Exists
-                            </p>
-                          )}
-                          {errorMessage && (
-                            <p className='error-message'>
-                              This field is required
-                            </p>
-                          )}
-                        </>
-                      )}
-                    </div>
-
-                    <div className='inputfield'>
-                      <label htmlFor='product_link'>Product Link</label>
-                      {isEdit ? (
-                        <div className='select-products'>
-                          <select
-                            name='product'
-                            id='product'
-                            value={editCampaignData?.product}
-                            onChange={handleChange}
-                          >
-                            {' '}
-                            <option>Select</option>;
-                            {productsData?.map((item) => {
-                              return (
-                                <option
-                                  value={item.title}
-                                  key={item.id}
-                                >
-                                  {item.title}
-                                </option>
-                              );
-                            })}
-                          </select>
-                        </div>
-                      ) : (
-                        <div className='select-products'>
-                          <select
-                            name='product'
-                            id='product'
-                            placeholder='T-Shirts'
-                            value={newCampaignData?.product}
-                            onChange={handleChange}
-                          >
-                            {' '}
-                            <option>Select</option>;
-                            {productsData?.map((item) => {
-                              return (
-                                <option
-                                  value={item.title}
-                                  key={item.id}
-                                >
-                                  {item.title}
-                                </option>
-                              );
-                            })}
-                          </select>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className='form-group'>
-                    <div className='inputfield'>
-                      <label htmlFor='start_date'>Start Date</label>
-
-                      {isEdit ? (
-                        <DatePicker
-                          minDate={new Date()}
-                          showDisabledMonthNavigation
-                          customInput={<ExampleCustomInput />}
-                          shouldCloseOnSelect={true}
-                          selected={
-                            editCampaignData?.start_date
-                              ? new Date(editCampaignData.start_date)
-                              : null
-                          }
-                          value={
-                            editCampaignData?.start_date
-                              ? new Date(editCampaignData.start_date)
-                              : null
-                          }
-                          onChange={(date) =>
-                            setEditCampaignData((prev) => ({
-                              ...prev,
-                              ['start_date']: date,
-                            }))
-                          }
-                        />
-                      ) : (
-                        <DatePicker
-                          name='start_date'
-                          minDate={new Date()}
-                          showDisabledMonthNavigation
-                          customInput={<ExampleCustomInput />}
-                          shouldCloseOnSelect={true}
-                          selected={newCampaignData?.start_date}
-                          value={newCampaignData?.start_date}
-                          onChange={(date) =>
-                            setNewCampaignData((prev) => ({
-                              ...prev,
-                              ['start_date']: date,
-                            }))
-                          }
-                        />
-                      )}
-                    </div>
-
-                    <div className='inputfield'>
-                      <label htmlFor='end_date'>End Date</label>
-                      {isEdit ? (
-                        <DatePicker
-                          minDate={new Date()}
-                          customInput={<ExampleCustomInput />}
-                          showDisabledMonthNavigation
-                          shouldCloseOnSelect={true}
-                          selected={
-                            editCampaignData?.end_date
-                              ? new Date(editCampaignData.end_date)
-                              : null
-                          }
-                          value={
-                            editCampaignData?.end_date
-                              ? new Date(editCampaignData.end_date)
-                              : null
-                          }
-                          onChange={(date) =>
-                            setEditCampaignData((prev) => ({
-                              ...prev,
-                              ['end_date']: date,
-                            }))
-                          }
-                        />
-                      ) : (
-                        <DatePicker
-                          name='end_date'
-                          minDate={new Date()}
-                          customInput={<ExampleCustomInput />}
-                          showDisabledMonthNavigation
-                          shouldCloseOnSelect={true}
-                          selected={newCampaignData?.end_date}
-                          value={newCampaignData?.end_date}
-                          onChange={(date) =>
-                            setNewCampaignData((prev) => ({
-                              ...prev,
-                              ['end_date']: date,
-                            }))
-                          }
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-                {/* Store's Social Links */}
-                <div className='store-links'>
-                  <h2 className='sub-heading'>
-                    Share Store's Social Media Links
-                  </h2>
-                  <div className='store-social-links'>
-                    {storeLinks.map((link) => (
-                      <div
-                        className='social-input-form'
-                        key={link.id}
-                      >
-                        {isEdit ? (
-                          <input
-                            className='social-input'
-                            type='checkbox'
-                            name={`show_${link?.name}`}
-                            checked={
-                              editCampaignData !== undefined
-                                ? editCampaignData[`show_${link?.name}`]
-                                : null
-                            }
-                            onChange={handleCheckboxChange}
-                          />
-                        ) : (
-                          <input
-                            className='social-input'
-                            type='checkbox'
-                            name={`show_${link?.name}`}
-                            checked={newCampaignData[`show_${link?.name}`]}
-                            onChange={handleCheckboxChange}
-                          />
-                        )}
-                        <span className='store-social-icons'>{link.icon}</span>
-                        {isEdit ? (
-                          <input
-                            className='social-inputfield'
-                            type='text'
-                            name={`${link?.name}`}
-                            value={editCampaignData[`${link?.name}`]}
-                            onChange={handleChange}
-                          />
-                        ) : (
-                          <input
-                            className='social-inputfield'
-                            type='text'
-                            name={`${link?.name}`}
-                            value={newCampaignData[`${link?.name}`]}
-                            onChange={handleChange}
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className='collect-setup'>
-                  <div className='collect-settings'>
-                    <h2 className='sub-heading'>Collect</h2>
-
-                    <div>
-                      {isEdit ? (
-                        <input
-                          className='checkbox-input'
-                          type='radio'
-                          name='collect_phone'
-                          value='phone'
-                          checked={editCampaignData?.collect_phone === true}
-                          onChange={handleRadioChange}
-                        />
-                      ) : (
-                        <input
-                          className='checkbox-input'
-                          type='radio'
-                          name='collect_phone'
-                          value='phone'
-                          checked={newCampaignData?.collect_phone === true}
-                          onChange={handleRadioChange}
-                        />
-                      )}
-                      <label htmlFor='collect_phone'>
-                        Email Addresses and Phone Numbers{' '}
-                      </label>
-                    </div>
-                    <div>
-                      {isEdit ? (
-                        <input
-                          className='checkbox-input'
-                          type='radio'
-                          name='collect_phone'
-                          value='email'
-                          checked={editCampaignData?.collect_phone === false}
-                          onChange={handleRadioChange}
-                        />
-                      ) : (
-                        <input
-                          className='checkbox-input'
-                          type='radio'
-                          name='collect_phone'
-                          value='email'
-                          checked={newCampaignData?.collect_phone === false}
-                          onChange={handleRadioChange}
-                        />
-                      )}
-                      <label htmlFor='collect_phone'>
-                        Email Addresses only
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className='next-btn-toggle'>{renderButton(1)}</div>
-            </>
-          )}
-        </section>
-
-        {/* Referal Settings */}
-        <section className='newcampaign-settings'>
-          <div
-            className={`referrals-settings ${expanded[1] ? 'active-card' : 'inactive-card'
-              }`}
-          //  onClick={() => handleExpand(1)}
-          >
-            <div className='card-header'>
-              <h2 className='card-title'>Referral Settings</h2>
-              <span
-                className='toggle-btn'
-              // onClick={() => handleExpand(1)}
-              >
-                {expanded[1] ? (
-                  <IoIosArrowUp
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                    onClick={() => handleExpand(1)}
-                  />
-                ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                  // onClick={() => handleExpand(1)}
-                  />
-                )}
-              </span>
-            </div>
-          </div>
-
-          {expanded[1] && (
-            <>
-              <div className='referral-settings-form'>
-                <div className='referral-container'>
-                  <p>
-                    Select the Social Media channels that you want to allow your
-                    customers to share their referral link with!
-                    <br /> You can also customise the message that you would
-                    want your customers to share!
-                  </p>
-                </div>
-                <div className='social-links-container'>
-                  {integratelinks?.map((link) => (
-                    <div
-                      className='social_block'
-                      key={link?.id}
-                    >
-                      <div className='social-section'>
-                        <div className='social-title'>
-                          <span className='social-icons'>{link?.icon}</span>
-                        </div>
-
-                        <div className='check-input'>
-                          {isEdit ? (
-                            <input
-                              type='checkbox'
-                              name={`share_${link?.title}_referral`}
-                              id={`share_${link?.title}_referral`}
-                              checked={
-                                editCampaignData[
-                                `share_${link?.title}_referral`
-                                ]
-                              }
-                              onChange={handleCheckboxChange}
-                            />
-                          ) : (
-                            <input
-                              type='checkbox'
-                              name={`share_${link?.title}_referral`}
-                              id={`share_${link?.title}_referral`}
-                              checked={
-                                newCampaignData[`share_${link?.title}_referral`]
-                              }
-                              onChange={handleCheckboxChange}
-                            />
-                          )}{' '}
-                          <label htmlFor=''>{link?.desc}</label>
-                        </div>
-
-                        <div className='referral-link-input'>
-                          {isEdit ? (
-                            <textarea
-                              className='referral-input'
-                              rows={4}
-                              value={
-                                editCampaignData[`share_${link?.title}_message`]
-                              }
-                              onChange={handleChange}
-                            />
-                          ) : (
-                            <textarea
-                              className='referral-input'
-                              rows={4}
-                              value={
-                                newCampaignData[`share_${link?.title}_message`]
-                              }
-                              onChange={handleChange}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className='referral-nextbtn'>
-                <>
-                  <button
-                    className='prevBtn'
-                    onClick={() => handlePrevious(0)}
                   >
-                    Previous
-                  </button>
-                  <button
-                    className='nextBtn'
-                    onClick={() => handleNext(2)}
-                  >
-                    Next
-                  </button>
-                </>
-              </div>
-            </>
-          )}
-        </section>
-
-        {/* Reward Settings */}
-
-        <section className='newcampaign-settings'>
-          <div
-            className={`rewards-settings ${expanded[2] ? 'active-card' : 'inactive-card'
-              }`}
-          // onClick={() => handleExpand(2)}
-          >
-            <div className='card-header'>
-              <h2 className='card-title'>Reward Settings</h2>
-              <span
-                className='toggle-btn'
-              // onClick={() => handleExpand(2)}
-              >
-                {expanded[2] ? (
-                  <IoIosArrowUp
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                    onClick={() => handleExpand(2)}
-                  />
-                ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                  // onClick={() => handleExpand(2)}
-                  />
-                )}
-              </span>
-            </div>
-          </div>
-
-          {expanded[2] && (
-            <>
-              <div className='rewards-settings-form'>
-                <p>
-                  Set up the Rewards for your customers here! Select the
-                  discount type and then the reward tiers!
-                </p>
-                <p>
-                  Note: Discount will not be applicable on Shipping. Each code
-                  can be used by a customer only once.
-                </p>
-
-                <div className='rewards-settings-container'>
-                  <h2 className='sub-heading'>Discount</h2>
-                  <div className='discount-settings'>
-                    {error ? (
-                      <p className='error-message'>Select the Discount Type</p>
-                    ) : null}
-
-                    <div>
-                      {isEdit ? (
-                        <input
-                          className='social-radioInput'
-                          type='radio'
-                          name='discount_type'
-                          value='percent'
-                          checked={
-                            editCampaignData?.discount_type === 'percent'
-                          }
-                          onChange={handleDiscountRadioChange}
-                        />
-                      ) : (
-                        <input
-                          className="social-radioInput"
-                          type="radio"
-                          name="discount_type"
-                          value="percent"
-                          checked={newCampaignData?.discount_type === "percent"}
-                          onChange={handleDiscountRadioChange}
-                        />
-                      )}
-                      <label htmlFor=''>% off the entire order</label>
-                    </div>
-                    <div>
-                      {isEdit ? (
-                        <input
-                          className="social-radioInput"
-                          type="radio"
-                          name="discount_type"
-                          value="amount"
-                          checked={editCampaignData?.discount_type === "amount"}
-                          onChange={handleDiscountRadioChange}
-                        />
-                      ) : (
-                        <input
-                          className="social-radioInput"
-                          type="radio"
-                          name="discount_type"
-                          value="amount"
-                          checked={newCampaignData?.discount_type === "amount"}
-                          onChange={handleDiscountRadioChange}
-                        />
-                      )}{' '}
-                      <label htmlFor=''>$ off the entire order</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className='rewards-container'>
-                  {RewardData.map((reward) => (
-                    <div
-                      key={reward.id}
-                      className='reward-card'
-                    >
-                      <div classname='reward-tier-card'>
-                        <div className='reward-title'>
-                          <h2>{reward.title}</h2>
-                          <span>
-                            {' '}
-                            {reward.is_required === true && '(Required)'}
-                          </span>
-                        </div>
-                        <div className='reward-content'>
-                          <div className='reward-form'>
-                            <div className='inputfield'>
-                              <label htmlFor={`reward_${reward?.id}_tier`}>
-                                No of Referrals
-                              </label>
-                              {isEdit ? (
-                                <input
-                                  className='small-inputfield'
-                                  type='number'
-                                  name={`reward_${reward?.id}_tier`}
-                                  value={
-                                    editCampaignData[
-                                    `reward_${reward?.id}_tier`
-                                    ]
-                                  }
-                                  onChange={handleChange}
-                                />
-                              ) : (
-                                <input
-                                  className='small-inputfield'
-                                  type='number'
-                                  name={`reward_${reward?.id}_tier`}
-                                  value={
-                                    newCampaignData[`reward_${reward?.id}_tier`]
-                                  }
-                                  onChange={handleChange}
-                                />
-                              )}
-                            </div>
-                            <div className='inputfield'>
-                              <label htmlFor={`reward_${reward?.id}_discount`}>
-                                Discount
-                              </label>
-                              {isEdit ? (
-                                <input
-                                  className='small-inputfield'
-                                  type='number'
-                                  name={`reward_${reward?.id}_discount`}
-                                  value={
-                                    editCampaignData[
-                                    `reward_${reward?.id}_discount`
-                                    ]
-                                  }
-                                  onChange={handleChange}
-                                />
-                              ) : (
-                                <input
-                                  className='small-inputfield'
-                                  type='number'
-                                  name={`reward_${reward?.id}_discount`}
-                                  value={
-                                    newCampaignData[
-                                    `reward_${reward?.id}_discount`
-                                    ]
-                                  }
-                                  onChange={handleChange}
-                                />
-                              )}
-                            </div>
-                            <div className='inputfield'>
-                              <label htmlFor={`reward_${reward?.id}_code`}>
-                                Discount Code
-                              </label>
-                              {isEdit ? (
-                                <input
-                                  className='large-field'
-                                  type='text'
-                                  name={`reward_${reward?.id}_code`}
-                                  value={
-                                    editCampaignData[
-                                    `reward_${reward?.id}_code`
-                                    ]
-                                  }
-                                  onChange={handleChange}
-                                />
-                              ) : (
-                                <input
-                                  className='large-field'
-                                  type='text'
-                                  name={`reward_${reward?.id}_code`}
-                                  value={
-                                    newCampaignData[`reward_${reward?.id}_code`]
-                                  }
-                                  onChange={handleChange}
-                                />
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className='reward-section'>
-                <>
-                  <button
-                    className='prevBtn'
-                    onClick={() => handlePrevious(1)}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    className='nextBtn'
-                    onClick={() => handleNext(3)}
-                  >
-                    Next
-                  </button>
-                </>
-              </div>
-            </>
-          )}
-        </section>
-
-        {/* Email Settings */}
-        <section className='newcampaign-settings'>
-          <div
-            className={`emails-settings ${expanded[3] ? 'active-card' : 'inactive-card'
-              }`}
-          // onClick={() => handleExpand(3)}
-          >
-            <div className='card-header'>
-              <h2 className='card-title'>Email Settings</h2>
-              <span
-                className='toggle-btn'
-              // onClick={() => handleExpand(3)}
-              >
-                {expanded[3] ? (
-                  <IoIosArrowUp
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                    onClick={() => handleExpand(3)}
-                  />
-                ) : (
-                  <IoIosArrowDown
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                  // onClick={() => handleExpand(3)}
-                  />
-                )}
-              </span>
-            </div>
-          </div>
-          {expanded[3] && (
-            <>
-              <div className='email-container'>
-                <div className='email-optCheck'>
-                  {isEdit ? (
-                    <input
-                      className='checkbox-input'
-                      type='checkbox'
-                      name='double_opt_in'
-                      id='double_opt_in'
-                      checked={editCampaignData?.double_opt_in}
-                      onChange={handleCheckboxChange}
-                    />
-                  ) : (
-                    <input
-                      className='checkbox-input'
-                      type='checkbox'
-                      name='double_opt_in'
-                      id='double_opt_in'
-                      checked={newCampaignData?.double_opt_in}
-                      onChange={handleCheckboxChange}
-                    />
-                  )}
-                  <label htmlFor='double_opt_in'>
-                    Enable Double Opt in for new sign-ups (This feature requires
-                    Professional Plan or above)
-                  </label>
-                </div>
-                <section>
-                  <div className='email-section'>
-                    <h2>Email Settings - Double Opt-in Email </h2>
-                    <div className='email-content'>
-                      <img
-                        src={xychrosLogo}
-                        alt='Shop Logo'
-                        className='shop-logo'
-                      />
-
-                      {isEdit ? (
-                        <textarea
-                          className='email-textinput'
-                          type='text'
-                          rows={9}
-                          value={editCampaignData?.double_opt_in_email}
-                          name='double_opt_in_email'
-                          id='double_opt_in_email'
-                          onChange={handleChange}
-                        />
-                      ) : (
-                        <textarea
-                          className='email-textinput'
-                          type='text'
-                          rows={9}
-                          value={newCampaignData?.double_opt_in_email}
-                          name='double_opt_in_email'
-                          id='double_opt_in_email'
-                          onChange={handleChange}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <div className='email-section'>
-                    <h2>
-                      Welcome Email Draft - This email is sent when a customer
-                      signs up{' '}
-                    </h2>
-                    <div className='email-content'>
-                      <img
-                        src={xychrosLogo}
-                        alt='Shop Logo'
-                        className='shop-logo'
-                      />
-
-                      {isEdit ? (
-                        <textarea
-                          className='email-textinput'
-                          rows={9}
-                          value={editCampaignData?.welcome_email}
-                          name='welcome_email'
-                          id='welcome_email'
-                          onChange={handleChange}
-                        />
-                      ) : (
-                        <textarea
-                          className='email-textinput'
-                          rows={9}
-                          value={newCampaignData?.welcome_email}
-                          name='welcome_email'
-                          id='welcome_email'
-                          onChange={handleChange}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <div className='email-section'>
-                    <h2>
-                      Referral Email Draft - This email is sent when a referral
-                      signs up{' '}
-                    </h2>
-                    <div className='email-content'>
-                      <img
-                        src={xychrosLogo}
-                        alt='Shop Logo'
-                        className='shop-logo'
-                      />
-
-                      {isEdit ? (
-                        <textarea
-                          className='email-textinput'
-                          rows={9}
-                          name='referral_email'
-                          value={editCampaignData?.referral_email}
-                          onChange={handleChange}
-                        />
-                      ) : (
-                        <textarea
-                          className='email-textinput'
-                          rows={9}
-                          name='referral_email'
-                          value={newCampaignData?.referral_email}
-                          onChange={handleChange}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <div className='email-section'>
-                    <h2>
-                      Reward Tier Email Draft - This email is sent when a reward
-                      tier is unlocked
-                    </h2>
-                    <div className='email-content'>
-                      <img
-                        src={xychrosLogo}
-                        alt='Shop Logo'
-                        className='shop-logo'
-                      />
-
-                      {isEdit ? (
-                        <textarea
-                          className='email-textinput'
-                          rows={9}
-                          name='reward_email'
-                          value={editCampaignData?.reward_email}
-                          onChange={handleChange}
-                        />
-                      ) : (
-                        <textarea
-                          className='email-textinput'
-                          rows={9}
-                          name='reward_email'
-                          value={newCampaignData?.reward_email}
-                          onChange={handleChange}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </section>
-              </div>
-              <div className='email-setting-section'>
-                <>
-                  <button
-                    className='prevBtn'
-                    onClick={() => handlePrevious(2)}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    className='nextBtn'
-                    onClick={() => handleNext(4)}
-                  >
-                    Next
-                  </button>
-                </>
-              </div>
-            </>
-          )}
-        </section>
-
-        {/* Integration Settings */}
-
-        <section className='newcampaign-settings'>
-          <div
-            className={`integration-settings ${expanded[4] ? 'active-card' : 'inactive-card'
-              }`}
-          >
-            <div className='card-header'>
-              <h2 className='card-title'>Integration Settings</h2>
-              <span className='toggle-btn'>
-                {expanded[4] ? (
-                  <IoIosArrowUp
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                    onClick={() => handleExpand(4)}
-                  />
-                ) : (
-                  <IoIosArrowDown style={{ strokeWidth: '70', fill: '#fff' }} />
-                )}
-              </span>
-            </div>
-          </div>
-
-          {expanded[4] && (
-            <>
-              <div className='integration-container'>
-                <div className='integration-block-content'>
-                  <div className='check-input'>
-                    {isEdit ? (
-                      <input
-                        type='checkbox'
-                        name='klaviyo_integration'
-                        checked={editCampaignData?.klaviyo_integration}
-                        onChange={handleCheckboxChange}
+                    {expanded[0] ? (
+                      <IoIosArrowUp
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                        onClick={() => handleExpand(0)}
                       />
                     ) : (
-                      <input
-                        type='checkbox'
-                        name='klaviyo_integration'
-                        checked={newCampaignData?.klaviyo_integration}
-                        onChange={handleCheckboxChange}
+                      <IoIosArrowDown
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                        onClick={() => handleExpand(0)}
                       />
                     )}
-                    <label htmlFor='klaviyo_integration'>
-                      Integrate with Klaviyo
-                    </label>
-                  </div>
+                  </span>
+                </div>
+              </div>
+              {expanded[0] && (
+                <>
+                  <div className='campaign-form'>
+                    <div className='input-form-groups'>
+                      <div className='form-group'>
+                        <div className='inputfield'>
+                          <label htmlFor='name'>Campaign Name</label>
+                          {isEdit ? (
+                            <>
+                              <input
+                                type='text'
+                                name='name'
+                                id='name'
+                                value={editCampaignData?.name}
+                                onChange={handleChange}
+                              />{' '}
+                              {errorName && (
+                                <p className='error-message'>
+                                  "Campaign Name already Exists"
+                                </p>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              <input
+                                type='text'
+                                name='name'
+                                id='name'
+                                placeholder='Campaign Name'
+                                value={newCampaignData?.name}
+                                onChange={handleChange}
+                                required
+                              />
+                              {errorName && (
+                                <p className='error-message'>
+                                  Campaign Name already Exists
+                                </p>
+                              )}
+                              {errorMessage && (
+                                <p className='error-message'>
+                                  This field is required
+                                </p>
+                              )}
+                            </>
+                          )}
+                        </div>
 
-                  <div className='integration-settings-container'>
-                    <div className='form-group'>
-                      <div className='inputfield'>
-                        <label htmlFor='klaviyo_api_key'>Private API Key</label>
-                        {isEdit ? (
-                          <input
-                            type='text'
-                            className='disabled-value'
-                            name='klaviyo_api_key'
-                            id='klaviyo_api_key'
-                            placeholder='Enter API Key'
-                            value={globalSettings?.klaviyo_api_key}
-                            onChange={handleChange}
-                            disabled
-                          />
-                        ) : (
-                          <input
-                            className='disabled-value'
-                            type='text'
-                            name='klaviyo_api_key'
-                            id='klaviyo_api_key'
-                            placeholder='Enter API Key'
-                            value={newCampaignData?.klaviyo_api_key}
-                            onChange={handleChange}
-                            disabled
-                          />
-                        )}
+                        <div className='inputfield'>
+                          <label htmlFor='product_link'>Product Link</label>
+                          {isEdit ? (
+                            <div className='select-products'>
+                              <select
+                                name='product'
+                                id='product'
+                                value={editCampaignData?.product}
+                                onChange={handleChange}
+                              >
+                                {' '}
+                                <option>Select</option>;
+                                {productsData?.map((item) => {
+                                  return (
+                                    <option
+                                      value={item.title}
+                                      key={item.id}
+                                    >
+                                      {item.title}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            </div>
+                          ) : (
+                            <div className='select-products'>
+                              <select
+                                name='product'
+                                id='product'
+                                placeholder='T-Shirts'
+                                value={newCampaignData?.product}
+                                onChange={handleChange}
+                              >
+                                {' '}
+                                <option>Select</option>;
+                                {productsData?.map((item) => {
+                                  return (
+                                    <option
+                                      value={item.title}
+                                      key={item.id}
+                                    >
+                                      {item.title}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className='form-group'>
+                        <div className='inputfield'>
+                          <label htmlFor='start_date'>Start Date</label>
+
+                          {isEdit ? (
+                            <DatePicker
+                              minDate={new Date()}
+                              showDisabledMonthNavigation
+                              customInput={<ExampleCustomInput />}
+                              shouldCloseOnSelect={true}
+                              selected={
+                                editCampaignData?.start_date
+                                  ? new Date(editCampaignData.start_date)
+                                  : null
+                              }
+                              value={
+                                editCampaignData?.start_date
+                                  ? new Date(editCampaignData.start_date)
+                                  : null
+                              }
+                              onChange={(date) =>
+                                setEditCampaignData((prev) => ({
+                                  ...prev,
+                                  ['start_date']: date,
+                                }))
+                              }
+                            />
+                          ) : (
+                            <DatePicker
+                              name='start_date'
+                              minDate={new Date()}
+                              showDisabledMonthNavigation
+                              customInput={<ExampleCustomInput />}
+                              shouldCloseOnSelect={true}
+                              selected={newCampaignData?.start_date}
+                              value={newCampaignData?.start_date}
+                              onChange={(date) =>
+                                setNewCampaignData((prev) => ({
+                                  ...prev,
+                                  ['start_date']: date,
+                                }))
+                              }
+                            />
+                          )}
+                        </div>
+
+                        <div className='inputfield'>
+                          <label htmlFor='end_date'>End Date</label>
+                          {isEdit ? (
+                            <DatePicker
+                              minDate={new Date()}
+                              customInput={<ExampleCustomInput />}
+                              showDisabledMonthNavigation
+                              shouldCloseOnSelect={true}
+                              selected={
+                                editCampaignData?.end_date
+                                  ? new Date(editCampaignData.end_date)
+                                  : null
+                              }
+                              value={
+                                editCampaignData?.end_date
+                                  ? new Date(editCampaignData.end_date)
+                                  : null
+                              }
+                              onChange={(date) =>
+                                setEditCampaignData((prev) => ({
+                                  ...prev,
+                                  ['end_date']: date,
+                                }))
+                              }
+                            />
+                          ) : (
+                            <DatePicker
+                              name='end_date'
+                              minDate={new Date()}
+                              customInput={<ExampleCustomInput />}
+                              showDisabledMonthNavigation
+                              shouldCloseOnSelect={true}
+                              selected={newCampaignData?.end_date}
+                              value={newCampaignData?.end_date}
+                              onChange={(date) =>
+                                setNewCampaignData((prev) => ({
+                                  ...prev,
+                                  ['end_date']: date,
+                                }))
+                              }
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <div className='form-group'>
-                      <div className='inputfield'>
-                        {klaviyoList?.length > 2 && (
-                          <label htmlFor=''>List to Add Users</label>
-                        )}
-
-                        {klaviyoList?.length > 2 ? (
-                          <div className='select-user-input'>
+                    {/* Store's Social Links */}
+                    <div className='store-links'>
+                      <h2 className='sub-heading'>
+                        Share Store's Social Media Links
+                      </h2>
+                      <div className='store-social-links'>
+                        {storeLinks.map((link) => (
+                          <div
+                            className='social-input-form'
+                            key={link.id}
+                          >
                             {isEdit ? (
-                              <select
-                                name='klaviyo_list_id'
-                                id='klaviyo_list_id'
-                                value={editCampaignData?.klaviyo_list_id}
-                                onChange={handleChange}
-                              >
-                                <option value='Select'>Select</option>
-                                {klaviyoList?.map((list) => (
-                                  <option
-                                    key={list?.list_id}
-                                    value={list?.list_id}
-                                  >
-                                    {list?.list_name}
-                                  </option>
-                                ))}
-                              </select>
+                              <input
+                                className='social-input'
+                                type='checkbox'
+                                name={`show_${link?.name}`}
+                                checked={
+                                  editCampaignData !== undefined
+                                    ? editCampaignData[`show_${link?.name}`]
+                                    : null
+                                }
+                                onChange={handleCheckboxChange}
+                              />
                             ) : (
-                              <select
-                                name='klaviyo_list_id'
-                                id='klaviyo_list_id'
-                                value={newCampaignData?.klaviyo_list_id}
+                              <input
+                                className='social-input'
+                                type='checkbox'
+                                name={`show_${link?.name}`}
+                                checked={newCampaignData[`show_${link?.name}`]}
+                                onChange={handleCheckboxChange}
+                              />
+                            )}
+                            <span className='store-social-icons'>{link.icon}</span>
+                            {isEdit ? (
+                              <input
+                                className='social-inputfield'
+                                type='text'
+                                name={`${link?.name}`}
+                                value={editCampaignData[`${link?.name}`]}
                                 onChange={handleChange}
-                              >
-                                <option value='Select'>Select</option>
-                                {klaviyoList?.map((list) => (
-                                  <option
-                                    key={list?.list_id}
-                                    value={list?.list_id}
-                                  >
-                                    {list?.list_name}
-                                  </option>
-                                ))}
-                              </select>
+                              />
+                            ) : (
+                              <input
+                                className='social-inputfield'
+                                type='text'
+                                name={`${link?.name}`}
+                                value={newCampaignData[`${link?.name}`]}
+                                onChange={handleChange}
+                              />
                             )}
                           </div>
-                        ) : (
-                          <Link to='/settings'>
-                            <p className='klaviyo-message'>
-                              {klaviyoList?.message}
-                            </p>
-                          </Link>
-                        )}
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className='collect-setup'>
+                      <div className='collect-settings'>
+                        <h2 className='sub-heading'>Collect</h2>
+
+                        <div>
+                          {isEdit ? (
+                            <input
+                              className='checkbox-input'
+                              type='radio'
+                              name='collect_phone'
+                              value='phone'
+                              checked={editCampaignData?.collect_phone === true}
+                              onChange={handleRadioChange}
+                            />
+                          ) : (
+                            <input
+                              className='checkbox-input'
+                              type='radio'
+                              name='collect_phone'
+                              value='phone'
+                              checked={newCampaignData?.collect_phone === true}
+                              onChange={handleRadioChange}
+                            />
+                          )}
+                          <label htmlFor='collect_phone'>
+                            Email Addresses and Phone Numbers{' '}
+                          </label>
+                        </div>
+                        <div>
+                          {isEdit ? (
+                            <input
+                              className='checkbox-input'
+                              type='radio'
+                              name='collect_phone'
+                              value='email'
+                              checked={editCampaignData?.collect_phone === false}
+                              onChange={handleRadioChange}
+                            />
+                          ) : (
+                            <input
+                              className='checkbox-input'
+                              type='radio'
+                              name='collect_phone'
+                              value='email'
+                              checked={newCampaignData?.collect_phone === false}
+                              onChange={handleRadioChange}
+                            />
+                          )}
+                          <label htmlFor='collect_phone'>
+                            Email Addresses only
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <div className='next-btn-toggle'>{renderButton(1)}</div>
+                </>
+              )}
+            </section>
+
+            {/* Referal Settings */}
+            <section className='newcampaign-settings'>
+              <div
+                className={`referrals-settings ${expanded[1] ? 'active-card' : 'inactive-card'
+                  }`}
+              //  onClick={() => handleExpand(1)}
+              >
+                <div className='card-header'>
+                  <h2 className='card-title'>Referral Settings</h2>
+                  <span
+                    className='toggle-btn'
+                  // onClick={() => handleExpand(1)}
+                  >
+                    {expanded[1] ? (
+                      <IoIosArrowUp
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                        onClick={() => handleExpand(1)}
+                      />
+                    ) : (
+                      <IoIosArrowDown
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                      // onClick={() => handleExpand(1)}
+                      />
+                    )}
+                  </span>
                 </div>
               </div>
-              <div className='integrate-setting-btn'>
+
+              {expanded[1] && (
                 <>
-                  <button
-                    className='prevBtn'
-                    onClick={() => handlePrevious(3)}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    className='nextBtn'
-                    onClick={() => NextClick(5)}
-                  >
-                    Next
-                  </button>
+                  <div className='referral-settings-form'>
+                    <div className='referral-container'>
+                      <p>
+                        Select the Social Media channels that you want to allow your
+                        customers to share their referral link with!
+                        <br /> You can also customise the message that you would
+                        want your customers to share!
+                      </p>
+                    </div>
+                    <div className='social-links-container'>
+                      {integratelinks?.map((link) => (
+                        <div
+                          className='social_block'
+                          key={link?.id}
+                        >
+                          <div className='social-section'>
+                            <div className='social-title'>
+                              <span className='social-icons'>{link?.icon}</span>
+                            </div>
+
+                            <div className='check-input'>
+                              {isEdit ? (
+                                <input
+                                  type='checkbox'
+                                  name={`share_${link?.title}_referral`}
+                                  id={`share_${link?.title}_referral`}
+                                  checked={
+                                    editCampaignData[
+                                    `share_${link?.title}_referral`
+                                    ]
+                                  }
+                                  onChange={handleCheckboxChange}
+                                />
+                              ) : (
+                                <input
+                                  type='checkbox'
+                                  name={`share_${link?.title}_referral`}
+                                  id={`share_${link?.title}_referral`}
+                                  checked={
+                                    newCampaignData[`share_${link?.title}_referral`]
+                                  }
+                                  onChange={handleCheckboxChange}
+                                />
+                              )}{' '}
+                              <label htmlFor=''>{link?.desc}</label>
+                            </div>
+
+                            <div className='referral-link-input'>
+                              {isEdit ? (
+                                <textarea
+                                  className='referral-input'
+                                  rows={4}
+                                  value={
+                                    editCampaignData[`share_${link?.title}_message`]
+                                  }
+                                  onChange={handleChange}
+                                />
+                              ) : (
+                                <textarea
+                                  className='referral-input'
+                                  rows={4}
+                                  value={
+                                    newCampaignData[`share_${link?.title}_message`]
+                                  }
+                                  onChange={handleChange}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className='referral-nextbtn'>
+                    <>
+                      <button
+                        className='prevBtn'
+                        onClick={() => handlePrevious(0)}
+                      >
+                        Previous
+                      </button>
+                      <button
+                        className='nextBtn'
+                        onClick={() => handleNext(2)}
+                      >
+                        Next
+                      </button>
+                    </>
+                  </div>
                 </>
+              )}
+            </section>
+
+            {/* Reward Settings */}
+
+            <section className='newcampaign-settings'>
+              <div
+                className={`rewards-settings ${expanded[2] ? 'active-card' : 'inactive-card'
+                  }`}
+              // onClick={() => handleExpand(2)}
+              >
+                <div className='card-header'>
+                  <h2 className='card-title'>Reward Settings</h2>
+                  <span
+                    className='toggle-btn'
+                  // onClick={() => handleExpand(2)}
+                  >
+                    {expanded[2] ? (
+                      <IoIosArrowUp
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                        onClick={() => handleExpand(2)}
+                      />
+                    ) : (
+                      <IoIosArrowDown
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                      // onClick={() => handleExpand(2)}
+                      />
+                    )}
+                  </span>
+                </div>
               </div>
-            </>
-          )}
-        </section>
 
-        {/* Template Settings */}
+              {expanded[2] && (
+                <>
+                  <div className='rewards-settings-form'>
+                    <p>
+                      Set up the Rewards for your customers here! Select the
+                      discount type and then the reward tiers!
+                    </p>
+                    <p>
+                      Note: Discount will not be applicable on Shipping. Each code
+                      can be used by a customer only once.
+                    </p>
 
-        <section className='newcampaign-settings'>
-          <div
-            className={`template-settings ${expanded[5] ? 'active-card' : 'inactive-card'
-              }`}
-          >
-            <div className='card-header'>
-              <h2 className='card-title'>Template Settings</h2>
-              <span className='toggle-btn'>
-                {expanded[5] ? (
-                  <IoIosArrowUp
-                    style={{ strokeWidth: '70', fill: '#fff' }}
-                    onClick={() => handleExpand(5)}
-                  />
-                ) : (
-                  <IoIosArrowDown style={{ strokeWidth: '70', fill: '#fff' }} />
-                )}
-              </span>
+                    <div className='rewards-settings-container'>
+                      <h2 className='sub-heading'>Discount</h2>
+                      <div className='discount-settings'>
+                        {error ? (
+                          <p className='error-message'>Select the Discount Type</p>
+                        ) : null}
+
+                        <div>
+                          {isEdit ? (
+                            <input
+                              className='social-radioInput'
+                              type='radio'
+                              name='discount_type'
+                              value='percent'
+                              checked={
+                                editCampaignData?.discount_type === 'percent'
+                              }
+                              onChange={handleDiscountRadioChange}
+                            />
+                          ) : (
+                            <input
+                              className="social-radioInput"
+                              type="radio"
+                              name="discount_type"
+                              value="percent"
+                              checked={newCampaignData?.discount_type === "percent"}
+                              onChange={handleDiscountRadioChange}
+                            />
+                          )}
+                          <label htmlFor=''>% off the entire order</label>
+                        </div>
+                        <div>
+                          {isEdit ? (
+                            <input
+                              className="social-radioInput"
+                              type="radio"
+                              name="discount_type"
+                              value="amount"
+                              checked={editCampaignData?.discount_type === "amount"}
+                              onChange={handleDiscountRadioChange}
+                            />
+                          ) : (
+                            <input
+                              className="social-radioInput"
+                              type="radio"
+                              name="discount_type"
+                              value="amount"
+                              checked={newCampaignData?.discount_type === "amount"}
+                              onChange={handleDiscountRadioChange}
+                            />
+                          )}{' '}
+                          <label htmlFor=''>$ off the entire order</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className='rewards-container'>
+                      {RewardData.map((reward) => (
+                        <div
+                          key={reward.id}
+                          className='reward-card'
+                        >
+                          <div classname='reward-tier-card'>
+                            <div className='reward-title'>
+                              <h2>{reward.title}</h2>
+                              <span>
+                                {' '}
+                                {reward.is_required === true && '(Required)'}
+                              </span>
+                            </div>
+                            <div className='reward-content'>
+                              <div className='reward-form'>
+                                <div className='inputfield'>
+                                  <label htmlFor={`reward_${reward?.id}_tier`}>
+                                    No of Referrals
+                                  </label>
+                                  {isEdit ? (
+                                    <input
+                                      className='small-inputfield'
+                                      type='number'
+                                      name={`reward_${reward?.id}_tier`}
+                                      value={
+                                        editCampaignData[
+                                        `reward_${reward?.id}_tier`
+                                        ]
+                                      }
+                                      onChange={handleChange}
+                                    />
+                                  ) : (
+                                    <input
+                                      className='small-inputfield'
+                                      type='number'
+                                      name={`reward_${reward?.id}_tier`}
+                                      value={
+                                        newCampaignData[`reward_${reward?.id}_tier`]
+                                      }
+                                      onChange={handleChange}
+                                    />
+                                  )}
+                                </div>
+                                <div className='inputfield'>
+                                  <label htmlFor={`reward_${reward?.id}_discount`}>
+                                    Discount
+                                  </label>
+                                  {isEdit ? (
+                                    <input
+                                      className='small-inputfield'
+                                      type='number'
+                                      name={`reward_${reward?.id}_discount`}
+                                      value={
+                                        editCampaignData[
+                                        `reward_${reward?.id}_discount`
+                                        ]
+                                      }
+                                      onChange={handleChange}
+                                    />
+                                  ) : (
+                                    <input
+                                      className='small-inputfield'
+                                      type='number'
+                                      name={`reward_${reward?.id}_discount`}
+                                      value={
+                                        newCampaignData[
+                                        `reward_${reward?.id}_discount`
+                                        ]
+                                      }
+                                      onChange={handleChange}
+                                    />
+                                  )}
+                                </div>
+                                <div className='inputfield'>
+                                  <label htmlFor={`reward_${reward?.id}_code`}>
+                                    Discount Code
+                                  </label>
+                                  {isEdit ? (
+                                    <input
+                                      className='large-field'
+                                      type='text'
+                                      name={`reward_${reward?.id}_code`}
+                                      value={
+                                        editCampaignData[
+                                        `reward_${reward?.id}_code`
+                                        ]
+                                      }
+                                      onChange={handleChange}
+                                    />
+                                  ) : (
+                                    <input
+                                      className='large-field'
+                                      type='text'
+                                      name={`reward_${reward?.id}_code`}
+                                      value={
+                                        newCampaignData[`reward_${reward?.id}_code`]
+                                      }
+                                      onChange={handleChange}
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className='reward-section'>
+                    <>
+                      <button
+                        className='prevBtn'
+                        onClick={() => handlePrevious(1)}
+                      >
+                        Previous
+                      </button>
+                      <button
+                        className='nextBtn'
+                        onClick={() => handleNext(3)}
+                      >
+                        Next
+                      </button>
+                    </>
+                  </div>
+                </>
+              )}
+            </section>
+
+            {/* Email Settings */}
+            <section className='newcampaign-settings'>
+              <div
+                className={`emails-settings ${expanded[3] ? 'active-card' : 'inactive-card'
+                  }`}
+              // onClick={() => handleExpand(3)}
+              >
+                <div className='card-header'>
+                  <h2 className='card-title'>Email Settings</h2>
+                  <span
+                    className='toggle-btn'
+                  // onClick={() => handleExpand(3)}
+                  >
+                    {expanded[3] ? (
+                      <IoIosArrowUp
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                        onClick={() => handleExpand(3)}
+                      />
+                    ) : (
+                      <IoIosArrowDown
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                      // onClick={() => handleExpand(3)}
+                      />
+                    )}
+                  </span>
+                </div>
+              </div>
+              {expanded[3] && (
+                <>
+                  <div className='email-container'>
+                    <div className='email-optCheck'>
+                      {isEdit ? (
+                        <input
+                          className='checkbox-input'
+                          type='checkbox'
+                          name='double_opt_in'
+                          id='double_opt_in'
+                          checked={editCampaignData?.double_opt_in}
+                          onChange={handleCheckboxChange}
+                        />
+                      ) : (
+                        <input
+                          className='checkbox-input'
+                          type='checkbox'
+                          name='double_opt_in'
+                          id='double_opt_in'
+                          checked={newCampaignData?.double_opt_in}
+                          onChange={handleCheckboxChange}
+                        />
+                      )}
+                      <label htmlFor='double_opt_in'>
+                        Enable Double Opt in for new sign-ups (This feature requires
+                        Professional Plan or above)
+                      </label>
+                    </div>
+                    <section>
+                      <div className='email-section'>
+                        <h2>Email Settings - Double Opt-in Email </h2>
+                        <div className='email-content'>
+                          <img
+                            src={xychrosLogo}
+                            alt='Shop Logo'
+                            className='shop-logo'
+                          />
+
+                          {isEdit ? (
+                            <textarea
+                              className='email-textinput'
+                              type='text'
+                              rows={9}
+                              value={editCampaignData?.double_opt_in_email}
+                              name='double_opt_in_email'
+                              id='double_opt_in_email'
+                              onChange={handleChange}
+                            />
+                          ) : (
+                            <textarea
+                              className='email-textinput'
+                              type='text'
+                              rows={9}
+                              value={newCampaignData?.double_opt_in_email}
+                              name='double_opt_in_email'
+                              id='double_opt_in_email'
+                              onChange={handleChange}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </section>
+                    <section>
+                      <div className='email-section'>
+                        <h2>
+                          Welcome Email Draft - This email is sent when a customer
+                          signs up{' '}
+                        </h2>
+                        <div className='email-content'>
+                          <img
+                            src={xychrosLogo}
+                            alt='Shop Logo'
+                            className='shop-logo'
+                          />
+
+                          {isEdit ? (
+                            <textarea
+                              className='email-textinput'
+                              rows={9}
+                              value={editCampaignData?.welcome_email}
+                              name='welcome_email'
+                              id='welcome_email'
+                              onChange={handleChange}
+                            />
+                          ) : (
+                            <textarea
+                              className='email-textinput'
+                              rows={9}
+                              value={newCampaignData?.welcome_email}
+                              name='welcome_email'
+                              id='welcome_email'
+                              onChange={handleChange}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </section>
+                    <section>
+                      <div className='email-section'>
+                        <h2>
+                          Referral Email Draft - This email is sent when a referral
+                          signs up{' '}
+                        </h2>
+                        <div className='email-content'>
+                          <img
+                            src={xychrosLogo}
+                            alt='Shop Logo'
+                            className='shop-logo'
+                          />
+
+                          {isEdit ? (
+                            <textarea
+                              className='email-textinput'
+                              rows={9}
+                              name='referral_email'
+                              value={editCampaignData?.referral_email}
+                              onChange={handleChange}
+                            />
+                          ) : (
+                            <textarea
+                              className='email-textinput'
+                              rows={9}
+                              name='referral_email'
+                              value={newCampaignData?.referral_email}
+                              onChange={handleChange}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </section>
+                    <section>
+                      <div className='email-section'>
+                        <h2>
+                          Reward Tier Email Draft - This email is sent when a reward
+                          tier is unlocked
+                        </h2>
+                        <div className='email-content'>
+                          <img
+                            src={xychrosLogo}
+                            alt='Shop Logo'
+                            className='shop-logo'
+                          />
+
+                          {isEdit ? (
+                            <textarea
+                              className='email-textinput'
+                              rows={9}
+                              name='reward_email'
+                              value={editCampaignData?.reward_email}
+                              onChange={handleChange}
+                            />
+                          ) : (
+                            <textarea
+                              className='email-textinput'
+                              rows={9}
+                              name='reward_email'
+                              value={newCampaignData?.reward_email}
+                              onChange={handleChange}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                  <div className='email-setting-section'>
+                    <>
+                      <button
+                        className='prevBtn'
+                        onClick={() => handlePrevious(2)}
+                      >
+                        Previous
+                      </button>
+                      <button
+                        className='nextBtn'
+                        onClick={() => handleNext(4)}
+                      >
+                        Next
+                      </button>
+                    </>
+                  </div>
+                </>
+              )}
+            </section>
+
+            {/* Integration Settings */}
+
+            <section className='newcampaign-settings'>
+              <div
+                className={`integration-settings ${expanded[4] ? 'active-card' : 'inactive-card'
+                  }`}
+              >
+                <div className='card-header'>
+                  <h2 className='card-title'>Integration Settings</h2>
+                  <span className='toggle-btn'>
+                    {expanded[4] ? (
+                      <IoIosArrowUp
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                        onClick={() => handleExpand(4)}
+                      />
+                    ) : (
+                      <IoIosArrowDown style={{ strokeWidth: '70', fill: '#fff' }} />
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              {expanded[4] && (
+                <>
+                  <div className='integration-container'>
+                    <div className='integration-block-content'>
+                      <div className='check-input'>
+                        {isEdit ? (
+                          <input
+                            type='checkbox'
+                            name='klaviyo_integration'
+                            checked={editCampaignData?.klaviyo_integration}
+                            onChange={handleCheckboxChange}
+                          />
+                        ) : (
+                          <input
+                            type='checkbox'
+                            name='klaviyo_integration'
+                            checked={newCampaignData?.klaviyo_integration}
+                            onChange={handleCheckboxChange}
+                          />
+                        )}
+                        <label htmlFor='klaviyo_integration'>
+                          Integrate with Klaviyo
+                        </label>
+                      </div>
+
+                      <div className='integration-settings-container'>
+                        <div className='form-group'>
+                          <div className='inputfield'>
+                            <label htmlFor='klaviyo_api_key'>Private API Key</label>
+                            {isEdit ? (
+                              <input
+                                type='text'
+                                className='disabled-value'
+                                name='klaviyo_api_key'
+                                id='klaviyo_api_key'
+                                placeholder='Enter API Key'
+                                value={globalSettings?.klaviyo_api_key}
+                                onChange={handleChange}
+                                disabled
+                              />
+                            ) : (
+                              <input
+                                className='disabled-value'
+                                type='text'
+                                name='klaviyo_api_key'
+                                id='klaviyo_api_key'
+                                placeholder='Enter API Key'
+                                value={newCampaignData?.klaviyo_api_key}
+                                onChange={handleChange}
+                                disabled
+                              />
+                            )}
+                          </div>
+                        </div>
+                        <div className='form-group'>
+                          <div className='inputfield'>
+                            {klaviyoList?.length > 2 && (
+                              <label htmlFor=''>List to Add Users</label>
+                            )}
+
+                            {klaviyoList?.length > 2 ? (
+                              <div className='select-user-input'>
+                                {isEdit ? (
+                                  <select
+                                    name='klaviyo_list_id'
+                                    id='klaviyo_list_id'
+                                    value={editCampaignData?.klaviyo_list_id}
+                                    onChange={handleChange}
+                                  >
+                                    <option value='Select'>Select</option>
+                                    {klaviyoList?.map((list) => (
+                                      <option
+                                        key={list?.list_id}
+                                        value={list?.list_id}
+                                      >
+                                        {list?.list_name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                ) : (
+                                  <select
+                                    name='klaviyo_list_id'
+                                    id='klaviyo_list_id'
+                                    value={newCampaignData?.klaviyo_list_id}
+                                    onChange={handleChange}
+                                  >
+                                    <option value='Select'>Select</option>
+                                    {klaviyoList?.map((list) => (
+                                      <option
+                                        key={list?.list_id}
+                                        value={list?.list_id}
+                                      >
+                                        {list?.list_name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                )}
+                              </div>
+                            ) : (
+                              <Link to='/settings'>
+                                <p className='klaviyo-message'>
+                                  {klaviyoList?.message}
+                                </p>
+                              </Link>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='integrate-setting-btn'>
+                    <>
+                      <button
+                        className='prevBtn'
+                        onClick={() => handlePrevious(3)}
+                      >
+                        Previous
+                      </button>
+                      <button
+                        className='nextBtn'
+                        onClick={() => NextClick(5)}
+                      >
+                        Next
+                      </button>
+                    </>
+                  </div>
+                </>
+              )}
+            </section>
+
+            {/* Template Settings */}
+
+            <section className='newcampaign-settings'>
+              <div
+                className={`template-settings ${expanded[5] ? 'active-card' : 'inactive-card'
+                  }`}
+              >
+                <div className='card-header'>
+                  <h2 className='card-title'>Template Settings</h2>
+                  <span className='toggle-btn'>
+                    {expanded[5] ? (
+                      <IoIosArrowUp
+                        style={{ strokeWidth: '70', fill: '#fff' }}
+                        onClick={() => handleExpand(5)}
+                      />
+                    ) : (
+                      <IoIosArrowDown style={{ strokeWidth: '70', fill: '#fff' }} />
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              {expanded[5] && (
+                <>
+                  <div className='template-container'>
+                    <div className='template-content'>
+                      <p>Select one of the following specially curated template</p>
+                    </div>
+                    <div className='templates-block-container'>
+                      <div className='template-cards'>
+                        {randomTemplate?.map((template, index) => (
+                          <div
+                            key={template?.id}
+                            className={
+                              selectedTemplateData?.id === template?.id
+                                ? 'template-card-block selected'
+                                : 'template-card-block'
+                            }
+                            onClick={() => handleTemplateSelect(template)}
+                          >
+                            {template?.id === 1 ? (
+                              <h3>
+                                Build a custom template in the Shopify Theme Editor{' '}
+                              </h3>
+                            ) : (
+                              template?.id > 1 &&
+                              showList?.map(
+                                (data) =>
+                                  data?.image !== null &&
+                                  data?.name === template?.campaign_image && (
+                                    <img
+                                      key={data?.id || template?.id}
+                                      src={data?.image}
+                                      alt={template?.campaign_image}
+                                    />
+                                  )
+                              )
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className='laststep'>
+                      <p>
+                        After the Campaign is created, you will be navigated to your
+                        Shopify Theme Editor to finalize your settings.
+                      </p>
+                    </div>
+                  </div>
+                  <div className='template-end'>
+                    <>
+                      <button
+                        className='prevBtn'
+                        onClick={() => handlePrevious(4)}
+                      >
+                        Previous
+                      </button>
+                      <button
+                        className='saveFormBtn'
+                        type='submit'
+                      >
+                        {isEdit ? (
+                          <>{isLoading ? 'Updating...' : 'Update Campaign'}</>
+                        ) : (
+                          <>{isLoading ? 'Creating...' : 'Create Campaign'}</>
+                        )}
+                      </button>
+
+
+                    </>
+                  </div>
+                </>
+              )}
+            </section>
+          </form>
+
+          {/* Loading Animation  */}
+          <div id='loading-overlay'>
+            <div id='loading-spinner'>
+              <h2>Setting Up the best templates for your campaigns</h2>
+              <img
+                src={anime}
+                alt='image'
+              />
             </div>
           </div>
-
-          {expanded[5] && (
-            <>
-              <div className='template-container'>
-                <div className='template-content'>
-                  <p>Select one of the following specially curated template</p>
-                </div>
-                <div className='templates-block-container'>
-                  <div className='template-cards'>
-                    {randomTemplate?.map((template, index) => (
-                      <div
-                        key={template?.id}
-                        className={
-                          selectedTemplateData?.id === template?.id
-                            ? 'template-card-block selected'
-                            : 'template-card-block'
-                        }
-                        onClick={() => handleTemplateSelect(template)}
-                      >
-                        {template?.id === 1 ? (
-                          <h3>
-                            Build a custom template in the Shopify Theme Editor{' '}
-                          </h3>
-                        ) : (
-                          template?.id > 1 &&
-                          showList?.map(
-                            (data) =>
-                              data?.image !== null &&
-                              data?.name === template?.campaign_image && (
-                                <img
-                                  key={data?.id || template?.id}
-                                  src={data?.image}
-                                  alt={template?.campaign_image}
-                                />
-                              )
-                          )
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className='laststep'>
-                  <p>
-                    After the Campaign is created, you will be navigated to your
-                    Shopify Theme Editor to finalize your settings.
-                  </p>
-                </div>
-              </div>
-              <div className='template-end'>
-                <>
-                  <button
-                    className='prevBtn'
-                    onClick={() => handlePrevious(4)}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    className='saveFormBtn'
-                    type='submit'
-                  >
-                    {isEdit ? (
-                      <>{isLoading ? 'Updating...' : 'Update Campaign'}</>
-                    ) : (
-                      <>{isLoading ? 'Creating...' : 'Create Campaign'}</>
-                    )}
-                  </button>
-                </>
-              </div>
-            </>
-          )}
-        </section>
-      </form>
-
-      {/* Loading Animation  */}
-      <div id='loading-overlay'>
-        <div id='loading-spinner'>
-          <h2>Setting Up the best templates for your campaigns</h2>
-          <img
-            src={anime}
-            alt='image'
-          />
         </div>
-      </div>
-    </div>
+
+      }
+    </>
   );
 }
 

@@ -1,36 +1,31 @@
 import React, { useState } from "react";
 import "./billingCard.css";
-import { Link } from "react-router-dom";
-const BillingCard = ({ card, handleSubscription, isSubscribed }) => {
+import { Link, useNavigate } from "react-router-dom";
+import { BsCheck2 } from "react-icons/bs";
 
+const BillingCard = ({ card }) => {
+
+  const navigate = useNavigate();
   return (
-    <div className="card-block" onClick={() => handleSubscription(card?.id)}>
-      <h2>{card.title}</h2>
-      <div className="card-content">
-        {card.feature &&
-          card.feature.map((feature) => {
-            return (
-              <>
-                <div className="feature" key={feature?.id}>
-                  <span className="check-icon">
-                    {feature?.icon}
-                  </span>
-                  <p>{feature.title}</p>
-                </div>
-              </>
-            );
-          })}
+    <div className="card-block">
+      <h2>{card.plan_name}</h2>
+      <ul className="card-content">
+        {card?.features && Object.entries(card?.features).map(([key, value]) => (
+          <li className="feature" key={key}>
+            <BsCheck2
+              style={{
+                height: "24",
+                width: "24",
+              }}
+            />{value}
+          </li>
+        ))}
+      </ul>
 
-        {card.slug && (
-          <Link className="card-slug" to="/viewdetails">
-            {card.slug}
-          </Link>
-        )}
-      </div>
 
       <div className="price-tag">
         <p>${card.price}/month</p>
-        <button className={`subscribed-btn ${isSubscribed ? 'subscribed' : ''}`} disabled={isSubscribed}> {isSubscribed ? "Subscribed" : card?.btnText}</button>
+        <button className='subscribed-btn' onClick={() => navigate("/price")}> Change Plan</button>
       </div>
     </div>
   );

@@ -1,21 +1,26 @@
 .feedback-container {
   color: white;
   margin: 40px;
-  margin-top: 60px;
-  padding: 35px;
+  margin-left: 5%;
+  margin-top: 40px;
+  padding: 10px;
 }
 
 .feedback-desc {
-  font-size: 24px;
-  line-height: 50px;
+  font-size: 21px;
+  line-height: 1.1;
 }
+
 .feedback-desc p {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
+
 .feedback-form {
-  width: 1200px;
-  padding: 30px;
-  margin-top: 40px;
+ 
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  margin-top: 30px;
   display: flex;
   /* flex-direction: column; */
   justify-content: space-between;
@@ -28,10 +33,17 @@
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
 }
+
 .feedback-form h2 {
   font-size: 30px;
   font-weight: 700px;
   margin-bottom: 20px;
+}
+
+.feedback-google-form {
+  width: 100%;
+  height: 981px;
+  overflow: hidden
 }
 
 .rating-content {
@@ -47,10 +59,12 @@
   justify-content: space-between;
   margin-bottom: 30px;
 }
+
 .link__input label {
   margin: 6px;
   font-size: 17px;
 }
+
 .link__input input {
   width: 400px;
   background-color: rgba(56, 54, 54, 0.894);
@@ -93,6 +107,47 @@
   color: #fff;
   font-size: 23px;
 }
+
+
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  margin-left: 50%;
+  display: grid;
+  border: 4.5px solid #0000;
+  border-radius: 50%;
+  border-color: #dbdcef #0000;
+  animation: spinner-e04l1k 1s infinite linear;
+}
+
+.spinner::before,
+.spinner::after {
+  content: "";
+  grid-area: 1/1;
+  margin: 2.2px;
+  border: inherit;
+  border-radius: 50%;
+}
+
+.spinner::before {
+  border-color: #474bff #0000;
+  animation: inherit;
+  animation-duration: 0.5s;
+  animation-direction: reverse;
+}
+
+.spinner::after {
+  margin: 8.9px;
+}
+
+@keyframes spinner-e04l1k {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+
 /* Media Queries */
 
 @media only screen and (max-width: 1440px) {
@@ -123,12 +178,19 @@
   .feedback-container {
     margin: 18px;
     margin-top: 30px;
+    margin-left: 3%;
     padding: 11px;
   }
 
   .feedback-form {
-    width: 580px;
+    width: 100%;
+    height: 90%;
+    /* overflow-y: hidden; */
     padding: 20px;
+  }
+
+  .feedback-google-form {
+    /* overflow-y: hidden; */
   }
 
   .rating-content {
@@ -207,7 +269,7 @@
     margin: 10px;
     display: flex;
     flex-direction: column;
-    justify-content:center;
+    justify-content: center;
     align-items: center;
   }
 
@@ -216,6 +278,7 @@
     margin: -4px;
     height: 100%;
   }
+
   .rating-content {
     display: flex;
     justify-content: flex-start;
@@ -225,6 +288,7 @@
   .link__input input {
     width: 290px;
   }
+
   .text-feedback {
     margin-top: 20px;
   }

@@ -1,17 +1,17 @@
 .support-container {
   color: white;
-  margin: 40px;
-  margin-top: 60px;
-
+  margin: 30px;
+  /* margin-top: 60px; */
+  margin-left: 4%;
   padding: 35px;
 }
 
 .top-description {
-  font-size: 28px;
-  line-height: 50px;
+  font-size: 22px;
+  line-height: 1.4;
 }
 .top-description p {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 .top-description a {
   color: var(--secondary-color);
@@ -26,12 +26,15 @@
 
 .section-form {
   padding: 20px;
-  margin: 20px;
+  margin: 0 20px;
   height: 100%;
 }
 
+
+
 .support-form {
-  width: 1200px;
+  width: 100%;
+  height: 100%;
   padding: 30px;
   margin-top: 40px;
   margin: 10 20px;
@@ -41,6 +44,10 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
+}
+.support-google-form{
+  /* height: 100%; */
+  width: 100%;
 }
 
 .file-links {
@@ -126,7 +133,47 @@
   -o-border-radius: 25px;
 }
 
-@media only screen and (max-width: 1440px) {
+
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  border: 4.5px solid #0000;
+  border-radius: 50%;
+  border-color: #dbdcef #0000;
+  animation: spinner-e04l1k 1s infinite linear;
+}
+
+.spinner::before,
+.spinner::after {
+  content: "";
+  grid-area: 1/1;
+  margin: 2.2px;
+  border: inherit;
+  border-radius: 50%;
+}
+
+.spinner::before {
+  border-color: #474bff #0000;
+  animation: inherit;
+  animation-duration: 0.5s;
+  animation-direction: reverse;
+}
+
+.spinner::after {
+  margin: 8.9px;
+}
+
+@keyframes spinner-e04l1k {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+
+/* Media Queries */
+@media only screen and (max-width: 1480px) {
   .support-container {
     margin: 38px;
     margin-top: 30px;
@@ -134,7 +181,7 @@
   }
 
   .support-form {
-    width: 750px;
+    width: 100%;
     padding: 20px;
   }
 
@@ -147,15 +194,16 @@
   }
 }
 
-@media only screen and (max-width: 1100px) {
+@media only screen and (max-width: 1280px) {
   .support-container {
     margin: 18px;
-    margin-top: 30px;
-    padding: 21px;
+    margin-top: 10px;
+    padding: 14px 21px;
+    margin-left: 3%;
   }
 
   .support-form {
-    width: 700px;
+    width: 100%;
     padding: 20px;
   }
 
@@ -179,7 +227,7 @@
   }
 
   .support-form {
-    width: 450px;
+    width: 100%;
     padding: 10px;
     display: flex;
     flex-direction: column;

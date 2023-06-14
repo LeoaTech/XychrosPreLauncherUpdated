@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { useAppBridge } from '@shopify/app-bridge-react';
+import { useAppBridge, useNavigate } from '@shopify/app-bridge-react';
 import { Redirect } from '@shopify/app-bridge/actions/index.js';
-
 import './price.css';
 import PricingBlock from './pricingBlock/PricingBlock';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,35 +10,38 @@ import { useAuthenticatedFetch } from '../../hooks';
 import { fetchCurrentPlan, fetchSavePlan } from '../../app/features/current_plan/current_plan';
 
 const PriceComponent = () => {
-  const priceData = useSelector(fetchAllpricing);
-  const activePlan = useSelector(fetchCurrentPlan);
+  const priceData = useSelector(fetchAllpricing);   //Get all Pricing Details Cards
+  const activePlan = useSelector(fetchCurrentPlan);   //Current Active Plan
 
   const [pricePlans, setPricePlans] = useState();
   const [isLoading, setIsloading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedPlanId, setSubscribedPlanId] = useState(null); //handle Biiling Card subscription ID
-  const [mydata, setMyData] = useState({})
+
   const app = useAppBridge();
   const redirect = Redirect.create(app);
   console.log(activePlan, "plan in reducer");
 
-
+  const navigate = useNavigate();
   const dispatch = useDispatch()
   const fetchAuth = useAuthenticatedFetch();
 
   useEffect(() => {
     if (activePlan) {
-      console.log(activePlan, "plan");
-      setSubscribedPlanId(activePlan?.id);
-
+      let planId = priceData?.find((plan) => plan?.plan_name === activePlan?.plan_name);
+      setSubscribedPlanId(planId?.id);
     }
-  }, [activePlan, dispatch])
+  }, [activePlan, priceData])
+
+
   useEffect(() => {
     if (priceData.length > 0) {
       setPricePlans(priceData);
     }
   }, [priceData]);
 
+
+  // Handle Card Next and Prev events
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const maxCardIndex = pricePlans?.length - 1;
   const cardWidth = 280;
@@ -55,14 +57,17 @@ const PriceComponent = () => {
     }
   };
 
+  // Handle Subscription plan Event
   const handlePlanSubscribe = async (id) => {
     setIsloading(true);
     setSubscribedPlanId(id);
 
     if (pricePlans) {
       const data = pricePlans?.find((price) => price.id === id);
-      // console.log(data, "handle function")
+
       setIsSubscribed(true);
+
+      // Subscribed To Paid Tiers
       if (data?.plan_name !== 'Free') {
         const response = await fetchAuth('/api/subscribe-plan', {
           method: 'POST',
@@ -81,11 +86,9 @@ const PriceComponent = () => {
           setSubscribedPlanId(id);
           setIsloading(false)
         } else {
-          console.log(response);
-          // window.location.href = response.confirmationUrl;
           return;
         }
-      } else {
+      } else {   //Subscribed to Free Tier
         const response = await fetchAuth('/api/subscribe-plan', {
           method: 'POST',
           headers: {
@@ -95,13 +98,11 @@ const PriceComponent = () => {
         });
         if (response.ok) {
           const subscribe_data = await response.json();
-          console.log(subscribe_data, 'Free Tier');
-          dispatch(fetchSavePlan(data));
+          dispatch(fetchSavePlan(subscribe_data));
           setSubscribedPlanId(id);
           setIsloading(false);
+          navigate("/");
         } else {
-          console.log(response);
-          // window.location.href = response.confirmationUrl;
           return;
         }
       }
@@ -132,7 +133,7 @@ const PriceComponent = () => {
           </div>
         )}
         <div className='price-block'>
-          {pricePlans?.map((price, index) => {
+          {pricePlans?.length ? pricePlans?.map((price, index) => {
             return (
               <div
                 key={index}
@@ -156,7 +157,8 @@ const PriceComponent = () => {
                 />
               </div>
             );
-          })}
+          }) : <div class="spinner"></div>
+          }
         </div>
       </div>
     </div>
