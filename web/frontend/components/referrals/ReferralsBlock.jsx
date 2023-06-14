@@ -51,7 +51,6 @@ const ReferralsBlock = (props) => {
   const actionColumns = [
     {
       name: 'Details',
-      selector: 'details',
       id: 'details',
       style: {
         textAlign: 'center',
