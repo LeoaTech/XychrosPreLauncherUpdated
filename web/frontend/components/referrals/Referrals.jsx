@@ -8,11 +8,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllReferrals } from '../../app/features/referrals/referralSlice';
 import { fetchAllCampaigns } from '../../app/features/campaigns/campaignSlice';
 import { useAuthenticatedFetch } from '../../hooks';
+import { fetchCampaignsDetailsList } from '../../app/features/campaign_details/campaign_details';
 
 const Referrals = () => {
   // const { getCampaigns } = props;
   const List = useSelector(fetchAllCampaigns);
-  const [getCampaigns, setCampaigns] = useState([...List]);
+  const campaignDetails = useSelector(fetchCampaignsDetailsList)
+  const [getCampaigns, setCampaigns] = useState([...campaignDetails]);
 
   const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([...ReferralList]);
