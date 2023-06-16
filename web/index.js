@@ -23,6 +23,7 @@ import userDetailsApiEndPoint from './middleware/userdetails-api.js';
 import getUrlApi from './middleware/geturl-api.js';
 import pricingPlansApiEndpoints from './middleware/get-pricing-plans-api.js';
 import SubscribePlanApiEndPoint from './middleware/subscribe-plan-api.js';
+import campaignDetailsApiEndpoints from './middleware/campaign_details-api.js';
 
 
 
@@ -35,9 +36,9 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
-// const DB_PATH = `${process.cwd()}/database.sqlite`;
+const DB_PATH = "postgres://postgres:postgres@localhost:5432/prelauncher";
 
-const DB_PATH = `${process.env.DATABASE_URL}`;
+// const DB_PATH = `${process.env.DATABASE_URL}`;
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -162,6 +163,7 @@ export async function createServer(
   );
 
   campaignApiEndpoints(app);
+  campaignDetailsApiEndpoints(app)
   referralsApiEndpoints(app);
   createTemplateApiEndpoint(app);
   globalSettingsApiEndPoint(app);
