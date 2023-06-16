@@ -8,9 +8,13 @@
 }
 
 .sidebar-content .sidebar-logo {
-  width: 160px;
-  margin-top: 3px;
+  width: 170px;
+  /* width: 80%; */
+  margin-top: 15px;
+  margin-bottom: 10px;
+  margin-left: 10px;
   background-color: transparent;
+  margin-bottom: 20px;
 }
 
 .close-menubtn {
@@ -39,15 +43,15 @@ a {
 /* New Campaign button  */
 
 .add-btn-link {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 5%;
   margin-top: 10px;
   font-weight: 500;
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 .add-btn-link button {
   display: flex;
-  width: 100%;
   font-weight: 500;
   padding: 5px;
   border: none;
@@ -64,9 +68,10 @@ a {
   background-color: var(--secondary-color);
   color: white;
   border: 1px solid rgb(50, 50, 50);
+  border:none;
   display: flex;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 22px;
   align-items: center;
   border-radius: 10px;
   -webkit-border-radius: 10px;
@@ -75,10 +80,7 @@ a {
   -o-border-radius: 10px;
 }
 
-.add-icon-text {
-  display: block;
-  /* font-size: 15px; */
-}
+
 
 .sidebar-add-btn {
   display: flex;
@@ -88,6 +90,16 @@ a {
   gap: 15px;
   padding: 5px 0px;
   align-items: center;
+}
+
+.sidebar-add-btn .add-icon-img{
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.sidebar-add-btn .add-icon-text {
+  font-size: 20px;
+  margin-right: 5px;
 }
 
 /* All Pages Links in Center of Sidebar */
@@ -166,6 +178,16 @@ a {
 /* Media Queries */
 
 @media only screen and (max-width: 1480px) {
+  .sidebar-content .sidebar-logo {
+    width: 150px;
+    /* width: 80%; */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    background-color: transparent;
+    margin-bottom: 20px;
+  }
+  
   .sidebar_header {
     display: flex;
     padding: 10px 5px;
@@ -264,15 +286,28 @@ a {
     font-size: 16px;
     margin-right: 10px;
     gap: 2px;
-    padding: 5px 0px;
+    padding: 0px;
   }
 
-  .add-icon-text {
+  /* .add-icon-text {
     display: block;
     justify-content: center;
     align-items: center;
     font-size: 17.5px;
+  } */
+
+  
+
+  .sidebar-add-btn .add-icon-img{
+    margin-top: 5px;
+    margin-left: 0px;
+    font-size: 13px;
   }
+
+.sidebar-add-btn .add-icon-text {
+  font-size: 15px;
+  margin-right: 5px;
+}
 
   .top .normallink .icon-img,
   .bottom .sidebar-link-bottom .normallink .icon-img {
@@ -290,7 +325,7 @@ a {
   .sidebar-link-bottom .icon-text {
     display: block;
     font-weight: 500;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .bottom .sidebar-link-bottom .normallink {
@@ -299,7 +334,8 @@ a {
   }
 
   .icon-img,
-  .sidebar-link-bottom .icon-img {
+  .sidebar-link-bottom .icon-img
+  .sidebar-add-btn .add-icon-img {
     width: 20px;
     height: 20px;
   }

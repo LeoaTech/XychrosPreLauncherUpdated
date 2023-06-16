@@ -9,7 +9,7 @@ import {
   MdOutlinePriceChange,
 } from "react-icons/md";
 import { CgNotes } from "react-icons/cg";
-import { FaHome, FaUser} from "react-icons/fa";
+import { FaHome, FaUser } from "react-icons/fa";
 import { HiSpeakerphone } from "react-icons/hi";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { RiCustomerServiceLine } from "react-icons/ri";
@@ -22,7 +22,7 @@ import {
   Omnichannnel,
   profile,
   settings,
-  SideLogo,
+  ViralLaunch,
   webhook,
 } from "../../assets/index";
 
@@ -82,22 +82,11 @@ const SideBar = () => {
                 onClick={() => setActiveMenu(false)}
               />
               <img
-                // onClick={() => setActiveMenu((prev) => !prev)}
-                src={SideLogo}
+                src={ViralLaunch}
                 alt="Logo"
                 className="sidebar-logo"
               />
 
-              {/*  {activeMenu ? (
-                
-              ) : (
-                <img
-                  // onClick={() => setActiveMenu((prev) => !prev)}
-                  src={Logo}
-                  alt="Logo"
-                  className="onlylogo"
-                />
-              )} */}
             </div>
           </div>
 
@@ -111,7 +100,7 @@ const SideBar = () => {
                 className="sidebar-add-btn"
               >
                 <span className="add-icon-img">
-                  <MdAdd style={{ height: 24, width: 24 }} />
+                  <MdAdd />
                 </span>
                 <p className="add-icon-text">New Campaign</p>
               </NavLink>
