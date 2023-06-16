@@ -228,6 +228,9 @@ export async function GetCurrentAppInstallation(session) {
     [session?.shop]
   );
 
+  let updated_at = planExists?.rows[0]?.created_at;
+  console.log(updated_at)
+
   // Subscription Exists ====> Add it Into Database
 
   if (subscriptions.length > 0) {
@@ -266,7 +269,7 @@ export async function GetCurrentAppInstallation(session) {
            WHERE 
             shop_id=$7`
           ,
-          [plan_name, price, date.toISOString(), subscriptions[0]?.id, subscriptions[0]?.status, billing_required, session?.shop]);
+          [plan_name, price, updated_at, subscriptions[0]?.id, subscriptions[0]?.status, billing_required, session?.shop]);
       } catch (error) {
         return error
       }

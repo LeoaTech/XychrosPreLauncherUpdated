@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useAppBridge, useNavigate } from '@shopify/app-bridge-react';
 import { Redirect } from '@shopify/app-bridge/actions/index.js';
 import './price.css';
+import "./pricing.css"
 import PricingBlock from './pricingBlock/PricingBlock';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllpricing } from '../../app/features/pricing/pricing';
@@ -9,11 +10,14 @@ import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 import { useAuthenticatedFetch } from '../../hooks';
 import { fetchCurrentPlan, fetchSavePlan } from '../../app/features/current_plan/current_plan';
 
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+
 const PriceComponent = () => {
   const priceData = useSelector(fetchAllpricing);   //Get all Pricing Details Cards
   const activePlan = useSelector(fetchCurrentPlan);   //Current Active Plan
 
-  const [pricePlans, setPricePlans] = useState();
+  const [pricePlans, setPricePlans] = useState([]);
   const [isLoading, setIsloading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedPlanId, setSubscribedPlanId] = useState(null); //handle Biiling Card subscription ID
@@ -26,6 +30,22 @@ const PriceComponent = () => {
   const dispatch = useDispatch()
   const fetchAuth = useAuthenticatedFetch();
 
+  const [activeStep, setActiveStep] = useState(1);
+  const [numberOfSteps] = useState(9);
+  const [completedSteps, setCompletedSteps] = useState(0);
+
+
+  const handleClick = (step) => {
+    setActiveStep(step);
+  };
+  // const handleStepClick = (stepIndex) => {
+  //   setCompletedSteps(stepIndex + 1);
+  // };
+
+
+  const handleStepClick = (step) => {
+    setActiveStep(step);
+  };
   useEffect(() => {
     if (activePlan) {
       let planId = priceData?.find((plan) => plan?.plan_name === activePlan?.plan_name);
@@ -36,7 +56,7 @@ const PriceComponent = () => {
 
   useEffect(() => {
     if (priceData.length > 0) {
-      setPricePlans(priceData);
+      setPricePlans([...priceData]);
     }
   }, [priceData]);
 
@@ -112,8 +132,47 @@ const PriceComponent = () => {
   return (
     <div className='pricing-container'>
       <div className='pricing-title'>
-        <h2>Pricing & Billing</h2>
+        <h2>Select Your Plan</h2>
       </div>
+
+      <div className="container">
+
+        <div className="progress-bar">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((step) => (
+            <div
+              key={step}
+              className={`step ${activeStep >= step ? "active" : ""}`}
+              onClick={() => handleStepClick(step)}
+            >
+              {/* {step} */}
+
+              {step > 0 && step <= 8 && <div className="step-line" />}
+            </div>
+          ))}
+        </div>
+        <Carousel
+          selectedItem={activeStep - 1}
+          // showThumbs={true}
+          // showStatus={true}
+          centerMode={true}
+          centerSlidePercentage={33.33}
+          // emulateTouch={true}
+        >
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((step) => (
+            <div key={step} className="card">
+              <h2>Step {step}</h2>
+              <p>This is the content for step {step}.</p>
+            </div>
+          ))}
+
+        </Carousel>
+
+      </div>
+
+
+
+
+
 
       <div className='price-details-container'>
         {priceData?.length > 0 && (
