@@ -3,9 +3,10 @@
     justify-content: center;
     align-items: center;
     font-size: 32px;
-    font-weight: 700;
+    font-weight: 500;
     color: #fff;
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .intro-section,
@@ -41,6 +42,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.intro-img, .about-img{
+    height: 300px
 }
 
 
