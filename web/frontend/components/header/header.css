@@ -5,6 +5,7 @@
   justify-content: space-between;
   padding: 10px;
   position: relative;
+  margin-bottom: 10px;
 }
 
 /* Left Nav links */
@@ -51,10 +52,12 @@
 /* Center Nav Logo */
 .center {
   margin-right: 8rem;
+
 }
 
 .center img {
   width: 180px;
+
 }
 
 /* Right Nav Links */
