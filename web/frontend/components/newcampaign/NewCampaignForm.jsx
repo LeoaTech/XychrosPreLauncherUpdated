@@ -4,7 +4,7 @@ import React, { useState, forwardRef, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { anime, xychrosLogo } from '../../assets/index';
+import { anime, BlackLogo } from '../../assets/index';
 
 import * as images from '../../assets/index';
 import { AiOutlineCalendar } from 'react-icons/ai';
@@ -32,6 +32,7 @@ import useFetchTemplates from '../../constant/fetchTemplates';
 import { useCallbackPrompt } from '../../hooks/useNavigatingPrompt';
 import SaveDraft from '../modal/SaveDraft';
 import { fetchCurrentTier } from '../../app/features/current_plan/current_plan';
+import { addNewCampaignDetails } from '../../app/features/campaign_details/campaign_details';
 
 
 
@@ -492,55 +493,61 @@ function NewCampaignForm() {
 
   // Handle Discount Codes Validation on Next Button click 
   const handleDiscountValidation = (index) => {
-    const duplicateTiers = []; // Array to store tier IDs with duplicate discount codes
+    if (!isEdit) {
+      const duplicateTiers = []; // Array to store tier IDs with duplicate discount codes
 
-    const userDiscountCodes = RewardData.map((reward) => {
-      const rewardId = reward.id;
-      const inputName = `reward_${rewardId}_code`;
-      return newCampaignData[inputName];
-    });
+      const userDiscountCodes = RewardData.map((reward) => {
+        const rewardId = reward.id;
+        const inputName = `reward_${rewardId}_code`;
+        return newCampaignData[inputName];
+      });
 
-    // Check Duplicates Discount codes and push the Tiers IDs in duplicateTiers array
-    userDiscountCodes?.forEach((code, index) => {
-      if (discountList?.includes(code)) {
-        duplicateTiers.push(index + 1); // Push the tier ID (index + 1) to the array
+      // Check Duplicates Discount codes and push the Tiers IDs in duplicateTiers array
+      userDiscountCodes?.forEach((code, index) => {
+        if (discountList?.includes(code)) {
+          duplicateTiers.push(index + 1); // Push the tier ID (index + 1) to the array
+        }
+      });
+
+
+      // Step 3: Handle duplicate discount codes
+      if (duplicateTiers?.length > 0) {
+        // Display error message on the corresponding tiers' cards
+        if (duplicateTiers?.includes(1)) {
+          setDiscountCode1(true);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => i === index - 1 && true)
+          );
+        } if (duplicateTiers?.includes(2)) {
+          setDiscountCode2(true);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => i === index - 1 && true)
+          );
+        } if (duplicateTiers?.includes(3)) {
+          setDiscountCode3(true);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => i === index - 1 && true)
+          );
+        } if (duplicateTiers?.includes(4)) {
+          setDiscountCode4(true);
+          setExpanded((prevExpand) =>
+            prevExpand.map((state, i) => i === index - 1 && true)
+          );
+        }
+
+        return; // Stop further processing
+      } else {
+        // No Duplicate discount Code
+        setDiscountCode1(false);
+        setDiscountCode2(false);
+        setDiscountCode3(false);
+        setDiscountCode4(false);
+        // Open Next Form .... and Proceed
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => (i === index ? !state : false))
+        );
       }
-    });
-
-
-    // Step 3: Handle duplicate discount codes
-    if (duplicateTiers?.length > 0) {
-      // Display error message on the corresponding tiers' cards
-      if (duplicateTiers?.includes(1)) {
-        setDiscountCode1(true);
-        setExpanded((prevExpand) =>
-          prevExpand.map((state, i) => i === index - 1 && true)
-        );
-      } if (duplicateTiers?.includes(2)) {
-        setDiscountCode2(true);
-        setExpanded((prevExpand) =>
-          prevExpand.map((state, i) => i === index - 1 && true)
-        );
-      } if (duplicateTiers?.includes(3)) {
-        setDiscountCode3(true);
-        setExpanded((prevExpand) =>
-          prevExpand.map((state, i) => i === index - 1 && true)
-        );
-      } if (duplicateTiers?.includes(4)) {
-        setDiscountCode4(true);
-        setExpanded((prevExpand) =>
-          prevExpand.map((state, i) => i === index - 1 && true)
-        );
-      }
-
-      return; // Stop further processing
     } else {
-      // No Duplicate discount Code
-      setDiscountCode1(false);
-      setDiscountCode2(false);
-      setDiscountCode3(false);
-      setDiscountCode4(false);
-      // Open Next Form .... and Proceed
       setExpanded((prevExpand) =>
         prevExpand.map((state, i) => (i === index ? !state : false))
       );
@@ -702,16 +709,38 @@ function NewCampaignForm() {
       });
       const responseData = await response.json();
 
-
+      return responseData?.data;
     } catch (error) {
       console.log(error);
     }
+  }
+
+  // Save Campaign Details in database 
+  const saveCampaignDetails = async (campaign_details) => {
+    // Send POST Request to save Details From database
+    const detailsResponse = await fetch('/api/campaigndetails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...campaign_details, is_draft: false, is_active: false }),
+    });
+
+    if (detailsResponse.ok) {
+      const detailsData = await detailsResponse.json();
+      console.log(detailsData, "POST SEND");
+    } else {
+      console.log('Failed to insert campaign details:', detailsResponse);
+    }
+
   }
 
 
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
+    let idExists;
+    let campaignDetails;
     // Editing Camapign Data Form
     if (isEdit) {
       setDraftModal(false);
@@ -741,7 +770,8 @@ function NewCampaignForm() {
         setIsLoading(true);
 
         await generateDiscounts(newCampaignData);
-        await createTemplates(selectedTemplateData, newCampaignData);
+        campaignDetails = await createTemplates(selectedTemplateData, newCampaignData);
+        console.log(campaignDetails)
 
         await fetch('/api/campaignsettings', {
           method: 'POST',
@@ -751,15 +781,27 @@ function NewCampaignForm() {
           body: JSON.stringify(newCampaignData),
         })
           .then((res) => res.json())
-          .then((data) => dispatch(addNewCampaign(data)))
+          .then((data) => {
+            dispatch(addNewCampaign(data));
+            idExists = data[0]?.campaign_id
+          })
           .catch((err) => console.log(err));
 
 
-        setIsLoading(false);
       } else {
 
         return;
       }
+
+
+      // IF CampaignID Exists the call the saveCampaign details function to store value in db
+      if (typeof (idExists) == 'number' && campaignDetails) {
+        await saveCampaignDetails(campaignDetails)
+      } else {
+        console.log("Not saved data")
+      }
+
+      setIsLoading(false);
       navigate('/campaigns');
     }
   };
@@ -1539,7 +1581,7 @@ function NewCampaignForm() {
                         <h2>Email Settings - Double Opt-in Email </h2>
                         <div className='email-content'>
                           <img
-                            src={xychrosLogo}
+                            src={BlackLogo}
                             alt='Shop Logo'
                             className='shop-logo'
                           />
@@ -1576,7 +1618,7 @@ function NewCampaignForm() {
                         </h2>
                         <div className='email-content'>
                           <img
-                            src={xychrosLogo}
+                            src={BlackLogo}
                             alt='Shop Logo'
                             className='shop-logo'
                           />
@@ -1611,7 +1653,7 @@ function NewCampaignForm() {
                         </h2>
                         <div className='email-content'>
                           <img
-                            src={xychrosLogo}
+                            src={BlackLogo}
                             alt='Shop Logo'
                             className='shop-logo'
                           />
@@ -1644,7 +1686,7 @@ function NewCampaignForm() {
                         </h2>
                         <div className='email-content'>
                           <img
-                            src={xychrosLogo}
+                            src={BlackLogo}
                             alt='Shop Logo'
                             className='shop-logo'
                           />
