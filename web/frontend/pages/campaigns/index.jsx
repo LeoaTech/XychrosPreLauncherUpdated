@@ -6,6 +6,8 @@ import { SideBar, Header, Campaign } from '../../components/index';
 import useFetchCampaignsData from '../../constant/fetchCampaignsData';
 import useFetchReferralsData from '../../constant/fetchReferralsData';
 import { useStateContext } from '../../contexts/ContextProvider';
+import useFetchCampaignsDetails from '../../constant/fetchCampaignDetails';
+import { fetchCampaignDetails } from '../../app/features/campaign_details/campaign_details';
 
 const Campaigns = () => {
   const { activeMenu } = useStateContext();
@@ -15,6 +17,15 @@ const Campaigns = () => {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
+
+  const campaignsDetails = useFetchCampaignsDetails('/api/campaigndetails', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+
+  console.log(campaignsDetails, "index")
+
 
   const referrals = useFetchReferralsData('/api/getallreferralcount', {
     method: 'GET',
@@ -26,6 +37,12 @@ const Campaigns = () => {
       dispatch(fetchCampaign(campaigns));
     }
   }, [campaigns, dispatch]);
+
+  useEffect(() => {
+    if (campaignsDetails?.length > 0) {
+      dispatch(fetchCampaignDetails(campaignsDetails));
+    }
+  }, [campaignsDetails, dispatch]);
 
   useEffect(() => {
     if (referrals?.length > 0) {
