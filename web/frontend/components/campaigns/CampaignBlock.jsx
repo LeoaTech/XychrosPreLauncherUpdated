@@ -26,17 +26,18 @@ export default function CampaignBlock({
   campaignName, setCampaignName
 }) {
   // Campaign Card Block Data Properties
-  const { campaign_id, name, product, start_date, end_date, active } = data;
+  const { campaign_id, name, product, start_date, end_date, is_active, landing_page_link, rewards_page_link } = data;
 
   const [alertModal, setAlertModal] = useState(false);
 
 
   let startDate = new Date(start_date).toDateString();
   let endDate = new Date(end_date).toDateString();
+
   const totalCampaigns = useSelector(getTotalCampaigns);
   const currentTier = useSelector(fetchCurrentTier);
   const [deleteEndData, setDeleteEndDate] = useState(null);
-  const [isToggled, setIsToggled] = useState(false);
+  const [isToggled, setIsToggled] = useState(is_active);
   const [isDisabled, setIsDisabled] = useState(isToggled);
 
   const now = new Date();
@@ -56,6 +57,21 @@ export default function CampaignBlock({
       setAlertModal(true);
     }
   }
+
+  // Update campaigns Active Status when Today's Date is in Start and End Date Range
+  const today = new Date();
+
+  useEffect(() => {
+    const startDate = new Date(start_date);
+    const endDate = new Date(end_date);
+    const isInDateRange = startDate <= today && today <= endDate;
+
+    if (isInDateRange) {
+      setIsToggled(true);
+    } else {
+      setIsToggled(false);
+    }
+  }, [today]);
 
   return (
     <>
@@ -86,8 +102,8 @@ export default function CampaignBlock({
 
         <div className="campaign_center_links">
           <div className="campaign_details_links">
-            <Link to="/" >Landing Page</Link>
-            <Link to="/">Rewards Page </Link>
+            <a href={landing_page_link} target="_blank">Landing Page</a>
+            <a href={rewards_page_link} target="_blank">Rewards Page </a>
           </div>
         </div>
         <div className="campaign-right-card">
