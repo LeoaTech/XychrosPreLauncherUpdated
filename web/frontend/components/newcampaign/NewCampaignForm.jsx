@@ -71,7 +71,8 @@ function NewCampaignForm() {
   const [discountCode2, setDiscountCode2] = useState(false);
   const [discountCode3, setDiscountCode3] = useState(false);
   const [discountCode4, setDiscountCode4] = useState(false);
-
+  const [rewardTier1Error, setRewardTier1Error] = useState(false)
+  const [rewardTier2Error, setRewardTier2Error] = useState(false)
   const [editCampaignData, setEditCampaignData] = useState({});
   const [discountList, setDiscountList] = useState([])
   const [globalSettings, setGlobalSettings] = useState();
@@ -491,12 +492,15 @@ function NewCampaignForm() {
     }
   };
 
+ 
   // Handle Discount Codes Validation on Next Button click 
   const handleDiscountValidation = (index) => {
     if (!isEdit) {
+
       const duplicateTiers = []; // Array to store tier IDs with duplicate discount codes
 
-      const userDiscountCodes = RewardData.map((reward) => {
+
+      const userDiscountCodes = RewardData?.map((reward) => {
         const rewardId = reward.id;
         const inputName = `reward_${rewardId}_code`;
         return newCampaignData[inputName];
@@ -542,12 +546,15 @@ function NewCampaignForm() {
         setDiscountCode2(false);
         setDiscountCode3(false);
         setDiscountCode4(false);
+
+        
         // Open Next Form .... and Proceed
         setExpanded((prevExpand) =>
           prevExpand.map((state, i) => (i === index ? !state : false))
         );
       }
     } else {
+
       setExpanded((prevExpand) =>
         prevExpand.map((state, i) => (i === index ? !state : false))
       );
@@ -581,6 +588,7 @@ function NewCampaignForm() {
         [name]: value,
       }));
     } else {
+
       setNewCampaignData((prevState) => ({
         ...prevState,
         [name]: value,
@@ -822,6 +830,9 @@ function NewCampaignForm() {
       return;
     }
   };
+
+
+  console.log(newCampaignData, "Form Data")
 
   return (
     <>
@@ -1409,6 +1420,12 @@ function NewCampaignForm() {
                                 {reward.is_required === true && '(Required)'}
                               </span>
                             </div>
+
+                            {/* Reward Tier Required */}
+                            {/* <div>
+                              {rewardTier1Error && reward?.id === 1 && <h2 className='discount_error_text'>{`Please fill in the value for reward tier ${reward?.id}.`}</h2>}
+                              {rewardTier2Error && reward?.id === 2 && <h2 className='discount_error_text'>{`Please fill in the value for reward tier ${reward?.id}.`}</h2>}
+                            </div> */}
                             <div className='reward-content'>
                               <div className='reward-form'>
                                 <div className='inputfield'>
