@@ -3,7 +3,9 @@ import { Shopify } from '@shopify/shopify-api';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: `${process.env.DATABASE_URL}`,
+  // connectionString: `${process.env.DATABASE_URL}`,
+  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
+
 });
 
 pool.connect((err, result) => {
@@ -43,7 +45,7 @@ export default async function ensureBilling(
     throw `Unrecognized billing interval '${interval}'`;
   }
 
-  isProd = isProdOverride;
+  // isProd = isProdOverride;
 
   let hasPayment;
   let confirmationUrl = null;
@@ -76,7 +78,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
     for (let i = 0, len = subscriptions.length; i < len; i++) {
       if (
         subscriptions[i].name === chargeName &&
-        (!isProd || !subscriptions[i].test)
+        (!subscriptions[i].test) // !isProd ||
       ) {
         return true;
       }
@@ -98,7 +100,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
         const node = purchases.edges[i].node;
         if (
           node.name === chargeName &&
-          (!isProd || !node.test) &&
+          (!node.test) &&     //!isProd || 
           node.status === 'ACTIVE'
         ) {
           return true;
@@ -117,9 +119,8 @@ async function requestPayment(
   { chargeName, amount, currencyCode, interval }
 ) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
-  const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${
-    session.shop
-  }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
+  const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${session.shop
+    }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
 
   let data;
   if (isRecurring(interval)) {
@@ -169,7 +170,7 @@ async function requestRecurringPayment(
           },
         ],
         returnUrl,
-        test: !isProd,
+        test: true,  //!isProd,
       },
     },
   });
@@ -233,7 +234,7 @@ export async function GetCurrentAppInstallation(session) {
 
   // Subscription Exists ====> Add it Into Database
 
-  if (subscriptions.length > 0) {
+  if (subscriptions?.length > 0) {
     let myPlan = price_plans?.rows.find((plan) => plan?.plan_name === subscriptions[0]?.name);
     myPlan["billing_required"] = true;
     const { plan_name, price, billing_required } = myPlan;
