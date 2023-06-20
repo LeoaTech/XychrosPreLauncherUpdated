@@ -39,13 +39,14 @@ let date = new Date();
 export default async function ensureBilling(
   session,
   { chargeName, amount, currencyCode, interval },
+  
   isProdOverride = process.env.NODE_ENV === 'production'
 ) {
   if (!Object.values(BillingInterval).includes(interval)) {
     throw `Unrecognized billing interval '${interval}'`;
   }
-
-  // isProd = isProdOverride;
+    /* Uncomment This line to TEST for environment */
+  // isProd = isProdOverride;   
 
   let hasPayment;
   let confirmationUrl = null;
@@ -230,7 +231,6 @@ export async function GetCurrentAppInstallation(session) {
   );
 
   let updated_at = planExists?.rows[0]?.created_at;
-  console.log(updated_at)
 
   // Subscription Exists ====> Add it Into Database
 
