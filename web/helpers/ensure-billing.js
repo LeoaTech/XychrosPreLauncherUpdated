@@ -3,9 +3,7 @@ import { Shopify } from '@shopify/shopify-api';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-  // connectionString: `${process.env.DATABASE_URL}`,
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
-
+  connectionString: `${process.env.DATABASE_URL}`,
 });
 
 pool.connect((err, result) => {
@@ -39,13 +37,13 @@ let date = new Date();
 export default async function ensureBilling(
   session,
   { chargeName, amount, currencyCode, interval },
-  
+
   isProdOverride = process.env.NODE_ENV === 'production'
 ) {
   if (!Object.values(BillingInterval).includes(interval)) {
     throw `Unrecognized billing interval '${interval}'`;
   }
-    /* Uncomment This line to TEST for environment */
+  /* Uncomment This line to TEST for environment */
   // isProd = isProdOverride;   
 
   let hasPayment;
