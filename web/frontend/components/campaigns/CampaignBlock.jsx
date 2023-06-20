@@ -26,18 +26,27 @@ export default function CampaignBlock({
   campaignName, setCampaignName
 }) {
   // Campaign Card Block Data Properties
-  const { campaign_id, name, product, start_date, end_date, is_active, landing_page_link, rewards_page_link } = data;
+  const { campaign_id, name, product, start_date, end_date, is_active, is_draft, landing_page_link, rewards_page_link } = data;
 
   const [alertModal, setAlertModal] = useState(false);
 
+  const [hovered, setHovered] = useState(false);
 
+  const campaignActionButtonStyle = {
+    // backgroundColor: is_active ? "#e0e0e0" : "",
+    cursor: is_active ? "default" : "pointer",
+    pointerEvents: is_active ? "none" : "auto",
+    color: is_active ? "#C0C0C0	" : '#e0e0e0',
+  };
+
+  const campaignActionMessage = is_active ? "This campaign is active" : "";
   let startDate = new Date(start_date).toDateString();
   let endDate = new Date(end_date).toDateString();
 
   const totalCampaigns = useSelector(getTotalCampaigns);
   const currentTier = useSelector(fetchCurrentTier);
   const [deleteEndData, setDeleteEndDate] = useState(null);
-  const [isToggled, setIsToggled] = useState(is_active);
+  const [isToggled, setIsToggled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(isToggled);
 
   const now = new Date();
@@ -59,19 +68,14 @@ export default function CampaignBlock({
   }
 
   // Update campaigns Active Status when Today's Date is in Start and End Date Range
-  const today = new Date();
 
   useEffect(() => {
-    const startDate = new Date(start_date);
-    const endDate = new Date(end_date);
-    const isInDateRange = startDate <= today && today <= endDate;
-
-    if (isInDateRange) {
+    if (is_active) {
       setIsToggled(true);
     } else {
-      setIsToggled(false);
+      setIsToggled(false)
     }
-  }, [today]);
+  }, [is_active]);
 
   return (
     <>
@@ -99,6 +103,10 @@ export default function CampaignBlock({
             {startDate} - {endDate}
           </div>
         </div>
+
+        {is_draft && <div className="draft-campaign">
+          <span className="draft">draft</span>
+        </div>}
 
         <div className="campaign_center_links">
           <div className="campaign_details_links">
@@ -128,16 +136,16 @@ export default function CampaignBlock({
           <div className="campaign-actions">
             <IconContext.Provider
               value={{
-                color: "#fcfcfc",
                 size: 24,
               }}
-              disabled={isDisabled}
-
             >
-              <div className="icon-image">
+              <div className="icon-image" style={campaignActionButtonStyle}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}>
                 <Link
                   to={`/campaigns/${campaign_id}`}
                   onClick={() => handleEdit(campaign_id)}
+                  style={{ textDecoration: "none" }}
                   disabled={isDisabled}
                 >
                   <FaEdit style={{ height: 24, width: 24 }} />
@@ -145,6 +153,9 @@ export default function CampaignBlock({
                     <span>Edit</span>
                   </div>
                 </Link>
+                {hovered && (
+                  <div className="hover-message">{campaignActionMessage}</div>
+                )}
               </div>
             </IconContext.Provider>
             <IconContext.Provider
@@ -152,10 +163,11 @@ export default function CampaignBlock({
                 color: "red",
                 size: 24,
               }}
-              disabled={isDisabled}
+              disabled={!is_active}
 
             >
-              <div className="icon-image">
+              <div className="icon-image" style={campaignActionButtonStyle}
+              >
                 <RiDeleteBin6Line
                   onClick={() => {
                     setDeleteId(campaign_id);
@@ -163,12 +175,11 @@ export default function CampaignBlock({
                     setDeleteEndDate(endDate);
                     checkAndDeleteCampaign(deleteEndData);
                   }}
-                  disabled={!isDisabled}
+                  // disabled={!is_active}
 
-                  style={{ height: 24, width: 24, color: "red" }}
-                />
+                  style={is_active ? { height: 24, width: 24, color: "#CB624C" } : { height: 24, width: 24, color: "red" }} />
                 <div>
-                  <span style={{ color: "red" }}>Delete</span>
+                  <span >Delete</span>
                 </div>
               </div>
             </IconContext.Provider>
