@@ -14,7 +14,7 @@ const Referrals = () => {
   // const { getCampaigns } = props;
   const List = useSelector(fetchAllCampaigns);
   const campaignDetails = useSelector(fetchCampaignsDetailsList)
-  const [getCampaigns, setCampaigns] = useState([...campaignDetails]);
+  const [getCampaigns, setCampaigns] = useState([]);
 
   const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([...ReferralList]);
@@ -24,6 +24,12 @@ const Referrals = () => {
       setReferrals(ReferralList);
     }
   }, [ReferralList]);
+
+  useEffect(() => {
+    if (campaignDetails?.length > 0) {
+      setCampaigns(campaignDetails)
+    }
+  }, [campaignDetails])
 
   const fetch = useAuthenticatedFetch();
 
