@@ -76,36 +76,34 @@ const SideBar = () => {
         <div className="top">
           <div className="sidebar-content">
             <div className="sidebar_header">
-              <MdOutlineClose
-                className="close-menubtn"
-                style={{ height: 40, width: 40 }}
-                onClick={() => setActiveMenu(false)}
-              />
-              <img
+              <span>
+                <MdOutlineClose
+                  className="close-menubtn"
+
+                  onClick={() => setActiveMenu(false)}
+                />
+              </span>
+              <span><img
                 src={ViralLaunch}
                 alt="Logo"
                 className="sidebar-logo"
-              />
+              /></span>
 
             </div>
           </div>
 
           {/* Add Campaign Link */}
 
-          <div className="add-btn-link">
-            <button>
-              <NavLink
-                to="/newcampaign"
-                onClick={handleToggle}
-                className="sidebar-add-btn"
-              >
-                <span className="add-icon-img">
-                  <MdAdd />
-                </span>
-                <p className="add-icon-text">New Campaign</p>
-              </NavLink>
+          <div className="btn-link-add">
+            <button className="add-button">
+              <Link to="/newcampaign" >
+                <p>
+                  <span><MdAdd className="add-btn-icon" /></span>
+                  <span className="add-btn-text">New Campaign</span></p>
+              </Link>
             </button>
           </div>
+
 
           {/* Center links */}
 
@@ -194,6 +192,8 @@ const SideBar = () => {
           </div>
         </div>
       </>
+
+     
     </div>
   );
 };
