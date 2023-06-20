@@ -32,7 +32,6 @@ import useFetchTemplates from '../../constant/fetchTemplates';
 import { useCallbackPrompt } from '../../hooks/useNavigatingPrompt';
 import SaveDraft from '../modal/SaveDraft';
 import { fetchCurrentTier } from '../../app/features/current_plan/current_plan';
-import { addNewCampaignDetails } from '../../app/features/campaign_details/campaign_details';
 
 
 
@@ -346,6 +345,7 @@ function NewCampaignForm() {
       setTotalCampaign(totalCampaigns)
     }
   }, [currentTier, totalCampaigns])
+
 
   // Get Klaviyo integration Lists from API
   async function getKlaviyoList() {
@@ -723,12 +723,11 @@ function NewCampaignForm() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...campaign_details, is_draft: false, is_active: false }),
+      body: JSON.stringify({ ...campaign_details, is_draft: false, is_active: true }),
     });
 
     if (detailsResponse.ok) {
       const detailsData = await detailsResponse.json();
-      console.log(detailsData, "POST SEND");
     } else {
       console.log('Failed to insert campaign details:', detailsResponse);
     }
@@ -826,7 +825,7 @@ function NewCampaignForm() {
 
   return (
     <>
-      {(myPlan === 'Free' && !isEdit) || (myPlan === 'Tier1' && !isEdit) ?
+      {(myPlan === 'Free' && TotalCampaign > 1 && !isEdit) || (myPlan === 'Tier 1' && TotalCampaign > 2 && !isEdit) ?
         <div className="upgrade-container">
           <p>Upgrade Your Account </p>
           <button className='upgrade-btn' onClick={() => navigate("/price")}>Upgrade Plan</button>
