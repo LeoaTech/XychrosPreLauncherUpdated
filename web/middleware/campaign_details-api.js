@@ -3,13 +3,11 @@ import { Shopify } from '@shopify/shopify-api';
 import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
-    // connectionString: `${process.env.DATABASE_URL}`,
-    connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
+    connectionString: `${process.env.DATABASE_URL}`,
 });
 
 pool.connect((err, result) => {
     if (err) throw err;
-    console.log("Connected in Details")
 });
 
 export default function campaignDetailsApiEndpoints(app) {
@@ -66,7 +64,6 @@ export default function campaignDetailsApiEndpoints(app) {
             let campaignID;
             const campaignExists = await pool.query(`select * from campaign_settings where name = $1`, [campaign_name])
 
-            console.log("Exists", campaignExists?.rows)
             if (campaignExists?.rowCount > 0) {
                 campaignID = campaignExists?.rows[0]?.campaign_id
                 const query = `
@@ -101,7 +98,6 @@ export default function campaignDetailsApiEndpoints(app) {
                     session?.shop,
                 ]);
 
-                console.log("insert", campaigns);
                 return res.status(201).json(campaigns.rows);
             } else {
                 return res.json({ message: "Campaign not exists" })
