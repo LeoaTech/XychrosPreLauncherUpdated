@@ -492,7 +492,7 @@ function NewCampaignForm() {
     }
   };
 
- 
+
   // Handle Discount Codes Validation on Next Button click 
   const handleDiscountValidation = (index) => {
     if (!isEdit) {
@@ -547,7 +547,7 @@ function NewCampaignForm() {
         setDiscountCode3(false);
         setDiscountCode4(false);
 
-        
+
         // Open Next Form .... and Proceed
         setExpanded((prevExpand) =>
           prevExpand.map((state, i) => (i === index ? !state : false))
@@ -778,7 +778,6 @@ function NewCampaignForm() {
 
         await generateDiscounts(newCampaignData);
         campaignDetails = await createTemplates(selectedTemplateData, newCampaignData);
-        console.log(campaignDetails)
 
         await fetch('/api/campaignsettings', {
           method: 'POST',
@@ -830,9 +829,6 @@ function NewCampaignForm() {
       return;
     }
   };
-
-
-  console.log(newCampaignData, "Form Data")
 
   return (
     <>
