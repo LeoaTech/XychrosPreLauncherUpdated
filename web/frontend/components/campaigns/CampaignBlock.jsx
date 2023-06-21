@@ -1,18 +1,19 @@
-import ShortSummaryCard from "../ui/ShortSummaryCard";
-import { subscriber, Sale, arrow } from "../../assets/index";
-import { IconContext } from "react-icons";
-import { FaEdit, FaHourglassEnd } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { IoCalendarSharp } from "react-icons/io5"
-import { DeleteModal } from "../modal/index";
-import "./CampaignBlock.css";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
-import AlertInfoModal from "../modal/AlertInfoModal";
-import { getTotalCampaigns } from "../../app/features/campaigns/campaignSlice";
-import { useSelector } from "react-redux";
-import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
+import ShortSummaryCard from '../ui/ShortSummaryCard';
+import { subscriber, Sale, arrow } from '../../assets/index';
+import { IconContext } from 'react-icons';
+import { FaEdit, FaHourglassEnd } from 'react-icons/fa';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { IoCalendarSharp } from 'react-icons/io5';
+import { DeleteModal } from '../modal/index';
+import './CampaignBlock.css';
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import ToggleSwitch from './toggleSwitch/ToggleSwitch';
+import AlertInfoModal from '../modal/AlertInfoModal';
+import { getTotalCampaigns } from '../../app/features/campaigns/campaignSlice';
+import { fetchReferralById } from '../../app/features/referrals/referralSlice';
+import { useSelector } from 'react-redux';
+import { fetchCurrentTier } from '../../app/features/current_plan/current_plan';
 
 export default function CampaignBlock({
   data,
@@ -23,7 +24,8 @@ export default function CampaignBlock({
   deleteId,
   editData,
   setDeleteId,
-  campaignName, setCampaignName
+  campaignName,
+  setCampaignName,
 }) {
   // Campaign Card Block Data Properties
   const { campaign_id, name, product, start_date, end_date, is_active, is_draft, landing_page_link, rewards_page_link } = data;
@@ -45,6 +47,9 @@ export default function CampaignBlock({
 
   const totalCampaigns = useSelector(getTotalCampaigns);
   const currentTier = useSelector(fetchCurrentTier);
+  const referralsById = useSelector((state) =>
+    fetchReferralById(state, +campaign_id)
+  );
   const [deleteEndData, setDeleteEndDate] = useState(null);
   const [isToggled, setIsToggled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(isToggled);
@@ -58,7 +63,7 @@ export default function CampaignBlock({
     if (campaignDateObj < now && !isToggled) {
       setDeleteModal(true);
     } else if (!isToggled) {
-      setDeleteModal(true);     //uncomment this line to test Delete modal behavior
+      setDeleteModal(true); //uncomment this line to test Delete modal behavior
     } else if (isToggled) {
       // Info Alert Display
       setAlertModal(true);
@@ -79,9 +84,9 @@ export default function CampaignBlock({
 
   return (
     <>
-      <div className="campaign-block">
-        <div className="campaign-details">
-          <div className="camapign-block-name">
+      <div className='campaign-block'>
+        <div className='campaign-details'>
+          <div className='camapign-block-name'>
             {name}
             <span>
               <ToggleSwitch
@@ -94,12 +99,17 @@ export default function CampaignBlock({
             </span>
           </div>
 
-          <Link to={product} className="campaign-block-product-name">
+          <Link
+            to={product}
+            className='campaign-block-product-name'
+          >
             {/* {product} */} Product Name
           </Link>
 
-          <div className="campaign-block-duration">
-            <IoCalendarSharp style={{ height: 14, width: 16, marginRight: 5, marginTop: 10 }} />
+          <div className='campaign-block-duration'>
+            <IoCalendarSharp
+              style={{ height: 14, width: 16, marginRight: 5, marginTop: 10 }}
+            />
             {startDate} - {endDate}
           </div>
         </div>
@@ -114,13 +124,12 @@ export default function CampaignBlock({
             <a href={rewards_page_link} target="_blank">Rewards Page </a>
           </div>
         </div>
-        <div className="campaign-right-card">
-
-          <div className="campaign-kpis">
+        <div className='campaign-right-card'>
+          <div className='campaign-kpis'>
             <ShortSummaryCard
-              value="375"
+              value={referralsById}
               icon={subscriber}
-              className="referral-icon"
+              className='referral-icon'
             />
             {/* <ShortSummaryCard
               value="$37"
@@ -133,7 +142,7 @@ export default function CampaignBlock({
               className="clicks-icon"
             /> */}
           </div>
-          <div className="campaign-actions">
+          <div className='campaign-actions'>
             <IconContext.Provider
               value={{
                 size: 24,
@@ -160,7 +169,7 @@ export default function CampaignBlock({
             </IconContext.Provider>
             <IconContext.Provider
               value={{
-                color: "red",
+                color: 'red',
                 size: 24,
               }}
               disabled={!is_active}
@@ -171,7 +180,7 @@ export default function CampaignBlock({
                 <RiDeleteBin6Line
                   onClick={() => {
                     setDeleteId(campaign_id);
-                    setCampaignName(name)
+                    setCampaignName(name);
                     setDeleteEndDate(endDate);
                     checkAndDeleteCampaign(deleteEndData);
                   }}

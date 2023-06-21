@@ -51,7 +51,6 @@ const ReferralsBlock = (props) => {
   const actionColumns = [
     {
       name: 'Details',
-      selector: 'details',
       id: 'details',
       style: {
         textAlign: 'center',
@@ -87,7 +86,7 @@ const ReferralsBlock = (props) => {
   ];
   return (
     <>
-      {props?.tableData.length > 0 ?
+      {props?.tableData.length > 0 ? (
         <div className='datatable'>
           <DataTable
             customStyles={customStyles}
@@ -97,16 +96,21 @@ const ReferralsBlock = (props) => {
             highlightOnHover
           />
         </div>
-        : <h2 style={{
-          color: '#fff',
-          fontSize: 29,
-          margin: 20,
-          height: '50vh',
-          display: 'Flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>No Referral Data</h2>
-      }
+      ) : (
+        <h2
+          style={{
+            color: '#fff',
+            fontSize: 29,
+            margin: 20,
+            height: '50vh',
+            display: 'Flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          No Referral Data
+        </h2>
+      )}
       <div style={{ borderRadius: '15px' }}>
         <ShowModal
           openModal={openModal}
