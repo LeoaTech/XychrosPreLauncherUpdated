@@ -19,41 +19,24 @@ let copy_btn = document.getElementById('copy_referral_code_btn');
 
 // Get Socials Icons
 let share_email_referral = document.getElementById('rewards_email_refferal');
-let share_facebook_referral = document.getElementById(
-  'rewards_facebook_refferal'
-);
-let share_twitter_referral = document.getElementById(
-  'rewards_twitter_refferal'
-);
-let share_snapchat_referral = document.getElementById(
-  'rewards_snapchat_refferal'
-);
-let share_instagram_referral = document.getElementById(
-  'rewards_instagram_refferal'
-);
+let share_facebook_referral = document.getElementById('rewards_facebook_refferal');
+let share_twitter_referral = document.getElementById('rewards_twitter_refferal');
+let share_snapchat_referral = document.getElementById('rewards_snapchat_refferal');
+let share_instagram_referral = document.getElementById('rewards_instagram_refferal');
 let share_tiktok_referral = document.getElementById('rewards_tiktok_refferal');
-let share_whatsapp_referral = document.getElementById(
-  'rewards_whatsapp_refferal'
-);
-let share_discord_referral = document.getElementById(
-  'rewards_discord_refferal'
-);
+let share_whatsapp_referral = document.getElementById('rewards_whatsapp_refferal');
+let share_discord_referral = document.getElementById('rewards_discord_refferal');
 
 // Get Referral Count Tagline
 let count_referrals = document.getElementById('count_referrals');
 
-// Timeline Header ?
-let referral_div = document.getElementById('referral_rows');
+// Timeline Progress Containers 
+let horizontal_timeline = document.getElementById('horizontal-timeline');
 
-// Get Current Referrals Container from Timeline Progress
-let referral_count_container_h = document.getElementById(
-  'referral-count-achieved'
-); // for horizontal layout
-let referral_count_container_v = document.getElementById(
-  'vertical-referral-count-achieved'
-); // for vertical layout
+// Get Current Referrals Container 
+let horizontal_referral_count_container = document.getElementById('referral-count-achieved');
 
-// Get Current and Remaining Referral Value Elements from Timeline Progress
+// Get Current and Remaining Referral Value Elements 
 let current_referrals = document.getElementById('current_referrals');
 let remaining_referrals = document.getElementById('remaining_referrals');
 
@@ -62,6 +45,7 @@ let tier_target1 = document.getElementById('tier1');
 let tier_target2 = document.getElementById('tier2');
 let tier_target3 = document.getElementById('tier3');
 let tier_target4 = document.getElementById('tier4');
+let lastHighestTier;
 
 let reward_icon1 = document.getElementById('reward1');
 let reward_icon2 = document.getElementById('reward2');
@@ -75,7 +59,24 @@ let tier_discount4 = document.getElementById('discount4');
 
 // --------------------------------------------------------------------------------- //
 
-// Find and Set Referral Details For Rewards Page
+// Function to update referral count position
+
+function updateReferralPosition(referralCount, lastHighestTier) {
+
+  // for horizontal layout
+  if (horizontal_timeline) {
+    const horizontal_progress_container_width = horizontal_timeline.offsetWidth;
+    const horizontal_progress_container_height = horizontal_timeline.offsetHeight;
+    const horizontal_referral_count_width = horizontal_referral_count_container.offsetWidth;
+    const horizontal_referral_count_height = horizontal_referral_count_container.offsetHeight;
+    let newPosition;
+
+      // Desktop (horizontal) orientation
+      newPosition = (horizontal_progress_container_width / lastHighestTier) * (65 * 0.75);
+
+      horizontal_referral_count_container.style.top = "-15px"; // Reset top position
+      horizontal_referral_count_container.style.left = `${newPosition}px`;
+  }
 const get_referrals = async () => {
   console.log('I came here');
   console.log(campaign_name.innerHTML);
@@ -275,24 +276,6 @@ const get_referrals = async () => {
       }
     }
 
-    // end of social media settings
-
-    if (data.referral_data.length > 0) {
-      // set number of referrals joined in referral count tagline
-      count_referrals.innerText = `Total Referrals Joined: ${data.referral_data.length}`;
-
-      // set current referrals in timeline progress
-      current_referrals.innerText = `${data.referral_data.length}`;
-
-      // set remaining referrals in timeline progress
-      // remaining_referrals.innerText = `${.length}`;
-    } else {
-      count_referrals.innerText =
-        '0 friends have joined! Invite friends to Join';
-      current_referrals.innerText = 0;
-      remaining_referrals.innerText = `${data.referral_data.length}`;
-    }
-
     // set rewards and tiers as per campaign settings
     const reward_1_tier = campaign_data.reward_1_tier;
     const reward_2_tier = campaign_data.reward_2_tier;
@@ -323,6 +306,11 @@ const get_referrals = async () => {
         reward_4_discount = `$${reward_4_discount} Off`;
       }
     }
+
+    const reward_1_code = campaign_data.reward_1_code;
+    const reward_2_code = campaign_data.reward_2_code;
+    const reward_3_code = campaign_data.reward_3_code || '';
+    const reward_4_code = campaign_data.reward_4_code || '';
 
     // reward targets and rewards icons according to tiers:
     tier_target1.innerHTML = reward_1_tier;
@@ -360,6 +348,35 @@ const get_referrals = async () => {
         tier_discount4.innerHTML = reward_4_discount;
       }
     }
+
+    // set referral count settings 
+    if (data.referral_data.length > 0) {
+      // set number of referrals joined 
+      count_referrals.innerText = `Total Referrals Joined: ${data.referral_data.length}`;
+
+      // function call to set current referrals and position in timeline
+      const currentReferrals = `${data.referral_data.length}`;
+
+      if (reward_3_tier == '' && reward_4_tier == '') {
+        lastHighestTier = reward_2_tier;
+      }
+      else if (reward_3_tier != '' && reward_4_tier == '') {
+        lastHighestTier = reward_3_tier;
+      }
+      else if (reward_3_tier != '' && reward_4_tier != '') {
+        lastHighestTier = reward_4_tier;
+      }
+
+      console.log(lastHighestTier);
+      updateReferralCountValue(currentReferrals, parseInt(lastHighestTier));
+
+      // set remaining referrals in timeline progress
+      // remaining_referrals.innerText = `${.length}`;
+    } else {
+      count_referrals.innerText = '0 friends have joined! Invite friends to Join';
+      current_referrals.innerText = 0;
+      remaining_referrals.innerText = `${data.referral_data.length}`;
+    }
   } else {
     console.log(data);
   }
@@ -367,9 +384,14 @@ const get_referrals = async () => {
 
 get_referrals();
 
-//Hover effect on rewards
+// Event listener for device width change (resize event)
+window.addEventListener('resize', () => {
+  updateReferralPosition(parseInt(current_referrals.innerText), parseInt(lastHighestTier));
+});
+
 // const totalProducts = product_list.count;
 
+//Hover effect on rewards
 function mouseenter(x) {
   let childrenelements = x.children;
   for (let i = 0; i < childrenelements.length; i++) {

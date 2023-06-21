@@ -166,8 +166,8 @@ input[type='text']:focus {
 
 .referral-count-achieved {
   position: absolute;
-  top: -2.5vh;
-  left: -4vh;
+  top: -15px;
+  left: -15px;
   width: 35px;
   height: 35px;
   border-radius: 45px;
@@ -421,8 +421,8 @@ input[type='text']:focus {
   width: 35px;
   height: 35px;
   border-radius: 45px;
-  left: -1.8vh;
-  top: -1vh;
+  left: -12px;
+  top: -7px;
   text-align: center;
   font-weight: 600;
   font-size: 20px;
@@ -508,8 +508,8 @@ input[type='text']:focus {
   width: 35px;
   height: 35px;
   border-radius: 45px;
-  left: -1.8vh;
-  top: 0vh;
+  left: -12px;
+  top: 0px;
   text-align: center;
   font-weight: 600;
   font-size: 20px;
@@ -605,6 +605,7 @@ input[type='text']:focus {
   .timeline {
     height: 100%;
     width: 5px;
+    margin-left: 5vh;
   }
 
   .reward-targets {
@@ -618,7 +619,7 @@ input[type='text']:focus {
   }
 
   .referral-count-achieved {
-    left: -2vh;
+    left: -14px;
     width: 30px;
     height: 30px;
     font-size: 16px;
@@ -648,6 +649,18 @@ input[type='text']:focus {
 
   .rewards-none-horizontal .none-gift-layout {
     height: 50%;
+  }
+
+  .rewards-none-horizontal .rewards_socials {
+    width: 80%;
+    justify-content: space-evenly;
+  }
+
+  /* horizontal */
+
+  .rewards-horizontal .rewards_socials {
+    width: 80%;
+    justify-content: space-evenly;
   }
 
   /* none-vertical and vertical */
@@ -881,7 +894,7 @@ input[type='text']:focus {
   .rewards-vertical .vertical-referral-count-achieved {
     width: 32px;
     height: 32px;
-    left: -1.5vh;
+    left: -16px;
     font-size: 17px;
     line-height: 32px;
   }
