@@ -171,13 +171,11 @@ a {
   /*Add New Campaign  Button*/
 
   .btn-link-add {
-
     margin: 10px 5px;
   }
 
   .add-button {
     padding: 7px 6px;
-
     font-size: 15px;
     font-weight: 500;
   }
@@ -251,11 +249,19 @@ a {
   .sidebar_header {
     display: flex;
     font-size: 12px;
-    padding: 2px 3px;
+    padding: 5px 3px;
     justify-content: flex-start;
     align-items: center;
   }
 
+  .sidebar-content .sidebar-logo {
+    width: 130px;
+    margin: 0 10px;
+    background-color: transparent;
+    margin-bottom: 5px;
+    margin-top: 3px;
+    margin-right: 15px;
+  }
 
   /*Add New Campaign  Button*/
 
@@ -264,8 +270,8 @@ a {
   }
 
   .add-button {
-    padding: 7px 6px;
-    font-size: 15px;
+    padding: 7px 2px;
+    font-size: 14px;
     font-weight: 500;
   }
 
@@ -274,7 +280,7 @@ a {
     justify-content: center;
     align-items: center;
     padding: 5px;
-    gap: 7px;
+    gap: 4px;
   }
 
   .add-btn-icon {
@@ -286,8 +292,8 @@ a {
 
   .top .normallink .icon-img,
   .bottom .sidebar-link-bottom .normallink .icon-img {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
   }
 
   .top .normallink,
@@ -302,11 +308,11 @@ a {
   .sidebar-link-bottom .icon-text {
     display: block;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16.5px;
   }
 
   .bottom .sidebar-link-bottom .normallink {
-    font-size: 20px;
+    font-size: 18px;
     align-items: center;
   }
 
@@ -317,36 +323,44 @@ a {
   }
 
   .bottom .sidebar-link-bottom .normallink .icon-text {
-    font-size: 17px;
+    font-size: 14.5px;
   }
 
   .sidebar-link-bottom a {
-    margin-top: 8px;
+    margin-top: 4px;
   }
 
   .bottom .sidebar-link-bottom .normallink {
     padding-top: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 7px;
     gap: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 7px;
   }
 }
 
 @media only screen and (max-width: 786px) {
+  .sidebar-content .sidebar-logo {
+    width: 130px;
+    margin: 0 10px;
+  }
   .sidebar_header {
     display: flex;
-    padding: 6px 5px;
+    padding: 6px 0px;
     justify-content: space-between;
     align-items: center;
-    margin: 0 20px;
+    margin: 0 15px;
     margin-bottom: 4px;
   }
 
   .close-menubtn {
     display: block;
-    height: 24px;
-    width: 24px;
+    height: 22px;
+    width: 22px;
     font-weight: bold;
+  }
+
+  .sidebar-content .sidebar-logo{
+    margin-right: 15px;
   }
 
   .icon-img {
@@ -389,27 +403,39 @@ a {
 }
 
 @media only screen and (max-width: 500px) {
+  .sidebar-content .sidebar-logo{
+    margin: 0 5px;
+    margin-right: 10px;
+  }
+
   .sidebar_header {
     display: flex;
     padding: 10px 5px;
     margin: 0 20px;
-
-    /* justify-content: space-between; */
-    /* align-items: center; */
-    /* margin-left: 20px; */
   }
 
   .close-menubtn {
     display: block;
-    height: 30px;
-    width: 30px;
+    height: 22px;
+    width: 22px;
     font-weight: bold;
   }
+
+  .btn-link-add {
+    margin: 5px 5px;
+  }
+
+  .add-button {
+    padding: 5px 4px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
 
   .icon-text {
     display: block;
     font-weight: 500;
-    font-size: 21px;
+    font-size: 17px;
   }
 
   /* .top .normallink, */

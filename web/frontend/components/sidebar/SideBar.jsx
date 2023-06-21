@@ -33,7 +33,7 @@ const SideBar = () => {
   // const [isActive, setIsActive] = useState(false);
 
   const handleToggle = () => {
-    if (activeMenu && screenSize <= 786) {
+    if (activeMenu && screenSize < 700) {
       setActiveMenu(false);
     }
   };
