@@ -75,12 +75,27 @@ function updateReferralPosition(referralCount, lastHighestTier) {
 
     if (window.innerWidth < 768) {
       // Mobile (vertical) orientation
-      newPosition = (horizontal_referral_count_height / lastHighestTier) * (65 * 0.75);
+      const maxTop = horizontal_progress_container_height - horizontal_referral_count_height;
+      newPosition = (maxTop / lastHighestTier) * (referralCount * 0.75);
+
+      if (newPosition < -15) {
+        newPosition = -15;
+      } else if (newPosition > maxTop) {
+        newPosition = maxTop;
+      }
+
       horizontal_referral_count_container.style.top = `${newPosition}px`;
       horizontal_referral_count_container.style.left = "-15px"; // Reset left position
     } else {
       // Desktop (horizontal) orientation
-      newPosition = (horizontal_progress_container_width / lastHighestTier) * (65 * 0.75);
+      const maxLeft = horizontal_progress_container_width - horizontal_referral_count_width;
+      newPosition = (maxLeft / lastHighestTier) * (referralCount * 0.75);
+
+      if (newPosition < -15) {
+        newPosition = -15;
+      } else if (newPosition > maxLeft) {
+        newPosition = maxLeft;
+      }
 
       horizontal_referral_count_container.style.top = "-15px"; // Reset top position
       horizontal_referral_count_container.style.left = `${newPosition}px`;
@@ -93,7 +108,14 @@ function updateReferralPosition(referralCount, lastHighestTier) {
     const vertical_referral_count_height = vertical_referral_count_container.offsetHeight;
     let newPosition;
 
-    newPosition = (vertical_progress_container_height / lastHighestTier) * (65 * 0.75);
+    const maxTop = vertical_progress_container_height - vertical_referral_count_height;
+    newPosition = (maxTop / lastHighestTier) * (referralCount * 0.75);
+
+    if (newPosition < -15) {
+      newPosition = -15;
+    } else if (newPosition > maxTop) {
+      newPosition = maxTop;
+    }
 
     vertical_referral_count_container.style.top = `${newPosition}px`;
   }
