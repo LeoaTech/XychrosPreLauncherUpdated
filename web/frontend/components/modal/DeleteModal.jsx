@@ -1,6 +1,6 @@
 import "../modal/delete.css";
 
-const DeleteModal = ({ openModal, setDeleteModal, values, handleDelete }) => {
+const DeleteModal = ({ openModal, setDeleteModal, values, handleDelete, campaignName }) => {
   const handleClose = () => {
     setDeleteModal((prev) => !prev);
   };
@@ -12,7 +12,7 @@ const DeleteModal = ({ openModal, setDeleteModal, values, handleDelete }) => {
           <h6>Alert </h6>
         </nav>
         <section className="modal__body">
-          <p>{`Are you Sure you want to delete ID ${values}? `}</p>
+          <p>{`Are you Sure you want to delete Campaign "${campaignName}?" `}</p>
 
           <div className="action__btn-modal">
             <button

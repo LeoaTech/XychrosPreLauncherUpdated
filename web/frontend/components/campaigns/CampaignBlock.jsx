@@ -1,17 +1,19 @@
-import ShortSummaryCard from "../ui/ShortSummaryCard";
-import { subscriber, Sale, arrow } from "../../assets/index";
-import { IconContext } from "react-icons";
-import { FaEdit, FaHourglassEnd } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { DeleteModal } from "../modal/index";
-import "./CampaignBlock.css";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
-import AlertInfoModal from "../modal/AlertInfoModal";
-import { getTotalCampaigns } from "../../app/features/campaigns/campaignSlice";
-import { useSelector } from "react-redux";
-import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
+import ShortSummaryCard from '../ui/ShortSummaryCard';
+import { subscriber, Sale, arrow } from '../../assets/index';
+import { IconContext } from 'react-icons';
+import { FaEdit, FaHourglassEnd } from 'react-icons/fa';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { IoCalendarSharp } from 'react-icons/io5';
+import { DeleteModal } from '../modal/index';
+import './CampaignBlock.css';
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import ToggleSwitch from './toggleSwitch/ToggleSwitch';
+import AlertInfoModal from '../modal/AlertInfoModal';
+import { getTotalCampaigns } from '../../app/features/campaigns/campaignSlice';
+import { fetchReferralById } from '../../app/features/referrals/referralSlice';
+import { useSelector } from 'react-redux';
+import { fetchCurrentTier } from '../../app/features/current_plan/current_plan';
 
 export default function CampaignBlock({
   data,
@@ -22,49 +24,35 @@ export default function CampaignBlock({
   deleteId,
   editData,
   setDeleteId,
+  campaignName,
+  setCampaignName,
 }) {
   // Campaign Card Block Data Properties
-  const { campaign_id, name, product, start_date, end_date } = data;
+  const { campaign_id, name, product, start_date, end_date, active } = data;
+
   const [alertModal, setAlertModal] = useState(false);
 
-  let startDate = new Date(start_date).toLocaleDateString();
-  let endDate = new Date(end_date).toLocaleDateString();
+  let startDate = new Date(start_date).toDateString();
+  let endDate = new Date(end_date).toDateString();
   const totalCampaigns = useSelector(getTotalCampaigns);
-  const currentTier = useSelector(fetchCurrentTier
+  const currentTier = useSelector(fetchCurrentTier);
+  const referralsById = useSelector((state) =>
+    fetchReferralById(state, +campaign_id)
   );
   const [deleteEndData, setDeleteEndDate] = useState(null);
   const [isToggled, setIsToggled] = useState(false);
-
-  // const [subscriptionPlan, setSubscriptionPlan] = useState('')
-  // const [activeCampaign, setActiveCampaign] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(isToggled);
 
   const now = new Date();
-
-  useEffect(() => {
-    if (new Date(start_date) > now) {
-      setIsToggled(false);
-    } else if (new Date(end_date) >= now) {
-      setIsToggled(true);
-    }
-    else {
-      setIsToggled(false);
-
-    }
-
-  }, [start_date,end_date])
-
-
-
 
   function checkAndDeleteCampaign(campaignDate) {
     // Convert the campaign date string to a Date object
     const campaignDateObj = new Date(campaignDate);
-    // Get the current date
     // Check if the campaign date has expired
     if (campaignDateObj < now && !isToggled) {
       setDeleteModal(true);
     } else if (!isToggled) {
-      setDeleteModal(true);     //uncomment this line to test Delete modal behavior
+      setDeleteModal(true); //uncomment this line to test Delete modal behavior
     } else if (isToggled) {
       // Info Alert Display
       setAlertModal(true);
@@ -75,9 +63,9 @@ export default function CampaignBlock({
 
   return (
     <>
-      <div className="campaign-block">
-        <div className="campaign-details">
-          <div className="camapign-block-name">
+      <div className='campaign-block'>
+        <div className='campaign-details'>
+          <div className='camapign-block-name'>
             {name}
             <span>
               <ToggleSwitch
@@ -86,28 +74,39 @@ export default function CampaignBlock({
                 id={campaign_id}
                 start_date={start_date}
                 end_date={end_date}
-              // subscriptionPlan={subscriptionPlan}
-              // activeCampaign={activeCampaign}
               />
             </span>
           </div>
 
-          <Link to={product} className="campaign-block-product-name">
-            {product}
+          <Link
+            to={product}
+            className='campaign-block-product-name'
+          >
+            {/* {product} */} Product Name
           </Link>
 
-          <div className="campaign-block-duration">
+          <div className='campaign-block-duration'>
+            <IoCalendarSharp
+              style={{ height: 14, width: 16, marginRight: 5, marginTop: 10 }}
+            />
             {startDate} - {endDate}
           </div>
         </div>
-        <div className="campaign-right-card">
-          <div className="campaign-kpis">
+
+        <div className='campaign_center_links'>
+          <div className='campaign_details_links'>
+            <Link to='/'>Landing Page</Link>
+            <Link to='/'>Rewards Page </Link>
+          </div>
+        </div>
+        <div className='campaign-right-card'>
+          <div className='campaign-kpis'>
             <ShortSummaryCard
-              value="345"
+              value={referralsById}
               icon={subscriber}
-              className="referral-icon"
+              className='referral-icon'
             />
-            <ShortSummaryCard
+            {/* <ShortSummaryCard
               value="$37"
               icon={Sale}
               className="revenue-icon"
@@ -116,19 +115,21 @@ export default function CampaignBlock({
               value="4568"
               icon={arrow}
               className="clicks-icon"
-            />
+            /> */}
           </div>
-          <div className="campaign-actions">
+          <div className='campaign-actions'>
             <IconContext.Provider
               value={{
-                color: "#fcfcfc",
+                color: '#fcfcfc',
                 size: 24,
               }}
+              disabled={isDisabled}
             >
-              <div className="icon-image">
+              <div className='icon-image'>
                 <Link
                   to={`/campaigns/${campaign_id}`}
                   onClick={() => handleEdit(campaign_id)}
+                  disabled={isDisabled}
                 >
                   <FaEdit style={{ height: 24, width: 24 }} />
                   <div>
@@ -139,21 +140,24 @@ export default function CampaignBlock({
             </IconContext.Provider>
             <IconContext.Provider
               value={{
-                color: "red",
+                color: 'red',
                 size: 24,
               }}
+              disabled={isDisabled}
             >
-              <div className="icon-image">
+              <div className='icon-image'>
                 <RiDeleteBin6Line
                   onClick={() => {
                     setDeleteId(campaign_id);
+                    setCampaignName(name);
                     setDeleteEndDate(endDate);
                     checkAndDeleteCampaign(deleteEndData);
                   }}
-                  style={{ height: 24, width: 24, color: "red" }}
+                  disabled={!isDisabled}
+                  style={{ height: 24, width: 24, color: 'red' }}
                 />
                 <div>
-                  <span style={{ color: "red" }}>Delete</span>
+                  <span style={{ color: 'red' }}>Delete</span>
                 </div>
               </div>
             </IconContext.Provider>
@@ -164,6 +168,7 @@ export default function CampaignBlock({
         <DeleteModal
           values={deleteId}
           expiryDate={deleteEndData}
+          campaignName={campaignName}
           isToggled={isToggled}
           openModal={deleteModal}
           setDeleteModal={setDeleteModal}
@@ -173,6 +178,7 @@ export default function CampaignBlock({
       <div>
         <AlertInfoModal
           values={deleteId}
+          campaignName={campaignName}
           expiryDate={deleteEndData}
           isToggled={isToggled}
           openModal={alertModal}
