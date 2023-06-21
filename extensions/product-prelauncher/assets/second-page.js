@@ -32,9 +32,11 @@ let count_referrals = document.getElementById('count_referrals');
 
 // Timeline Progress Containers 
 let horizontal_timeline = document.getElementById('horizontal-timeline');
+let vertical_timeline = document.getElementById('vertical-timeline');
 
 // Get Current Referrals Container 
 let horizontal_referral_count_container = document.getElementById('referral-count-achieved');
+let vertical_referral_count_container = document.getElementById('vertical-referral-count-achieved');
 
 // Get Current and Remaining Referral Value Elements 
 let current_referrals = document.getElementById('current_referrals');
@@ -71,12 +73,39 @@ function updateReferralPosition(referralCount, lastHighestTier) {
     const horizontal_referral_count_height = horizontal_referral_count_container.offsetHeight;
     let newPosition;
 
+    if (window.innerWidth < 768) {
+      // Mobile (vertical) orientation
+      newPosition = (horizontal_referral_count_height / lastHighestTier) * (65 * 0.75);
+      horizontal_referral_count_container.style.top = `${newPosition}px`;
+      horizontal_referral_count_container.style.left = "-15px"; // Reset left position
+    } else {
       // Desktop (horizontal) orientation
       newPosition = (horizontal_progress_container_width / lastHighestTier) * (65 * 0.75);
 
       horizontal_referral_count_container.style.top = "-15px"; // Reset top position
       horizontal_referral_count_container.style.left = `${newPosition}px`;
+    }
   }
+
+  // for vertical layout
+  if (vertical_timeline) {
+    const vertical_progress_container_height = vertical_timeline.offsetHeight;
+    const vertical_referral_count_height = vertical_referral_count_container.offsetHeight;
+    let newPosition;
+
+    newPosition = (vertical_progress_container_height / lastHighestTier) * (65 * 0.75);
+
+    vertical_referral_count_container.style.top = `${newPosition}px`;
+  }
+}
+
+// Function to update the referral count value and position
+function updateReferralCountValue(referralCount, lastHighestTier) {
+  current_referrals.innerText = referralCount;
+  updateReferralPosition(referralCount, lastHighestTier);
+}
+
+// API Call to get Referrals - Find and Set Referral Details For Rewards Page
 const get_referrals = async () => {
   console.log('I came here');
   console.log(campaign_name.innerHTML);
