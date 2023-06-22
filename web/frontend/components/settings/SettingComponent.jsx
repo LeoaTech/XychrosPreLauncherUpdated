@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { settings, xychrosLogo } from "../../assets";
+import { settings, BlackLogo } from "../../assets";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import "./setting.css";
 import { storeLinks } from "../newcampaign/dummySocial";
@@ -66,12 +66,14 @@ const SettingComponent = () => {
       setCurrentExpanded((prevExpand) =>
         prevExpand.map((state, i) => (i === index ? !state : false))
       );
-    } else {
+    }
+    else {
       setCurrentExpanded((prevExpand) =>
         prevExpand.map((state, i) => (i === index ? !state : false))
       );
     }
   };
+
 
   // Update Global Settings for the Shop
   const handleSubmit = async (e) => {
@@ -83,14 +85,18 @@ const SettingComponent = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(settingsData),
-    })
-      .then((res) => res.json())
+    }).then((res) => res.json())
       .then((data) => {
+        console.log(data, "Backend")
         dispatch(fetchSettings(data[0]));
-        setIsLoading(false);
-      });
+      })
+      .catch((err) => console.log(err));
+
 
     handleNext(4);
+    setIsLoading(false);
+    handleNext(0)
+
     document.getElementById("settings-save").setAttribute("disabled", "");
     document.getElementById("settings-save").style.color = "#f5f5f5";
     document.getElementById("settings-save").style.cursor = "none";
@@ -141,10 +147,6 @@ const SettingComponent = () => {
       discount_type: value,
     }));
   }
-
-
-
-
 
   console.log("Settings", settingsData);
 
@@ -208,17 +210,17 @@ const SettingComponent = () => {
                             type="text"
                             name={`${storeLink?.name}`}
                             value={settingsData !== undefined
-                              ?settingsData[`${storeLink?.name}`]:null}
+                              ? settingsData[`${storeLink?.name}`] : null}
                             onChange={handleChange}
                           />
                         </div>
                         <div>
-                          {settingsData !== undefined ?settingsData[`show_${storeLink?.name}`] === true &&
+                          {settingsData !== undefined ? settingsData[`show_${storeLink?.name}`] === true &&
                             settingsData[`${storeLink?.name}`] === "" && (
                               <p className="error-message">
                                 Please Fill the Input field also{" "}
                               </p>
-                            ):null}
+                            ) : null}
                         </div>
                       </div>
                     ))}
@@ -438,9 +440,11 @@ const SettingComponent = () => {
                                 type="number"
                                 name={`reward_${reward?.id}_tier`}
                                 value={
-                                  settingsData[`reward_${reward?.id}_tier`]
+                                  settingsData[`reward_${reward?.id}_tier`] === '' ? null : settingsData[`reward_${reward?.id}_tier`]
                                 }
                                 onChange={handleChange}
+                                disabled={reward?.id > 1 && !settingsData[`reward_${reward?.id - 1}_discount`]}
+
                               />
                             </div>
                             <div className="inputfield">
@@ -452,9 +456,11 @@ const SettingComponent = () => {
                                 type="number"
                                 name={`reward_${reward?.id}_discount`}
                                 value={
-                                  settingsData[`reward_${reward?.id}_discount`]
+                                  settingsData[`reward_${reward?.id}_discount`] === '' ? null : settingsData[`reward_${reward?.id}_discount`]
                                 }
                                 onChange={handleChange}
+                                disabled={reward?.id > 1 && !settingsData[`reward_${reward?.id - 1}_discount`]}
+
                               />
                             </div>
                             <div className="inputfield">
@@ -469,6 +475,7 @@ const SettingComponent = () => {
                                   settingsData[`reward_${reward?.id}_code`]
                                 }
                                 onChange={handleChange}
+                                disabled={reward?.id > 1 && !settingsData[`reward_${reward?.id - 1}_discount`]}
                               />
                             </div>
                           </div>
@@ -535,7 +542,7 @@ const SettingComponent = () => {
                     <h2>Email Settings - Double Opt-in Email </h2>
                     <div className="email-content">
                       <img
-                        src={xychrosLogo}
+                        src={BlackLogo}
                         alt="Shop Logo"
                         className="shop-logo"
                       />
@@ -560,7 +567,7 @@ const SettingComponent = () => {
                     </h2>
                     <div className="email-content">
                       <img
-                        src={xychrosLogo}
+                        src={BlackLogo}
                         alt="Shop Logo"
                         className="shop-logo"
                       />
@@ -585,7 +592,7 @@ const SettingComponent = () => {
                     </h2>
                     <div className="email-content">
                       <img
-                        src={xychrosLogo}
+                        src={BlackLogo}
                         alt="Shop Logo"
                         className="shop-logo"
                       />
@@ -608,7 +615,7 @@ const SettingComponent = () => {
                     </h2>
                     <div className="email-content">
                       <img
-                        src={xychrosLogo}
+                        src={BlackLogo}
                         alt="Shop Logo"
                         className="shop-logo"
                       />

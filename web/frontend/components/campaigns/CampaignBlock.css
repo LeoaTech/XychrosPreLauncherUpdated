@@ -101,6 +101,9 @@
   gap: 10px;
 }
 
+.hover-message{
+  color:#fff
+}
 .campaign-block-product-name {
   font-weight: 400;
   font-size: 19px;

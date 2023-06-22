@@ -6,7 +6,7 @@ import { FaUser} from "react-icons/fa";
 import "./header.css";
 
 import { useStateContext } from "../../contexts/ContextProvider";
-import { SideLogo } from "../../assets/index";
+import { ViralLaunch } from "../../assets/index";
 import { Link } from "react-router-dom";
 
 const NavButton = ({ title, customFunction, color, icon, dotColor }) => (
@@ -83,7 +83,7 @@ const Header = () => {
       <div className="center">
         {/* logo */}
         <img
-          src={SideLogo}
+          src={ViralLaunch}
           alt="XychrosLogo"
         // onClick={() => setActiveMenu(!activeMenu)}
         />

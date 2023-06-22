@@ -246,14 +246,19 @@ const HomeComponent = () => {
           <p>New to Viral Launch? Get up to speed with everything about your product/service launch!</p>
 
         </div>
-        <img src={intro} alt="INTRO" />
+        <div className="intro-img">
+          <img src={intro} alt="INTRO" />
+        </div>
       </div>
 
       <div className="about-section">
         <div className="about-card">
           <p>Create a new campaign and get your email database filled even before you launch!</p>
         </div>
-        <img src={about} alt="About" />
+        <div className="about-img">
+          <img src={about} alt="About" />
+
+        </div>
       </div>
       <div className="contact-us-section">
         <div className="contact-us-card">
