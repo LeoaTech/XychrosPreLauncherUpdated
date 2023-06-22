@@ -15,6 +15,8 @@ import useFetchBillingModel from "../constant/fetchBillingModel";
 import useFetchPricingPlans from "../constant/fetchPricingPlans";
 import useFetchReferralsData from '../constant/fetchReferralsData';
 import { fetchReferrals } from '../app/features/referrals/referralSlice';
+import useFetchCampaignsDetails from '../constant/fetchCampaignDetails';
+import { fetchCampaignDetails } from '../app/features/campaign_details/campaign_details';
 
 export default function HomePage() {
   const { activeMenu } = useStateContext();
@@ -24,24 +26,35 @@ export default function HomePage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+
+  // Get Camapign Lists
   const campaigns = useFetchCampaignsData('/api/getcampaigns', {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
 
+
+  // Get Referral List
   const referrals = useFetchReferralsData('/api/getallreferralcount', {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
+
+  // Get All Products of App Store
   const product = useFetchAllProducts('/api/2022-10/products.json', {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
 
+  // Get Global Settings
   const settings = useFetchSettings('/api/updatesettings', {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
+
+
+  // Get Current Billing Details of App
 
   const billing = useFetchBillingModel("/api/subscribe-plan", {
     method: "GET",
@@ -51,6 +64,15 @@ export default function HomePage() {
   });
 
 
+  // Get Camapign Details with all Campaign_settings
+
+  const campaignsDetails = useFetchCampaignsDetails('/api/campaigndetails', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+
+  // Dispatch API result in Redux store to get access data in the App
   useEffect(() => {
     if (billing) {
       dispatch(fetchSavePlan(billing))   //Save Current Billing Details in App Store
@@ -80,6 +102,15 @@ export default function HomePage() {
       dispatch(fetchReferrals(referrals));
     }
   }, [dispatch, referrals]);
+
+
+  useEffect(() => {
+    if (campaignsDetails?.length > 0) {
+      dispatch(fetchCampaignDetails(campaignsDetails));
+    }
+  }, [campaignsDetails, dispatch]);
+
+
 
   return (
     <div className='app'>

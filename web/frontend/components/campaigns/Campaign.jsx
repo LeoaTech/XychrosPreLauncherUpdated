@@ -7,17 +7,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchAllCampaigns,
   fetchCampaign,
+  getTotalCampaigns,
   updateCampaign
 } from '../../app/features/campaigns/campaignSlice';
 import { useAuthenticatedFetch } from '../../hooks';
 import { fetchAllReferrals } from '../../app/features/referrals/referralSlice';
+import { fetchCampaignDetails, fetchCampaignsDetailsList } from '../../app/features/campaign_details/campaign_details';
+import { fetchCurrentTier } from '../../app/features/current_plan/current_plan';
 
 export default function CampaignsComponent() {
   const fetch = useAuthenticatedFetch();
   const { setIsEdit } = useStateContext();
   const dispatch = useDispatch();
   const List = useSelector(fetchAllCampaigns);
+  const campaignDetails = useSelector(fetchCampaignsDetailsList);
+
   const [getCampaigns, setCampaigns] = useState([]);
+  const [getDetails, setDetails] = useState([])
   const [editData, setEditData] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -26,30 +32,34 @@ export default function CampaignsComponent() {
   const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([]);
 
-
-  // Get Campaigns with Id (descending Order)
   useEffect(() => {
     if (List?.length > 0) {
       setCampaigns(List);
     }
   }, [dispatch, List]);
 
-
-// Get Referrals List
+  // Get Referrals List
   useEffect(() => {
     if (ReferralList) {
       setReferrals(ReferralList);
     }
   }, [ReferralList]);
 
+  // Get Details of Campaign
+  useEffect(() => {
+    if (campaignDetails?.length > 0) {
+      setDetails(campaignDetails);
+    }
+  }, [campaignDetails]);
+
   // PAGINATION
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
-  const totalPages = Math.ceil(getCampaigns?.length / itemsPerPage);
+  const totalPages = Math.ceil(getDetails?.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems = getCampaigns?.slice(startIndex, endIndex);
+  const currentItems = getDetails?.slice(startIndex, endIndex);
   // Handle Previous Page Click events
   const handlePrevClick = () => {
     setCurrentPage((currentPage) => currentPage - 1);
@@ -65,9 +75,11 @@ export default function CampaignsComponent() {
 
     try {
       const deletedCampaign = getCampaigns.find(
-        (campaign) => campaign.campaign_id === id
+        (campaign) => campaign?.campaign_id === id
       );
 
+      const deletedDetails = getDetails?.find((camp) =>
+        camp?.campaign_id === id)
       setCampaignName(deletedCampaign?.name)
 
       const response = await fetch(`/api/campaignsettings/${id}`, {
@@ -80,7 +92,6 @@ export default function CampaignsComponent() {
           is_deleted: true,
         }),
       });
-
       if (response.ok) {
         try {
           const deletedData = await response.json();
@@ -89,10 +100,13 @@ export default function CampaignsComponent() {
           const newData = getCampaigns?.filter(
             (campaign) => campaign?.campaign_id !== id
           );
-          console.log("new Data", newData);
+          const newDetails = getDetails?.filter(
+            (campaign) => campaign?.campaign_id !== id
+          );
           await dispatch(fetchCampaign(newData));
-
+          await dispatch(fetchCampaignDetails(newDetails))
           setCampaigns([...newData]);
+          setDetails([...newDetails])
 
         } catch (error) {
           throw new Error("Invalid JSON response");
@@ -115,7 +129,7 @@ export default function CampaignsComponent() {
     <div className='home-container'>
       <div className='summary-blocks'>
         <SummaryCard
-          value={getCampaigns?.length}
+          value={getDetails?.length}
           title='Campaigns'
           icon={Marketing}
           class='campaign-icon'
@@ -140,7 +154,7 @@ export default function CampaignsComponent() {
         /> */}
       </div>
       <div className='campaigns'>
-        {getCampaigns?.length > 0 ? (
+        {getDetails?.length > 0 ? (
           <>
             {' '}
             <div className='campaigns-blocks'>

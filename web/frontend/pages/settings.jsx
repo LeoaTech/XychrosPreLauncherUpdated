@@ -23,8 +23,9 @@ const SettingsPage = () => {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
+
   useEffect(() => {
-    if (data.length > 0) {
+    if (data?.length > 0) {
       dispatch(fetchSettings(data[0]));
     }
   }, [dispatch, data]);
