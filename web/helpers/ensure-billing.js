@@ -37,13 +37,14 @@ let date = new Date();
 export default async function ensureBilling(
   session,
   { chargeName, amount, currencyCode, interval },
+
   isProdOverride = process.env.NODE_ENV === 'production'
 ) {
   if (!Object.values(BillingInterval).includes(interval)) {
     throw `Unrecognized billing interval '${interval}'`;
   }
-
-  isProd = isProdOverride;
+  /* Uncomment This line to TEST for environment */
+  // isProd = isProdOverride;   
 
   let hasPayment;
   let confirmationUrl = null;
@@ -76,7 +77,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
     for (let i = 0, len = subscriptions.length; i < len; i++) {
       if (
         subscriptions[i].name === chargeName &&
-        (!isProd || !subscriptions[i].test)
+        (!subscriptions[i].test) // !isProd ||
       ) {
         return true;
       }
@@ -98,7 +99,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
         const node = purchases.edges[i].node;
         if (
           node.name === chargeName &&
-          (!isProd || !node.test) &&
+          (!node.test) &&     //!isProd || 
           node.status === 'ACTIVE'
         ) {
           return true;
@@ -117,9 +118,8 @@ async function requestPayment(
   { chargeName, amount, currencyCode, interval }
 ) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
-  const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${
-    session.shop
-  }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
+  const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${session.shop
+    }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
 
   let data;
   if (isRecurring(interval)) {
@@ -169,7 +169,7 @@ async function requestRecurringPayment(
           },
         ],
         returnUrl,
-        test: !isProd,
+        test: true,  //!isProd,
       },
     },
   });
@@ -228,9 +228,11 @@ export async function GetCurrentAppInstallation(session) {
     [session?.shop]
   );
 
+  let updated_at = planExists?.rows[0]?.created_at;
+
   // Subscription Exists ====> Add it Into Database
 
-  if (subscriptions.length > 0) {
+  if (subscriptions?.length > 0) {
     let myPlan = price_plans?.rows.find((plan) => plan?.plan_name === subscriptions[0]?.name);
     myPlan["billing_required"] = true;
     const { plan_name, price, billing_required } = myPlan;
@@ -266,7 +268,7 @@ export async function GetCurrentAppInstallation(session) {
            WHERE 
             shop_id=$7`
           ,
-          [plan_name, price, date.toISOString(), subscriptions[0]?.id, subscriptions[0]?.status, billing_required, session?.shop]);
+          [plan_name, price, updated_at, subscriptions[0]?.id, subscriptions[0]?.status, billing_required, session?.shop]);
       } catch (error) {
         return error
       }

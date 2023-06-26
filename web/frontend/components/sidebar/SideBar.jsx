@@ -9,7 +9,7 @@ import {
   MdOutlinePriceChange,
 } from "react-icons/md";
 import { CgNotes } from "react-icons/cg";
-import { FaHome, FaUser} from "react-icons/fa";
+import { FaHome, FaUser } from "react-icons/fa";
 import { HiSpeakerphone } from "react-icons/hi";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { RiCustomerServiceLine } from "react-icons/ri";
@@ -22,7 +22,7 @@ import {
   Omnichannnel,
   profile,
   settings,
-  SideLogo,
+  ViralLaunch,
   webhook,
 } from "../../assets/index";
 
@@ -33,7 +33,7 @@ const SideBar = () => {
   // const [isActive, setIsActive] = useState(false);
 
   const handleToggle = () => {
-    if (activeMenu && screenSize <= 786) {
+    if (activeMenu && screenSize < 700) {
       setActiveMenu(false);
     }
   };
@@ -76,47 +76,34 @@ const SideBar = () => {
         <div className="top">
           <div className="sidebar-content">
             <div className="sidebar_header">
-              <MdOutlineClose
-                className="close-menubtn"
-                style={{ height: 40, width: 40 }}
-                onClick={() => setActiveMenu(false)}
-              />
-              <img
-                // onClick={() => setActiveMenu((prev) => !prev)}
-                src={SideLogo}
+              <span>
+                <MdOutlineClose
+                  className="close-menubtn"
+
+                  onClick={() => setActiveMenu(false)}
+                />
+              </span>
+              <span><img
+                src={ViralLaunch}
                 alt="Logo"
                 className="sidebar-logo"
-              />
+              /></span>
 
-              {/*  {activeMenu ? (
-                
-              ) : (
-                <img
-                  // onClick={() => setActiveMenu((prev) => !prev)}
-                  src={Logo}
-                  alt="Logo"
-                  className="onlylogo"
-                />
-              )} */}
             </div>
           </div>
 
           {/* Add Campaign Link */}
 
-          <div className="add-btn-link">
-            <button>
-              <NavLink
-                to="/newcampaign"
-                onClick={handleToggle}
-                className="sidebar-add-btn"
-              >
-                <span className="add-icon-img">
-                  <MdAdd style={{ height: 24, width: 24 }} />
-                </span>
-                <p className="add-icon-text">New Campaign</p>
-              </NavLink>
+          <div className="btn-link-add">
+            <button className="add-button">
+              <Link to="/newcampaign" >
+                <p>
+                  <span><MdAdd className="add-btn-icon" /></span>
+                  <span className="add-btn-text">New Campaign</span></p>
+              </Link>
             </button>
           </div>
+
 
           {/* Center links */}
 
@@ -205,6 +192,8 @@ const SideBar = () => {
           </div>
         </div>
       </>
+
+     
     </div>
   );
 };

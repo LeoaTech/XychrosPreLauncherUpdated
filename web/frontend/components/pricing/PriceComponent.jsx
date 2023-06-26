@@ -13,7 +13,7 @@ const PriceComponent = () => {
   const priceData = useSelector(fetchAllpricing);   //Get all Pricing Details Cards
   const activePlan = useSelector(fetchCurrentPlan);   //Current Active Plan
 
-  const [pricePlans, setPricePlans] = useState();
+  const [pricePlans, setPricePlans] = useState([]);
   const [isLoading, setIsloading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedPlanId, setSubscribedPlanId] = useState(null); //handle Biiling Card subscription ID
@@ -36,7 +36,7 @@ const PriceComponent = () => {
 
   useEffect(() => {
     if (priceData.length > 0) {
-      setPricePlans(priceData);
+      setPricePlans([...priceData]);
     }
   }, [priceData]);
 
@@ -44,7 +44,7 @@ const PriceComponent = () => {
   // Handle Card Next and Prev events
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const maxCardIndex = pricePlans?.length - 1;
-  const cardWidth = 280;
+  const cardWidth = 230;
 
   const handleClickNext = () => {
     if (currentCardIndex < maxCardIndex) {
@@ -112,9 +112,8 @@ const PriceComponent = () => {
   return (
     <div className='pricing-container'>
       <div className='pricing-title'>
-        <h2>Pricing & Billing</h2>
+        <h2>Select Your Plan</h2>
       </div>
-
       <div className='price-details-container'>
         {priceData?.length > 0 && (
           <div className='action-click-btn'>

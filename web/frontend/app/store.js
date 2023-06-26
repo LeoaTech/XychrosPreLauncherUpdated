@@ -6,12 +6,13 @@ import userReducer from './features/users/userSlice';
 import priceReducer from './features/pricing/pricing';
 import currentPlanReducer from './features/current_plan/current_plan';
 import referralReducer from './features/referrals/referralSlice';
-
+import campaignDetailsReducer from "./features/campaign_details/campaign_details"
 // All Slices will be added there
 
 export const store = configureStore({
   reducer: {
     campaign: campaignReducer,
+    campaign_details: campaignDetailsReducer,
     settings: settingsReducer,
     products: productReducer,
     users: userReducer,

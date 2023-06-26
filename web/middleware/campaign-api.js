@@ -4,6 +4,7 @@ import NewPool from 'pg';
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: `${process.env.DATABASE_URL}`,
+
 });
 
 pool.connect((err, result) => {
@@ -23,13 +24,9 @@ export default function campaignApiEndpoints(app) {
       );
 
       const campaigns = await pool.query(
-        // 'select * from campaign_settings where shop_id = $1 ',
-        // [session?.id]
-
         'select * from campaign_settings where shop_id = $1 ',
         [session?.shop]
       );
-      // console.log(campaigns.rows);
       return res.status(200).json(campaigns.rows);
     } catch (err) {
       return res.status(500).json(err.message);
@@ -45,6 +42,7 @@ export default function campaignApiEndpoints(app) {
         res,
         app.get('use-online-tokens')
       );
+
       const {
         collect_phone,
         discord_link,
@@ -103,7 +101,7 @@ export default function campaignApiEndpoints(app) {
       } = req.body;
       const campaigns = await pool.query(
         `INSERT INTO campaign_settings (
-          collect_phone, discord_link, double_opt_in, double_opt_in_email, end_date, facebook_link, instagram_link, klaviyo_integration, klaviyo_list_id, name, product, referral_email, reward_1_code, reward_1_discount, reward_1_tier, reward_2_code, reward_2_discount, reward_2_tier, reward_3_code, reward_3_discount, reward_3_tier, reward_4_code, reward_4_discount, reward_4_tier, reward_email, share_discord_message, share_discord_referral, share_email_message, share_email_referral, share_facebook_message, share_facebook_referral, share_instagram_message, share_instagram_referral, share_snapchat_message, share_snapchat_referral, share_tiktok_message, share_tiktok_referral, share_twitter_message, share_twitter_referral, share_whatsapp_message, share_whatsapp_referral, show_discord_link, show_facebook_link, show_instagram_link, show_snapchat_link, show_tiktok_link, show_twitter_link, snapchat_link, start_date, tiktok_link, twitter_link, welcome_email, template_id, discount_type ,shop_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55)
+          collect_phone, discord_link, double_opt_in, double_opt_in_email, end_date, facebook_link, instagram_link, klaviyo_integration, klaviyo_list_id, name, product, referral_email, reward_1_code, reward_1_discount, reward_1_tier, reward_2_code, reward_2_discount, reward_2_tier, reward_3_code, reward_3_discount, reward_3_tier, reward_4_code, reward_4_discount, reward_4_tier, reward_email, share_discord_message, share_discord_referral, share_email_message, share_email_referral, share_facebook_message, share_facebook_referral, share_instagram_message, share_instagram_referral, share_snapchat_message, share_snapchat_referral, share_tiktok_message, share_tiktok_referral, share_twitter_message, share_twitter_referral, share_whatsapp_message, share_whatsapp_referral, show_discord_link, show_facebook_link, show_instagram_link, show_snapchat_link, show_tiktok_link, show_twitter_link, snapchat_link, start_date, tiktok_link, twitter_link, welcome_email, template_id, discount_type ,shop_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55) Returning *;
         `,
         [
           collect_phone,
@@ -163,6 +161,9 @@ export default function campaignApiEndpoints(app) {
           session?.shop,
         ]
       );
+
+
+      console.log(campaigns?.rowCount, "Inserted")
       return res.status(201).json(campaigns.rows);
     } catch (err) {
       return res.status(500).json(err.message);

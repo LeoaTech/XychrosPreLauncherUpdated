@@ -1,6 +1,6 @@
 .pricing-details {
   height: 500px;
-  width: 280px;
+  width: 250px;
   display: flex;
   flex-direction: column;
 
@@ -46,7 +46,7 @@
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  width: 250px;
+  width: 210px;
   justify-content: flex-start;
   align-items: flex-start;
 }
@@ -108,15 +108,37 @@
   color:var(--secondary-text-color)
 
 }
-
-@media screen and (max-width: 786px) {
+@media screen and (max-width: 1480px) {
   .pricing-details {
-    height: 550px;
-    width: 230px;
+    height: 460px;
+    width: 240px;
   }
   .pricing-features {
     
-    width: 200px;
+    width: 190px;
+   
+  } 
+}
+
+@media screen and (max-width: 1050px) {
+  .pricing-details {
+    height: 470px;
+    width: 220px;
+  }
+  .pricing-features {
+    
+    width: 160px;
+   
+  } 
+}
+@media screen and (max-width: 786px) {
+  .pricing-details {
+    height: 480px;
+    width: 210px;
+  }
+  .pricing-features {
+    
+    width: 190px;
    
   }
   
