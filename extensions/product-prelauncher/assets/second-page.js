@@ -34,6 +34,10 @@ let count_referrals = document.getElementById('count_referrals');
 let horizontal_timeline = document.getElementById('horizontal-timeline');
 let vertical_timeline = document.getElementById('vertical-timeline');
 
+// Timeline Progress Bar
+let horizontal_progress = document.getElementById('horizontal-timeline-progress');
+let vertical_progress = document.getElementById('vertical-timeline-progress');
+
 // Get Current Referrals Container 
 let horizontal_referral_count_container = document.getElementById('referral-count-achieved');
 let vertical_referral_count_container = document.getElementById('vertical-referral-count-achieved');
@@ -69,6 +73,8 @@ function updateReferralPosition(referralCount, lastHighestTier) {
   if (horizontal_timeline) {
     const horizontal_progress_container_width = horizontal_timeline.offsetWidth;
     const horizontal_progress_container_height = horizontal_timeline.offsetHeight;
+    const horizontal_progress_width = horizontal_progress.offsetWidth;
+    const horizontal_progress_height = horizontal_progress.offsetHeight;
     const horizontal_referral_count_width = horizontal_referral_count_container.offsetWidth;
     const horizontal_referral_count_height = horizontal_referral_count_container.offsetHeight;
     let newPosition;
@@ -86,6 +92,8 @@ function updateReferralPosition(referralCount, lastHighestTier) {
 
       horizontal_referral_count_container.style.top = `${newPosition}px`;
       horizontal_referral_count_container.style.left = "-15px"; // Reset left position
+      horizontal_progress.style.height = `${newPosition + horizontal_referral_count_height}px`; // Update progress bar height
+      horizontal_progress.style.width = '5px'; // Reset bar width
     } else {
       // Desktop (horizontal) orientation
       const maxLeft = horizontal_progress_container_width - horizontal_referral_count_width;
@@ -99,6 +107,8 @@ function updateReferralPosition(referralCount, lastHighestTier) {
 
       horizontal_referral_count_container.style.top = "-15px"; // Reset top position
       horizontal_referral_count_container.style.left = `${newPosition}px`;
+      horizontal_progress.style.width = `${newPosition + horizontal_referral_count_width}px`; // Update progress bar width
+      horizontal_progress.style.height = '5px'; // Reset bar height
     }
   }
 
@@ -118,6 +128,7 @@ function updateReferralPosition(referralCount, lastHighestTier) {
     }
 
     vertical_referral_count_container.style.top = `${newPosition}px`;
+    vertical_progress.style.height = `${newPosition + vertical_referral_count_height}px`; // Update progress bar height
   }
 }
 
