@@ -22,6 +22,7 @@ import discountApiEndpoint from './middleware/discount-api.js';
 import userDetailsApiEndPoint from "./middleware/userdetails-api.js";
 import getUrlApi from "./middleware/geturl-api.js";
 import getCampaignClicks from "./middleware/get_campaign_clicks.js";
+import getrevenuedetails from "./middleware/getrevenuedetails.js";
 
 const USE_ONLINE_TOKENS = false;
 
@@ -183,6 +184,7 @@ export async function createServer(
   getUrlApi(app)
   discountApiEndpoint(app);
   getCampaignClicks(app); //Klaviyo Integration API
+  getrevenuedetails(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
