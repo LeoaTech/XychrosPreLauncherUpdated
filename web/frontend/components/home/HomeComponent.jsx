@@ -21,6 +21,7 @@ const HomeComponent = () => {
   const authenticated_fetch = useAuthenticatedFetch();
 
   const [clicks, setClicks] = useState(0);
+  const [revenue, setRevenue] = useState(0);
 
   useEffect(() => {
     if (List) {
@@ -35,6 +36,16 @@ const HomeComponent = () => {
       setClicks(data.clicks);
     } else {
       setClicks(0);
+    }
+  };
+
+  const gettotal_revenue = async () => {
+    const response = await authenticated_fetch("/api/totalrevenue");
+    const data = await response.json();
+    if (response.status === 200) {
+      setRevenue(data.message);
+    } else {
+      console.log("some error occurred");
     }
   };
 
@@ -91,6 +102,7 @@ const HomeComponent = () => {
     }
     getClicks();
     getLastSixMonthsData();
+    gettotal_revenue();
   }, []);
 
   const LineChartOptions = {
@@ -317,7 +329,7 @@ const HomeComponent = () => {
           class="referral-icon"
         />
         <SummaryCard
-          value="$253,467"
+          value={revenue}
           title="Revenue"
           icon={Sale}
           class="revenue-icon"
