@@ -85,12 +85,12 @@
                 <div class="rewards">
                   <div class="reward-item-detail" id="reward1">
                     {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                    {{ imageDropdown | asset_url | img_tag }}
+                    <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                     <span id="discount1">Gift Card {}</span>
                   </div>
                   <div class="reward-item-detail" id="reward2">
                     {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                    {{ imageDropdown | asset_url | img_tag }}
+                    <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                     <span id="discount2">Gift Card {}</span>
                   </div>
                   <div
@@ -98,7 +98,7 @@
                     id="reward3"
                     style="display: none;">
                     {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                    {{ imageDropdown | asset_url | img_tag }}
+                    <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                     <span id="discount3">Gift Card {}</span>
                   </div>
                   <div
@@ -106,7 +106,7 @@
                     id="reward4"
                     style="display: none;">
                     {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                    {{ imageDropdown | asset_url | img_tag }}
+                    <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                     <span id="discount4">Gift Card {}</span>
                   </div>
                 </div>
@@ -200,25 +200,25 @@
               <div class="vertical-rewards">
                 <div class="vertical-reward-item-detail" id="reward1">
                   {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                 </div>
                 <div class="vertical-reward-item-detail" id="reward2">
                   {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                 </div>
                 <div
                   class="vertical-reward-item-detail"
                   id="reward3"
                   style="display: none;">
                   {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                 </div>
                 <div
                   class="vertical-reward-item-detail"
                   id="reward4"
                   style="display: none;">
                   {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                 </div>
               </div>
             </div>
@@ -313,12 +313,12 @@
               <div class="rewards">
                 <div class="reward-item-detail" id="reward1">
                   {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                   <span id="discount1">Gift Card {{ block.settings.tier_1_discount }}</span>
                 </div>
                 <div class="reward-item-detail" id="reward2">
                   {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                   <span id="discount2">Gift Card {{ block.settings.tier_2_discount }}</span>
                 </div>
                 <div
@@ -326,7 +326,7 @@
                   id="reward3"
                   style="display: none;">
                   {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                   <span id="discount3">Gift Card {{ block.settings.tier_3_discount }}</span>
                 </div>
                 <div
@@ -334,7 +334,7 @@
                   id="reward4"
                   style="display: none;">
                   {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                  {{ imageDropdown | asset_url | img_tag }}
+                  <img src={{ imageDropdown | asset_url }} alt="reward-icon">
                   <span id="discount4">Gift Card {{ block.settings.tier_4_discount }}</span>
                 </div>
               </div>
@@ -428,25 +428,25 @@
             <div class="vertical-rewards">
               <div class="vertical-reward-item-detail" id="reward1">
                 {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                {{ imageDropdown | asset_url | img_tag }}
+                <img src={{ imageDropdown | asset_url }} alt="reward-icon">
               </div>
               <div class="vertical-reward-item-detail" id="reward2">
                 {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                {{ imageDropdown | asset_url | img_tag }}
+                <img src={{ imageDropdown | asset_url }} alt="reward-icon">
               </div>
               <div
                 class="vertical-reward-item-detail"
                 id="reward3"
                 style="display: none;">
                 {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                {{ imageDropdown | asset_url | img_tag }}
+                <img src={{ imageDropdown | asset_url }} alt="reward-icon">
               </div>
               <div
                 class="vertical-reward-item-detail"
                 id="reward4"
                 style="display: none;">
                 {% assign imageDropdown = block.settings.icon_dropdown | append: '.png' %}
-                {{ imageDropdown | asset_url | img_tag }}
+                <img src={{ imageDropdown | asset_url }} alt="reward-icon">
               </div>
             </div>
           </div>
