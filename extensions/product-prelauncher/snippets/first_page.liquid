@@ -196,6 +196,7 @@
       <div class="spaced {% if block.settings.layout == 'vertical' or block.settings.layout == 'flip-vertical' %}vertical-mobile-two{% endif %}">
         <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
+          action='/apps/product-prelauncher/api/getuser'
           id="form-submission"
           class="first-page-form">
           <input
