@@ -113,7 +113,7 @@ input[type='tel']:focus {
   min-height: 50px;
   width: 50%;
   padding: 0.5%;
-  margin: 8px auto;
+  margin: 0 auto;
 }
 
 .social_icons a > svg {
@@ -126,6 +126,10 @@ input[type='tel']:focus {
 .submit-button-product-prelaunch {
   border-radius: 4px;
   margin: 10px auto;
+}
+
+.diagonal .submit-button-product-prelaunch,  .flip-diagonal .submit-button-product-prelaunch, .transfer-diagonal .submit-button-product-prelaunch, .flip-transfer-diagonal .submit-button-product-prelaunch{
+  margin: 0px auto;
 }
 
 /* none-horizontal layout */
@@ -278,9 +282,10 @@ input[type='tel']:focus {
 
 .lower-triangular .tag-line {
   position: absolute;
-  bottom: 20rem;
-  right: 6rem;
+  top: 15rem;
+  left: 5.5rem;
   width: unset !important;
+  margin: unset;
 }
 
 .lower-triangular .first-page-form {
@@ -345,9 +350,10 @@ input[type='tel']:focus {
 
 .transfer-lower-triangular .tag-line {
   position: absolute;
-  top: 13rem;
-  right: 10rem;
+  bottom: 8rem;
+  left: 4.5rem;
   width: unset !important;
+  margin: unset;
 }
 
 .transfer-lower-triangular .first-page-form {
@@ -510,7 +516,7 @@ input[type='tel']:focus {
 
   .diagonal-background {
     min-width: 50vw;
-    min-height: 60vh;
+    min-height: 50vh;
     position: unset !important;
     height: unset !important;
     width: unset !important;
@@ -519,7 +525,7 @@ input[type='tel']:focus {
 
   .lower-triangular {
     min-width: 50vw !important;
-    min-height: 40vh !important;
+    min-height: 50vh !important;
     height: unset !important;
     width: unset !important;
   }
@@ -537,7 +543,7 @@ input[type='tel']:focus {
   }
 
   .lower-triangular .tag-line {
-    bottom: 18rem;
+    top: 20rem;
     left: 0;
     right: 0;
   }
@@ -569,7 +575,7 @@ input[type='tel']:focus {
 
   .flip-diagonal .diagonal-background {
     min-width: 50vw;
-    min-height: 60vh;
+    min-height: 50vh;
     position: unset !important;
     height: unset !important;
     width: unset !important;
@@ -596,7 +602,7 @@ input[type='tel']:focus {
 
   .transfer-diagonal-background {
     min-width: 50vw;
-    min-height: 60vh;
+    min-height: 50vh;
     position: unset !important;
     height: unset !important;
     width: unset !important;
@@ -605,7 +611,7 @@ input[type='tel']:focus {
 
   .transfer-lower-triangular {
     min-width: 50vw !important;
-    min-height: 40vh !important;
+    min-height: 50vh !important;
     height: unset !important;
     width: unset !important;
   }
@@ -617,14 +623,13 @@ input[type='tel']:focus {
   }
 
   .transfer-lower-triangular .header_text {
-    top: 8rem;
+    top: 8.5rem;
     left: 0;
     right: 0;
   }
 
   .transfer-lower-triangular .tag-line {
-    top: unset;
-    bottom: 18rem;
+    top: 20rem;
     left: 0;
     right: 0;
   }
@@ -657,7 +662,7 @@ input[type='tel']:focus {
 
   .flip-transfer-diagonal .transfer-diagonal-background {
     min-width: 50vw;
-    min-height: 60vh;
+    min-height: 50vh;
     position: unset !important;
     height: unset !important;
     width: unset !important;
@@ -752,14 +757,13 @@ input[type='tel']:focus {
   }
 
   .lower-triangular .tag-line {
-    bottom: 19rem;
-    right: 2.5rem;
+    top: 13.5rem;
+    left: 0.5rem
   }
 
   .lower-triangular .first-page-form {
     bottom: 1rem;
     right: 3rem;
-    width: 60%;
   }
 
   .diagonal .email-input-product-prelaucher{
@@ -797,26 +801,26 @@ input[type='tel']:focus {
   /* traverse diagonal layout */
 
   .transfer-lower-triangular .subheader_text {
-    bottom: 10rem;
+    bottom: 12rem;
     left: 0.2rem;
     right: unset;
   }
 
   .transfer-lower-triangular .header_text {
-    bottom: 5rem;
+    bottom: 6rem;
     left: 1rem;
     right: unset;
   }
 
   .transfer-lower-triangular .tag-line {
-    top: 5rem;
-    right: 3rem;
+    bottom: 4rem;
+    left: 1.5rem;
+    right: unset;
   }
 
   .transfer-lower-triangular .first-page-form {
-    top: 12rem;
+    top: 8rem;
     right: 3rem;
-    width: 60%;
   }
 
   .transfer-diagonal .email-input-product-prelaucher {
@@ -903,24 +907,23 @@ input[type='tel']:focus {
   /* diagonal layout */
 
   .lower-triangular .subheader_text {
-    top: 8rem;
+    top: 6.5rem;
     left: 0;
   }
 
   .lower-triangular .header_text {
-    top: 12rem;
+    top: 10rem;
     left: 1rem;
   }
 
   .lower-triangular .tag-line {
-    bottom: 19rem;
-    right: 6.5rem;
+    top: 18rem;
+    left: 1.5rem;
   }
 
   .lower-triangular .first-page-form {
     bottom: 1rem;
     right: 3rem;
-    width: 60%;
   }
 
   .diagonal .email-input-product-prelaucher{
@@ -958,26 +961,26 @@ input[type='tel']:focus {
   /* traverse diagonal layout */
 
   .transfer-lower-triangular .subheader_text {
-    bottom: 10rem;
+    bottom: 14rem;
     left: 0.2rem;
     right: unset;
   }
 
   .transfer-lower-triangular .header_text {
-    bottom: 5rem;
+    bottom: 7.5rem;
     left: 1rem;
     right: unset;
   }
 
   .transfer-lower-triangular .tag-line {
-    top: 5rem;
-    right: 6.5rem;
+    bottom: 5.5rem;
+    left: 1.5rem;
+    right: unset;
   }
 
   .transfer-lower-triangular .first-page-form {
-    top: 12rem;
+    top: 8rem;
     right: 3rem;
-    width: 60%;
   }
 
   .transfer-diagonal .email-input-product-prelaucher{
@@ -1050,19 +1053,18 @@ input[type='tel']:focus {
   }
 
   .lower-triangular .header_text {
-    top: 13rem;
+    top: 12rem;
     left: 1.2rem;
   }
 
   .lower-triangular .tag-line {
-    bottom: 19rem;
-    right: 6.5rem;
+    top: 22.5rem;
+    left: 1.5rem;
   }
 
   .lower-triangular .first-page-form {
-    bottom: 1rem;
-    right: 3rem;
-    width: 60%;
+    bottom: 5rem;
+    right: 5rem;
   }
 
   .diagonal .email-input-product-prelaucher{
@@ -1100,26 +1102,26 @@ input[type='tel']:focus {
   /* traverse diagonal layout */
 
   .transfer-lower-triangular .subheader_text {
-    bottom: 10rem;
+    bottom: 24rem;
     left: 0.2rem;
     right: unset;
   }
 
   .transfer-lower-triangular .header_text {
-    bottom: 5rem;
+    bottom: 14rem;
     left: 1.5rem;
     right: unset;
   }
 
   .transfer-lower-triangular .tag-line {
-    top: 5rem;
-    right: 6.5rem;
+    bottom: 10rem;
+    left: 2.5rem;
+    right: unset;
   }
 
   .transfer-lower-triangular .first-page-form {
     top: 15rem;
-    right: 3rem;
-    width: 60%;
+    right: 6rem;
   }
 
   .transfer-diagonal .email-input-product-prelaucher{
