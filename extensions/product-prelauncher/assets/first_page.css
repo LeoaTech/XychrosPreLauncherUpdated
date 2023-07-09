@@ -38,8 +38,8 @@
   box-sizing: border-box;
 }
 
-.tag-line {
-  width: 100%;
+.headers {
+  padding: 0 2%;
 }
 
 #form-submission {
@@ -132,6 +132,10 @@ input[type='tel']:focus {
   margin: 0px auto;
 }
 
+.none-horizontal .headers, .none-vertical .headers {
+  margin-bottom: 5rem;
+}
+
 /* none-horizontal layout */
 
 .section-layout.none-horizontal {
@@ -219,7 +223,7 @@ input[type='tel']:focus {
   min-height: 100vh;
   display: flex !important;
   flex-direction: column !important;
-  gap: 12rem !important;
+  gap: 6rem !important;
 }
 
 .spaced {
@@ -268,24 +272,10 @@ input[type='tel']:focus {
   width: 100vw;
 }
 
-.lower-triangular .subheader_text {
+.lower-triangular .headers {
   position: absolute;
   top: 8rem;
-  left: 4.1rem;
-}
-
-.lower-triangular .header_text {
-  position: absolute;
-  top: 12rem;
-  left: 5rem;
-}
-
-.lower-triangular .tag-line {
-  position: absolute;
-  top: 15rem;
-  left: 5.5rem;
-  width: unset !important;
-  margin: unset;
+  left: 1rem;
 }
 
 .lower-triangular .first-page-form {
@@ -336,24 +326,11 @@ input[type='tel']:focus {
   width: 100vw;
 }
 
-.transfer-lower-triangular .subheader_text {
+.transfer-lower-triangular .headers {
+  padding: 0 2%;
   position: absolute;
   bottom: 11rem;
   left: 3rem;
-}
-
-.transfer-lower-triangular .header_text {
-  position: absolute;
-  bottom: 5rem;
-  left: 4rem;
-}
-
-.transfer-lower-triangular .tag-line {
-  position: absolute;
-  bottom: 8rem;
-  left: 4.5rem;
-  width: unset !important;
-  margin: unset;
 }
 
 .transfer-lower-triangular .first-page-form {
@@ -530,26 +507,14 @@ input[type='tel']:focus {
     width: unset !important;
   }
 
-  .lower-triangular .subheader_text {
+  .lower-triangular .headers {
     top: 5rem;
     left: 0;
     right: 0;
   }
 
-  .lower-triangular .header_text {
-    top: 8rem;
-    left: 0;
-    right: 0;
-  }
-
-  .lower-triangular .tag-line {
-    top: 20rem;
-    left: 0;
-    right: 0;
-  }
-
   .lower-triangular .first-page-form {
-    bottom: 0;
+    bottom: 4rem;
     left: 0;
     right: 0;
     width: 100%;
@@ -616,27 +581,15 @@ input[type='tel']:focus {
     width: unset !important;
   }
 
-  .transfer-lower-triangular .subheader_text {
+  .transfer-lower-triangular .headers {
     top: 5rem;
-    left: 0;
-    right: 0;
-  }
-
-  .transfer-lower-triangular .header_text {
-    top: 8.5rem;
-    left: 0;
-    right: 0;
-  }
-
-  .transfer-lower-triangular .tag-line {
-    top: 20rem;
     left: 0;
     right: 0;
   }
 
   .transfer-lower-triangular .first-page-form {
     top: unset;
-    bottom: 0;
+    bottom: 4rem;
     left: 0;
     right: 0;
     width: 100%;
@@ -746,24 +699,14 @@ input[type='tel']:focus {
 
   /* diagonal layout */
 
-  .lower-triangular .subheader_text {
+  .lower-triangular .headers {
     top: 4rem;
-    left: -0.8rem;
-  }
-
-  .lower-triangular .header_text {
-    top: 7rem;
-    left: 0;
-  }
-
-  .lower-triangular .tag-line {
-    top: 13.5rem;
-    left: 0.5rem
+    left: 0rem;
   }
 
   .lower-triangular .first-page-form {
-    bottom: 1rem;
-    right: 3rem;
+    bottom: 4rem;
+    right: 4rem;
   }
 
   .diagonal .email-input-product-prelaucher{
@@ -800,21 +743,9 @@ input[type='tel']:focus {
 
   /* traverse diagonal layout */
 
-  .transfer-lower-triangular .subheader_text {
-    bottom: 12rem;
-    left: 0.2rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .header_text {
-    bottom: 6rem;
-    left: 1rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .tag-line {
-    bottom: 4rem;
-    left: 1.5rem;
+  .transfer-lower-triangular .headers {
+    bottom: 2rem;
+    left: 0rem;
     right: unset;
   }
 
@@ -906,24 +837,14 @@ input[type='tel']:focus {
 
   /* diagonal layout */
 
-  .lower-triangular .subheader_text {
-    top: 6.5rem;
+  .lower-triangular .headers {
+    top: 3.5rem;
     left: 0;
   }
 
-  .lower-triangular .header_text {
-    top: 10rem;
-    left: 1rem;
-  }
-
-  .lower-triangular .tag-line {
-    top: 18rem;
-    left: 1.5rem;
-  }
-
   .lower-triangular .first-page-form {
-    bottom: 1rem;
-    right: 3rem;
+    bottom: 4rem;
+    right: 4rem;
   }
 
   .diagonal .email-input-product-prelaucher{
@@ -960,21 +881,9 @@ input[type='tel']:focus {
 
   /* traverse diagonal layout */
 
-  .transfer-lower-triangular .subheader_text {
-    bottom: 14rem;
-    left: 0.2rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .header_text {
-    bottom: 7.5rem;
-    left: 1rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .tag-line {
-    bottom: 5.5rem;
-    left: 1.5rem;
+  .transfer-lower-triangular .headers {
+    bottom: 3.5rem;
+    left: 0rem;
     right: unset;
   }
 
@@ -1047,24 +956,14 @@ input[type='tel']:focus {
   }
 
   /* diagonal layout */
-  .lower-triangular .subheader_text {
+  .lower-triangular .headers {
     top: 8rem;
     left: 0;
   }
 
-  .lower-triangular .header_text {
-    top: 12rem;
-    left: 1.2rem;
-  }
-
-  .lower-triangular .tag-line {
-    top: 22.5rem;
-    left: 1.5rem;
-  }
-
   .lower-triangular .first-page-form {
-    bottom: 5rem;
-    right: 5rem;
+    bottom: 10rem;
+    right: 6rem;
   }
 
   .diagonal .email-input-product-prelaucher{
@@ -1101,21 +1000,9 @@ input[type='tel']:focus {
 
   /* traverse diagonal layout */
 
-  .transfer-lower-triangular .subheader_text {
-    bottom: 24rem;
-    left: 0.2rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .header_text {
-    bottom: 14rem;
-    left: 1.5rem;
-    right: unset;
-  }
-
-  .transfer-lower-triangular .tag-line {
+  .transfer-lower-triangular .headers {
     bottom: 10rem;
-    left: 2.5rem;
+    left: 0.2rem;
     right: unset;
   }
 

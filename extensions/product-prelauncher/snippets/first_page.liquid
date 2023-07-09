@@ -13,10 +13,12 @@
     <div id='background-image' class="none-layout none-parent-container">
       <div class="hidden">this div is hidden</div>
       <div class="none">
-        <div class="subheader_text">{{ block.settings.subheader_text }}</div>
-        <div class="header_text">{{ block.settings.header_text }}</div>
-        <div class="spaced">
+        <div class="headers">
+          <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+          <div class="header_text">{{ block.settings.header_text }}</div>
           <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
+        </div>
+        <div class="spaced">
           <form
             action='/apps/product-prelauncher/api/getuser'
             id="form-submission"
@@ -99,12 +101,14 @@
 
   {% if block.settings.layout == 'horizontal' or block.settings.layout == 'flip-horizontal' %}
     <div id='background-image' class="img-layout three-fourth">
-      <div class="subheader_text">{{ block.settings.subheader_text }}</div>
-      <div class="header_text">{{ block.settings.header_text }}</div>
+      <div class="headers">
+        <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+        <div class="header_text">{{ block.settings.header_text }}</div>
+        <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
+      </div>
     </div>
     <div class="text-layout one-fourth">
       <div class="spaced">
-        <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
           action='/apps/product-prelauncher/api/getuser'
           id="form-submission"
@@ -189,12 +193,14 @@
       <div class="hidden">this div is hidden</div>
     </div>
     <div class="text-layout {% if block.settings.layout == 'vertical' or block.settings.layout == 'flip-vertical' %}spaced-evenly{% elsif block.settings.layout == 'diagonal' or block.settings.layout == 'flip-diagonal' %}lower-triangular{% elsif block.settings.layout == 'transfer-diagonal' or block.settings.layout == 'flip-transfer-diagonal' %}transfer-lower-triangular{% endif %}">
-    <div class="spaced {% if block.settings.layout == 'vertical' or block.settings.layout == 'flip-vertical' %}vertical-mobile{% endif %}">
-        <div class="subheader_text">{{ block.settings.subheader_text }}</div>
-        <div class="header_text">{{ block.settings.header_text }}</div>
+      <div class="spaced {% if block.settings.layout == 'vertical' or block.settings.layout == 'flip-vertical' %}vertical-mobile{% endif %}">
+        <div class="headers">
+          <div class="subheader_text">{{ block.settings.subheader_text }}</div>
+          <div class="header_text">{{ block.settings.header_text }}</div>
+          <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
+        </div>
       </div>
       <div class="spaced {% if block.settings.layout == 'vertical' or block.settings.layout == 'flip-vertical' %}vertical-mobile-two{% endif %}">
-        <div class="tag-line">{{ block.settings.cta_tag_text }}</div>
         <form
           action='/apps/product-prelauncher/api/getuser'
           id="form-submission"
