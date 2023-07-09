@@ -51,8 +51,6 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   const rewards_subheader_text = templateData.rewards_sub_header_text || '';
   const rewards_base_font_size = templateData.rewards_base_text_size;
   const rewards_image = templateData.rewards_rewards_image;
-  const referral_position = templateData.rewards_referral_position;
-  const reward_position = templateData.reward_position;
 
   // end of reward template settings
 
@@ -203,7 +201,6 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
         }),
       });
       const data = await response.json();
-      console.log(data);
       if (!response.ok) {
         throw new Error(`Failed to create page template: ${data.errors}`);
       }
@@ -233,7 +230,6 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
         }
       );
       const data = await response.json();
-      console.log(data);
       if (!response.ok) {
         throw new Error(`Failed to create page template: ${data.errors}`);
       }
@@ -264,7 +260,6 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
         }
       );
       const data = await response.json();
-      console.log(data);
       return data.page.handle;
     } catch (error) {
       console.error(error);
@@ -292,7 +287,6 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
         }
       );
       const data = await response.json();
-      console.log(data);
       return data.page.handle;
     } catch (error) {
       console.error(error);
@@ -353,7 +347,6 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
         }
       );
       const data = await response.json();
-      console.log('Updated template with page handle');
       if (!response.ok) {
         throw new Error(`Failed to update page template: ${data.errors}`);
       }
@@ -415,7 +408,6 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
         }
       );
       const data = await response.json();
-      console.log('Updated template with page handle');
       if (!response.ok) {
         throw new Error(`Failed to update page template: ${data.errors}`);
       }
@@ -424,8 +416,6 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
       console.error(error);
     }
   };
-
-  // ==== open shopify theme editor - pending ====
 
   // call api functions
 
@@ -448,7 +438,7 @@ const templateApiCalls = async (accessToken, shopURL, templateData, campaignData
   await updateFirstPageTemplate(templateSuffix1, secondpage_handle);
   await updateSecondPageTemplate(templateSuffix2, firstpage_handle);
 
-  // generate template links
+  // generate template links to be opened in shopify theme editor
   const landingTemplateLink = `https://${shopURL}/admin/themes/${themeid}/editor?previewPath=${encodeURIComponent('/pages/' + firstpage_handle)}`;
   const rewardsTemplateLink = `https://${shopURL}/admin/themes/${themeid}/editor?previewPath=${encodeURIComponent('/pages/' + secondpage_handle)}`;
 
