@@ -242,23 +242,16 @@
     color: {{ block.settings.accent_color }};
     font-size: {{ block.settings.base_font_size | times: 0.5}}px;
     font-weight: 400;
-    padding: 0 3%;
-    text-align: center;
   }
   .header_text {
     color: {{ block.settings.accent_color }};
     font-size: {{ block.settings.base_font_size}}px;
     font-weight: 600;
-    padding: 0 2%;
-    text-align: center;
   }
   .tag-line {
     color: {{ block.settings.accent_color }};
     font-size: {{ block.settings.base_font_size | times: 0.4}}px;
     font-weight: 600;
-    margin: 10px auto;
-    padding: 0 2%;
-    text-align: center;
   }
   input[value] {
     font-weight: 400;
@@ -285,6 +278,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  .headers {
     {% if block.settings.text_layout == 'left' %}
       text-align: left;
     {% elsif block.settings.text_layout == 'right' %}
@@ -301,7 +296,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
   }
   .none-vertical .none-layout {
     flex-direction: row;
