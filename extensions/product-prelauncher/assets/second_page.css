@@ -433,6 +433,16 @@ input[type='text']:focus {
 
 .rewards-vertical .vertical-referral-count-achieved {
   top: -7px;
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 45px;
+  left: -12px;
+  top: -7px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 34px;
 }
 
 .rewards-vertical .vertical-referral-count-detail {
@@ -511,6 +521,16 @@ input[type='text']:focus {
 
 .rewards-none-vertical .vertical-referral-count-achieved {
   top: 0px;
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 45px;
+  left: -12px;
+  top: 0px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 34px;
 }
 
 .rewards-none-vertical .vertical-referral-count-detail {
@@ -901,6 +921,7 @@ input[type='text']:focus {
     padding: 2% 4%;
   }
 
+
   .refferal-container {
     width: 70%;
   }
@@ -957,6 +978,7 @@ input[type='text']:focus {
     width: 40px;
     height: 40px;
     line-height: 40px;
+
   }
 }
 

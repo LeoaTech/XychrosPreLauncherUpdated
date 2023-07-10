@@ -34,6 +34,7 @@ let count_referrals = document.getElementById('count_referrals');
 let horizontal_timeline = document.getElementById('horizontal-timeline');
 let vertical_timeline = document.getElementById('vertical-timeline');
 
+
 // Timeline Progress Bar
 let horizontal_progress = document.getElementById('horizontal-timeline-progress');
 let vertical_progress = document.getElementById('vertical-timeline-progress');
@@ -370,6 +371,7 @@ const get_referrals = async () => {
       }
     }
 
+
     // for future feature 
 
     const reward_1_code = campaign_data.reward_1_code;
@@ -432,6 +434,7 @@ const get_referrals = async () => {
         lastHighestTier = reward_4_tier;
       }
 
+
       updateReferralCountValue(currentReferrals, parseInt(lastHighestTier));
 
       // set remaining referrals in timeline progress
@@ -461,6 +464,7 @@ const get_referrals = async () => {
       if (parseInt(remaining_referrals.innerText) == 1) {
         count_detail.innerText = "Invite 1 more friend to unlock next reward!";
       }
+
 
     } else {
       count_referrals.innerText = '0 friends have joined! Invite friends to Join';
