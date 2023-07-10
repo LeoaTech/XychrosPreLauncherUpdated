@@ -34,11 +34,17 @@ let count_referrals = document.getElementById('count_referrals');
 let horizontal_timeline = document.getElementById('horizontal-timeline');
 let vertical_timeline = document.getElementById('vertical-timeline');
 
+
+// Timeline Progress Bar
+let horizontal_progress = document.getElementById('horizontal-timeline-progress');
+let vertical_progress = document.getElementById('vertical-timeline-progress');
+
 // Get Current Referrals Container 
 let horizontal_referral_count_container = document.getElementById('referral-count-achieved');
 let vertical_referral_count_container = document.getElementById('vertical-referral-count-achieved');
 
-// Get Current and Remaining Referral Value Elements 
+// Get Current and Remaining Referral Container and Value Elements
+let count_detail = document.getElementById("count-detail");
 let current_referrals = document.getElementById('current_referrals');
 let remaining_referrals = document.getElementById('remaining_referrals');
 
@@ -69,6 +75,8 @@ function updateReferralPosition(referralCount, lastHighestTier) {
   if (horizontal_timeline) {
     const horizontal_progress_container_width = horizontal_timeline.offsetWidth;
     const horizontal_progress_container_height = horizontal_timeline.offsetHeight;
+    const horizontal_progress_width = horizontal_progress.offsetWidth;
+    const horizontal_progress_height = horizontal_progress.offsetHeight;
     const horizontal_referral_count_width = horizontal_referral_count_container.offsetWidth;
     const horizontal_referral_count_height = horizontal_referral_count_container.offsetHeight;
     let newPosition;
@@ -86,6 +94,8 @@ function updateReferralPosition(referralCount, lastHighestTier) {
 
       horizontal_referral_count_container.style.top = `${newPosition}px`;
       horizontal_referral_count_container.style.left = "-15px"; // Reset left position
+      horizontal_progress.style.height = `${newPosition + horizontal_referral_count_height}px`; // Update progress bar height
+      horizontal_progress.style.width = '5px'; // Reset bar width
     } else {
       // Desktop (horizontal) orientation
       const maxLeft = horizontal_progress_container_width - horizontal_referral_count_width;
@@ -99,6 +109,8 @@ function updateReferralPosition(referralCount, lastHighestTier) {
 
       horizontal_referral_count_container.style.top = "-15px"; // Reset top position
       horizontal_referral_count_container.style.left = `${newPosition}px`;
+      horizontal_progress.style.width = `${newPosition + horizontal_referral_count_width}px`; // Update progress bar width
+      horizontal_progress.style.height = '5px'; // Reset bar height
     }
   }
 
@@ -118,6 +130,7 @@ function updateReferralPosition(referralCount, lastHighestTier) {
     }
 
     vertical_referral_count_container.style.top = `${newPosition}px`;
+    vertical_progress.style.height = `${newPosition + vertical_referral_count_height}px`; // Update progress bar height
   }
 }
 
@@ -358,6 +371,9 @@ const get_referrals = async () => {
       }
     }
 
+
+    // for future feature 
+
     const reward_1_code = campaign_data.reward_1_code;
     const reward_2_code = campaign_data.reward_2_code;
     const reward_3_code = campaign_data.reward_3_code || '';
@@ -418,11 +434,38 @@ const get_referrals = async () => {
         lastHighestTier = reward_4_tier;
       }
 
-      console.log(lastHighestTier);
+
       updateReferralCountValue(currentReferrals, parseInt(lastHighestTier));
 
       // set remaining referrals in timeline progress
-      // remaining_referrals.innerText = `${.length}`;
+      let tier1 = parseInt(reward_1_tier);
+      let tier2 = parseInt(reward_2_tier);
+      let tier3 = 0;
+      let tier4 = 0;
+      if (reward_3_tier != '') {
+        tier3 = parseInt(reward_3_tier);
+      }
+      if (reward_4_tier != '') {
+        tier4 = parseInt(reward_4_tier);
+      }
+
+      if (currentReferrals < tier1) {
+        remaining_referrals.innerText = tier1 - currentReferrals;
+      } else if (currentReferrals >= reward_1_tier && currentReferrals < tier2) {
+        remaining_referrals.innerText = tier2 - currentReferrals;
+      } else if (tier3 != 0 && currentReferrals >= tier2 && currentReferrals < tier3) {
+        remaining_referrals.innerText = tier3 - currentReferrals;
+      } else if (tier4 != 0 && currentReferrals >= tier3 && currentReferrals < tier4) {
+        remaining_referrals.innerText = tier4 - currentReferrals;
+      } else {
+        count_detail.innerText = "You have unlocked all rewards!";
+      }
+
+      if (parseInt(remaining_referrals.innerText) == 1) {
+        count_detail.innerText = "Invite 1 more friend to unlock next reward!";
+      }
+
+
     } else {
       count_referrals.innerText = '0 friends have joined! Invite friends to Join';
       current_referrals.innerText = 0;
