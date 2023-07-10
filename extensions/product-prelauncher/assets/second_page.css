@@ -153,6 +153,7 @@ input[type='text']:focus {
 .reward-targets {
   display: flex;
   justify-content: space-evenly;
+  margin-bottom: 2rem;
 }
 
 .reward-target {
@@ -197,6 +198,7 @@ input[type='text']:focus {
 .rewards {
   display: flex;
   justify-content: space-evenly;
+  margin-top: 2rem;
 }
 
 .reward-item-detail {
@@ -278,14 +280,15 @@ input[type='text']:focus {
   font-weight: 600;
   font-size: 20px;
   display: flex;
-  width: 70%;
-  justify-content: space-between;
+  width: 100%;
+  justify-content: space-around;
   position: relative;
+  margin-bottom: 2rem;
 }
 
 .vertical-timeline-container {
   width: 100%;
-  height: 50%;
+  height: 45%;
 }
 
 .vertical-timeline {
@@ -320,7 +323,19 @@ input[type='text']:focus {
   text-align: center;
   font-size: 22px;
   font-weight: 600;
-  margin-top: 1.2rem;
+}
+
+.vertical-referral-count-achieved {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 45px;
+  left: -15px;
+  top: 0px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 34px;
 }
 
 .vertical-timeline-item-name {
@@ -417,16 +432,7 @@ input[type='text']:focus {
 }
 
 .rewards-vertical .vertical-referral-count-achieved {
-  position: absolute;
-  width: 35px;
-  height: 35px;
-  border-radius: 45px;
-  left: -12px;
   top: -7px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 34px;
 }
 
 .rewards-vertical .vertical-referral-count-detail {
@@ -488,7 +494,7 @@ input[type='text']:focus {
 
 .rewards-none-vertical .friends-joined {
   padding-bottom: 0;
-  margin: 4vh 0;
+  margin: 2vh 0;
 }
 
 .rewards-none-vertical .vertical-reward-targets {
@@ -504,16 +510,7 @@ input[type='text']:focus {
 }
 
 .rewards-none-vertical .vertical-referral-count-achieved {
-  position: absolute;
-  width: 35px;
-  height: 35px;
-  border-radius: 45px;
-  left: -12px;
   top: 0px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 34px;
 }
 
 .rewards-none-vertical .vertical-referral-count-detail {
@@ -589,6 +586,7 @@ input[type='text']:focus {
 
   .timeline-headers div {
     font-size: 18px;
+    margin: 0 0 5px 0;
   }
 
   .timeline-container {
@@ -610,6 +608,7 @@ input[type='text']:focus {
 
   .reward-targets {
     flex-direction: column;
+    margin-bottom: 0;
   }
 
   .reward-target {
@@ -634,6 +633,7 @@ input[type='text']:focus {
 
   .rewards {
     flex-direction: column;
+    margin-top: 0;
   }
 
   .reward-item-detail span {
@@ -675,14 +675,22 @@ input[type='text']:focus {
   }
 
   .vertical-reward-item-detail img {
-    width: 45px;
-    height: 45px;
+    width: 42px;
+    height: 42px;
   }
 
   .vertical-reward-target {
     width: 35px;
     height: 35px;
     font-size: 18px;
+  }
+
+  .vertical-referral-count-achieved {
+    left: -13px;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    line-height: 30px;
   }
 
   /* none-vertical */
@@ -699,13 +707,6 @@ input[type='text']:focus {
   .rewards-none-vertical .copy-link-btn {
     right: 0;
     width: 25%;
-  }
-
-  .rewards-none-vertical  .vertical-referral-count-achieved {
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
-    line-height: 30px;
   }
 
   .rewards-none-vertical .vertical-referral-count-detail {
@@ -777,13 +778,6 @@ input[type='text']:focus {
     margin: 0 0 0 7rem;
   }
 
-  .rewards-vertical .vertical-referral-count-achieved {
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
-    line-height: 30px;
-  }
-
   .rewards-vertical .vertical-referral-count-detail {
     top: -44px;
     left: 12px;
@@ -793,9 +787,13 @@ input[type='text']:focus {
   }
 }
 
-/* ============================== CSS styles for tablets ==================================== */
+/* ============================== CSS styles for small tablets ==================================== */
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
+
+  .rewards-none-horizontal .rewards_subheader_text {
+    padding: 2% 5%;
+  }
 
   .rewards_socials a > svg {
     width: 20px;
@@ -807,20 +805,20 @@ input[type='text']:focus {
   /* general */
 
   .refferal-container {
-    width: 60%;
+    width: 72%;
   }
 
   .friends-joined {
     font-size: 20px;
   }
 
-  .timeline-group {
-    width: 95%;
+  .timeline-headers {
+    width: 20%;
+    font-size: 20px;
   }
 
-  .timeline-headers {
-    width: 25%;
-    font-size: 20px;
+  .timeline-container {
+    width: 75%;
   }
 
   .reward-target {
@@ -836,6 +834,10 @@ input[type='text']:focus {
     line-height: 32px;
   }
 
+  .rewards {
+    margin-top: 1rem;
+  }
+
   .reward-item-detail img {
     width: 50px;
     height: 50px;
@@ -846,13 +848,12 @@ input[type='text']:focus {
   /* general */
 
   .vertical-timeline-headers {
-    font-size: 18px;
-    width: 80%;
+    font-size: 20px;
   }
 
   .vertical-reward-item-detail img {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
   }
 
   .vertical-reward-target {
@@ -861,24 +862,23 @@ input[type='text']:focus {
     font-size: 19px;
   }
 
-  /* none vertical */
-
-  .rewards-none-vertical .copy-link-btn {
-    right: 2.5rem;
-  }
-
-  .rewards-none-vertical .vertical-referral-count-achieved {
+  .vertical-referral-count-achieved {
+    left: -14px;
     width: 32px;
     height: 32px;
     font-size: 17px;
     line-height: 32px;
   }
 
+  /* none vertical */
+
+  .rewards-none-vertical .copy-link-btn {
+    right: 2.5rem;
+  }
+
   .rewards-none-vertical .vertical-referral-count-detail {
     top: -35px;
     left: 9px;
-    width: 227px;
-    height: 35px;
   }
 
   /* vertical */
@@ -890,37 +890,48 @@ input[type='text']:focus {
   .rewards-vertical .copy-link-btn {
     right: 2rem;
   }
-
-  .rewards-vertical .vertical-referral-count-achieved {
-    width: 32px;
-    height: 32px;
-    left: -16px;
-    font-size: 17px;
-    line-height: 32px;
-  }
 }
 
-/* ======================== CSS rules for large desktops and high-resolution displays ==================== */
+/* ======================= CSS styles for large tablets and small desktops ============================== */
 
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  /* general */
 
-  .rewards_socials a > svg {
-    width: 28px;
-    height: 28px;
+  .rewards-none-horizontal .rewards_subheader_text {
+    padding: 2% 4%;
+  }
+
+  .refferal-container {
+    width: 70%;
+  }
+
+  .timeline-headers div {
+    font-size: 22px;
   }
 
   /* rewards-none-horizontal and rewards-horizontal */
 
   /* general */
 
+  .timeline-group {
+    width: 85%;
+  }
+
   .referral-count-achieved {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+  }
+
+  .reward-target {
     width: 40px;
     height: 40px;
     line-height: 40px;
   }
 
-  .timeline-group {
-    width: 80%;
+  .reward-item-detail img {
+    width: 55px;
+    height: 55px;
   }
 
   /* none-vertical and vertical */
@@ -928,7 +939,88 @@ input[type='text']:focus {
   /* general */
 
   .vertical-timeline-headers {
-    width: 68%;
+    font-size: 22px;
+  }
+
+  .vertical-reward-item-detail img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .vertical-referral-count-achieved {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+  }
+
+  .vertical-reward-target  {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
+}
+
+/* ================================== CSS styles for desktop screens ================================ */
+@media only screen and (min-width: 1200px) and (max-width: 1599px) {
+
+  /* general */
+
+  .refferal-container {
+    width: 65%;
+  }
+
+  .referral-link-inp {
+    min-height: 60px;
+  }
+
+  .copy-link-btn {
+    min-height: 60px;
+  }
+
+  .rewards_socials a > svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .friends-joined {
+    font-size: 28px;
+  }
+
+  .timeline-headers div {
+    font-size: 26px;
+  }
+
+  /* rewards-none-horizontal and rewards-horizontal */
+
+  /* general */
+
+  .timeline-group {
+    width: 80%;
+  }
+
+  .referral-count-achieved {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .reward-target {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+  }
+
+  .reward-item-detail img {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* none-vertical and vertical */
+
+  /* general */
+
+  .vertical-timeline-headers {
+    font-size: 26px;
   }
 
   .vertical-reward-item-detail img {
@@ -936,22 +1028,181 @@ input[type='text']:focus {
     height: 60px;
   }
 
-  /* none-vertical */
-
-  .rewards-none-vertical .vertical-referral-count-achieved {
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
+  .vertical-referral-count-achieved {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
   }
 
-  /* vertical */
-
-  .rewards-vertical .vertical-referral-count-achieved {
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
+  .vertical-reward-target  {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
   }
 }
+
+/* ================================= CSS styles for larger desktop screens ============================= */
+@media only screen and (min-width: 1600px) and (max-width: 1919px) {
+
+  /* general */
+
+  .refferal-container {
+    width: 50%;
+  }
+
+  .referral-link-inp {
+    min-height: 70px;
+  }
+
+  .copy-link-btn {
+    min-height: 70px;
+  }
+
+  .rewards_socials a > svg {
+    width: 35px;
+    height: 35px;
+  }
+
+  .friends-joined {
+    font-size: 32px;
+  }
+
+  .timeline-headers div {
+    font-size: 30px;
+  }
+
+  /* rewards-none-horizontal and rewards-horizontal */
+
+  /* general */
+
+  .timeline-group {
+    width: 75%;
+  }
+
+  .referral-count-achieved {
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+  }
+
+  .reward-target {
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+  }
+
+  .reward-item-detail img {
+    width: 65px;
+    height: 65px;
+  }
+
+  /* none-vertical and vertical */
+
+  /* general */
+
+  .vertical-timeline-headers {
+    font-size: 30px;
+  }
+
+  .vertical-reward-item-detail img {
+    width: 65px;
+    height: 65px;
+  }
+
+  .vertical-referral-count-achieved {
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+  }
+
+  .vertical-reward-target  {
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+  }
+}
+
+/* ============================== CSS styles for extra-large desktop screens ============================= */
+@media only screen and (min-width: 1920px) {
+
+  /* general */
+
+  .refferal-container {
+    width: 50%;
+  }
+
+  .referral-link-inp {
+    min-height: 80px;
+  }
+
+  .copy-link-btn {
+    min-height: 80px;
+  }
+
+  .rewards_socials a > svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .friends-joined {
+    font-size: 38px;
+  }
+
+  .timeline-headers div {
+    font-size: 35px;
+  }
+
+  /* rewards-none-horizontal and rewards-horizontal */
+
+  /* general */
+
+  .timeline-group {
+    width: 70%;
+  }
+
+  .referral-count-achieved {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+  }
+
+  .reward-target {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .reward-item-detail img {
+    width: 70px;
+    height: 70px;
+  }
+
+  /* none-vertical and vertical */
+
+  /* general */
+
+  .vertical-timeline-headers {
+    font-size: 35px;
+  }
+
+  .vertical-reward-item-detail img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .vertical-referral-count-achieved {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+  }
+
+  .vertical-reward-target  {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+  }
+}
+
 
 /* =========================== animations =========================== */
 
