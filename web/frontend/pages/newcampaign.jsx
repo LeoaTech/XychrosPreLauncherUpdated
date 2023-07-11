@@ -1,18 +1,18 @@
-import React, { useEffect, Suspense } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../app/features/productSlice";
 import { fetchSettings } from "../app/features/settings/settingsSlice";
-import {
-  SideBar,
-  Header,
-  MainPage,
-  NewCampaignForm,
-} from "../components/index";
+import { SideBar, Header } from "../components/index";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import useFetchAllProducts from "../constant/fetchProducts";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
+import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
+
+const NewCampaignForm = lazy(() =>
+  import("../components/newcampaign/NewCampaignForm")
+);
 
 const NewCampaign = () => {
   const { activeMenu } = useStateContext();
@@ -62,7 +62,9 @@ const NewCampaign = () => {
               <SideBar />
             </div>
             <div className="main-container">
-              <NewCampaignForm />
+              <Suspense fallback={<SkeletonLoader />}>
+                <NewCampaignForm />
+              </Suspense>
             </div>
           </>
         ) : (
@@ -71,7 +73,9 @@ const NewCampaign = () => {
               <SideBar />
             </div>
             <div className="main-container full">
-              <NewCampaignForm />
+              <Suspense fallback={<SkeletonLoader />}>
+                <NewCampaignForm />
+              </Suspense>
             </div>
           </>
         )}
