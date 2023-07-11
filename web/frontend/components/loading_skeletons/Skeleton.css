@@ -1,0 +1,47 @@
+.skeleton {
+  background: rgb(199, 199, 199);
+  margin: 0.75rem 0;
+  border-radius: 0.25rem;
+  -webkit-border-radius: 0.25rem;
+  -moz-border-radius: 0.25rem;
+  -ms-border-radius: 0.25rem;
+  -o-border-radius: 0.25rem;
+}
+.skeleton.values {
+  height: 0.75rem;
+  background-color: #fff;
+}
+.skeleton.title {
+  height: 1rem;
+  background-color: #fff;
+  margin-bottom: 1rem;
+}
+
+.skeleton.width-100 {
+  width: 100%;
+}
+.skeleton.width-50 {
+  width: 50%;
+}
+.skeleton.img {
+  width: 40px;
+  height: 40px;
+  border-radius: 5%;
+  -webkit-border-radius: 5%;
+  -moz-border-radius: 5%;
+  -ms-border-radius: 5%;
+  -o-border-radius: 5%;
+}
+
+/* Animations */
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0 0.6, 1) infinite;
+  -webkit-animation: pulse 2s cubic-bezier(0.4, 0 0.6, 1) infinite;
+}
