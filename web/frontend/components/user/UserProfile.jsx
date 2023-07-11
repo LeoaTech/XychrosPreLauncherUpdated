@@ -92,8 +92,6 @@ const UserProfile = () => {
   const billingPlan = useSelector(fetchCurrentPlan);
   const dispatch = useDispatch();
 
-  console.log("Price card Data", priceData);
-  console.log("bill", billingPlan)
 
   const [subscribeMessage, setSubscribeMessage] = useState("")
   const fetch = useAuthenticatedFetch();
@@ -145,7 +143,6 @@ const UserProfile = () => {
       },
     }
   ]
-  console.log(subscribedCardId)
 
   // Get user Details From DB(if any) and Set Values in States
   useEffect(() => {
@@ -159,7 +156,6 @@ const UserProfile = () => {
       return;
     }
   }, [data, subscribedCardId]);
-  console.log(userDetails, "old")
 
   // Get Current Plan and Set Billing Details in TableData
   useEffect(() => {
@@ -185,7 +181,6 @@ const UserProfile = () => {
     setUserDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-  console.log(userDetails, "new")
 
   // Save User Account Details
 
