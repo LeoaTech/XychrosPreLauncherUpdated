@@ -20,7 +20,6 @@ const PriceComponent = () => {
 
   const app = useAppBridge();
   const redirect = Redirect.create(app);
-  console.log(activePlan, "plan in reducer");
 
   const navigate = useNavigate();
   const dispatch = useDispatch()
@@ -44,7 +43,7 @@ const PriceComponent = () => {
   // Handle Card Next and Prev events
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const maxCardIndex = pricePlans?.length - 1;
-  const cardWidth = 230;
+  const cardWidth = 300;
 
   const handleClickNext = () => {
     if (currentCardIndex < maxCardIndex) {
@@ -78,7 +77,6 @@ const PriceComponent = () => {
         });
         if (response.ok) {
           const subscribe_data = await response.json();
-          console.log(subscribe_data, 'Client Selected Plan');
           redirect.dispatch(Redirect.Action.REMOTE, {
             url: subscribe_data.confirmationUrl,
             newContext: false,

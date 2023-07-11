@@ -1,6 +1,6 @@
 .pricing-details {
   height: 500px;
-  width: 250px;
+  width: 300px;
   display: flex;
   flex-direction: column;
 
@@ -46,7 +46,7 @@
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  width: 210px;
+  width: 240px;
   justify-content: flex-start;
   align-items: flex-start;
 }
@@ -111,11 +111,11 @@
 @media screen and (max-width: 1480px) {
   .pricing-details {
     height: 460px;
-    width: 240px;
+    width: 280px;
   }
   .pricing-features {
     
-    width: 190px;
+    width: 250px;
    
   } 
 }
