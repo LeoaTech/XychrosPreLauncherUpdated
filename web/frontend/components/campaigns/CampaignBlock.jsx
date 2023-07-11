@@ -1,19 +1,22 @@
-import ShortSummaryCard from '../ui/ShortSummaryCard';
-import { subscriber, Sale, arrow } from '../../assets/index';
-import { IconContext } from 'react-icons';
-import { FaEdit, FaHourglassEnd } from 'react-icons/fa';
-import { RiDeleteBin6Line } from 'react-icons/ri';
-import { IoCalendarSharp } from 'react-icons/io5';
-import { DeleteModal } from '../modal/index';
-import './CampaignBlock.css';
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import ToggleSwitch from './toggleSwitch/ToggleSwitch';
-import AlertInfoModal from '../modal/AlertInfoModal';
-import { getTotalCampaigns } from '../../app/features/campaigns/campaignSlice';
-import { fetchReferralById } from '../../app/features/referrals/referralSlice';
-import { useSelector } from 'react-redux';
-import { fetchCurrentTier } from '../../app/features/current_plan/current_plan';
+import { subscriber, Sale, arrow } from "../../assets/index";
+import { IconContext } from "react-icons";
+import { FaEdit, FaHourglassEnd } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoCalendarSharp } from "react-icons/io5";
+import "./CampaignBlock.css";
+import { Link } from "react-router-dom";
+import { Suspense, lazy, useEffect, useState } from "react";
+import { getTotalCampaigns } from "../../app/features/campaigns/campaignSlice";
+import { fetchReferralById } from "../../app/features/referrals/referralSlice";
+import { useSelector } from "react-redux";
+import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
+import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
+import SkeletonShortSummaryCard from "../loading_skeletons/SkeletonShortSummaryCard";
+import { DeleteModal, AlertInfoModal } from "../modal/index";
+
+// const DeleteModal = lazy(() => import("../modal/DeleteModal"));
+// const ToggleSwitch = lazy(() => import("./toggleSwitch/ToggleSwitch"));
+const ShortSummaryCard = lazy(() => import("../ui/ShortSummaryCard"));
 
 export default function CampaignBlock({
   data,
@@ -28,9 +31,17 @@ export default function CampaignBlock({
   setCampaignName,
 }) {
   // Campaign Card Block Data Properties
-  const { campaign_id, name, product, start_date, end_date, is_active, is_draft, landing_page_link, rewards_page_link } = data;
-
-  const [alertModal, setAlertModal] = useState(false);
+  const {
+    campaign_id,
+    name,
+    product,
+    start_date,
+    end_date,
+    is_active,
+    is_draft,
+    landing_page_link,
+    rewards_page_link,
+  } = data;
 
   const [hovered, setHovered] = useState(false);
 
@@ -38,15 +49,13 @@ export default function CampaignBlock({
     // backgroundColor: is_active ? "#e0e0e0" : "",
     cursor: is_active ? "default" : "pointer",
     pointerEvents: is_active ? "none" : "auto",
-    color: is_active ? "#C0C0C0	" : '#e0e0e0',
+    color: is_active ? "#C0C0C0	" : "#e0e0e0",
   };
 
   const campaignActionMessage = is_active ? "This campaign is active" : "";
   let startDate = new Date(start_date).toDateString();
   let endDate = new Date(end_date).toDateString();
 
-  const totalCampaigns = useSelector(getTotalCampaigns);
-  const currentTier = useSelector(fetchCurrentTier);
   const referralsById = useSelector((state) =>
     fetchReferralById(state, +campaign_id)
   );
@@ -54,7 +63,7 @@ export default function CampaignBlock({
   const [isToggled, setIsToggled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(isToggled);
 
-  const now = new Date();
+  const now = new Date(); //Get the current date
 
   function checkAndDeleteCampaign(campaignDate) {
     // Convert the campaign date string to a Date object
@@ -64,11 +73,6 @@ export default function CampaignBlock({
       setDeleteModal(true);
     } else if (!isToggled) {
       setDeleteModal(true); //uncomment this line to test Delete modal behavior
-    } else if (isToggled) {
-      // Info Alert Display
-      setAlertModal(true);
-    } else if (campaignDateObj > now) {
-      setAlertModal(true);
     }
   }
 
@@ -78,15 +82,15 @@ export default function CampaignBlock({
     if (is_active) {
       setIsToggled(true);
     } else {
-      setIsToggled(false)
+      setIsToggled(false);
     }
   }, [is_active]);
 
   return (
     <>
-      <div className='campaign-block'>
-        <div className='campaign-details'>
-          <div className='camapign-block-name'>
+      <div className="campaign-block">
+        <div className="campaign-details">
+          <div className="camapign-block-name">
             {name}
             <span>
               <ToggleSwitch
@@ -99,14 +103,11 @@ export default function CampaignBlock({
             </span>
           </div>
 
-          <Link
-            to={product}
-            className='campaign-block-product-name'
-          >
-            {/* {product} */} Product Name
+          <Link to={product} className="campaign-block-product-name">
+            {product ? product : "Product Name"}
           </Link>
 
-          <div className='campaign-block-duration'>
+          <div className="campaign-block-duration">
             <IoCalendarSharp
               style={{ height: 14, width: 16, marginRight: 5, marginTop: 10 }}
             />
@@ -114,23 +115,31 @@ export default function CampaignBlock({
           </div>
         </div>
 
-        {is_draft && <div className="draft-campaign">
-          <span className="draft">draft</span>
-        </div>}
+        {is_draft && (
+          <div className="draft-campaign">
+            <span className="draft">draft</span>
+          </div>
+        )}
 
         <div className="campaign_center_links">
           <div className="campaign_details_links">
-            <a href={landing_page_link} target="_blank">Landing Page</a>
-            <a href={rewards_page_link} target="_blank">Rewards Page </a>
+            <a href={landing_page_link} target="_blank">
+              Landing Page
+            </a>
+            <a href={rewards_page_link} target="_blank">
+              Rewards Page{" "}
+            </a>
           </div>
         </div>
-        <div className='campaign-right-card'>
-          <div className='campaign-kpis'>
-            <ShortSummaryCard
-              value={referralsById}
-              icon={subscriber}
-              className='referral-icon'
-            />
+        <div className="campaign-right-card">
+          <div className="campaign-kpis">
+            <Suspense fallback={<SkeletonShortSummaryCard />}>
+              <ShortSummaryCard
+                value={referralsById}
+                icon={subscriber}
+                className="referral-icon"
+              />
+            </Suspense>
             {/* <ShortSummaryCard
               value="$37"
               icon={Sale}
@@ -142,15 +151,18 @@ export default function CampaignBlock({
               className="clicks-icon"
             /> */}
           </div>
-          <div className='campaign-actions'>
+          <div className="campaign-actions">
             <IconContext.Provider
               value={{
                 size: 24,
               }}
             >
-              <div className="icon-image" style={campaignActionButtonStyle}
+              <div
+                className="icon-image"
+                style={campaignActionButtonStyle}
                 onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}>
+                onMouseLeave={() => setHovered(false)}
+              >
                 <Link
                   to={`/campaigns/${campaign_id}`}
                   onClick={() => handleEdit(campaign_id)}
@@ -169,14 +181,12 @@ export default function CampaignBlock({
             </IconContext.Provider>
             <IconContext.Provider
               value={{
-                color: 'red',
+                color: "red",
                 size: 24,
               }}
               disabled={!is_active}
-
             >
-              <div className="icon-image" style={campaignActionButtonStyle}
-              >
+              <div className="icon-image" style={campaignActionButtonStyle}>
                 <RiDeleteBin6Line
                   onClick={() => {
                     setDeleteId(campaign_id);
@@ -186,9 +196,14 @@ export default function CampaignBlock({
                   }}
                   // disabled={!is_active}
 
-                  style={is_active ? { height: 24, width: 24, color: "#CB624C" } : { height: 24, width: 24, color: "red" }} />
+                  style={
+                    is_active
+                      ? { height: 24, width: 24, color: "#CB624C" }
+                      : { height: 24, width: 24, color: "red" }
+                  }
+                />
                 <div>
-                  <span >Delete</span>
+                  <span>Delete</span>
                 </div>
               </div>
             </IconContext.Provider>
@@ -204,18 +219,7 @@ export default function CampaignBlock({
           openModal={deleteModal}
           setDeleteModal={setDeleteModal}
           handleDelete={handleDelete}
-        />
-      </div>
-      <div>
-        <AlertInfoModal
-          values={deleteId}
-          campaignName={campaignName}
-          expiryDate={deleteEndData}
-          isToggled={isToggled}
-          openModal={alertModal}
-          setAlertModal={setAlertModal}
-          handleDelete={handleDelete}
-        />
+        />{" "}
       </div>
     </>
   );
