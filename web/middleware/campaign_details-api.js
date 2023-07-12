@@ -25,7 +25,7 @@ export default function campaignDetailsApiEndpoints(app) {
 
             const campaigns = await pool.query(
                 `SELECT cs.*,
-                cd.is_active, cd.is_draft, cd.landing_page_link, cd.rewards_page_link
+                cd.is_active, cd.is_draft, cd.landing_page_link, cd.rewards_page_link, cd.landing_template_link, cd.rewards_template_link
                 FROM campaign_settings cs
                 JOIN campaign_details cd ON cs.campaign_id = cd.campaign_id
                 WHERE cs.shop_id = $1 `,
