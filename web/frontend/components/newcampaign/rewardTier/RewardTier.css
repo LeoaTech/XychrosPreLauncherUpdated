@@ -9,6 +9,10 @@
   margin-bottom: 30px;
 }
 
+.reward-title span{
+  color:rgb(214, 216, 216);
+}
+
 .reward-form {
   display: flex;
   justify-content: space-between;
