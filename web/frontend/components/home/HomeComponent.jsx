@@ -224,7 +224,7 @@ const HomeComponent = () => {
           </p>
         </div>
         <div className="intro-img">
-          <img src={intro} alt="INTRO" lazyloading />
+          <img src={intro} alt="INTRO" loading="lazy"  />
         </div>
       </div>
 
