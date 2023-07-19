@@ -1,9 +1,165 @@
 import { Shopify } from '@shopify/shopify-api';
 import fetch from 'node-fetch';
 
-const discountApiCalls = async (accessToken, shop, campaignData) => {
+const api_version = '2022-10';
 
-    // extract rewards settings in form
+// -------------------------- Customers Segments - GraphQL API Call ----------------------------
+
+const segmentApiCalls = async (accessToken, shop, campaignData) => {
+    const url = `https://${shop}/admin/api/${api_version}/graphql.json`;
+
+    // Set Headers
+    const headers = {
+        'X-Shopify-Access-Token': accessToken,
+        'Content-Type': 'application/json',
+    };
+
+    // [Update] - Will be retrieved from campaign data
+    const desiredTag1 = 'eligibleFirstTier';
+    const desiredTag2 = 'eligibleSecondTier';
+    const desiredTag3 = 'eligibleThirdTier';
+    const desiredTag4 = 'eligibleFourthTier';
+
+    // tier data from campaign details
+    const tierData = {
+        tier1: campaignData.reward_1_tier,
+        tier2: campaignData.reward_2_tier,
+        tier3: campaignData.reward_3_tier,
+        tier4: campaignData.reward_4_tier,
+    };
+
+    // check for active tiers and create queries accordingly
+    const mutations = [];
+
+    // Query for Tier 1 Segment
+    const segment1Name = `"${campaignData.name}-Tier1Segment"`
+    const segment1Query = `"customer_tags CONTAINS '${desiredTag1}'"`;
+    const mutation1 = `
+        mutation {
+            segmentCreate(name: ${segment1Name}, query: ${segment1Query}) {
+                segment {
+                    id
+                    name
+                    query
+                }
+                userErrors {
+                    message
+                    field
+                }
+            }
+        }
+    `;
+    mutations.push(mutation1);
+
+    // Query for Tier 2 Segment
+    const segment2Name = `"${campaignData.name}-Tier2Segment"`
+    const segment2Query = `"customer_tags CONTAINS '${desiredTag2}'"`;
+    const mutation2 = `
+        mutation {
+            segmentCreate(name: ${segment2Name}, query: ${segment2Query}) {
+                segment {
+                    id
+                    name
+                    query
+                }
+                userErrors {
+                    message
+                    field
+                }
+            }
+        }
+    `;
+    mutations.push(mutation2);
+
+    // Query for Tier 3 Segment
+    if (tierData.tier3) {
+        const segment3Name = `"${campaignData.name}-Tier3Segment"`
+        const segment3Query = `"customer_tags CONTAINS '${desiredTag3}'"`;
+        const mutation3 = `
+            mutation {
+                segmentCreate(name: ${segment3Name}, query: ${segment3Query}) {
+                    segment {
+                        id
+                        name
+                        query
+                    }
+                    userErrors {
+                        message
+                        field
+                    }
+                }
+            }
+        `;
+        mutations.push(mutation3);
+    }
+
+    // Query for Tier 4 Segment
+    if (tierData.tier4) {
+        const segment4Name = `"${campaignData.name}-Tier4Segment"`
+        const segment4Query = `"customer_tags CONTAINS '${desiredTag4}'"`;
+        const mutation4 = `
+            mutation {
+                segmentCreate(name: ${segment4Name}, query: ${segment4Query}) {
+                    segment {
+                        id
+                        name
+                        query
+                    }
+                    userErrors {
+                        message
+                        field
+                    }
+                }
+            }
+        `;
+        mutations.push(mutation4);
+    }
+
+    const createdSegmentIds = [];
+
+    try {
+        for (const mutation of mutations) {
+            const options = {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ query: mutation.trim() }),
+            };
+
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            if (!response.ok || data.errors) {
+                const errors = data.errors || data.data.segmentCreate.userErrors;
+                throw new Error(`Failed to create customer segments: ${JSON.stringify(errors)}`);
+            }
+
+            const segment = data.data.segmentCreate.segment;
+            if (segment) {
+                let segment_id = segment.id.match(/\d+/)[0];
+                createdSegmentIds.push(parseInt(segment_id, 10));
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('An error occurred while creating customer segments');
+    }
+
+    console.log('Created Segment Ids:', createdSegmentIds);
+    return createdSegmentIds;
+};
+
+
+// ------------------------- Price Rules and Dicounts - Rest API Call --------------------------
+
+const discountApiCalls = async (accessToken, shop, campaignData, customerSegmentIds) => {
+
+    // Set Headers
+    const headers = {
+        'X-Shopify-Access-Token': accessToken,
+        'Content-Type': 'application/json',
+    };
+
+    // extract rewards settings from campaign data
 
     // Discount type
     let price_rule_type = '';
@@ -15,27 +171,23 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
     }
 
     // Tier 1
-    const reward_1_tier = campaignData.reward_1_tier;
     const reward_1_discount = campaignData.reward_1_discount;
     const reward_1_code = campaignData.reward_1_code;
 
     // Tier 2
-    const reward_2_tier = campaignData.reward_2_tier;
     const reward_2_discount = campaignData.reward_2_discount;
     const reward_2_code = campaignData.reward_2_code;
 
     // Tier 3
-    const reward_3_tier = campaignData.reward_3_tier;
     const reward_3_discount = campaignData.reward_3_discount;
     const reward_3_code = campaignData.reward_3_code;
 
     // Tier 4
-    const reward_4_tier = campaignData.reward_4_tier;
     const reward_4_discount = campaignData.reward_4_discount;
     const reward_4_code = campaignData.reward_4_code;
 
     // Overall Tier data
-    const tierData = {
+    const priceRules_tierData = {
         tier1: reward_1_discount,
         tier2: reward_2_discount,
         tier3: reward_3_discount,
@@ -45,24 +197,26 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
     // price rule settings
     const priceRulesSettings = [
         {
-            title: "Tier 1 Discount",
+            title: `${campaignData.name}_Tier_1_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
             value_type: `${price_rule_type}`,
-            value: `-${tierData.tier1}.0`,
-            customer_selection: "all",
+            value: `-${priceRules_tierData.tier1}.0`,
+            customer_selection: "prerequisite",
+            customer_segment_prerequisite_ids: [customerSegmentIds[0]],
             once_per_customer: true,
             starts_at: new Date().toISOString(),
         },
         {
-            title: "Tier 2 Discount",
+            title: `${campaignData.name}_Tier_2_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
             value_type: `${price_rule_type}`,
-            value: `-${tierData.tier2}.0`,
-            customer_selection: "all",
+            value: `-${priceRules_tierData.tier2}.0`,
+            customer_selection: "prerequisite",
+            customer_segment_prerequisite_ids: [customerSegmentIds[1]],
             once_per_customer: true,
             starts_at: new Date().toISOString(),
         },
@@ -70,30 +224,32 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
 
     // check if tier 3 and 4 are not null
 
-    if (tierData.tier3) {
+    if (priceRules_tierData.tier3) {
         const tier3Data = {
-            title: "Tier 3 Discount",
+            title: `${campaignData.name}_Tier_3_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
             value_type: `${price_rule_type}`,
-            value: `-${tierData.tier3}.0`,
-            customer_selection: "all",
+            value: `-${priceRules_tierData.tier3}.0`,
+            customer_selection: "prerequisite",
+            customer_segment_prerequisite_ids: [customerSegmentIds[2]],
             once_per_customer: true,
             starts_at: new Date().toISOString(),
         };
         priceRulesSettings.push(tier3Data);
     }
 
-    if (tierData.tier4) {
+    if (priceRules_tierData.tier4) {
         const tier4Data = {
-            title: "Tier 4 Discount",
+            title: `${campaignData.name}_Tier_4_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
             value_type: `${price_rule_type}`,
-            value: `-${tierData.tier4}.0`,
-            customer_selection: "all",
+            value: `-${priceRules_tierData.tier4}.0`,
+            customer_selection: "prerequisite",
+            customer_segment_prerequisite_ids: [customerSegmentIds[3]],
             once_per_customer: true,
             starts_at: new Date().toISOString(),
         };
@@ -133,16 +289,10 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
         discountCodeBody.push(discount4Data)
     }
 
-    // set headers
-    const headers = {
-        'X-Shopify-Access-Token': accessToken,
-        'Content-Type': 'application/json',
-    };
-
-    // create price rules
+    // Create Price Rules
     const createPriceRules = async () => {
         const priceRuleIds = [];
-        const url = `https://${shop}/admin/api/2022-10/price_rules.json`;
+        const url = `https://${shop}/admin/api/${api_version}/price_rules.json`;
 
         for (const rule of priceRulesSettings) {
             try {
@@ -167,10 +317,10 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
         return priceRuleIds;
     }
 
-    // create discount code for each price rule
+    // Create Discount Codes
     const createDiscountCodes = async (priceRuleIds) => {
         const discountCodes = [];
-        const url = `https://${shop}/admin/api/2022-10/price_rules/:price_rule_id/discount_codes.json`;
+        const url = `https://${shop}/admin/api/${api_version}/price_rules/:price_rule_id/discount_codes.json`;
 
         for (const [index, code] of discountCodeBody.entries()) {
             const priceRuleId = priceRuleIds[index % priceRuleIds.length];
@@ -194,11 +344,15 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
         console.log("Generated Discount Codes: ", discountCodes);
     }
 
+    // price rules
     const priceRuleIds = await createPriceRules();
+
+    // pass price rule ids to generate discount codes
     await createDiscountCodes(priceRuleIds);
 }
 
 // ------------------- API ---------------------
+
 export default function discountApiEndpoint(app) {
     app.post("/api/generate_discount", async (req, res) => {
         try {
@@ -209,8 +363,13 @@ export default function discountApiEndpoint(app) {
             );
             const { accessToken, shop } = session;
             const { campaignData } = req.body;
-            await discountApiCalls(accessToken, shop, campaignData);
-            // console.log(campaignData);
+
+            // customer segments function call
+            const customer_segment_ids = await segmentApiCalls(accessToken, shop, campaignData);
+
+            // discount and price rule function call
+            await discountApiCalls(accessToken, shop, campaignData, customer_segment_ids);
+
             return res.status(200).json({ success: true, message: "Discount Codes Generated Successfully" });
         } catch (error) {
             return res.status(500).json({ success: false, message: "Failed to Generate Discount Codes", error: error.message });

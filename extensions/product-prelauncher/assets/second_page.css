@@ -13,17 +13,21 @@
   position: relative;
   display: flex;
   align-items: center;
+  background-color: #D9D9D9;
+  margin: 8px auto;
+  border-radius: 4px;
+  min-height: 50px;
+  padding: 0.5%;
   width: 50%;
 }
 
 .referral-link-inp {
-  border-radius: 4px;
-  min-height: 50px;
-  width: 100%;
+  background-color: transparent;
+  width: 80%;
   font-size: 20px;
-  padding: 1.5%;
   border: none;
-  margin: 8px auto;
+  white-space: nowrap;
+  overflow-x: auto;
 }
 
 input[type='text']:focus {
@@ -268,12 +272,16 @@ input[type='text']:focus {
 /* general */
 
 .rewards-spaced-evenly {
-  padding: 10% 0;
+  padding: 5% 0;
 }
 
 .rewards-spaced {
   text-align: center;
   width: 100%;
+}
+
+.rewards-vertical .refferal-container, .rewards-none-vertical .refferal-container {
+  width: 80%;
 }
 
 .vertical-timeline-headers {
@@ -394,18 +402,6 @@ input[type='text']:focus {
   justify-content: center;
 }
 
-.rewards-vertical .refferal-container {
-  width: 100%;
-}
-
-.rewards-vertical .referral-link-inp {
-  width: 80%;
-}
-
-.rewards-vertical .copy-link-btn {
-  right: 5rem;
-}
-
 .rewards-vertical .rewards_socials {
   display: flex;
   flex-direction: row;
@@ -433,6 +429,16 @@ input[type='text']:focus {
 
 .rewards-vertical .vertical-referral-count-achieved {
   top: -7px;
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 45px;
+  left: -12px;
+  top: -7px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 34px;
 }
 
 .rewards-vertical .vertical-referral-count-detail {
@@ -472,18 +478,6 @@ input[type='text']:focus {
   justify-content: center;
 }
 
-.rewards-none-vertical .refferal-container {
-  width: 100%;
-}
-
-.rewards-none-vertical .referral-link-inp {
-  width: 80%;
-}
-
-.rewards-none-vertical .copy-link-btn {
-  right: 5rem;
-}
-
 .rewards-none-vertical .rewards_socials {
   display: flex;
   flex-direction: row;
@@ -511,6 +505,16 @@ input[type='text']:focus {
 
 .rewards-none-vertical .vertical-referral-count-achieved {
   top: 0px;
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 45px;
+  left: -12px;
+  top: 0px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 34px;
 }
 
 .rewards-none-vertical .vertical-referral-count-detail {
@@ -536,16 +540,10 @@ input[type='text']:focus {
 @media screen and (max-width: 767px) {
   
   .refferal-container {
-    width: 95%;
-  }
-
-  .referral-link-inp {
-    min-height: 45px;
+    width: 90%;
   }
 
   .copy-link-btn {
-    right: 2px;
-    min-height: 42px;
     font-size: 13px;
   }
   
@@ -697,16 +695,6 @@ input[type='text']:focus {
 
   .rewards-none-vertical .refferal-container {
     width: 95%;
-    margin: auto;
-  }
-
-  .rewards-none-vertical .referral-link-inp {
-    width: 100%;
-  }
-
-  .rewards-none-vertical .copy-link-btn {
-    right: 0;
-    width: 25%;
   }
 
   .rewards-none-vertical .vertical-referral-count-detail {
@@ -745,16 +733,6 @@ input[type='text']:focus {
 
   .rewards-vertical .refferal-container {
     width: 95%;
-    margin: auto;
-  }
-
-  .rewards-vertical .referral-link-inp {
-    width: 100%;
-  }
-
-  .rewards-vertical .copy-link-btn {
-    right: 0;
-    width: 25%;
   }
 
   .rewards-vertical .friends-joined {
@@ -805,7 +783,7 @@ input[type='text']:focus {
   /* general */
 
   .refferal-container {
-    width: 72%;
+    width: 75%;
   }
 
   .friends-joined {
@@ -872,24 +850,21 @@ input[type='text']:focus {
 
   /* none vertical */
 
-  .rewards-none-vertical .copy-link-btn {
-    right: 2.5rem;
-  }
-
   .rewards-none-vertical .vertical-referral-count-detail {
     top: -35px;
     left: 9px;
   }
 
-  /* vertical */
-
-  .rewards-vertical .referral-link-inp {
+  .rewards-none-vertical .refferal-container {
     width: 90%;
   }
 
-  .rewards-vertical .copy-link-btn {
-    right: 2rem;
+  /* vertical */
+
+  .rewards-vertical .refferal-container {
+    width: 90%;
   }
+
 }
 
 /* ======================= CSS styles for large tablets and small desktops ============================== */
@@ -900,6 +875,7 @@ input[type='text']:focus {
   .rewards-none-horizontal .rewards_subheader_text {
     padding: 2% 4%;
   }
+
 
   .refferal-container {
     width: 70%;
@@ -938,6 +914,10 @@ input[type='text']:focus {
 
   /* general */
 
+  .rewards-vertical .refferal-container, .rewards-none-vertical .refferal-container {
+    width: 90%;
+  }
+
   .vertical-timeline-headers {
     font-size: 22px;
   }
@@ -957,6 +937,7 @@ input[type='text']:focus {
     width: 40px;
     height: 40px;
     line-height: 40px;
+
   }
 }
 
@@ -967,9 +948,6 @@ input[type='text']:focus {
 
   .refferal-container {
     width: 65%;
-  }
-
-  .referral-link-inp {
     min-height: 60px;
   }
 
@@ -1019,6 +997,10 @@ input[type='text']:focus {
 
   /* general */
 
+  .rewards-vertical .refferal-container, .rewards-none-vertical .refferal-container {
+    width: 85%;
+  }
+
   .vertical-timeline-headers {
     font-size: 26px;
   }
@@ -1048,9 +1030,6 @@ input[type='text']:focus {
 
   .refferal-container {
     width: 50%;
-  }
-
-  .referral-link-inp {
     min-height: 70px;
   }
 
@@ -1100,6 +1079,10 @@ input[type='text']:focus {
 
   /* general */
 
+  .rewards-vertical .refferal-container, .rewards-none-vertical .refferal-container {
+    width: 80%;
+  }
+
   .vertical-timeline-headers {
     font-size: 30px;
   }
@@ -1129,9 +1112,6 @@ input[type='text']:focus {
 
   .refferal-container {
     width: 50%;
-  }
-
-  .referral-link-inp {
     min-height: 80px;
   }
 
@@ -1180,6 +1160,10 @@ input[type='text']:focus {
   /* none-vertical and vertical */
 
   /* general */
+
+  .rewards-vertical .refferal-container, .rewards-none-vertical .refferal-container {
+    width: 75%;
+  }
 
   .vertical-timeline-headers {
     font-size: 35px;
