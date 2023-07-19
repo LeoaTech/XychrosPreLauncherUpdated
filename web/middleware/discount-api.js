@@ -16,6 +16,22 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
 
     // [Update] - Will be retrieved from campaign data
     const desiredTag1 = 'eligibleFirstTier';
+    const desiredTag2 = 'eligibleSecondTier';
+    const desiredTag3 = 'eligibleThirdTier';
+    const desiredTag4 = 'eligibleFourthTier';
+
+    // tier data from campaign details
+    const tierData = {
+        tier1: campaignData.reward_1_tier,
+        tier2: campaignData.reward_2_tier,
+        tier3: campaignData.reward_3_tier,
+        tier4: campaignData.reward_4_tier,
+    };
+
+    // check for active tiers and create queries accordingly
+    const mutations = [];
+
+    // Query for Tier 1 Segment
     const segment1Name = `"${campaignData.name}-Tier1Segment"`
     const segment1Query = `"customer_tags CONTAINS '${desiredTag1}'"`;
     const mutation1 = `
@@ -33,7 +49,76 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
             }
         }
     `;
+    mutations.push(mutation1);
+
+    // Query for Tier 2 Segment
+    const segment2Name = `"${campaignData.name}-Tier2Segment"`
+    const segment2Query = `"customer_tags CONTAINS '${desiredTag2}'"`;
+    const mutation2 = `
+        mutation {
+            segmentCreate(name: ${segment2Name}, query: ${segment2Query}) {
+                segment {
+                    id
+                    name
+                    query
+                }
+                userErrors {
+                    message
+                    field
+                }
+            }
+        }
+    `;
+    mutations.push(mutation2);
+
+    // Query for Tier 3 Segment
+    if (tierData.tier3) {
+        const segment3Name = `"${campaignData.name}-Tier3Segment"`
+        const segment3Query = `"customer_tags CONTAINS '${desiredTag3}'"`;
+        const mutation3 = `
+            mutation {
+                segmentCreate(name: ${segment3Name}, query: ${segment3Query}) {
+                    segment {
+                        id
+                        name
+                        query
+                    }
+                    userErrors {
+                        message
+                        field
+                    }
+                }
+            }
+        `;
+        mutations.push(mutation3);
+    }
+
+    // Query for Tier 4 Segment
+    if (tierData.tier4) {
+        const segment4Name = `"${campaignData.name}-Tier4Segment"`
+        const segment4Query = `"customer_tags CONTAINS '${desiredTag4}'"`;
+        const mutation4 = `
+            mutation {
+                segmentCreate(name: ${segment4Name}, query: ${segment4Query}) {
+                    segment {
+                        id
+                        name
+                        query
+                    }
+                    userErrors {
+                        message
+                        field
+                    }
+                }
+            }
+        `;
+        mutations.push(mutation4);
+    }
+
+    const createdSegmentIds = [];
+
     try {
+        for (const mutation of mutations) {
             const options = {
                 method: 'POST',
                 headers,
@@ -49,11 +134,18 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
             }
 
             const segment = data.data.segmentCreate.segment;
+            if (segment) {
+                let segment_id = segment.id.match(/\d+/)[0];
+                createdSegmentIds.push(parseInt(segment_id, 10));
+            }
+        }
     } catch (error) {
         console.error(error);
         throw new Error('An error occurred while creating customer segments');
     }
 
+    console.log('Created Segment Ids:', createdSegmentIds);
+    return createdSegmentIds;
 };
 
     // Discount type
