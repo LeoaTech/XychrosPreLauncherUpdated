@@ -9,8 +9,8 @@ import { add_to_klaviyo_list } from "../helpers/klaviyoIntegrations.js";
 import NewPool from "pg";
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
-});
+    connectionString: `${process.env.DATABASE_URL}`,
+  });
 
 import {
   replace_welcome_email_text,
@@ -71,9 +71,7 @@ export default function getUrlApi(app, secret) {
       // Get App Session from Shop Domain
       const shopSession =
         await Shopify.Context.SESSION_STORAGE.findSessionsByShop(shop);
-      console.log(shopSession[0], "Get user token");
 
-      let session = shopSession[0];
       let message = "";
 
       if (!email) {
@@ -161,12 +159,13 @@ export default function getUrlApi(app, secret) {
               `INSERT INTO referrals (email, referrer_id, campaign_id) VALUES ('${email}', '${refer}', ${campaignID}) RETURNING *`
             );
 
-            console.log("Referrals", getreferrals?.rows[0]);
+            // When a User signup with email and a new entry will add in referral table
+            // Then we call out create customer function to add Customer data on Store
             const customerData = {
               first_name: "",
               last_name: "",
               email: email,
-              phone: "",
+              phone: phone || "",
               verified_email: true,
               addresses: [
                 {
@@ -183,7 +182,7 @@ export default function getUrlApi(app, secret) {
             };
 
             let result2 = await createCustomer(shopSession, customerData);
-            console.log(result2, "created customer 2");
+            console.log(result2, "create Customer with Referral Code");
 
             referralcode = getreferrals.rows[0].referral_code;
             //prepare welcome email
@@ -224,7 +223,7 @@ export default function getUrlApi(app, secret) {
             first_name: "",
             last_name: "",
             email: email,
-            phone: "",
+            phone: phone || "",
             verified_email: true,
             addresses: [
               {
@@ -249,10 +248,8 @@ export default function getUrlApi(app, secret) {
             `INSERT INTO referrals (email, referrer_id, campaign_id) VALUES ('${email}', '${refer}', ${campaignID}) RETURNING *`
           );
 
-          console.log("Referrals 2", getreferrals?.rows[0]);
-
           let result = await createCustomer(shopSession, customerData);
-          console.log(result, "created customer");
+          console.log(result, "customer Created without Referral Code");
           referralcode = getreferrals.rows[0].referral_code;
 
           //prepare welcome email
