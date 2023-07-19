@@ -38,15 +38,12 @@
   font-weight: 500;
   margin-top: 20px;
   border-radius: 50px;
-
 }
-
 
 .upgrade-btn:hover,
 .upgrade-btn:focus {
   font-size: 17px;
   box-shadow: 1px 2px -1px 2px #cfcfcf;
-
 }
 
 /*------------------- Navbar ------------------- */
@@ -71,6 +68,7 @@
   height: 60px;
   width: 170px;
   background-color: var(--secondary-color);
+  background-color: #5447df;
   border: none;
   color: white;
   float: right;
@@ -78,11 +76,7 @@
   font-size: 18px;
   font-weight: 500;
   margin-top: 20px;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
+  border-radius: 7px;
 }
 
 .saveFormBtn:hover,
@@ -95,10 +89,8 @@
 .prevBtn {
   height: 50px;
   width: 110px;
-  font-size: 17.5px;
+  font-size: 17px;
 }
-
-
 
 .toggle-btn {
   border: none;
@@ -167,7 +159,6 @@
   padding: 20px 40px;
 }
 
-
 .store-links,
 .collect-setup {
   margin: 20px 0;
@@ -185,35 +176,40 @@
   gap: 30px;
 }
 
-
 .error-message {
-  font-size: 17px;
-  margin: 20px;
-  color: rgba(199, 34, 34, 0.86);
+  font-size: 15.6px;
+  margin: 0 5px;
+  color: #b70404;
+  margin-bottom: 15px;
 }
 
 .discount_error_text {
-  color: red;
-  margin: 20px;
-  padding: 0 20px;
+  color: #b70404;
+  margin: 0 5px;
+  padding: 0 10px;
+  margin-top: 18px;
 }
 
+.validation {
+  color: #b70404;
+  margin: 0 5px;
+  padding: 0 10px;
+  margin-top: 20px;
+}
 .form-group {
   display: flex;
   justify-content: space-between;
-
 }
 
 .campaign-form .form-group {
   display: flex;
   justify-content: space-between;
-
 }
 
 /* Labels */
 
 label {
-  font-size: 21px;
+  font-size: 19px;
   font-weight: 500;
   margin: 10px 0;
   color: rgb(245, 239, 239);
@@ -481,22 +477,20 @@ input[type="checkbox"]:checked {
   font-size: 20px;
   font-weight: 300;
   line-height: 1.6;
-  color: #e3dee0;
+  color: #ebf0f2;
 }
 
 .discount-settings {
   line-height: 0.9;
 }
 
-
-
 .discount-settings div {
   display: flex;
   align-items: center;
   gap: 10px;
+  font-size: 12px;
+  color: #ebf0f2;
 }
-
-
 
 .discount-settings .social-radioInput {
   height: 20px;
@@ -665,6 +659,11 @@ input[type="checkbox"]:checked {
   color: gray !important;
 }
 
+.reward_error {
+  display: block;
+  height: 20px;
+}
+
 .klaviyo-message:hover {
   color: var(--secondary-color);
 }
@@ -679,6 +678,7 @@ input[type="checkbox"]:checked {
 .template-content p,
 .laststep p {
   font-size: 20.5px;
+  line-height: normal;
   color: #b5b4b4;
 }
 
@@ -788,14 +788,12 @@ input[type="checkbox"]:checked {
   .newcampaign-title h1 {
     font-weight: 600;
     font-size: 25px;
-
   }
 
   .card-title {
     font-weight: 600;
     font-size: 20px;
   }
-
 
   /* Basic Form Settings */
   .campaign-form {
@@ -807,7 +805,6 @@ input[type="checkbox"]:checked {
     margin: 5px 0px;
     padding: 5px 0px;
   }
-
 
   .campaign-form .input-form-groups .form-group {
     margin: 5px 0;
@@ -829,7 +826,6 @@ input[type="checkbox"]:checked {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
-
 
   /* Referral Settings */
 
@@ -908,7 +904,6 @@ input[type="checkbox"]:checked {
     padding: 0 15px;
   }
 
-
   .referral-settings-form,
   .reward {
     margin: 15px 11px;
@@ -926,9 +921,6 @@ input[type="checkbox"]:checked {
   }
 
   /* Basic Form Settings */
-
-
-
 
   /* Reward Tier Settings */
   .referral-container p {
@@ -1032,7 +1024,6 @@ input[type="checkbox"]:checked {
     margin: 5px 10px;
   }
 
-
   .newcampaign-settings {
     margin-left: 2%;
     margin-bottom: 20px;
@@ -1052,20 +1043,18 @@ input[type="checkbox"]:checked {
     padding: 0 10px;
   }
 
-
   .referral-settings-form,
   .reward {
     margin: 15px 11px;
     padding: 12px 5px;
   }
 
-  .nextBtn {
+  .nextBtn,
+  .prevBtn {
     height: 40px;
     width: 90px;
-    font-size: 20px;
+    font-size: 17px;
   }
-
-
 
   /* Basic Form Settings */
   .campaign-form {
@@ -1148,7 +1137,6 @@ input[type="checkbox"]:checked {
     word-break: keep-all;
   }
 
-
   /* Email Settings */
   .email-container {
     padding: 0 17px;
@@ -1227,7 +1215,6 @@ input[type="checkbox"]:checked {
     flex-direction: column;
   }
 
-
   .input-form-groups,
   .select-products:after,
   .select-user-input:after {
@@ -1248,8 +1235,6 @@ input[type="checkbox"]:checked {
     right: -35px;
   }
 
-
-
   .campaign-form .store-links .store-social-links {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -1258,8 +1243,6 @@ input[type="checkbox"]:checked {
     height: 40px;
     width: 100%;
   }
-
-
 
   /* Referral Settings */
 
@@ -1406,7 +1389,6 @@ input[type="checkbox"]:checked {
     -o-border-radius: 12px;
   }
 
-
   .saveFormBtn {
     font-size: 14px;
     width: 100px;
@@ -1418,7 +1400,6 @@ input[type="checkbox"]:checked {
     width: 80px;
     font-size: 14.5px;
   }
-
 
   .new-campaign-container {
     padding: 10px 6px;
@@ -1432,18 +1413,15 @@ input[type="checkbox"]:checked {
 
   /* Basic Form Settings */
 
-
   .saveFormBtn,
   .nextBtn,
   .prevBtn {
     height: 40px;
   }
 
-
   .campaign-form .form-group {
     flex-direction: column;
   }
-
 
   .input-form-groups,
   .select-products:after,
@@ -1466,8 +1444,6 @@ input[type="checkbox"]:checked {
     right: 22px;
   }
 
-
-
   .campaign-form .store-links .store-social-links {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -1476,7 +1452,6 @@ input[type="checkbox"]:checked {
     height: 40px;
     width: 100%;
   }
-
 
   /* Referral Settings */
   .referral-container p {
@@ -1520,7 +1495,6 @@ input[type="checkbox"]:checked {
     background-color: transparent;
   }
 
-
   /* Reward Settings */
   .discount-settings label {
     font-size: 16px;
@@ -1537,11 +1511,9 @@ input[type="checkbox"]:checked {
     margin: 0 10px;
   }
 
-
   .email-optCheck label {
     font-size: 17px;
   }
-
 
   .email-section h2 {
     font-size: 18s.5px;
@@ -1577,14 +1549,12 @@ input[type="checkbox"]:checked {
 
   .integration-settings-container .form-group {
     flex-direction: column;
-
   }
 
   .integration-settings-container input,
   .select-user-input select {
     width: 300px;
     font-size: 16px;
-
   }
 
   .campaign-form .input-form-groups input,
@@ -1593,8 +1563,6 @@ input[type="checkbox"]:checked {
     width: 300px;
     font-size: 16px;
   }
-
-
 
   /* Template Settings */
   .template-container {

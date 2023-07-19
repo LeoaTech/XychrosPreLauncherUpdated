@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { SideBar, Header, UserProfile, MainPage } from "../components/index";
+import { Suspense, lazy, useEffect } from "react";
+import { SideBar, Header} from "../components/index";
 import { useStateContext } from "../contexts/ContextProvider";
 import "../index.css";
 import useFetchUserDetails from "../constant/fetchUserDetails";
@@ -9,8 +9,9 @@ import useFetchPricingPlans from "../constant/fetchPricingPlans";
 import { fetchpricing } from "../app/features/pricing/pricing";
 import { fetchSavePlan } from "../app/features/current_plan/current_plan";
 import useFetchBillingModel from "../constant/fetchBillingModel";
+import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
 
-
+const UserProfile = lazy(() => import("../components/user/UserProfile"));
 
 const UserProfilePage = () => {
   const { activeMenu } = useStateContext();
@@ -19,7 +20,6 @@ const UserProfilePage = () => {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
-
 
   const response = useFetchPricingPlans("/api/pricing-plans", {
     method: "GET",
@@ -39,23 +39,23 @@ const UserProfilePage = () => {
     }
   }, [userDetails]);
 
-   // Get Current Active Plan Billing Details
+  // Get Current Active Plan Billing Details
 
-   const billing = useFetchBillingModel("/api/subscribe-plan", {
+  const billing = useFetchBillingModel("/api/subscribe-plan", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
   });
 
-    // Dispatch Active plan data to App Store  
-    useEffect(() => {
-      if (billing) {
-        dispatch(fetchSavePlan(billing))   //Save Current Billing Details in App Store
-      }
-    }, [dispatch, billing]);
-   // Get All Pricing Details with Features
-   useEffect(() => {
+  // Dispatch Active plan data to App Store
+  useEffect(() => {
+    if (billing) {
+      dispatch(fetchSavePlan(billing)); //Save Current Billing Details in App Store
+    }
+  }, [dispatch, billing]);
+  // Get All Pricing Details with Features
+  useEffect(() => {
     if (response.length > 0) {
       dispatch(fetchpricing(response));
     }
@@ -79,7 +79,9 @@ const UserProfilePage = () => {
               <SideBar />
             </div>
             <div className="main-container">
-              <UserProfile />
+              <Suspense fallback={<SkeletonLoader />}>
+                <UserProfile />
+              </Suspense>
             </div>
           </>
         ) : (
@@ -88,7 +90,9 @@ const UserProfilePage = () => {
               <SideBar />
             </div>
             <div className="main-container full">
-              <UserProfile />
+              <Suspense fallback={<SkeletonLoader />}>
+                <UserProfile />
+              </Suspense>
             </div>
           </>
         )}

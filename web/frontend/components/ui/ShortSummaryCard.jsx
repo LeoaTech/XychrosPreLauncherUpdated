@@ -1,6 +1,6 @@
 import './ShortSummaryCard.css';
 
-export default function ShortSummaryCard(props) {
+const ShortSummaryCard = (props) => {
   return (
     <div className='short-summary-card'>
       <div className='short-summary-card-value'>{props.value}</div>
@@ -11,3 +11,4 @@ export default function ShortSummaryCard(props) {
     </div>
   );
 }
+export default ShortSummaryCard

@@ -17,12 +17,10 @@ export const campaignDetailsSlice = createSlice({
 
 // Get All Campaigns
 
-export const fetchCampaignsDetailsList = (state) => state?.campaign_details?.campaigns_details?.filter((camp) => camp.is_deleted === false);
-
+export const fetchCampaignsDetailsList = (state) => state?.campaign_details?.campaigns_details?.filter((camp) => camp?.is_deleted === false);
 
 // All Action of the campaign
 
-export const {
-    fetchCampaignDetails } = campaignDetailsSlice.actions;
+export const {fetchCampaignDetails } = campaignDetailsSlice.actions;
 
 export default campaignDetailsSlice.reducer;

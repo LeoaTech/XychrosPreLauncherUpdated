@@ -87,7 +87,6 @@ const SettingComponent = () => {
       body: JSON.stringify(settingsData),
     }).then((res) => res.json())
       .then((data) => {
-        console.log(data, "Backend")
         dispatch(fetchSettings(data[0]));
       })
       .catch((err) => console.log(err));
@@ -148,7 +147,6 @@ const SettingComponent = () => {
     }));
   }
 
-  console.log("Settings", settingsData);
 
   return (
     <div className="settings-container">
