@@ -1,5 +1,37 @@
 import { Shopify } from "@shopify/shopify-api";
 import axios from "axios";
+export default async function createCustomer(session, customerData) {
+  // Function to create a new customer on Shopify
+  try {
+    // Set the base API URL for Shopify
+    const baseUrl = `https://${session[0]?.shop}/admin/api/2022-10/customers.json`;
+
+    // Create the customer data object
+    const customer = {
+      customer: customerData,
+    };
+    // Set up the POST request headers
+    const headers = {
+      "X-Shopify-Access-Token": session[0]?.accessToken,
+      "Content-Type": "application/json",
+    };
+
+    // Make the POST request to the Shopify API
+    const response = await axios.post(`${baseUrl}`, customer, {
+      headers,
+    });
+
+    // Return the newly created customer data
+    return response?.data?.customer;
+  } catch (error) {
+    // Handle any errors that occur during the request
+    console.error("Error creating customer:", error);
+    throw error;
+  }
+}
+
+// Grapgql Muatation to Create Customer
+
 
 /* export default async function createCustomer(session, { email }) {
   console.log(session, email); // Check the structure of the session object
@@ -70,40 +102,3 @@ import axios from "axios";
 
   return data;
 } */
-export default async function createCustomer(session, customerData) {
-  // Function to create a new customer on Shopify
-  try {
-    // Set the base API URL for Shopify
-    const baseUrl = `https://${session[0]?.shop}/admin/api/2022-10/customers.json`;
-
-    // Create the customer data object
-    const customer = {
-      customer: customerData,
-    };
-
-    console.log(baseUrl, "Before Request", customer);
-
-    // Set up the POST request headers
-    const headers = {
-      "X-Shopify-Access-Token": session[0]?.accessToken,
-      "Authorization": `Bearer ${session[0]?.accessToken}`,
-      "Content-Type": "application/json",
-      "scope":session[0]?.scope
-    };
-
-    console.log(headers, "Header");
-
-    // Make the POST request to the Shopify API
-    const response = await axios.post(`${baseUrl}`, customer, {
-      headers,
-    });
-
-    console.log(response, "REsponse");
-    // Return the newly created customer data
-    return response.data.customer;
-  } catch (error) {
-    // Handle any errors that occur during the request
-    console.error("Error creating customer:", error);
-    throw error;
-  }
-}
