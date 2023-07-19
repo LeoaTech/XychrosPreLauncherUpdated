@@ -31,7 +31,19 @@ export default function CampaignBlock({
   setCampaignName,
 }) {
   // Campaign Card Block Data Properties
-  const { campaign_id, name, product, start_date, end_date, is_active, is_draft, landing_page_link, rewards_page_link, landing_template_link, rewards_template_link } = data;
+  const {
+    campaign_id,
+    name,
+    product,
+    start_date,
+    end_date,
+    is_active,
+    is_draft,
+    landing_page_link,
+    rewards_page_link,
+    landing_template_link,
+    rewards_template_link,
+  } = data;
 
   const [alertModal, setAlertModal] = useState(false);
 
@@ -115,10 +127,21 @@ export default function CampaignBlock({
 
         <div className="campaign_center_links">
           <div className="campaign_details_links">
-            <a href={landing_template_link} target='_blank' className='btn'>Open Landing Template in Theme Editor</a>
-            <a href={rewards_template_link} target='_blank' className='btn'>Open Rewards Template in Theme Editor</a>
-            <a href={landing_page_link} target="_blank">Landing Page</a>
-            <a href={rewards_page_link} target="_blank">Rewards Page </a>
+            <a href={landing_page_link} target="_blank">
+              Landing Page
+            </a>
+            <a href={rewards_page_link} target="_blank">
+              Rewards Page
+            </a>
+          </div>
+          <div className="campaign_details_links">
+            <a href={landing_template_link} target="_blank" className="btn">
+              Show in Theme Editor
+            </a>
+
+            <a href={rewards_template_link} target="_blank" className="btn">
+              Show in Theme Editor
+            </a>
           </div>
         </div>
         <div className="campaign-right-card">
