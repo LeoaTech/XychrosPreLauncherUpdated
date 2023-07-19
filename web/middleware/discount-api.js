@@ -148,6 +148,19 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
     return createdSegmentIds;
 };
 
+
+// ------------------------- Price Rules and Dicounts - Rest API Call --------------------------
+
+const discountApiCalls = async (accessToken, shop, campaignData, customerSegmentIds) => {
+
+    // Set Headers
+    const headers = {
+        'X-Shopify-Access-Token': accessToken,
+        'Content-Type': 'application/json',
+    };
+
+    // extract rewards settings from campaign data
+
     // Discount type
     let price_rule_type = '';
 
@@ -158,27 +171,23 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
     }
 
     // Tier 1
-    const reward_1_tier = campaignData.reward_1_tier;
     const reward_1_discount = campaignData.reward_1_discount;
     const reward_1_code = campaignData.reward_1_code;
 
     // Tier 2
-    const reward_2_tier = campaignData.reward_2_tier;
     const reward_2_discount = campaignData.reward_2_discount;
     const reward_2_code = campaignData.reward_2_code;
 
     // Tier 3
-    const reward_3_tier = campaignData.reward_3_tier;
     const reward_3_discount = campaignData.reward_3_discount;
     const reward_3_code = campaignData.reward_3_code;
 
     // Tier 4
-    const reward_4_tier = campaignData.reward_4_tier;
     const reward_4_discount = campaignData.reward_4_discount;
     const reward_4_code = campaignData.reward_4_code;
 
     // Overall Tier data
-    const tierData = {
+    const priceRules_tierData = {
         tier1: reward_1_discount,
         tier2: reward_2_discount,
         tier3: reward_3_discount,
@@ -193,8 +202,9 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
             target_selection: "all",
             allocation_method: "across",
             value_type: `${price_rule_type}`,
-            value: `-${tierData.tier1}.0`,
-            customer_selection: "all",
+            value: `-${priceRules_tierData.tier1}.0`,
+            customer_selection: "prerequisite",
+            customer_segment_prerequisite_ids: [customerSegmentIds[0]],
             once_per_customer: true,
             starts_at: new Date().toISOString(),
         },
@@ -204,8 +214,9 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
             target_selection: "all",
             allocation_method: "across",
             value_type: `${price_rule_type}`,
-            value: `-${tierData.tier2}.0`,
-            customer_selection: "all",
+            value: `-${priceRules_tierData.tier2}.0`,
+            customer_selection: "prerequisite",
+            customer_segment_prerequisite_ids: [customerSegmentIds[1]],
             once_per_customer: true,
             starts_at: new Date().toISOString(),
         },
@@ -213,30 +224,32 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
 
     // check if tier 3 and 4 are not null
 
-    if (tierData.tier3) {
+    if (priceRules_tierData.tier3) {
         const tier3Data = {
             title: `${campaignData.name}_Tier_3_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
             value_type: `${price_rule_type}`,
-            value: `-${tierData.tier3}.0`,
-            customer_selection: "all",
+            value: `-${priceRules_tierData.tier3}.0`,
+            customer_selection: "prerequisite",
+            customer_segment_prerequisite_ids: [customerSegmentIds[2]],
             once_per_customer: true,
             starts_at: new Date().toISOString(),
         };
         priceRulesSettings.push(tier3Data);
     }
 
-    if (tierData.tier4) {
+    if (priceRules_tierData.tier4) {
         const tier4Data = {
             title: `${campaignData.name}_Tier_4_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
             value_type: `${price_rule_type}`,
-            value: `-${tierData.tier4}.0`,
-            customer_selection: "all",
+            value: `-${priceRules_tierData.tier4}.0`,
+            customer_selection: "prerequisite",
+            customer_segment_prerequisite_ids: [customerSegmentIds[3]],
             once_per_customer: true,
             starts_at: new Date().toISOString(),
         };
@@ -276,16 +289,10 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
         discountCodeBody.push(discount4Data)
     }
 
-    // set headers
-    const headers = {
-        'X-Shopify-Access-Token': accessToken,
-        'Content-Type': 'application/json',
-    };
-
-    // create price rules
+    // Create Price Rules
     const createPriceRules = async () => {
         const priceRuleIds = [];
-        const url = `https://${shop}/admin/api/2022-10/price_rules.json`;
+        const url = `https://${shop}/admin/api/${api_version}/price_rules.json`;
 
         for (const rule of priceRulesSettings) {
             try {
@@ -310,10 +317,10 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
         return priceRuleIds;
     }
 
-    // create discount code for each price rule
+    // Create Discount Codes
     const createDiscountCodes = async (priceRuleIds) => {
         const discountCodes = [];
-        const url = `https://${shop}/admin/api/2022-10/price_rules/:price_rule_id/discount_codes.json`;
+        const url = `https://${shop}/admin/api/${api_version}/price_rules/:price_rule_id/discount_codes.json`;
 
         for (const [index, code] of discountCodeBody.entries()) {
             const priceRuleId = priceRuleIds[index % priceRuleIds.length];
@@ -337,11 +344,15 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
         console.log("Generated Discount Codes: ", discountCodes);
     }
 
+    // price rules
     const priceRuleIds = await createPriceRules();
+
+    // pass price rule ids to generate discount codes
     await createDiscountCodes(priceRuleIds);
 }
 
 // ------------------- API ---------------------
+
 export default function discountApiEndpoint(app) {
     app.post("/api/generate_discount", async (req, res) => {
         try {
@@ -352,8 +363,13 @@ export default function discountApiEndpoint(app) {
             );
             const { accessToken, shop } = session;
             const { campaignData } = req.body;
-            await discountApiCalls(accessToken, shop, campaignData);
-            // console.log(campaignData);
+
+            // customer segments function call
+            const customer_segment_ids = await segmentApiCalls(accessToken, shop, campaignData);
+
+            // discount and price rule function call
+            await discountApiCalls(accessToken, shop, campaignData, customer_segment_ids);
+
             return res.status(200).json({ success: true, message: "Discount Codes Generated Successfully" });
         } catch (error) {
             return res.status(500).json({ success: false, message: "Failed to Generate Discount Codes", error: error.message });
