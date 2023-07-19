@@ -45,7 +45,7 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
     // price rule settings
     const priceRulesSettings = [
         {
-            title: "Tier 1 Discount",
+            title: `${campaignData.name}_Tier_1_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
@@ -56,7 +56,7 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
             starts_at: new Date().toISOString(),
         },
         {
-            title: "Tier 2 Discount",
+            title: `${campaignData.name}_Tier_2_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
@@ -72,7 +72,7 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
 
     if (tierData.tier3) {
         const tier3Data = {
-            title: "Tier 3 Discount",
+            title: `${campaignData.name}_Tier_3_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
@@ -87,7 +87,7 @@ const discountApiCalls = async (accessToken, shop, campaignData) => {
 
     if (tierData.tier4) {
         const tier4Data = {
-            title: "Tier 4 Discount",
+            title: `${campaignData.name}_Tier_4_Discounts`,
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
