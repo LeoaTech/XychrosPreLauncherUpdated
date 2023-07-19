@@ -1,6 +1,6 @@
 import "./SummaryCard.css";
 
-export default function SummaryCard(props) {
+const SummaryCard = (props) => {
   return (
     <div className="summary-card">
       <div className="summary-details">
@@ -14,3 +14,5 @@ export default function SummaryCard(props) {
     </div>
   );
 }
+
+export default SummaryCard;

@@ -172,9 +172,7 @@
     -o-border-radius: 10px;
   }
 
-  .error-message {
-    color: red;
-  }
+  
 
   .collect__inputs {
     display: flex;

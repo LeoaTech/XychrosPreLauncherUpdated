@@ -1,14 +1,14 @@
-import './ReferralsBlock.css';
-import * as React from 'react';
-import { referralRows, referralColumns } from './dummyData';
-import { BiShow } from 'react-icons/bi';
-import { RiDeleteBin6Line } from 'react-icons/ri';
-import { ShowModal, DeleteModal } from '../modal/index';
-import DataTable from 'react-data-table-component';
-import { customStyles } from './customStyles';
-import { useDispatch, useSelector } from 'react-redux';
+import "./ReferralsBlock.css";
+import * as React from "react";
+import { referralRows, referralColumns } from "./dummyData";
+import { BiShow } from "react-icons/bi";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { ShowModal, DeleteModal } from "../modal/index";
+import DataTable from "react-data-table-component";
+import { customStyles } from "./customStyles";
+import { useDispatch, useSelector } from "react-redux";
 
-import { fetchReferralById } from '../../app/features/referrals/referralSlice';
+import { fetchReferralById } from "../../app/features/referrals/referralSlice";
 
 const ReferralsBlock = (props) => {
   const [openModal, setOpenModal] = React.useState(false);
@@ -20,20 +20,19 @@ const ReferralsBlock = (props) => {
   const handleDelete = (id) => {
     let delVal = data.filter((item) => item.id !== id);
     setData(delVal);
-    console.log(delVal);
   };
 
   React.useEffect(() => {
     if (openModal || deleteModal) {
-      document.body.style.opacity = '0.5 !important';
+      document.body.style.opacity = "0.5 !important";
     } else {
-      document.body.style.opacity = '1 !important';
+      document.body.style.opacity = "1 !important";
     }
   }, [openModal, deleteModal]);
 
   React.useEffect(() => {
     if (deleteModal) {
-      window.addEventListener('click', () => {
+      window.addEventListener("click", () => {
         setDeleteModal(false);
       });
     }
@@ -50,19 +49,19 @@ const ReferralsBlock = (props) => {
   // Actions column on table to view and delete data
   const actionColumns = [
     {
-      name: 'Details',
-      id: 'details',
+      name: "Details",
+      id: "details",
       style: {
-        textAlign: 'center',
-        alignItems: 'center',
+        textAlign: "center",
+        alignItems: "center",
         fontSize: 17,
-        maxWidth: '12px',
+        maxWidth: "12px",
       },
       cell: (row) => {
         return (
-          <div className='cellAction'>
+          <div className="cellAction">
             <div
-              className='actionbtn'
+              className="actionbtn"
               onClick={(e) => {
                 setOpenModal(true);
                 setModalData(row);
@@ -87,7 +86,7 @@ const ReferralsBlock = (props) => {
   return (
     <>
       {props?.tableData.length > 0 ? (
-        <div className='datatable'>
+        <div className="datatable">
           <DataTable
             customStyles={customStyles}
             columns={referralColumns.concat(actionColumns)}
@@ -96,22 +95,8 @@ const ReferralsBlock = (props) => {
             highlightOnHover
           />
         </div>
-      ) : (
-        <h2
-          style={{
-            color: '#fff',
-            fontSize: 29,
-            margin: 20,
-            height: '50vh',
-            display: 'Flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          No Referral Data
-        </h2>
-      )}
-      <div style={{ borderRadius: '15px' }}>
+      ) : null}
+      <div style={{ borderRadius: "15px" }}>
         <ShowModal
           openModal={openModal}
           setOpenModal={setOpenModal}

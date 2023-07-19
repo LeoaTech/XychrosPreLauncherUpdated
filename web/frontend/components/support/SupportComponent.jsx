@@ -13,12 +13,12 @@ const SupportComponent = () => {
   const handleChange = () => {
 
   }
-  // useEffect(() => {
-  //   // Simulating the form loading process
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 400); // Replace this with the actual form loading logic
-  // }, []);
+  useEffect(() => {
+    // Simulating the form loading process
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 400); // Replace this with the actual form loading logic
+  }, []);
 
 
   const handleSubmit = () => {
@@ -28,12 +28,13 @@ const SupportComponent = () => {
     <div className="support-container">
       <div className="top-description">
         <p>
-          Visit our <Link to="/help">Help Centre</Link> for troubleshooting and
-          how-to articles.{" "}
+          {/* Visit our <Link to="/help">Help Centre</Link> for troubleshooting and
+          how-to articles.{" "} */}
         </p>
         <p>
-          For an urgent inquiry fill out the form below or
-          {" "}<Link to="/chat">chat with our team</Link>.
+          For an urgent inquiry fill out the form below
+          {/* or
+          {" "}<Link to="/chat">chat with our team</Link>. */}
         </p>
       </div>
 
@@ -42,9 +43,18 @@ const SupportComponent = () => {
           <h2>Support Form</h2>
 
 
+          {isLoading ? <div className="spinner"></div> : <iframe className="support-google-form"
+            src="https://docs.google.com/forms/d/e/1FAIpQLSfRkYidDN7u-hrv12dl_p5Qh_pyqLpU3J9geH9ggwIYku6Olw/viewform?embedded=true"
+            width="640"
+            height="670"
+            frameborder="0"
+            // marginheight="0"
+            // marginwidth="0"
 
-          {/* <form> */}
-          <div className="file-links">
+          >Loading…</iframe>
+          }
+
+          {/* <div className="file-links">
             <div className="link-input">
               <label htmlFor=""> Store URL</label>
               <input type="text" />
@@ -67,7 +77,7 @@ const SupportComponent = () => {
           </div>
 
           <div className="submit-btn" onClick={handleSubmit}>Submit</div>
-          {/* </form> */}
+          */}
 
         </div>
       </div>

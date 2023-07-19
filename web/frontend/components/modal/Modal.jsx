@@ -53,7 +53,6 @@ const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
   };
 
   let finalData = [];
-  console.log(values);
   if (values) {
     finalData = fulldata.filter(
       (one) => one.referrer_id == values.referral_code

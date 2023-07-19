@@ -9,7 +9,7 @@ const ToggleSwitch = ({ rounded, isToggled, onToggle, id, start_date, end_date }
   const todayDate = new Date()
   return (
     <label className="switch-label">
-      <input type="checkbox" checked={isToggled}
+      <input type="checkbox" checked={isToggled} defaultChecked
       />
       <span className={sliderCX} />
     </label>
