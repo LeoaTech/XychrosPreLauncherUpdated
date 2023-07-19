@@ -1,9 +1,60 @@
 import { Shopify } from '@shopify/shopify-api';
 import fetch from 'node-fetch';
 
-const discountApiCalls = async (accessToken, shop, campaignData) => {
+const api_version = '2022-10';
 
-    // extract rewards settings in form
+// -------------------------- Customers Segments - GraphQL API Call ----------------------------
+
+const segmentApiCalls = async (accessToken, shop, campaignData) => {
+    const url = `https://${shop}/admin/api/${api_version}/graphql.json`;
+
+    // Set Headers
+    const headers = {
+        'X-Shopify-Access-Token': accessToken,
+        'Content-Type': 'application/json',
+    };
+
+    // [Update] - Will be retrieved from campaign data
+    const desiredTag1 = 'eligibleFirstTier';
+    const segment1Name = `"${campaignData.name}-Tier1Segment"`
+    const segment1Query = `"customer_tags CONTAINS '${desiredTag1}'"`;
+    const mutation1 = `
+        mutation {
+            segmentCreate(name: ${segment1Name}, query: ${segment1Query}) {
+                segment {
+                    id
+                    name
+                    query
+                }
+                userErrors {
+                    message
+                    field
+                }
+            }
+        }
+    `;
+    try {
+            const options = {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ query: mutation.trim() }),
+            };
+
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            if (!response.ok || data.errors) {
+                const errors = data.errors || data.data.segmentCreate.userErrors;
+                throw new Error(`Failed to create customer segments: ${JSON.stringify(errors)}`);
+            }
+
+            const segment = data.data.segmentCreate.segment;
+    } catch (error) {
+        console.error(error);
+        throw new Error('An error occurred while creating customer segments');
+    }
+
+};
 
     // Discount type
     let price_rule_type = '';
