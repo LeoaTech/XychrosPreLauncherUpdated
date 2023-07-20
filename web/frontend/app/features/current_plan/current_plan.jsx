@@ -18,7 +18,6 @@ export const currentPlanSlice = createSlice({
   reducers: {
     fetchSavePlan: (state, action) => {
       state.current_plan = action.payload;
-      console.log(current(state), "Current")
 
     },
 

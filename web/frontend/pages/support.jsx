@@ -1,17 +1,22 @@
-import React, { useEffect } from "react";
-import { SideBar, Header, Support, MainPage } from "../components/index";
+import React, { useEffect, lazy, Suspense } from "react";
+import { SideBar, Header, MainPage } from "../components/index";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
+import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
+
+const Support = lazy(() => import("../components/support/SupportComponent"));
+
 const SupportPage = () => {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
-   // Page render Scroll to Top
-   useEffect(()=>{
+  // Page render Scroll to Top
+  useEffect(() => {
     window.scrollTo(0, 0);
-  },[])
-  return <div className="app">
-     {activeMenu ? (
+  }, []);
+  return (
+    <div className="app">
+      {activeMenu ? (
         <div className="header">
           <Header />
         </div>
@@ -27,7 +32,9 @@ const SupportPage = () => {
               <SideBar />
             </div>
             <div className="main-container">
-              <Support />
+              <Suspense fallback={<SkeletonLoader />}>
+                <Support />
+              </Suspense>
             </div>
           </>
         ) : (
@@ -36,12 +43,15 @@ const SupportPage = () => {
               <SideBar />
             </div>
             <div className="main-container full">
-              <Support />
+              <Suspense fallback={<SkeletonLoader />}>
+                <Support />
+              </Suspense>
             </div>
           </>
         )}
       </div>
-  </div>;
+    </div>
+  );
 };
 
 export default SupportPage;

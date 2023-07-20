@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { SideBar, Header, Pricing, MainPage } from "../components/index";
+import { Suspense, lazy, useEffect } from "react";
+import { SideBar, Header } from "../components/index";
 import { useStateContext } from "../contexts/ContextProvider";
 import "../index.css";
 import useFetchPricingPlans from "../constant/fetchPricingPlans";
@@ -7,16 +7,18 @@ import { fetchpricing } from "../app/features/pricing/pricing";
 import { useDispatch } from "react-redux";
 import { fetchSavePlan } from "../app/features/current_plan/current_plan";
 import useFetchBillingModel from "../constant/fetchBillingModel";
+import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
+
+const Pricing = lazy(() => import("../components/pricing/PriceComponent"));
 
 const PricePage = () => {
   const { activeMenu } = useStateContext();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // Page render Scroll to Top
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [])
-
+  }, []);
 
   const response = useFetchPricingPlans("/api/pricing-plans", {
     method: "GET",
@@ -41,14 +43,12 @@ const PricePage = () => {
     }
   }, [dispatch, response]);
 
-
-  // Dispatch Active plan data to App Store  
+  // Dispatch Active plan data to App Store
   useEffect(() => {
     if (billing) {
-      dispatch(fetchSavePlan(billing))   //Save Current Billing Details in App Store
+      dispatch(fetchSavePlan(billing)); //Save Current Billing Details in App Store
     }
   }, [dispatch, billing]);
-
 
   return (
     <div className="app">
@@ -68,7 +68,9 @@ const PricePage = () => {
               <SideBar />
             </div>
             <div className="main-container">
-              <Pricing />
+              <Suspense fallback={<SkeletonLoader />}>
+                <Pricing />
+              </Suspense>
             </div>
           </>
         ) : (
@@ -77,7 +79,9 @@ const PricePage = () => {
               <SideBar />
             </div>
             <div className="main-container full">
-              <Pricing />
+              <Suspense fallback={<SkeletonLoader />}>
+                <Pricing />
+              </Suspense>
             </div>
           </>
         )}

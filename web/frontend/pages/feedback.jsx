@@ -1,19 +1,24 @@
-import { useEffect } from "react";
-import { SideBar, Header, Feedback, MainPage } from "../components/index";
+import { Suspense, lazy, useEffect } from "react";
+import { SideBar, Header, MainPage } from "../components/index";
 import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 
+
+// Code Splitting
+const Feedback = lazy(() => import("../components/feedback/Feedback"));
+
+
 const FeedbackPage = () => {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
-   // Page render Scroll to Top
-   useEffect(()=>{
+  // Page render Scroll to Top
+  useEffect(() => {
     window.scrollTo(0, 0);
-  },[])
+  }, [])
   return (
     <div className="app">
-       {activeMenu ? (
+      {activeMenu ? (
         <div className="header">
           <Header />
         </div>
@@ -29,7 +34,9 @@ const FeedbackPage = () => {
               <SideBar />
             </div>
             <div className="main-container">
-              <Feedback />
+              <Suspense fallback={<div>Loading...</div>}>
+                <Feedback />
+              </Suspense>
             </div>
           </>
         ) : (
@@ -38,7 +45,9 @@ const FeedbackPage = () => {
               <SideBar />
             </div>
             <div className="main-container full">
-              <Feedback />
+              <Suspense fallback={<div>Loading...</div>}>
+                <Feedback />
+              </Suspense>
             </div>
           </>
         )}
