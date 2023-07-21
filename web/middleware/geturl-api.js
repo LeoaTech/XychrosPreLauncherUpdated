@@ -261,12 +261,45 @@ export default function getUrlApi(app, secret) {
                 let new_camp_name = campaign_details.rows[0].name;
                 let newTag = `${new_camp_name}`;
 
+                // if the Customer has existing tags, update tags
+                if (findEmail?.tags) {
+
+                  // Extract the current tags from the customer's data
+                  const tags = findEmail.tags.split(',').map((tag) => tag.trim());
+
+                  // Check if the new tag is already present in the current tags
+
+                  // new tag doesn't exist
+                  if (!tags.includes(newTag)) {
+                    tags.push(newTag);
+                    const updatedTags = tags.join(', ');
+
+                    // Update the customer's tags
                     const updatedCustomerData = {
                       id: findEmail.id,
                       tags: updatedTags,
                     };
+
                     await updateCustomer(shopSession, updatedCustomerData);
                     console.log('Customer Tags Updated Successfully - Customer Signed up for Another Campaign');
+
+                  }
+                  // new tag exists already
+                  else {
+                    console.log('Customer Already Has this Tag. No Update Needed.');
+                  }
+                }
+
+                // If the customer has no existing tags, simply add the new tag
+                else {
+                  const updatedCustomerData = {
+                    id: findEmail.id,
+                    tags: newTag,
+                  };
+
+                  await updateCustomer(shopSession, updatedCustomerData);
+                  console.log('Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found');
+                }
               }
             } catch (error) {
               console.log("Error Creating/Updating Customer", error);
@@ -362,6 +395,20 @@ export default function getUrlApi(app, secret) {
               let new_camp_name = campaign_details.rows[0].name;
               let newTag = `${new_camp_name}`;
 
+              // if the Customer has existing tags, update tags
+              if (findEmail?.tags) {
+
+                // Extract the current tags from the customer's data
+                const tags = findEmail.tags.split(',').map((tag) => tag.trim());
+
+                // Check if the new tag is already present in the current tags
+
+                // new tag doesn't exist
+                if (!tags.includes(newTag)) {
+                  tags.push(newTag);
+                  const updatedTags = tags.join(', ');
+
+                  // Update the customer's tags
                   const updatedCustomerData = {
                     id: findEmail.id,
                     tags: updatedTags,
@@ -369,6 +416,24 @@ export default function getUrlApi(app, secret) {
 
                   await updateCustomer(shopSession, updatedCustomerData);
                   console.log('Customer Tags Updated Successfully - Customer Signed up for Another Campaign');
+
+                }
+                // new tag exists already
+                else {
+                  console.log('Customer Already Has this Tag. No Update Needed.');
+                }
+              }
+
+              // If the customer has no existing tags, simply add the new tag
+              else {
+                const updatedCustomerData = {
+                  id: findEmail.id,
+                  tags: newTag,
+                };
+
+                await updateCustomer(shopSession, updatedCustomerData);
+                console.log('Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found');
+              }
             }
           } catch (error) {
             console.log("Error Creating/Updating Customer", error);
