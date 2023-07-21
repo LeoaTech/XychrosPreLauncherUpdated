@@ -1,7 +1,8 @@
 import { Shopify } from "@shopify/shopify-api";
 import axios from "axios";
+
+// Function to create a new customer on Shopify store
 export default async function createCustomer(session, customerData) {
-  // Function to create a new customer on Shopify
   try {
     // Set the base API URL for Shopify
     const baseUrl = `https://${session[0]?.shop}/admin/api/2022-10/customers.json`;
@@ -22,13 +23,13 @@ export default async function createCustomer(session, customerData) {
     });
 
     // Return the newly created customer data
+    console.log("Customer Created Successfully");
     return response?.data?.customer;
   } catch (error) {
     // Handle any errors that occur during the request
-    console.error(
-      "Error creating customer:",
-      error?.response ? error.response.data : error.message
-    );
-    // throw error;
+    console.error("Error creating customer:", error);
+  }
+}
+
   }
 }
