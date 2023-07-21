@@ -1,17 +1,9 @@
 import { Shopify } from "@shopify/shopify-api";
-
 import queryString from "query-string";
 import crypto from "crypto";
-
 import emailValidator from "deep-email-validator";
 import { add_to_klaviyo_list } from "../helpers/klaviyoIntegrations.js";
-
 import NewPool from "pg";
-const { Pool } = NewPool;
-const pool = new Pool({
-    connectionString: `${process.env.DATABASE_URL}`,
-  });
-
 import {
   replace_welcome_email_text,
   replace_referral_email_text,
@@ -19,19 +11,25 @@ import {
   send_email,
 } from "../helpers/emails.js";
 import createCustomer from "../helpers/create-customer.js";
+import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
+import axios from "axios";
+
+const { Pool } = NewPool;
+const pool = new Pool({
+  connectionString: `${process.env.DATABASE_URL}`,
+});
 
 export default function getUrlApi(app, secret) {
-  console.log(secret, "Secret");
   app.post("/api/geturl", async (req, res) => {
     try {
-      console.log("I am here in fetch API URL");
-      console.log(req.query);
-      console.log(req.body);
+      // console.log("I am here in fetch API URL");
+      // console.log(req.query);
+      // console.log(req.body);
       const shop = req.query.shop;
       const campaign = req.body.campaign_name;
 
-      console.log(shop);
-      console.log(campaign);
+      // console.log(shop);
+      // console.log(campaign);
 
       const imageURL = await pool.query(
         `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
@@ -73,6 +71,57 @@ export default function getUrlApi(app, secret) {
         await Shopify.Context.SESSION_STORAGE.findSessionsByShop(shop);
 
       let message = "";
+
+      
+      /* -----------------     Get All Customers List of App Store     -------------------- */
+      // Set the base API URL for Shopify
+
+      const baseUrl = `https://${shopSession[0]?.shop}/admin/api/2023-04/customers.json`;
+      let store_customers;
+      try {
+        let response = await axios.get(baseUrl, {
+          headers: {
+            "X-Shopify-Access-Token": shopSession[0]?.accessToken,
+            Authorization: `Bearer ${shopSession[0]?.accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        // console.log("customer mail", response?.data);
+        let customers = response?.data?.customers;
+        const customerData = customers.map((customer) => {
+          const {
+            email,
+            phone,
+            first_name,
+            last_name,
+            id,
+            tags,
+            created_at,
+            updated_at,
+          } = customer;
+          return {
+            email,
+            phone,
+            first_name,
+            last_name,
+            id,
+            tags,
+            created_at,
+            updated_at,
+          };
+        });
+
+        store_customers = customerData;
+      } catch (error) {
+        console.log(error);
+      }
+      console.log("customer List of App Store", store_customers);
+
+
+      // Check if the Email user entered is Already in App Store customers list
+      let findEmail = store_customers.find((data) => data.email === email);
+      console.log(findEmail, "email found");
+
 
       if (!email) {
         return res
@@ -118,6 +167,14 @@ export default function getUrlApi(app, secret) {
         const getIPAddress = await pool.query(
           `SELECT count_ip FROM ip_addresses WHERE address='${ip_address}' and campaign_id=${campaignID}`
         );
+
+        // Check if Email Customer entered already exists in database 
+        const customerExists = await pool.query(
+          `SELECT * FROM referrals where email= $1`,
+          [email]
+        );
+        console.log(customerExists?.rows, "Email exists in Database");
+
 
         let count = 1;
 
@@ -181,8 +238,22 @@ export default function getUrlApi(app, secret) {
               ],
             };
 
-            let result2 = await createCustomer(shopSession, customerData);
-            console.log(result2, "create Customer with Referral Code");
+
+            // Check If Customer Already Exists in App Store or Database 
+            try {
+              
+              // if Not Exists on App Store or Database
+              if (customerExists?.rowCount == 0 && findEmail === undefined) {
+                console.log("inside if statement to Create Customer");
+                let result2 = await createCustomer(shopSession, customerData);
+                console.log(result2, "create Customer with Referral Code");
+              } else {
+                // Update customer
+                console.log("Customer already Exists with this email", findEmail?.email);
+              }
+            } catch (error) {
+              throwError;
+            }
 
             referralcode = getreferrals.rows[0].referral_code;
             //prepare welcome email
@@ -248,8 +319,19 @@ export default function getUrlApi(app, secret) {
             `INSERT INTO referrals (email, referrer_id, campaign_id) VALUES ('${email}', '${refer}', ${campaignID}) RETURNING *`
           );
 
-          let result = await createCustomer(shopSession, customerData);
-          console.log(result, "customer Created without Referral Code");
+          /* Check If Customer Email is not present already on both Database and App Store  */
+          try {
+            if (customerExists?.rowCount == 0 && findEmail=== undefined) {
+              console.log("inside if to ceate customer");
+              let result = await createCustomer(shopSession, customerData);
+              console.log(result, "customer Created without Referral Code");
+            } else {
+              // Update Customers data
+              console.log("Customer already Exists with this email", findEmail?.email);
+            }
+          } catch (error) {
+            console.log(error);
+          }
           referralcode = getreferrals.rows[0].referral_code;
 
           //prepare welcome email
@@ -329,7 +411,7 @@ export default function getUrlApi(app, secret) {
       const campaign_details = await pool.query(
         `SELECT * from campaign_settings where name=${campaign_name}`
       );
-      const campaign_id = campaign_details.rows[0].campaign_id;
+      const campaign_id = campaign_details?.rows[0]?.campaign_id;
       const data = await pool.query(
         "SELECT * FROM referrals WHERE referral_code=$1 and campaign_id=$2",
         [referral_code, campaign_id]
