@@ -219,14 +219,16 @@ export default function getUrlApi(app, secret) {
             // Then we call out create customer function to add Customer data on Store
 
             // customer creation data
-            let general_tag = "viral-launch";
+            let camp_name = campaign_details.rows[0].name;
+            let tags = `viral-launch, ${camp_name}`;
+
             const customerData = {
               first_name: "",
               last_name: "",
               email: email,
               phone: phone || "",
               verified_email: true,
-              tags: general_tag,
+              tags: tags,
               addresses: [
                 {
                   address1: "",
@@ -306,7 +308,8 @@ export default function getUrlApi(app, secret) {
           );
 
           // customer creation data
-          let general_tag = "viral-launch";
+          let camp_name = campaign_details.rows[0].name;
+          let tags = `viral-launch, ${camp_name}`;
 
           const customerData = {
             first_name: "",
@@ -314,7 +317,7 @@ export default function getUrlApi(app, secret) {
             email: email,
             phone: phone || "",
             verified_email: true,
-            tags: general_tag,
+            tags: tags,
             addresses: [
               {
                 address1: "",
