@@ -31,5 +31,33 @@ export default async function createCustomer(session, customerData) {
   }
 }
 
+// Function to update an existing customer on Shopify store
+export async function updateCustomer(session, updatedCustomerData) {
+  const customerId = updatedCustomerData.id;
+  console.log("Add/Update Tags of Customer Having Id: ", [customerId]);
+  try {
+    // Set the base API URL for Shopify
+    const baseUrl = `https://${session[0]?.shop}/admin/api/2022-10/customers/${customerId}.json`;
+
+    const customer = {
+      customer: updatedCustomerData,
+    };
+
+    // Set up the PUT request headers
+    const headers = {
+      "X-Shopify-Access-Token": session[0]?.accessToken,
+      "Content-Type": "application/json",
+    };
+
+    // Make the POST request to the Shopify API
+    const response = await axios.put(`${baseUrl}`, customer, {
+      headers,
+    });
+
+    // Return the updated customer data
+    console.log("Customer Updated Successfully");
+  } catch (error) {
+    // Handle any errors that occur during the request
+    console.error("Error Adding/Updating Customer Tags", error);
   }
 }
