@@ -72,28 +72,61 @@ const SettingComponent = () => {
     );
   };
 
+  // Check if all fields in a tier are filled
+  const isTierFilled = (tier) => {
+    return (
+      settingsData[`reward_${tier}_tier`] &&
+      settingsData[`reward_${tier}_discount`] &&
+      settingsData[`reward_${tier}_code`]
+    );
+  };
+
+  // Enable or disable fields based on whether the previous tier is filled
+  const isFieldDisabled = (tier) => {
+    return tier > 1 && !isTierFilled(tier - 1);
+  };
+
   const [rewardTierValidate, setRewardTierValidate] = useState(false);
+
+  // Before moving to the next form, replace empty strings with null
+  const prepareFieldsForSubmission = () => {
+    const preparedFields = { ...fields };
+    for (let tier = 3; tier <= 4; tier++) {
+      if (!isTierFilled(tier)) {
+        preparedFields[`reward_${tier}_tier`] = null;
+        preparedFields[`reward_${tier}_discount`] = null;
+      }
+    }
+    return preparedFields;
+  };
 
   // Handle Next Button event for each
   const handleNext = (index) => {
+    // if (index == 3) {
+    //   const preparedFields = prepareFieldsForSubmission();
+    //   setSettingsData(...settingsData, ...preparedFields);
+    //   setCurrentExpanded((prevExpand) =>
+    //     prevExpand.map((state, i) => (i === index ? !state : false))
+    //   );
+    // } else 
     if (index === 4) {
+      if (settingsData.reward_3_tier === "") {
+        settingsData.reward_3_tier = null;
+      }
+      if (settingsData.reward_3_discount === "") {
+        settingsData.reward_3_discount = null;
+      }
+      if (settingsData.reward_4_tier === "") {
+        settingsData.reward_4_tier = null;
+      }
+      if (settingsData.reward_4_discount === "") {
+        settingsData.reward_4_discount = null;
+      }
       document.getElementById("settings-save").disabled = false;
       document.getElementById("settings-save").style.cursor = "pointer";
       setCurrentExpanded((prevExpand) =>
         prevExpand.map((state, i) => (i === index ? !state : false))
       );
-    } else if (index === 3) {
-      if (!isReward1Filled && !isReward2Filled) {
-        setRewardTierValidate(true);
-        setExpanded((prevExpand) =>
-          prevExpand.map((state, i) => i === index - 1 && true)
-        );
-      } else {
-        setRewardTierValidate(false);
-        setExpanded((prevExpand) =>
-          prevExpand.map((state, i) => i === !state && false)
-        );
-      }
     } else {
       setCurrentExpanded((prevExpand) =>
         prevExpand.map((state, i) => (i === index ? !state : false))
@@ -119,50 +152,36 @@ const SettingComponent = () => {
     !!settingsData[`reward_4_tier`] &&
     !!settingsData[`reward_4_discount`] &&
     !!settingsData[`reward_4_code`];
-  const handleRewardValidation = (index) => {
-    if (index === 3) {
-      if (!isReward1Filled && !isReward2Filled) {
-        setRewardTierValidate(true);
-        setExpanded((prevExpand) =>
-          prevExpand.map((state, i) => i === index - 1 && true)
-        );
-      } else {
-        setRewardTierValidate(false);
-        // Proceed next step
-        setExpanded((prevExpand) =>
-          prevExpand.map((state, i) => (i === index ? !state : false))
-        );
-      }
-    }
-  };
-  console.log(settingsData, "settingsData");
+ 
 
   // Update Global Settings for the Shop
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    await fetch("/api/updatesettings", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(settingsData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data, "json res");
-        dispatch(fetchSettings(data[0]));
+    if (isReward1Filled && isReward2Filled) {
+      setIsLoading(true);
+
+      await fetch("/api/updatesettings", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(settingsData),
       })
-      .catch((err) => console.log(err));
+        .then((res) => res.json())
+        .then((data) => {
+          dispatch(fetchSettings(data[0]));
+        })
+        .catch((err) => console.log(err));
 
-    handleNext(4);
-    setIsLoading(false);
-    handleNext(0);
+      handleNext(4);
+      setIsLoading(false);
+      handleNext(0);
 
-    document.getElementById("settings-save").setAttribute("disabled", "");
-    document.getElementById("settings-save").style.color = "#f5f5f5";
-    document.getElementById("settings-save").style.cursor = "none";
+      document.getElementById("settings-save").setAttribute("disabled", "");
+      document.getElementById("settings-save").style.color = "#f5f5f5";
+      document.getElementById("settings-save").style.cursor = "none";
+    }
   };
 
   // Handle Form Input Changes
@@ -535,10 +554,11 @@ const SettingComponent = () => {
                                 }
                                 onChange={handleChange}
                                 disabled={
-                                  reward?.id > 1 &&
-                                  !settingsData[
-                                    `reward_${reward?.id - 1}_discount`
-                                  ]
+                                  isFieldDisabled(reward?.id) ||
+                                  (reward?.id > 1 &&
+                                    !settingsData[
+                                      `reward_${reward?.id - 1}_discount`
+                                    ])
                                 }
                               />
                             </div>
@@ -571,10 +591,11 @@ const SettingComponent = () => {
                                 }
                                 onChange={handleChange}
                                 disabled={
-                                  reward?.id > 1 &&
-                                  !settingsData[
-                                    `reward_${reward?.id - 1}_discount`
-                                  ]
+                                  isFieldDisabled(reward?.id) ||
+                                  (reward?.id > 1 &&
+                                    !settingsData[
+                                      `reward_${reward?.id - 1}_discount`
+                                    ])
                                 }
                               />
                             </div>
@@ -591,10 +612,11 @@ const SettingComponent = () => {
                                 }
                                 onChange={handleChange}
                                 disabled={
-                                  reward?.id > 1 &&
-                                  !settingsData[
-                                    `reward_${reward?.id - 1}_discount`
-                                  ]
+                                  isFieldDisabled(reward?.id) ||
+                                  (reward?.id > 1 &&
+                                    !settingsData[
+                                      `reward_${reward?.id - 1}_discount`
+                                    ])
                                 }
                               />
                             </div>
@@ -613,10 +635,7 @@ const SettingComponent = () => {
                   >
                     Previous
                   </button>
-                  <button
-                    className="next-button"
-                    onClick={() => handleRewardValidation(3)}
-                  >
+                  <button className="next-button" onClick={() => handleNext(3)}>
                     Next
                   </button>
                 </>
