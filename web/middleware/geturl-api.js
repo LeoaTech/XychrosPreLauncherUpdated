@@ -10,7 +10,7 @@ import {
   replace_reward_email_text,
   send_email,
 } from "../helpers/emails.js";
-import createCustomer from "../helpers/create-customer.js";
+import createCustomer, { updateCustomer } from "../helpers/create-customer.js";
 import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
 import axios from "axios";
 
@@ -253,8 +253,20 @@ export default function getUrlApi(app, secret) {
                 console.log("Customer Created With Referral Code having Id: ", currentCustomerData.id);
 
               } else {
-                // Update customer
-                console.log("Customer already Exists with this email", findEmail?.email);
+                // Update existing customer tags
+                console.log("Customer already Exists with this Email: ", findEmail?.email);
+
+                // -------------------------- More than one Campaign signups Based Customer Tags---------------------------
+
+                let new_camp_name = campaign_details.rows[0].name;
+                let newTag = `${new_camp_name}`;
+
+                    const updatedCustomerData = {
+                      id: findEmail.id,
+                      tags: updatedTags,
+                    };
+                    await updateCustomer(shopSession, updatedCustomerData);
+                    console.log('Customer Tags Updated Successfully - Customer Signed up for Another Campaign');
               }
             } catch (error) {
               console.log("Error Creating/Updating Customer", error);
@@ -342,8 +354,21 @@ export default function getUrlApi(app, secret) {
               console.log("Customer Created Without Referral Code having Id: ", currentCustomerData.id);
 
             } else {
-              // Update Customers data
-              console.log("Customer already Exists with this email", findEmail?.email);
+              // Update existing customer tags
+              console.log("Customer already Exists with this Email: ", findEmail?.email);
+
+              // -------------------------- More than one Campaign signups Based Customer Tags---------------------------
+
+              let new_camp_name = campaign_details.rows[0].name;
+              let newTag = `${new_camp_name}`;
+
+                  const updatedCustomerData = {
+                    id: findEmail.id,
+                    tags: updatedTags,
+                  };
+
+                  await updateCustomer(shopSession, updatedCustomerData);
+                  console.log('Customer Tags Updated Successfully - Customer Signed up for Another Campaign');
             }
           } catch (error) {
             console.log("Error Creating/Updating Customer", error);
