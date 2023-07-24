@@ -1,6 +1,5 @@
 <script>
   let first_page_settings = {{ block.settings | json }};
-
   async function getbackground(campaign_name) {
     return await fetch('/apps/product-prelauncher/api/geturl', {
       method: 'POST',
@@ -14,49 +13,34 @@
       return response.json();
     });
   }
-
   window.onload = async (e) => {
     var el = document.querySelector('.product-prelaunch');
     el.parentElement.style.padding = '0';
-    el.parentElement.style.margin = '0';{% if block.settings.show_header_footer == false %}
-      var node,
+    el.parentElement.style.margin = '0';{% if block.settings.show_header_footer == false %}var node,
         nodes = [];
-
       do {
         var parent = el.parentNode;
-
         // Collect element children
         for (var i = 0, iLen = parent.childNodes.length; i < iLen; i++) {
           node = parent.childNodes[i];
-
           // Collect only sibling nodes that are elements and not the current element
           if (node.nodeType == 1 && node != el) {
             nodes.push(node);
           }
         }
-
         // Go up to parent
         el = parent;
-
         // Stop when processed the body's child nodes
       } while (el.tagName.toLowerCase() != 'body');
-
       // Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
-      });{% endif %}
-
-    let urlredirect = window.location.href;
+      });{% endif %}let urlredirect = window.location.href;
     urlredirect = urlredirect.split('/pages')[0];
-
     const campaign = document.getElementById('landing_campaign_name');
     const campaign_name = campaign.innerHTML;
-    console.log(campaign_name)
-
     const myBackground = await getbackground(campaign_name);
     const campaign_details = myBackground.campaign_data;
-    console.log(campaign_details);
-
     // Get Store Social Icons
     let share_facebook = document.getElementById('store-facebook-link');
     let share_instagram = document.getElementById('store-instagram-link');
@@ -64,9 +48,7 @@
     let share_tiktok = document.getElementById('store-tiktok-link');
     let share_snapchat = document.getElementById('store-snapchat-link');
     let share_discord = document.getElementById('store-discord-link');
-
     // we have to show only checked social icons on landing page, hence:
-    
     // Facebook
     if (campaign_details.show_facebook_link === false) {
       if (share_facebook) {
@@ -74,14 +56,13 @@
       }
     } else {
       if (share_facebook) {
-        share_facebook.addEventListener('click', function (e) {
+        share_facebook.addEventListener('click', function(e) {
           e.preventDefault();
           const storefacebookUrl = campaign_details.facebook_link;
           window.location.href = storefacebookUrl;
         });
       }
     }
-
     // Instagram
     if (campaign_details.show_instagram_link === false) {
       if (share_instagram) {
@@ -89,14 +70,13 @@
       }
     } else {
       if (share_instagram) {
-        share_instagram.addEventListener('click', function (e) {
+        share_instagram.addEventListener('click', function(e) {
           e.preventDefault();
           const storeinstagramUrl = campaign_details.instagram_link;
           window.location.href = storeinstagramUrl;
         });
       }
     }
-
     // Twitter
     if (campaign_details.show_twitter_link === false) {
       if (share_twitter) {
@@ -104,14 +84,13 @@
       }
     } else {
       if (share_twitter) {
-        share_twitter.addEventListener('click', function (e) {
+        share_twitter.addEventListener('click', function(e) {
           e.preventDefault();
           const storetwitterUrl = campaign_details.twitter_link;
           window.location.href = storetwitterUrl;
         });
       }
     }
-
     // Tiktok
     if (campaign_details.show_tiktok_link === false) {
       if (share_tiktok) {
@@ -119,14 +98,13 @@
       }
     } else {
       if (share_tiktok) {
-        share_tiktok.addEventListener('click', function (e) {
+        share_tiktok.addEventListener('click', function(e) {
           e.preventDefault();
           const storetiktokUrl = campaign_details.tiktok_link;
           window.location.href = storetiktokUrl;
         });
       }
     }
-
     // Snapchat
     if (campaign_details.show_snapchat_link === false) {
       if (share_snapchat) {
@@ -134,14 +112,13 @@
       }
     } else {
       if (share_snapchat) {
-        share_snapchat.addEventListener('click', function (e) {
+        share_snapchat.addEventListener('click', function(e) {
           e.preventDefault();
           const storesnapchatUrl = campaign_details.snapchat_link;
           window.location.href = storesnapchatUrl;
         });
       }
     }
-
     // Discord
     if (campaign_details.show_discord_link === false) {
       if (share_discord) {
@@ -149,14 +126,13 @@
       }
     } else {
       if (share_discord) {
-        share_discord.addEventListener('click', function (e) {
+        share_discord.addEventListener('click', function(e) {
           e.preventDefault();
           const storediscordUrl = campaign_details.discord_link;
           window.location.href = storediscordUrl;
         });
       }
     }
-
     if (first_page_settings.background_image) {
       let image_background = 'https:' + first_page_settings.background_image;
       console.log(image_background);
@@ -164,19 +140,15 @@
     } else {
       document.getElementById('background-image').style.backgroundImage = first_page_settings.background_overlay + ',url(' + myBackground.imageURL + ')';
     }
-
     var form = document.getElementById('form-submission'),
       actionPath = '',
       formData = null;
-
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
       let urlParams = new URL(window.location.href).searchParams;
       let referrerID = urlParams.get('refer');
       formData = new URLSearchParams(new FormData(form)).toString() + '&refer=' + referrerID + '&campaign=' + first_page_settings.campaign_name;
       actionPath = form.getAttribute('action') + '?' + formData;
-
       const fetchOptions = {
         method: 'POST',
         headers: {
@@ -185,13 +157,9 @@
         data: formData,
         redirect: 'follow'
       };
-
       const response = await fetch(actionPath, fetchOptions);
-
       const data = await response.json();
-
       console.log(response.status);
-
       if (response.status == '400') {
         showSnackbar("snackbar");
       } else if (response.status == '307') {
@@ -201,13 +169,11 @@
       } else {
         showSnackbar('snackbar2');
       }
-
       return;
     });
 
     function showSnackbar(id) {
       var snackBar = document.getElementById(id);
-
       snackBar.className = "show-bar";
       setTimeout(function() {
         snackBar.className = snackBar.className.replace("show-bar", "");
@@ -217,7 +183,7 @@
 </script>
 
 <style>
-  .product-prelaunch {
+.product-prelaunch {
     display: block !important;
     width: 100vw;
   }
@@ -225,42 +191,42 @@
     width: 100vw;
   }
   .consent-label-product-prelaucher {
-    font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+    font-size: {{ block.settings.base_font_size | times: 0.25 }}px;
     color: {{ block.settings.accent_color }};
   }
   svg > path {
     fill: {{ block.settings.accent_color }} !important;
   }
   .submit-button {
-    font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+    font-size: {{ block.settings.base_font_size | times: 0.35 }}px;
     font-weight: 600 !important;
-    color: {{ block.settings.accent_color }}!important;
+    color: {{ block.settings.accent_color }} !important;
     background: {{ block.settings.main_color }};
-    border: 1px solid{{ block.settings.accent_color}};
+    border: 1px solid{{ block.settings.accent_color }};
   }
   .subheader_text {
     color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size | times: 0.5}}px;
+    font-size: {{ block.settings.base_font_size | times: 0.5 }}px;
     font-weight: 400;
   }
   .header_text {
     color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size}}px;
+    font-size: {{ block.settings.base_font_size }}px;
     font-weight: 600;
   }
   .tag-line {
     color: {{ block.settings.accent_color }};
-    font-size: {{ block.settings.base_font_size | times: 0.4}}px;
+    font-size: {{ block.settings.base_font_size | times: 0.4 }}px;
     font-weight: 600;
   }
   input[value] {
     font-weight: 400;
     color: {{ block.settings.main_color }};
-    font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+    font-size: {{ block.settings.base_font_size | times: 0.35 }}px;
   }
   ::placeholder {
     color: {{ block.settings.main_color }};
-    font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+    font-size: {{ block.settings.base_font_size | times: 0.35 }}px;
   }
   .text-layout {
     background-color: {{ block.settings.main_color }};
@@ -304,85 +270,85 @@
 
   @media screen and (max-width: 767px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size| times: 0.5}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.5 }}px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size| times: 0.36}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.36 }}px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size| times: 0.25}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.25 }}px;
     }
     input[value] {
-      font-size: {{ block.settings.base_font_size | times: 0.20}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.20 }}px;
     }
     ::placeholder {
-      font-size: {{ block.settings.base_font_size | times: 0.20}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.20 }}px;
     }
     .submit-button {
-      font-size: {{ block.settings.base_font_size | times: 0.24}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.24 }}px;
     }
     .consent-label-product-prelaucher {
-      font-size: {{ block.settings.base_font_size | times: 0.16}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.16 }}px;
     }
   }
-  @media only screen and (min-width: 768px) and (max-width: 991px) {
+  @media only screen and (min-width: 768px) and(max-width: 991px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size| times: 0.65}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.65 }}px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size| times: 0.40}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.40 }}px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size| times: 0.30}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.30 }}px;
     }
     input[value] {
-      font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.25 }}px;
     }
     ::placeholder {
-      font-size: {{ block.settings.base_font_size | times: 0.25}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.25 }}px;
     }
     .submit-button {
-      font-size: {{ block.settings.base_font_size | times: 0.28}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.28 }}px;
     }
   }
-  @media only screen and (min-width: 992px) and (max-width: 1199px) {
+  @media only screen and (min-width: 992px) and(max-width: 1199px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size | times: 0.75}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.75 }}px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size | times: 0.45}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.45 }}px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.35 }}px;
     }
     input[value] {
-      font-size: {{ block.settings.base_font_size | times: 0.30}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.30 }}px;
     }
     ::placeholder {
-      font-size: {{ block.settings.base_font_size | times: 0.30}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.30 }}px;
     }
     .submit-button {
-      font-size: {{ block.settings.base_font_size | times: 0.32}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.32 }}px;
     }
   }
   @media only screen and (min-width: 1200px) {
     .header_text {
-      font-size: {{ block.settings.base_font_size}}px;
+      font-size: {{ block.settings.base_font_size }}px;
     }
     .subheader_text {
-      font-size: {{ block.settings.base_font_size| times: 0.5}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.5 }}px;
     }
     .tag-line {
-      font-size: {{ block.settings.base_font_size| times: 0.40}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.40 }}px;
     }
     input[value] {
-      font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.35 }}px;
     }
     ::placeholder {
-      font-size: {{ block.settings.base_font_size | times: 0.35}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.35 }}px;
     }
     .submit-button {
-      font-size: {{ block.settings.base_font_size | times: 0.37}}px;
+      font-size: {{ block.settings.base_font_size | times: 0.37 }}px;
     }
   }
 </style>
@@ -448,8 +414,7 @@
           {
             "value": "flip-horizontal",
             "label": "Flip Horizontal"
-          },
-          {
+          }, {
             "value": "vertical",
             "label": "Vertical"
           }, {
@@ -474,15 +439,7 @@
         "label": "Background Image",
         "id": "background_image",
         "type": "image_picker"
-      },
-
-      // {
-      // "type": "font_picker",
-      // "id": "font_family",
-      // "label": "Font Family",
-      // "default": "akko_n5"
-      // }, 
-      {
+      }, {
         "label": "Header",
         "id": "header_text",
         "type": "text",
