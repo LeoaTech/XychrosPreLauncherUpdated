@@ -1,4 +1,10 @@
 import { Shopify } from "@shopify/shopify-api";
+import NewPool from "pg";
+const { Pool } = NewPool;
+const pool = new Pool({
+    connectionString: `${process.env.DATABASE_URL}`,
+
+});
 
 export function setupGDPRWebHooks(path) {
   /**
@@ -11,6 +17,64 @@ export function setupGDPRWebHooks(path) {
     path,
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
+
+      // Define a function to request Customer data
+
+      try {
+
+        // Check if customer data present in database
+        const getCustomer = await pool.query(
+          `select * from referrals where email = $1`,
+          [payload?.customer?.email]
+        );
+
+
+        if (getCustomer?.rows?.length > 0) {
+          let customerData = getCustomer?.rows;
+          console.log(customerData, "Customer data from DB");
+
+
+          // Extract required fields from customer data List
+          function extractData(arr) {
+            const extractedData = {};
+            for (const item of arr) {
+              const { referral_code, email, created_at, campaign_id, revenue } =
+                item;
+              const signup_date = new Date(created_at).toISOString();
+              const customerData = {
+                referral_code,
+                email,
+                signup_date,
+                campaigns_involved: campaign_id,
+                revenue,
+              };
+              if (!extractedData[email]) {
+                extractedData[email] = [];
+              }
+              extractedData[email].push(customerData);
+            }
+
+            console.log(extractedData);
+            return extractedData;
+          }
+
+          const extractedDataObject = extractData(customerData);
+          const extractedDataArray = Object.entries(extractedDataObject).map(
+            ([email, data]) => ({
+              [email]: data,
+            })
+          );
+          console.log(extractedDataArray, "extracted data");
+
+          // return extractedDataArray;
+        } else {
+          console.log("Customer not found");
+          
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,
@@ -42,7 +106,33 @@ export function setupGDPRWebHooks(path) {
     path,
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
+      console.log(payload, "Customers redact payload");
+
+      try {
+        // Find if customer exists in my database
+        const customerExist = await pool.query(
+          `select * from referrals where email = $1`,
+          [payload?.customer?.email]
+        );
+
+        // If customer found
+        if (customerExist?.rowCount > 0) {
+          //  Delete customer data from app database
+          await pool.query(`delete from referrals where email = $1`, [
+            customerExist?.rows[0]?.email,
+          ]);
+
+          return "Customer Data deleted successfully";
+        } else {
+          console.log("Customer not found");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      // Define a function to Delete Customer data
       // Payload has the following shape:
+
       // {
       //   "shop_id": 954889,
       //   "shop_domain": "{shop}.myshopify.com",
@@ -60,12 +150,12 @@ export function setupGDPRWebHooks(path) {
     },
   });
 
+  // Every Time User update Plan, this webhook will Trigger
   Shopify.Webhooks.Registry.addHandler("APP_SUBSCRIPTIONS_UPDATE", {
     path,
     webhookHandler: async (topic, shop, body) => {
-
       const payload = JSON.parse(body);
-      console.log(payload, "Update Subscriptions payload")
+      console.log(payload, "Update Subscriptions payload");
     },
   });
 
@@ -79,6 +169,8 @@ export function setupGDPRWebHooks(path) {
     path,
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
+
+      console.log("Update Shop", payload);
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,
