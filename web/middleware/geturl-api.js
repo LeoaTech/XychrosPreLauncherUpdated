@@ -72,7 +72,6 @@ export default function getUrlApi(app, secret) {
 
       let message = "";
 
-      
       /* -----------------     Get All Customers List of App Store     -------------------- */
       // Set the base API URL for Shopify
 
@@ -114,14 +113,20 @@ export default function getUrlApi(app, secret) {
         store_customers = customerData;
       } catch (error) {
         console.log(error);
+
+        throwError;
       }
       console.log("customer List of App Store", store_customers);
 
-
       // Check if the Email user entered is Already in App Store customers list
-      let findEmail = store_customers.find((data) => data.email === email);
-      console.log(findEmail, "email found");
+      let findEmail = store_customers?.find((data) => data.email === email);
+      console.log(findEmail, "Email found in App Store");
 
+      const customerExists = await pool.query(
+        `SELECT * FROM referrals where email= $1`,
+        [email]
+      );
+      console.log(customerExists?.rowCount, "Email exists in Database");
 
       if (!email) {
         return res
@@ -168,13 +173,7 @@ export default function getUrlApi(app, secret) {
           `SELECT count_ip FROM ip_addresses WHERE address='${ip_address}' and campaign_id=${campaignID}`
         );
 
-        // Check if Email Customer entered already exists in database 
-        const customerExists = await pool.query(
-          `SELECT * FROM referrals where email= $1`,
-          [email]
-        );
-        console.log(customerExists?.rows, "Email exists in Database");
-
+        // Check if Email Customer entered already exists in database
 
         let count = 1;
 
@@ -238,21 +237,22 @@ export default function getUrlApi(app, secret) {
               ],
             };
 
+            // Check If Customer Already Exists in App Store or Database
 
-            // Check If Customer Already Exists in App Store or Database 
-            try {
-              
-              // if Not Exists on App Store or Database
-              if (customerExists?.rowCount == 0 && findEmail === undefined) {
-                console.log("inside if statement to Create Customer");
-                let result2 = await createCustomer(shopSession, customerData);
-                console.log(result2, "create Customer with Referral Code");
-              } else {
-                // Update customer
-                console.log("Customer already Exists with this email", findEmail?.email);
-              }
-            } catch (error) {
-              throwError;
+            // if Not Exists on App Store or Database
+            if (customerExists?.rowCount !== 0 && findEmail == undefined) {
+              console.log("inside if when customer data only in db");
+              let result2 = await createCustomer(shopSession, customerData);
+              console.log(result2, "create Customer with Referral Code");
+            } else if (customerExists?.rowCount === 0 && !findEmail) {
+              console.log("inside else if no data in both db and store");
+              let result2 = await createCustomer(shopSession, customerData);
+              console.log(result2, "create Customer with Referral Code");
+            } else {
+              console.log(
+                "Customer already Exists with this email",
+                findEmail?.email
+              );
             }
 
             referralcode = getreferrals.rows[0].referral_code;
@@ -320,18 +320,23 @@ export default function getUrlApi(app, secret) {
           );
 
           /* Check If Customer Email is not present already on both Database and App Store  */
-          try {
-            if (customerExists?.rowCount == 0 && findEmail=== undefined) {
-              console.log("inside if to ceate customer");
-              let result = await createCustomer(shopSession, customerData);
-              console.log(result, "customer Created without Referral Code");
-            } else {
-              // Update Customers data
-              console.log("Customer already Exists with this email", findEmail?.email);
-            }
-          } catch (error) {
-            console.log(error);
+          if (customerExists?.rowCount !== 0 && !findEmail) {
+            console.log("inside if when customer only in db");
+            let result = await createCustomer(shopSession, customerData);
+            console.log(result, "customer Created without Referral Code");
+          } else if (customerExists?.rowCount === 0 && !findEmail) {
+            console.log(
+              "inside else if when no customer data in db and store data is present"
+            );
+            let result = await createCustomer(shopSession, customerData);
+            console.log(result, "customer Created without Referral Code");
+          } else {
+            console.log(
+              "Customer already Exists with this email",
+              findEmail?.email
+            );
           }
+
           referralcode = getreferrals.rows[0].referral_code;
 
           //prepare welcome email
