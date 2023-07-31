@@ -1,6 +1,6 @@
 // @ts-check
 import { join } from "path";
-import { readFileSync } from "fs";
+import { readFileSync, readFile } from "fs";
 import express from "express";
 import cookieParser from "cookie-parser";
 import {
@@ -28,8 +28,12 @@ import getUrlApi from "./middleware/geturl-api.js";
 import pricingPlansApiEndpoints from "./middleware/get-pricing-plans-api.js";
 import SubscribePlanApiEndPoint from "./middleware/subscribe-plan-api.js";
 import campaignDetailsApiEndpoints from "./middleware/campaign_details-api.js";
-import crypto from "crypto";
 import { verifyWebhookRequest } from "./VerifyWebhook.js";
+import {
+  appUninstallEmail,
+  send_email,
+} from "./helpers/emails.js";
+import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
 
 const USE_ONLINE_TOKENS = false;
 
@@ -39,7 +43,8 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
-const DB_PATH = `${process.env.DATABASE_URL}`;
+// const DB_PATH = `${process.env.DATABASE_URL}`;
+const DB_PATH = "postgres://postgres:postgres@localhost:5432/prelauncher";
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
@@ -52,13 +57,28 @@ Shopify.Context.initialize({
   SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(DB_PATH),
 });
 
+let emailUninstall, emailUpgradeSubscription;
+
 // App Uninstall Webhook to delete current app install session
 Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
   path: "/api/webhooks",
   webhookHandler: async (_topic, shop, _body) => {
-    await AppInstallations.delete(shop);   
+    const payload = JSON.parse(_body);
+    console.log(payload, "Uninstalling");
+    const { email } = payload;
+    readFile("./email_templates/uninstall_app.txt", "utf8", (error, data) => {
+      if (error) throwError;
+      emailUninstall = data;
+    });
+    await AppInstallations.delete(shop);
+    await appUninstallEmail(
+      emailUninstall,
+      email,
+      "App Uninstallation Confirmation"
+    );
   },
 });
+
 
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
 // See the ensureBilling helper to learn more about billing in this template.
@@ -103,7 +123,6 @@ export async function createServer(
   app.post("/api/webhooks", async (req, res) => {
     try {
       await Shopify.Webhooks.Registry.process(req, res);
-      console.log(res.statusCode, "webhook Response");
       console.log(`Webhook processed, returned status code 200`);
       return res.statusCode;
     } catch (e) {
@@ -129,6 +148,8 @@ export async function createServer(
     );
 
     const countData = await Product.all({ session });
+    // await createWebhook(session);
+
     // console.log(countData);
 
     res.status(200).send(countData);
