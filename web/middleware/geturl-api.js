@@ -10,13 +10,16 @@ import {
   replace_reward_email_text,
   send_email,
 } from "../helpers/emails.js";
-import createCustomer from "../helpers/create-customer.js";
+import createCustomer, {
+  getCustomersList,
+} from "../helpers/create-customer.js";
 import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
 import axios from "axios";
 
 const { Pool } = NewPool;
 const pool = new Pool({
-  connectionString: `${process.env.DATABASE_URL}`,
+  // connectionString: `${process.env.DATABASE_URL}`,
+  connectionString: "postgres://postgres:postgres@localhost:5432/prelauncher",
 });
 
 export default function getUrlApi(app, secret) {
@@ -72,50 +75,8 @@ export default function getUrlApi(app, secret) {
 
       let message = "";
 
-      /* -----------------     Get All Customers List of App Store     -------------------- */
-      // Set the base API URL for Shopify
-
-      const baseUrl = `https://${shopSession[0]?.shop}/admin/api/2023-04/customers.json`;
-      let store_customers;
-      try {
-        let response = await axios.get(baseUrl, {
-          headers: {
-            "X-Shopify-Access-Token": shopSession[0]?.accessToken,
-            Authorization: `Bearer ${shopSession[0]?.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        });
-        // console.log("customer mail", response?.data);
-        let customers = response?.data?.customers;
-        const customerData = customers.map((customer) => {
-          const {
-            email,
-            phone,
-            first_name,
-            last_name,
-            id,
-            tags,
-            created_at,
-            updated_at,
-          } = customer;
-          return {
-            email,
-            phone,
-            first_name,
-            last_name,
-            id,
-            tags,
-            created_at,
-            updated_at,
-          };
-        });
-
-        store_customers = customerData;
-      } catch (error) {
-        console.log(error);
-
-        throwError;
-      }
+      // Call Customer List Fetch API function
+      let store_customers = await getCustomersList(shopSession);
       console.log("customer List of App Store", store_customers);
 
       // Check if the Email user entered is Already in App Store customers list
@@ -137,7 +98,7 @@ export default function getUrlApi(app, secret) {
       // const shop_id = 'offline_' + shop;
 
       const campaign_details = await pool.query(
-        `SELECT * from campaign_settings where name='${campaign}' and shop_id='${shop}'`
+        `SELECT * from campaign_settings where name='${campaign}' AND shop_id='${shop}'`
       );
       const campaignID = campaign_details.rows[0].campaign_id;
 
@@ -271,7 +232,6 @@ export default function getUrlApi(app, secret) {
               email,
               "You have Subscribed"
             );
-            // console.log(send_message);
 
             //check referrer code and send reward unlock email or referral email
             const referrer_process = await find_referrer(
@@ -352,6 +312,7 @@ export default function getUrlApi(app, secret) {
             email,
             "You have Subscribed"
           );
+
           //check referrer code and send reward unlock email or referral email
           await find_referrer(refererURL, refer, campaign_details, shop);
         }
@@ -423,7 +384,7 @@ export default function getUrlApi(app, secret) {
       );
       const data_ = await pool.query(
         "SELECT * FROM referrals WHERE referrer_id=$1",
-        [data.rows[0].referral_code]
+        [data.rows[0]?.referral_code]
       );
       // console.log(data_.rows);
       if (data_.rows.length > 0) {
