@@ -70,7 +70,7 @@ input {
 }
 
 .email-input-product-prelaucher:hover {
-  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .4);
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.4);
 }
 
 input[type='email']:focus {
@@ -89,7 +89,7 @@ input[type='email']:focus {
 }
 
 .phone-input-product-prelaucher:hover {
-  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .4);
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.4);
 }
 
 input[type='tel']:focus {
@@ -128,11 +128,15 @@ input[type='tel']:focus {
   margin: 10px auto;
 }
 
-.diagonal .submit-button-product-prelaunch,  .flip-diagonal .submit-button-product-prelaunch, .transfer-diagonal .submit-button-product-prelaunch, .flip-transfer-diagonal .submit-button-product-prelaunch{
+.diagonal .submit-button-product-prelaunch,
+.flip-diagonal .submit-button-product-prelaunch,
+.transfer-diagonal .submit-button-product-prelaunch,
+.flip-transfer-diagonal .submit-button-product-prelaunch {
   margin: 0px auto;
 }
 
-.none-horizontal .headers, .none-vertical .headers {
+.none-horizontal .headers,
+.none-vertical .headers {
   margin-bottom: 5rem;
 }
 
@@ -245,7 +249,7 @@ input[type='tel']:focus {
   flex-direction: row-reverse;
 }
 
-.flip-vertical .email-input-product-prelaucher{
+.flip-vertical .email-input-product-prelaucher {
   width: 80%;
 }
 
@@ -285,25 +289,25 @@ input[type='tel']:focus {
   width: 50%;
 }
 
-.diagonal .email-input-product-prelaucher{
+.diagonal .email-input-product-prelaucher {
   width: 80%;
 }
 
-.diagonal .phone-input-product-prelaucher{
+.diagonal .phone-input-product-prelaucher {
   width: 80%;
 }
 
 /* flip diagonal layout */
 
 .flip-diagonal .diagonal-background {
-  clip-path:polygon(100% 0, 100% 0, 100% 100%, 0 100%) !important;
+  clip-path: polygon(100% 0, 100% 0, 100% 100%, 0 100%) !important;
 }
 
-.flip-diagonal .email-input-product-prelaucher{
+.flip-diagonal .email-input-product-prelaucher {
   width: 80%;
 }
 
-.flip-diagonal .phone-input-product-prelaucher{
+.flip-diagonal .phone-input-product-prelaucher {
   width: 80%;
 }
 
@@ -340,15 +344,15 @@ input[type='tel']:focus {
   width: 50%;
 }
 
-.transfer-diagonal .email-input-product-prelaucher{
+.transfer-diagonal .email-input-product-prelaucher {
   width: 80%;
 }
 
-.transfer-diagonal .phone-input-product-prelaucher{
+.transfer-diagonal .phone-input-product-prelaucher {
   width: 80%;
 }
 
-.transfer-diagonal .consent{
+.transfer-diagonal .consent {
   width: 80%;
 }
 
@@ -358,22 +362,21 @@ input[type='tel']:focus {
   clip-path: polygon(0 0, 0 0, 100% 0, 100% 100%) !important;
 }
 
-.flip-transfer-diagonal .email-input-product-prelaucher{
+.flip-transfer-diagonal .email-input-product-prelaucher {
   width: 80%;
 }
 
-.flip-transfer-diagonal .phone-input-product-prelaucher{
+.flip-transfer-diagonal .phone-input-product-prelaucher {
   width: 80%;
 }
 
-.flip-transfer-diagonal .consent{
+.flip-transfer-diagonal .consent {
   width: 80%;
 }
 
-/* =============================== CSS styles for mobile devices =========================== */ 
+/* =============================== CSS styles for mobile devices =========================== */
 
 @media screen and (max-width: 767px) {
-
   /* general settings for mobile view */
 
   .email-input-product-prelaucher {
@@ -396,7 +399,7 @@ input[type='tel']:focus {
     margin-left: 20px !important;
   }
 
-  input[type=checkbox] {
+  input[type='checkbox'] {
     position: absolute !important;
   }
 
@@ -454,7 +457,7 @@ input[type='tel']:focus {
     margin-top: 2.5rem;
   }
 
-  .vertical .email-input-product-prelaucher{
+  .vertical .email-input-product-prelaucher {
     width: 95%;
   }
 
@@ -473,7 +476,7 @@ input[type='tel']:focus {
     position: relative;
   }
 
-  .flip-vertical .email-input-product-prelaucher{
+  .flip-vertical .email-input-product-prelaucher {
     width: 95%;
   }
 
@@ -520,11 +523,11 @@ input[type='tel']:focus {
     width: 100%;
   }
 
-  .diagonal .email-input-product-prelaucher{
+  .diagonal .email-input-product-prelaucher {
     width: 95%;
   }
 
-  .diagonal .phone-input-product-prelaucher{
+  .diagonal .phone-input-product-prelaucher {
     width: 95%;
   }
 
@@ -547,11 +550,11 @@ input[type='tel']:focus {
     clip-path: unset !important;
   }
 
-  .flip-diagonal .email-input-product-prelaucher{
+  .flip-diagonal .email-input-product-prelaucher {
     width: 95%;
   }
 
-  .flip-diagonal .phone-input-product-prelaucher{
+  .flip-diagonal .phone-input-product-prelaucher {
     width: 95%;
   }
 
@@ -595,11 +598,11 @@ input[type='tel']:focus {
     width: 100%;
   }
 
-  .transfer-diagonal .email-input-product-prelaucher{
+  .transfer-diagonal .email-input-product-prelaucher {
     width: 95%;
   }
 
-  .transfer-diagonal .phone-input-product-prelaucher{
+  .transfer-diagonal .phone-input-product-prelaucher {
     width: 95%;
   }
 
@@ -622,11 +625,11 @@ input[type='tel']:focus {
     clip-path: unset !important;
   }
 
-  .flip-transfer-diagonal .email-input-product-prelaucher{
+  .flip-transfer-diagonal .email-input-product-prelaucher {
     width: 95%;
   }
 
-  .flip-transfer-diagonal .phone-input-product-prelaucher{
+  .flip-transfer-diagonal .phone-input-product-prelaucher {
     width: 95%;
   }
 
@@ -638,7 +641,6 @@ input[type='tel']:focus {
 /* ============================== CSS styles for tablets ==================================== */
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-
   /* general settings for tablet view */
 
   .email-input-product-prelaucher {
@@ -661,7 +663,7 @@ input[type='tel']:focus {
     margin-left: 20px;
   }
 
-  input[type=checkbox] {
+  input[type='checkbox'] {
     position: absolute;
   }
 
@@ -709,12 +711,12 @@ input[type='tel']:focus {
     right: 4rem;
   }
 
-  .diagonal .email-input-product-prelaucher{
+  .diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .diagonal .phone-input-product-prelaucher{
+  .diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -726,12 +728,12 @@ input[type='tel']:focus {
 
   /* flip-diagonal layout */
 
-  .flip-diagonal .email-input-product-prelaucher{
+  .flip-diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .flip-diagonal .phone-input-product-prelaucher{
+  .flip-diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -771,12 +773,12 @@ input[type='tel']:focus {
 
   /* flip traverse diagonal layout */
 
-  .flip-transfer-diagonal .email-input-product-prelaucher{
+  .flip-transfer-diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .flip-transfer-diagonal .phone-input-product-prelaucher{
+  .flip-transfer-diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -790,7 +792,6 @@ input[type='tel']:focus {
 /* =============================== CSS rules for desktops and laptops ================================ */
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
-
   .consent {
     width: 50%;
     text-align: left;
@@ -803,7 +804,7 @@ input[type='tel']:focus {
     margin-left: 20px;
   }
 
-  input[type=checkbox] {
+  input[type='checkbox'] {
     position: absolute;
   }
 
@@ -847,12 +848,12 @@ input[type='tel']:focus {
     right: 4rem;
   }
 
-  .diagonal .email-input-product-prelaucher{
+  .diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .diagonal .phone-input-product-prelaucher{
+  .diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -864,12 +865,12 @@ input[type='tel']:focus {
 
   /* flip-diagonal layout */
 
-  .flip-diagonal .email-input-product-prelaucher{
+  .flip-diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .flip-diagonal .phone-input-product-prelaucher{
+  .flip-diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -892,12 +893,12 @@ input[type='tel']:focus {
     right: 3rem;
   }
 
-  .transfer-diagonal .email-input-product-prelaucher{
+  .transfer-diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .transfer-diagonal .phone-input-product-prelaucher{
+  .transfer-diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -909,12 +910,12 @@ input[type='tel']:focus {
 
   /* flip traverse diagonal layout */
 
-  .flip-transfer-diagonal .email-input-product-prelaucher{
+  .flip-transfer-diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .flip-transfer-diagonal .phone-input-product-prelaucher{
+  .flip-transfer-diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -928,7 +929,6 @@ input[type='tel']:focus {
 /* ======================== CSS rules for large desktops and high-resolution displays ==================== */
 
 @media only screen and (min-width: 1200px) {
-
   /* vertical layout */
   .vertical .email-input-product-prelaucher {
     width: 90%;
@@ -966,12 +966,12 @@ input[type='tel']:focus {
     right: 6rem;
   }
 
-  .diagonal .email-input-product-prelaucher{
+  .diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .diagonal .phone-input-product-prelaucher{
+  .diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -983,12 +983,12 @@ input[type='tel']:focus {
 
   /* flip-diagonal layout */
 
-  .flip-diagonal .email-input-product-prelaucher{
+  .flip-diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .flip-diagonal .phone-input-product-prelaucher{
+  .flip-diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -1011,12 +1011,12 @@ input[type='tel']:focus {
     right: 6rem;
   }
 
-  .transfer-diagonal .email-input-product-prelaucher{
+  .transfer-diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .transfer-diagonal .phone-input-product-prelaucher{
+  .transfer-diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
@@ -1028,12 +1028,12 @@ input[type='tel']:focus {
 
   /* flip traverse diagonal layout */
 
-  .flip-transfer-diagonal .email-input-product-prelaucher{
+  .flip-transfer-diagonal .email-input-product-prelaucher {
     width: 100%;
     margin: 0 !important;
   }
 
-  .flip-transfer-diagonal .phone-input-product-prelaucher{
+  .flip-transfer-diagonal .phone-input-product-prelaucher {
     width: 100%;
     margin: 8px 0 !important;
   }
