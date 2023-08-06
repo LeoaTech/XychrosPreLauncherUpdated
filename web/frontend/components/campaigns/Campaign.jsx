@@ -37,6 +37,18 @@ const CampaignsComponent = () => {
   const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([]);
 
+  const [totalClicks, setTotalClicks] = useState(0);
+
+  const fetchTotalClicks = async () => {
+    const response = await fetch("/api/fetchtotalclicks");
+    const data = await response.json();
+    if (response.status == 200) {
+      setTotalClicks(data.clicks);
+    } else {
+      setTotalClicks(0);
+    }
+  };
+
   useEffect(() => {
     if (List?.length > 0) {
       setCampaigns(List);
@@ -56,6 +68,10 @@ const CampaignsComponent = () => {
       setDetails(campaignDetails);
     }
   }, [campaignDetails]);
+
+  useEffect(() => {
+    fetchTotalClicks();
+  }, []);
 
   // PAGINATION
 
@@ -146,6 +162,14 @@ const CampaignsComponent = () => {
             title="Referrals"
             icon={subscriber}
             class="referral-icon"
+          />
+        </Suspense>
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={totalClicks}
+            title="Clicks"
+            icon={arrow}
+            class="clicks-icon"
           />
         </Suspense>
         {/* <SummaryCard

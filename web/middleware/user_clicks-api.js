@@ -13,6 +13,33 @@ pool.connect((err, result) => {
 });
 
 export default function getCampaignClicks(app) {
+  app.get("/api/testing", async (req, res, next) => {
+    try {
+      return res.status(200).json({ success: true, message: "Api testing" });
+    } catch (err) {
+      return res.status(500).json({ success: false, message: "error" });
+    }
+  });
+
+  app.get("/api/fetchtotalclicks", async (req, res) => {
+    try {
+      const session = await Shopify.Utils.loadCurrentSession(
+        req,
+        res,
+        app.get("use-online-tokens")
+      );
+      const { id, shop } = session;
+      const data = await pool.query("SELECT * FROM clicks WHERE shop=$1", [
+        shop,
+      ]);
+      return res.status(200).json({ success: true, clicks: data.rowCount });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Server Error Occured" });
+    }
+  });
+
   app.post("/api/getclicks", async (req, res) => {
     try {
       console.log("I am here in get clicks API");
