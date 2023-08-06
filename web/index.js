@@ -28,6 +28,7 @@ import getUrlApi from "./middleware/geturl-api.js";
 import pricingPlansApiEndpoints from "./middleware/get-pricing-plans-api.js";
 import SubscribePlanApiEndPoint from "./middleware/subscribe-plan-api.js";
 import campaignDetailsApiEndpoints from "./middleware/campaign_details-api.js";
+import getCampaignClicks from "./middleware/user_clicks-api.js";
 import crypto from "crypto";
 import { verifyWebhookRequest } from "./VerifyWebhook.js";
 
@@ -166,6 +167,7 @@ export async function createServer(
   userDetailsApiEndPoint(app);
   discountApiEndpoint(app);
   pricingPlansApiEndpoints(app);
+  getCampaignClicks(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
