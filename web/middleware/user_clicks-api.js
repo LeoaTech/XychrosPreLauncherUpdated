@@ -12,39 +12,14 @@ pool.connect((err, result) => {
   if (err) throw err;
 });
 
-export default function getCampaignClicks(app) {
-  app.get("/api/testing", async (req, res, next) => {
-    try {
-      return res.status(200).json({ success: true, message: "Api testing" });
-    } catch (err) {
-      return res.status(500).json({ success: false, message: "error" });
-    }
-  });
+export default function getCampaignClicks(app, secret) {
 
-  app.get("/api/fetchtotalclicks", async (req, res) => {
-    try {
-      const session = await Shopify.Utils.loadCurrentSession(
-        req,
-        res,
-        app.get("use-online-tokens")
-      );
-      const { id, shop } = session;
-      const data = await pool.query("SELECT * FROM clicks WHERE shop=$1", [
-        shop,
-      ]);
-      return res.status(200).json({ success: true, clicks: data.rowCount });
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Server Error Occured" });
-    }
-  });
-
+  // count clicks of landing page 
   app.post("/api/getclicks", async (req, res) => {
     try {
-      console.log("I am here in get clicks API");
-      console.log(req.query);
-      console.log(req.body);
+      console.log("I am here in count clicks API");
+      // console.log(req.query);
+      // console.log(req.body);
       const shop = req.query.shop;
       const campaign = req.body.campaign_name;
 
@@ -52,23 +27,42 @@ export default function getCampaignClicks(app) {
         "SELECT * FROM campaign_settings WHERE name=$1",
         [campaign]
       );
-      console.log(campaign_data);
+      // console.log(campaign_data);
 
-      if (campaign.rowCount > 0) {
+      if (campaign_data.rowCount > 0) {
         await pool.query(
-          "INSERT INTO clicks(campaign_id, shop) VALUES($1,$2)",
-          [campaign.rows[0].campaign_id, shop]
+          "INSERT INTO clicks(campaign_id, shop) VALUES($1, $2)",
+          [campaign_data.rows[0].campaign_id, shop]
         );
-        return res.status(200).json({ success: true, message: "Success" });
+        return res.status(200).json({ success: true, message: "Successully Updated Clicks Table" });
       } else {
-        return res
-          .status(404)
-          .json({ success: false, message: "Campaign Not Found" });
+        return res.status(404).json({ success: false, message: "Campaign Not Found" });
       }
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Server Error Occured" });
+      return res.status(500).json({ success: false, error: error });
+    }
+  });
+
+  // fetch clicks to be displayed on app frontend
+  app.get("/api/fetchtotalclicks", async (req, res) => {
+    try {
+      // console.log("I am here in fetch clicks API");
+      // console.log(req.query);
+      // console.log(req.body);
+      const session = await Shopify.Utils.loadCurrentSession(
+        req,
+        res,
+        app.get("use-online-tokens")
+      );
+      const { shop } = session;
+      const total_clicks = await pool.query(
+        "SELECT * FROM clicks WHERE shop=$1", 
+        [shop]
+      );
+      // console.log('user clicks: ', total_clicks.rowCount);
+      return res.status(200).json(total_clicks.rowCount);
+    } catch (error) {
+      return res.status(500).json({ success: false, error: error});
     }
   });
 }

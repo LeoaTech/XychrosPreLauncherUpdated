@@ -19,8 +19,8 @@
 
   async function getClicks(campaign_name) {
     try {
-      const response = await fetch(
-      "/apps/appfrontenddev/api/getclicks",
+      console.log('Get Clicks of: ', campaign_name);
+      const response = await fetch("/apps/frontenddev_app_v2/api/getclicks",
       {
         method: "POST",
         headers: {
@@ -72,8 +72,8 @@
     const campaign_name = campaign.innerHTML;
     const myBackground = await getbackground(campaign_name);
     const campaign_details = myBackground.campaign_data;
-    const clicks = getClicks(campaign_name);
-    console.log(clicks);
+    clicks = getClicks(campaign_name);
+    // console.log('clicks api: ', clicks);
     
     // Get Store Social Icons
     let share_facebook = document.getElementById('store-facebook-link');

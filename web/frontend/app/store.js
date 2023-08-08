@@ -6,7 +6,9 @@ import userReducer from './features/users/userSlice';
 import priceReducer from './features/pricing/pricing';
 import currentPlanReducer from './features/current_plan/current_plan';
 import referralReducer from './features/referrals/referralSlice';
-import campaignDetailsReducer from "./features/campaign_details/campaign_details"
+import campaignDetailsReducer from "./features/campaign_details/campaign_details";
+import totalClicksReducer from './features/user_clicks/totalclicksSlice';
+
 // All Slices will be added there
 
 export const store = configureStore({
@@ -19,5 +21,6 @@ export const store = configureStore({
     pricing: priceReducer,
     current_plan: currentPlanReducer,
     referrals: referralReducer,
+    total_clicks: totalClicksReducer,
   },
 });

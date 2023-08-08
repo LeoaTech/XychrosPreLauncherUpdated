@@ -148,6 +148,7 @@ export async function createServer(
 
   SubscribePlanApiEndPoint(app);
   getUrlApi(app, process.env.SHOPIFY_API_SECRET);
+  getCampaignClicks(app, process.env.SHOPIFY_API_SECRET);
 
   // All endpoints after this point will require an active session
   app.use(
@@ -167,7 +168,6 @@ export async function createServer(
   userDetailsApiEndPoint(app);
   discountApiEndpoint(app);
   pricingPlansApiEndpoints(app);
-  getCampaignClicks(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);

@@ -9,6 +9,8 @@ import { useStateContext } from "../../contexts/ContextProvider";
 import useFetchCampaignsDetails from "../../constant/fetchCampaignDetails";
 import { fetchCampaignDetails } from "../../app/features/campaign_details/campaign_details";
 import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
+import useFetchTotalClicks from "../../constant/fetchTotalUserClicks";
+import { fetchTotalClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import SkeletonLoader from "../../components/loading_skeletons/SkeletonTable";
 
 const Campaign = lazy(() => import("../../components/campaigns/Campaign"));
@@ -39,6 +41,12 @@ const Campaigns = () => {
   });
 
   const referrals = useFetchReferralsData("/api/getallreferralcount", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  // Get All Campaign Clicks 
+  const total_clicks = useFetchTotalClicks("/api/fetchtotalclicks", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -135,6 +143,12 @@ const Campaigns = () => {
       dispatch(fetchReferrals(referrals));
     }
   }, [referrals, dispatch]);
+
+  useEffect(() => {
+    if (total_clicks > 0) {
+      dispatch(fetchTotalClicks(total_clicks));
+    }
+  }, [total_clicks, dispatch]);
 
   // Page render Scroll to Top
   useEffect(() => {

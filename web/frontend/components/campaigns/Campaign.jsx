@@ -14,6 +14,7 @@ import {
   fetchCampaignDetails,
   fetchCampaignsDetailsList,
 } from "../../app/features/campaign_details/campaign_details";
+import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
 
@@ -24,6 +25,7 @@ const CampaignsComponent = () => {
   const fetch = useAuthenticatedFetch();
   const { setIsEdit } = useStateContext();
   const dispatch = useDispatch();
+  
   const List = useSelector(fetchAllCampaigns);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
 
@@ -37,17 +39,8 @@ const CampaignsComponent = () => {
   const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([]);
 
-  const [totalClicks, setTotalClicks] = useState(0);
-
-  const fetchTotalClicks = async () => {
-    const response = await fetch("/api/fetchtotalclicks");
-    const data = await response.json();
-    if (response.status == 200) {
-      setTotalClicks(data.clicks);
-    } else {
-      setTotalClicks(0);
-    }
-  };
+  const TotalClicksList = useSelector(fetchAllCampaignClicks);
+  const [getTotalClicks, setTotalClicks] = useState(0);
 
   useEffect(() => {
     if (List?.length > 0) {
@@ -69,9 +62,12 @@ const CampaignsComponent = () => {
     }
   }, [campaignDetails]);
 
+  // Get Total Clicks Count
   useEffect(() => {
-    fetchTotalClicks();
-  }, []);
+    if (TotalClicksList > 0) {
+      setTotalClicks(TotalClicksList);
+    }
+  }, [TotalClicksList]);
 
   // PAGINATION
 
@@ -166,7 +162,7 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={totalClicks}
+            value={getTotalClicks}
             title="Clicks"
             icon={arrow}
             class="clicks-icon"
