@@ -47,9 +47,7 @@ export default async function ensureBilling(
   let hasPayment;
   let confirmationUrl = null;
 
-  if (
-    await hasActivePayment(session, { chargeName, interval })
-  ) {
+  if (await hasActivePayment(session, { chargeName, interval })) {
     hasPayment = true;
   } else {
     hasPayment = false;
@@ -57,17 +55,15 @@ export default async function ensureBilling(
       chargeName,
       amount,
       currencyCode,
-      interval,collecting_phones
+      interval,
+      collecting_phones,
     });
   }
   return [hasPayment, confirmationUrl];
 }
 
 // Function to Check Active Payment(One-time, Recurring)
-async function hasActivePayment(
-  session,
-  { chargeName, interval }
-) {
+async function hasActivePayment(session, { chargeName, interval }) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
 
   if (isRecurring(interval)) {
@@ -173,7 +169,7 @@ async function requestRecurringPayment(
             plan: {
               appRecurringPricingDetails: {
                 interval,
-                price: { amount: totalBill, currencyCode },   //Update the amount with total bill
+                price: { amount: totalBill, currencyCode }, //Update the amount with total bill
               },
             },
           },
@@ -220,7 +216,7 @@ async function requestSinglePayment(
 
   return mutationResponse;
 }
-
+let subscribed_id;
 // Get Current Active Subscription Plan Object From (recurring_application_charges) API
 export async function getCurrentActivePricingPlan(session) {
   const baseUrl = `https://${session?.shop}/admin/api/2023-04/recurring_application_charges.json`;
@@ -236,10 +232,12 @@ export async function getCurrentActivePricingPlan(session) {
     let activePlan = RecurringChargeList?.find(
       (recurringCharge) => recurringCharge?.status === "active" //Get active charge Plan details (Id, price,status)
     );
-    // Save the Active plan details in subscription_list 
+
+    subscribed_id = activePlan?.id;
+    // Save the Active plan details in subscription_list
     await saveSubscribedPlan(activePlan, session);
   } catch (err) {
-    console.log(err, "Error");
+    console.log(err, "Error in getting subscription");
   }
 }
 
@@ -250,20 +248,18 @@ async function saveSubscribedPlan(subscribedPlan, session) {
     `select * from subscriptions_list where shop_id =$1`,
     [session?.shop]
   );
-
   // Subscription Exists ====> Add it Into Database
 
   if (subscribedPlan) {
     let myPlan = price_plans?.rows.find(
       (plan) => plan?.plan_name === subscribedPlan?.name
     );
-    console.log(myPlan, "find Plan", subscribedPlan);
 
     myPlan["billing_required"] = true;
-    const { plan_name, price, billing_required } = myPlan;
-    // const { collecting_phones } = planExists?.rows[0]?.collecting_phones;
+    const { plan_name, billing_required } = myPlan;
     let totalBill, collectingPhones, subscriptionId;
 
+    // Findout the Tier Allotted Price and Tier Charged Price
     if (subscribedPlan?.price == myPlan?.price) {
       collectingPhones = false;
     } else {
@@ -288,8 +284,6 @@ async function saveSubscribedPlan(subscribedPlan, session) {
             collectingPhones,
           ]
         );
-
-        console.log(savePlan?.rows, "Inserted plan");
       } catch (err) {
         console.log(err);
       }
@@ -317,16 +311,13 @@ async function saveSubscribedPlan(subscribedPlan, session) {
             session?.shop,
           ]
         );
-
-        console.log(updatePlan?.rows, "update plan");
       } catch (error) {
-        console.log(error, "DB errro");
         return error;
       }
     }
     return "Updated DB";
   } else {
-    // Save the Free Plan Details Only
+    // Save the Free Plan Details Only when user Installs the App first time
     if (planExists?.rowCount <= 0) {
       try {
         const newPlan = await pool.query(
@@ -355,17 +346,16 @@ async function saveSubscribedPlan(subscribedPlan, session) {
 
 // Get Current App installation subscriptionID (requires for app installation function)
 
-export async function getCurrentSubscriptionId(client) {
+async function getCurrentSubscriptionId(client) {
   const currentInstallations = await client.query({
     data: RECURRING_PURCHASES_QUERY,
   });
   const subscriptions =
-    currentInstallations?.body?.data?.currentAppInstallation
-      ?.activeSubscriptions;
+    currentInstallations?.body?.data?.currentAppInstallation;
   return subscriptions?.length > 0 ? subscriptions[0]?.id : null;
 }
 
-//   Request Cancel App Subscription function
+// Request Cancel App Subscription function
 
 async function requestCancelSubscription(session, myId) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
@@ -381,6 +371,7 @@ async function requestCancelSubscription(session, myId) {
   let data = mutationResponse?.body?.data?.appSubscriptionCancel;
 
   if (data?.userErrors.length) {
+    console.log(data.userErrors, "Error for cancelling request");
     throw new ShopifyBillingError(
       "Error while billing the store",
       data.userErrors
@@ -393,28 +384,26 @@ async function requestCancelSubscription(session, myId) {
 export async function cancelAppSubscription(session, collecting_phones) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
 
-  let currentId = await getCurrentSubscriptionId(client);
-  let totalBill;
+  const planExists = await pool.query(
+    `select * from subscriptions_list where shop_id =$1`,
+    [session?.shop]
+  );
 
-  
+  let plan_Id = planExists?.rows[0]?.subscription_id;
 
-  if (currentId) {
-    let cancel_plan = await requestCancelSubscription(session, currentId);
+  // let currentId = await getCurrentSubscriptionId(client);
+  let totalBill = parseFloat("0.0");
+  if (collecting_phones === true) {
+    totalBill += 5.0;
+  } else {
+    totalBill += 0.0;
+  }
+  // If any paid Plan Exists in DB Already, then cancel app subscription with the subscription ID
+  if (planExists?.rowCount > 0 && plan_Id) {
+    let cancel_plan = await requestCancelSubscription(session, plan_Id);
     let cancelSubscription = cancel_plan?.appSubscription;
-
-    const planExists = await pool.query(
-      `select * from subscriptions_list where shop_id =$1`,
-      [session?.shop]
-    );
-
-    if (collecting_phones === true) {
-      let amount = parseFloat('0.0')
-      totalBill = amount + 5.0;
-    } else {
-      totalBill = '0.0';
-    }
     //  error on cancel Subscription
-    if (cancel_plan.userErrors.length) {
+    if (cancel_plan?.userErrors?.length) {
       throw new ShopifyBillingError(
         "Error while cancel the store subscription",
         cancel_plan?.userErrors
@@ -436,7 +425,6 @@ export async function cancelAppSubscription(session, collecting_phones) {
             ]
           );
 
-          console.log(savePlan?.rowCount,"Inseted free plan");
           return savePlan?.rows[0];
         } catch (err) {
           return err;
@@ -451,7 +439,7 @@ export async function cancelAppSubscription(session, collecting_phones) {
            subscription_id=$4,
            billing_status=$5, 
            billing_required=$6,
-           collecting_phones=$7,
+           collecting_phones=$7
            WHERE
            shop_id=$8 RETURNING *`,
             [
@@ -467,20 +455,29 @@ export async function cancelAppSubscription(session, collecting_phones) {
           );
           return updatePlan?.rows[0];
         } catch (error) {
-          console.log(error, "updating plan eroro");
           return error;
         }
       }
     }
-  } else {
+  }
+  //  If No Plan Exists in Database then user can only
+  else if (planExists?.rowCount <= 0) {
     try {
       const savePlan = await pool.query(
         `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id,collecting_phones, billing_required) VALUES ($1, $2, $3, $4, $5, $6,$7,$8) RETURNING *`,
-        ["Free", totalBill, date.toISOString(), "", "", session?.shop,collecting_phones, false]
+        [
+          "Free",
+          totalBill,
+          date.toISOString(),
+          "",
+          "",
+          session?.shop,
+          false,
+          false,
+        ]
       );
       return savePlan?.rows[0];
     } catch (err) {
-      console.log(err,"Inserting plan failed")
       return err;
     }
   }
