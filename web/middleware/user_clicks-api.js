@@ -80,11 +80,11 @@ export default function getCampaignClicks(app, secret) {
       );
       const { shop } = session;
       const lastsixmonths_clicks = await pool.query(
-        "SELECT COUNT(id), to_char(created_at, 'YYYY-MM-DD') AS created_month FROM user_clicks WHERE created_at >= date_trunc('month', CURRENT_DATE) - INTERVAL '6 months' AND created_at < date_trunc('month', CURRENT_DATE) AND shop=$1 GROUP BY created_month ORDER BY created_month ASC;", 
+        "SELECT COUNT(id) AS total_clicks, to_char(created_at, 'YYYY-MM') AS created_month FROM user_clicks WHERE created_at >= date_trunc('month', CURRENT_DATE) - INTERVAL '6 months' AND created_at < date_trunc('month', CURRENT_DATE) AND shop = $1 GROUP BY created_month ORDER BY created_month ASC;", 
         [shop]
       );
       // console.log('user clicks of last six months: ', lastsixmonths_clicks);
-      // console.log(lastsixmonths_clicks.rows);
+      console.log(lastsixmonths_clicks.rows);
       return res.status(200).json(lastsixmonths_clicks.rows);
     } catch (error) {
       return res.status(500).json({ success: false, error: error});

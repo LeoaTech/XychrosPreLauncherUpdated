@@ -40,38 +40,36 @@ const HomeComponent = () => {
     }
   }, [LastSixMonthsClicksList]);
 
-  // Constructing Line Chart data
+  // chart labels of last six months according to current date
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
-
-  const lineChartLabels = Array.from({ length: 6 }, (_, index) => {
+  const chartLabels = Array.from({ length: 6 }, (_, index) => {
     const tempDate = new Date(currentYear, currentMonth - index, 1);
     tempDate.setMonth(tempDate.getMonth() - 1); // Subtract 1 month
   
     const labelMonth = tempDate.toLocaleString('default', { month: 'long' });
     return labelMonth;
-  }).reverse();  
+  }).reverse();
   
-  const lineChartClicks = Array.from({ length: 6 }, () => 0);
+  // chart data of last six months according to current date
+  const chartClicks = Array.from({ length: 6 }, () => 0);
 
   if (getLastSixMonthsClicksData.length > 0) {
-    // console.log(getLastSixMonthsClicksData);
     getLastSixMonthsClicksData.forEach(entry => {
       const entryDate = new Date(entry.created_month);
-      // console.log(entryDate);
       const entryMonth = entryDate.getMonth();
       const entryYear = entryDate.getFullYear();
-      // console.log(entryMonth, entryYear);
 
       const monthIndex = (currentYear - entryYear) * 12 + (currentMonth - entryMonth - 1);
-      // console.log(monthIndex);
 
-      lineChartClicks[monthIndex] = parseInt(entry.count, 10); // Convert to integer
+      chartClicks[monthIndex] = parseInt(entry.total_clicks, 10); // Convert to integer
     });
   }
-  // console.log(lineChartClicks);
-
+  let finalClicks = chartClicks.reverse();
+  console.log(finalClicks);
+  
+  // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
     responsive: true,
     animation: {
@@ -151,11 +149,11 @@ const HomeComponent = () => {
   };
 
   const LineChartData = {
-    labels: lineChartLabels,
+    labels: chartLabels,
     datasets: [
       {
         label: "Clicks",
-        data: lineChartClicks.reverse(),
+        data: finalClicks,
         borderColor: "#5447df",
         backgroundColor: "#5447df",
         borderDash: [10, 5],
@@ -179,40 +177,7 @@ const HomeComponent = () => {
     ],
   };
 
-
-  const DonutChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "right",
-        labels: {
-          color: "#FFFFFF",
-
-          // This more specific font property overrides the global property
-          font: {
-            size: 14,
-          },
-        },
-      },
-      title: {
-        display: false,
-      },
-    },
-  };
-
-  const DonutChartData = {
-    labels: ["Product 1", "product 2", "Product 3", "Product 4"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [30, 20, 10, 5],
-        backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
-        borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
-        borderWidth: 1,
-      },
-    ],
-  };
-
+  // --------------- Constructing Radar Chart ---------------
   const RadarChartOptions = {
     responsive: true,
 
@@ -258,25 +223,59 @@ const HomeComponent = () => {
   };
 
   const RadarChartData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: chartLabels,
     datasets: [
       {
         label: "Referrals",
-        data: [1, 3, 56, 78, 55, 23, 98],
+        data: [1, 3, 6, 8, 5, 2],
         borderColor: "rgba(161, 246, 245, 0.7)",
         backgroundColor: "rgba(161, 246, 245, 0.6)",
       },
       {
         label: "Revenue",
-        data: [11, 53, 26, 38, 43, 67, 23],
+        data: [11, 3, 6, 8, 4, 7],
         borderColor: "rgba(245, 102, 128, 0.8)",
         backgroundColor: "rgba(245, 102, 128, 0.5)",
       },
       {
         label: "Clicks",
-        data: [86, 78, 65, 59, 65, 99],
+        data: finalClicks,
         borderColor: "rgba(84, 71, 223, 0.7)",
         backgroundColor: "rgba(84, 71, 223, 0.4)",
+      },
+    ],
+  };
+
+  // --------------- Constructing Donut Chart ---------------
+  const DonutChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "right",
+        labels: {
+          color: "#FFFFFF",
+
+          // This more specific font property overrides the global property
+          font: {
+            size: 14,
+          },
+        },
+      },
+      title: {
+        display: false,
+      },
+    },
+  };
+
+  const DonutChartData = {
+    labels: ["Product 1", "product 2", "Product 3", "Product 4"],
+    datasets: [
+      {
+        label: "# of Votes",
+        data: [30, 20, 10, 5],
+        backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
+        borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
+        borderWidth: 1,
       },
     ],
   };
