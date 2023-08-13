@@ -17,7 +17,9 @@ import { fetchReferrals } from "../app/features/referrals/referralSlice";
 import useFetchCampaignsDetails from "../constant/fetchCampaignDetails";
 import { fetchCampaignDetails } from "../app/features/campaign_details/campaign_details";
 import useFetchTotalClicks from "../constant/fetchTotalUserClicks";
-import { fetchTotalClicks } from "../app/features/user_clicks/totalclicksSlice"; 
+import { fetchTotalClicks } from "../app/features/user_clicks/totalclicksSlice";
+import useFetchLastSixMonthsClicks from "../constant/fetchLastSixMonthsClicks";
+import { fetchLastSixMonthsClicks } from "../app/features/user_clicks/lastSixMonthsClicksSlice"; 
 
 export default function HomePage() {
   const { activeMenu } = useStateContext();
@@ -54,6 +56,12 @@ export default function HomePage() {
     headers: { "Content-Type": "application/json" },
   });
 
+  // Get Last Six Months Campaign Clicks Data
+  const lastsixmonths_clicks = useFetchLastSixMonthsClicks("/api/fetch_lastsixmonths_clicks", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
   // Dispatch API result in Redux store to get access data in the App
   useEffect(() => {
     if (billing) {
@@ -79,6 +87,11 @@ export default function HomePage() {
     }
   }, [total_clicks, dispatch]);
 
+  useEffect(() => {
+    if (lastsixmonths_clicks.length > 0) {
+      dispatch(fetchLastSixMonthsClicks(lastsixmonths_clicks));
+    }
+  }, [lastsixmonths_clicks, dispatch]);
   return (
     <div className="app">
       {activeMenu ? (
