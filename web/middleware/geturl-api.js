@@ -62,7 +62,10 @@ export default function getUrlApi(app, secret) {
   // Landing page API
   app.post("/api/getuser", async (req, res) => {
     try {
-      const query_signature = req.query.signature;
+      const query_signature = req.query;
+
+      let validate_proxy = isProxySignatureValid(query_signature, secret);
+      console.log(validate_proxy, "Validate Signature");
       let ip_address =
         req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
       ip_address = ip_address.split(",")[0];
