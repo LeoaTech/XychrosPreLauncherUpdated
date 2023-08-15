@@ -1,6 +1,4 @@
 import { Shopify } from "@shopify/shopify-api";
-import queryString from "query-string";
-import crypto from "crypto";
 import emailValidator from "deep-email-validator";
 import { add_to_klaviyo_list } from "../helpers/klaviyoIntegrations.js";
 import NewPool from "pg";
@@ -13,8 +11,7 @@ import {
 import createCustomer, {
   getCustomersList,
 } from "../helpers/create-customer.js";
-import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
-import axios from "axios";
+import { isProxySignatureValid } from "../helpers/authenticateSignature.js";
 
 const { Pool } = NewPool;
 const pool = new Pool({
@@ -25,30 +22,38 @@ export default function getUrlApi(app, secret) {
   app.post("/api/geturl", async (req, res) => {
     try {
       // console.log("I am here in fetch API URL");
-      // console.log(req.query);
-      // console.log(req.body);
+      // console.log(req.query.signature,"Query");
+
+      const requestQuery = req.query;
+      let isvalid = await isProxySignatureValid(requestQuery, secret);
+      console.log(isvalid, "Signature Verified");
+
       const shop = req.query.shop;
       const campaign = req.body.campaign_name;
+      if (isvalid === true) {
+        const imageURL = await pool.query(
+          `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
+        );
 
-      // console.log(shop);
-      // console.log(campaign);
+        const campaign_details = await pool.query(
+          `SELECT * from campaign_settings where name='${campaign}' and shop_id = '${shop}'`
+        );
 
-      const imageURL = await pool.query(
-        `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
-      );
-
-      const campaign_details = await pool.query(
-        `SELECT * from campaign_settings where name='${campaign}' and shop_id = '${shop}'`
-      );
-
-      res.status(200).json({
-        success: true,
-        imageURL: imageURL?.rows[0]?.image_url,
-        campaign_data: campaign_details.rows[0],
-      });
+        res.status(200).json({
+          success: true,
+          imageURL: imageURL?.rows[0]?.image_url,
+          campaign_data: campaign_details.rows[0],
+        });
+      } else {
+        console.log("Shopify Signature verification failed, aborting");
+        return res
+          .status(401)
+          .json({ succeeded: false, message: "Not Authorized" })
+          .send();
+      }
     } catch (error) {
       console.log(error);
-      res.status(500).json({ success: false, message: error });
+      res.status(401).json({ success: false, message: error });
     }
   });
 
