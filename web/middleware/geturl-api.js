@@ -8,10 +8,9 @@ import {
   replace_reward_email_text,
   send_email,
 } from "../helpers/emails.js";
-import createCustomer, {
-  getCustomersList,
-} from "../helpers/create-customer.js";
-import { isProxySignatureValid } from "../helpers/authenticateSignature.js";
+import createCustomer from "../helpers/create-customer.js";
+import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
+import axios from "axios";
 
 const { Pool } = NewPool;
 const pool = new Pool({
@@ -123,7 +122,6 @@ export default function getUrlApi(app, secret) {
       }
 
       // get referral code
-
       const users = await pool.query(
         `SELECT * FROM referrals where email='${email}' and campaign_id=${campaignID}`
       );
@@ -149,7 +147,7 @@ export default function getUrlApi(app, secret) {
         if (getIPAddress.rows.length > 0) {
           count = getIPAddress.rows[0].count_ip;
 
-          // if IP exists more than 2 times
+          // ------------------ if IP exists more than 2 times -----------------
           if (count >= 2) {
             count = count + 1;
             await pool.query(
@@ -161,7 +159,8 @@ export default function getUrlApi(app, secret) {
               message: "You have already requested 2 times",
             });
           } else {
-            // if IP exists less than 2 times
+
+            // ---------------- if IP exists less than 2 times --------------------
 
             //add to Klaviyo List
             let klaviyo_list = await add_to_klaviyo_list(
@@ -183,14 +182,20 @@ export default function getUrlApi(app, secret) {
               `INSERT INTO referrals (email, referrer_id, campaign_id) VALUES ('${email}', '${refer}', ${campaignID}) RETURNING *`
             );
 
-            // When a User signup with email and a new entry will add in referral table
+            // When a User signup with email, a new entry will be added in referrals table
             // Then we call out create customer function to add Customer data on Store
+
+            // customer creation data
+            let camp_name = campaign_details.rows[0].name;
+            let tags = `viral-launch, ${camp_name}`;
+
             const customerData = {
               first_name: "",
               last_name: "",
               email: email,
               phone: phone || "",
               verified_email: true,
+              tags: tags,
               addresses: [
                 {
                   address1: "",
@@ -205,25 +210,24 @@ export default function getUrlApi(app, secret) {
               ],
             };
 
-            // Check If Customer Already Exists in App Store or Database
-
-            // if Not Exists on App Store or Database
-            if (customerExists?.rowCount !== 0 && findEmail == undefined) {
-              console.log("inside if when customer data only in db");
-              let result2 = await createCustomer(shopSession, customerData);
-              console.log(result2, "create Customer with Referral Code");
-            } else if (customerExists?.rowCount === 0 && !findEmail) {
-              console.log("inside else if no data in both db and store");
-              let result2 = await createCustomer(shopSession, customerData);
-              console.log(result2, "create Customer with Referral Code");
-            } else {
-              console.log(
-                "Customer already Exists with this email",
-                findEmail?.email
-              );
+            // Check If Customer Already Exists in App Store or Database 
+            try {
+              
+              // if Not Exists on App Store or Database
+              if (customerExists?.rowCount == 0 && findEmail === undefined) {
+                console.log("inside if statement to Create Customer");
+                let result2 = await createCustomer(shopSession, customerData);
+                console.log(result2, "create Customer with Referral Code");
+              } else {
+                // Update customer
+                console.log("Customer already Exists with this email", findEmail?.email);
+              }
+            } catch (error) {
+              throwError;
             }
 
             referralcode = getreferrals.rows[0].referral_code;
+
             //prepare welcome email
             message = await replace_welcome_email_text(
               refererURL,
@@ -249,6 +253,7 @@ export default function getUrlApi(app, secret) {
             );
           }
         } else {
+
           //add to Klaviyo List
           let klaviyo_list = await add_to_klaviyo_list(
             email,
@@ -257,12 +262,26 @@ export default function getUrlApi(app, secret) {
             shop
           );
 
+          // ------------------- IP address does not exist -----------------------
+          let data = await pool.query(
+            `INSERT INTO ip_addresses (address,count_ip,campaign_id,updated_at) VALUES('${ip_address}',${count},${campaignID}, now())`
+          );
+
+          const getreferrals = await pool.query(
+            `INSERT INTO referrals (email, referrer_id, campaign_id) VALUES ('${email}', '${refer}', ${campaignID}) RETURNING *`
+          );
+
+          // customer creation data
+          let camp_name = campaign_details.rows[0].name;
+          let tags = `viral-launch, ${camp_name}`;
+
           const customerData = {
             first_name: "",
             last_name: "",
             email: email,
             phone: phone || "",
             verified_email: true,
+            tags: tags,
             addresses: [
               {
                 address1: "",
@@ -277,31 +296,20 @@ export default function getUrlApi(app, secret) {
             ],
           };
 
-          // IP address does not exist
-          let data = await pool.query(
-            `INSERT INTO ip_addresses (address,count_ip,campaign_id,updated_at) VALUES('${ip_address}',${count},${campaignID}, now())`
-          );
-
-          const getreferrals = await pool.query(
-            `INSERT INTO referrals (email, referrer_id, campaign_id) VALUES ('${email}', '${refer}', ${campaignID}) RETURNING *`
-          );
+          /* Check If Customer already exists in Database or App Store  */
 
           /* Check If Customer Email is not present already on both Database and App Store  */
-          if (customerExists?.rowCount !== 0 && !findEmail) {
-            console.log("inside if when customer only in db");
-            let result = await createCustomer(shopSession, customerData);
-            console.log(result, "customer Created without Referral Code");
-          } else if (customerExists?.rowCount === 0 && !findEmail) {
-            console.log(
-              "inside else if when no customer data in db and store data is present"
-            );
-            let result = await createCustomer(shopSession, customerData);
-            console.log(result, "customer Created without Referral Code");
-          } else {
-            console.log(
-              "Customer already Exists with this email",
-              findEmail?.email
-            );
+          try {
+            if (customerExists?.rowCount == 0 && findEmail=== undefined) {
+              console.log("inside if to ceate customer");
+              let result = await createCustomer(shopSession, customerData);
+              console.log(result, "customer Created without Referral Code");
+            } else {
+              // Update Customers data
+              console.log("Customer already Exists with this email", findEmail?.email);
+            }
+          } catch (error) {
+            console.log(error);
           }
 
           referralcode = getreferrals.rows[0].referral_code;
@@ -313,6 +321,7 @@ export default function getUrlApi(app, secret) {
             shop,
             email
           );
+
           //send welcome email
           let send_message = await send_email(
             message,
