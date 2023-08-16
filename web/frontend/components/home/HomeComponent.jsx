@@ -1,11 +1,85 @@
 import "./HomeComponent.css";
 import "./home.css";
-import { intro, about } from "../../assets/index";
+import { intro, about, arrow } from "../../assets/index";
 import Charts from "../ui/Charts";
-import React from "react";
+import React, { useState, useEffect, Fragment, lazy, Suspense } from "react";
+import { useStateContext } from "../../contexts/ContextProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { useAuthenticatedFetch } from "../../hooks";
+import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
+import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
+
+const SummaryCard = lazy(() => import("../ui/SummaryCard"));
+
+import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
+import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
+import { fetchAllLastFourCampaignsClicks } from "../../app/features/user_clicks/lastFourCampaignsClicksSlice";
 
 const HomeComponent = () => {
-  /*  const LineChartOptions = {
+  const fetch = useAuthenticatedFetch();
+  const dispatch = useDispatch();
+
+  const TotalClicksList = useSelector(fetchAllCampaignClicks);
+  const [getTotalClicks, setTotalClicks] = useState(0);
+
+  const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
+  const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
+  
+  const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
+  const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
+
+  // Get Total Clicks Count
+  useEffect(() => {
+    if (TotalClicksList > 0) {
+      setTotalClicks(TotalClicksList);
+    }
+  }, [TotalClicksList]);
+
+  // Get Last Six Months Clicks Data
+  useEffect(() => {
+    if (LastSixMonthsClicksList) {
+      setLastSixMonthsClicksData(LastSixMonthsClicksList);
+    }
+  }, [LastSixMonthsClicksList]);
+
+  // Get Last Four Campaigns Clicks
+  useEffect(() => {
+    if (LastFourCampaignsClicksList) {
+      setLastFourCampaignsClicks(LastFourCampaignsClicksList);
+    }
+  }, [LastFourCampaignsClicksList]);
+
+  // line chart and radar chart labels of last six months according to current date
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  const chartLabels = Array.from({ length: 6 }, (_, index) => {
+    const tempDate = new Date(currentYear, currentMonth - index, 1);
+    tempDate.setMonth(tempDate.getMonth() - 1); // Subtract 1 month
+  
+    const labelMonth = tempDate.toLocaleString('default', { month: 'long' });
+    return labelMonth;
+  }).reverse();
+  
+  // line chart and radar chart data of last six months according to current date
+  const chartClicks = Array.from({ length: 6 }, () => 0);
+
+  if (getLastSixMonthsClicksData.length > 0) {
+    getLastSixMonthsClicksData.forEach(entry => {
+      const entryDate = new Date(entry.created_month);
+      const entryMonth = entryDate.getMonth();
+      const entryYear = entryDate.getFullYear();
+
+      const monthIndex = (currentYear - entryYear) * 12 + (currentMonth - entryMonth - 1);
+
+      chartClicks[monthIndex] = parseInt(entry.total_months_clicks, 10); // Convert to integer
+    });
+  }
+  let finalClicks = chartClicks.reverse();
+  // console.log(finalClicks);
+  
+  // --------------------- Constructing Line Chart -----------------
+  const LineChartOptions = {
     responsive: true,
     animation: {
       easing: "easeInOutQuad",
@@ -84,27 +158,27 @@ const HomeComponent = () => {
   };
 
   const LineChartData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: chartLabels,
     datasets: [
       {
         label: "Clicks",
-        data: [11, 73, 56, 32, 45, 9, 112],
+        data: finalClicks,
         borderColor: "#5447df",
         backgroundColor: "#5447df",
         borderDash: [10, 5],
         fill: "",
       },
-
+      // ... other datasets
       {
         label: "Campaigns",
-        data: [45, -23, 89, 23, 110, 34, 65],
+        data: [5, 3, 9, 2, 11, 4, 5],
         borderColor: "#E0777D",
         backgroundColor: "#E0777D",
         fill: "+2",
       },
       {
         label: "Referrals",
-        data: [21, 34, 61, 38, 45, 87, 12],
+        data: [2, 4, 1, 8, 5, 7, 3],
         borderColor: "#A1F6F5",
         backgroundColor: "#A1F6F5",
         fill: "origin",
@@ -112,39 +186,7 @@ const HomeComponent = () => {
     ],
   };
 
-  const DonutChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "right",
-        labels: {
-          color: "#FFFFFF",
-
-          // This more specific font property overrides the global property
-          font: {
-            size: 14,
-          },
-        },
-      },
-      title: {
-        display: false,
-      },
-    },
-  };
-
-  const DonutChartData = {
-    labels: ["Product 1", "product 2", "Product 3", "Product 4"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [30, 20, 10, 5],
-        backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
-        borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
-        borderWidth: 1,
-      },
-    ],
-  };
-
+  // --------------- Constructing Radar Chart ---------------
   const RadarChartOptions = {
     responsive: true,
 
@@ -190,62 +232,178 @@ const HomeComponent = () => {
   };
 
   const RadarChartData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: chartLabels,
     datasets: [
       {
         label: "Referrals",
-        data: [1, 3, 56, 78, 55, 23, 98],
+        data: [1, 3, 6, 8, 5, 2],
         borderColor: "rgba(161, 246, 245, 0.7)",
         backgroundColor: "rgba(161, 246, 245, 0.6)",
       },
       {
         label: "Revenue",
-        data: [11, 53, 26, 38, 43, 67, 23],
+        data: [11, 3, 6, 8, 4, 7],
         borderColor: "rgba(245, 102, 128, 0.8)",
         backgroundColor: "rgba(245, 102, 128, 0.5)",
       },
       {
         label: "Clicks",
-        data: [86, 78, 65, 59, 65, 99],
+        data: finalClicks,
         borderColor: "rgba(84, 71, 223, 0.7)",
         backgroundColor: "rgba(84, 71, 223, 0.4)",
       },
     ],
-  }; */
+  };
 
+  // donut chart labels and data according to latest four campaigns
+  // Initialize arrays to store the extracted data
+  const donutChart_labels = [];
+  const fourcampaigns_clicks = [];
+
+  // Loop through the API data to extract the clicks details of last/latest four campaigns
+  getLastFourCampaignsClicks.forEach(item => {
+    donutChart_labels.push(`${item.name}`);
+    fourcampaigns_clicks.push(parseInt(item.campaign_clicks));
+  });
+
+  // --------------- Constructing Donut Chart ---------------
+  const DonutChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "right",
+        labels: {
+          color: "#FFFFFF",
+
+          // This more specific font property overrides the global property
+          font: {
+            size: 14,
+          },
+        },
+      },
+      title: {
+        display: false,
+      },
+    },
+  };
+
+  const DonutChartData = {
+    labels: donutChart_labels,
+    datasets: [
+      {
+        data: fourcampaigns_clicks,
+        backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
+        borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // return (
+  //   <div className="home-container">
+  //     <h2>Welcome to Viral Launch!</h2>
+  //     <div className="intro-section">
+  //       <div className="intro-card">
+  //         <p>
+  //           New to Viral Launch? Get up to speed with everything about your
+  //           product/service launch!
+  //         </p>
+  //       </div>
+  //       <div className="intro-img">
+  //         <img src={intro} alt="INTRO" loading="lazy"  />
+  //       </div>
+  //     </div>
+
+  //     <div className="about-section">
+  //       <div className="about-img">
+  //         <img src={about} alt="About" />
+  //       </div>
+  //       <div className="about-card">
+  //         <p>
+  //           Create a new campaign and get your email database filled even before
+  //           you launch!
+  //         </p>
+  //       </div>
+  //     </div>
+  //     <div className="contact-us-section">
+  //       <div className="contact-us-card">
+  //         <p>Contact Us for further assistance and Feedback!</p>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
   return (
     <div className="home-container">
-      <h2>Welcome to Viral Launch!</h2>
-      <div className="intro-section">
-        <div className="intro-card">
-          <p>
-            New to Viral Launch? Get up to speed with everything about your
-            product/service launch!
-          </p>
-        </div>
-        <div className="intro-img">
-          <img src={intro} alt="INTRO" loading="lazy"  />
-        </div>
+      <div className='summary-blocks'>
+        {/* <SummaryCard
+          value={
+            <CountUp
+              start={0}
+              end={getCampaigns.length}
+              duration={1.4}
+            />
+          }
+          title='Campaigns'
+          icon={Marketing}
+          class='campaign-icon'
+        />
+        <SummaryCard
+          value={
+            <CountUp
+              start={0}
+              end={getReferrals.length}
+              duration={1.4}
+            />
+          }
+          title='Referrals'
+          icon={subscriber}
+          class='referral-icon'
+        />
+        <SummaryCard
+          value='$253,467'
+          title='Revenue'
+          icon={Sale}
+          class='revenue-icon'
+        /> */}
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={getTotalClicks}
+            title="Clicks"
+            icon={arrow}
+            class="clicks-icon"
+          />
+        </Suspense>
       </div>
-
-      <div className="about-section">
-        <div className="about-img">
-          <img src={about} alt="About" />
-        </div>
-        <div className="about-card">
-          <p>
-            Create a new campaign and get your email database filled even before
-            you launch!
-          </p>
-        </div>
+      <div className='single-chart'>
+        <Charts
+          type='line'
+          header='Total Revenue'
+          value='$253467'
+          subheader='Last 6 months Data'
+          LineChartOptions={LineChartOptions}
+          LineChartData={LineChartData}
+        />
       </div>
-      <div className="contact-us-section">
-        <div className="contact-us-card">
-          <p>Contact Us for further assistance and Feedback!</p>
-        </div>
+      <div className='dual-charts'>
+        <Charts
+          type='radar'
+          header='Product Launch'
+          value='$2456.76'
+          subheader='August 1st, 2022 - September 5th, 2022'
+          RadarChartOptions={RadarChartOptions}
+          RadarChartData={RadarChartData}
+        />
+        <Charts
+          type='donut'
+          header='Revenue'
+          value='$15,456.98'
+          subheader='Last 4 campaigns'
+          DonutChartOptions={DonutChartOptions}
+          DonutChartData={DonutChartData}
+        />
       </div>
     </div>
-  );
+  )
 };
 
 export default HomeComponent;

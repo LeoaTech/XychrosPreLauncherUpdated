@@ -28,6 +28,8 @@ import getUrlApi from "./middleware/geturl-api.js";
 import pricingPlansApiEndpoints from "./middleware/get-pricing-plans-api.js";
 import SubscribePlanApiEndPoint from "./middleware/subscribe-plan-api.js";
 import campaignDetailsApiEndpoints from "./middleware/campaign_details-api.js";
+import getCampaignClicks from "./middleware/user_clicks-api.js";
+import crypto from "crypto";
 import { verifyWebhookRequest } from "./VerifyWebhook.js";
 import { appUninstallEmail, send_email } from "./helpers/emails.js";
 import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
@@ -164,6 +166,7 @@ export async function createServer(
 
   SubscribePlanApiEndPoint(app);
   getUrlApi(app, process.env.SHOPIFY_API_SECRET);
+  getCampaignClicks(app, process.env.SHOPIFY_API_SECRET);
 
   // All endpoints after this point will require an active session
   app.use(

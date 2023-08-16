@@ -10,6 +10,8 @@ import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 import { fetchCampaignDetails } from "../app/features/campaign_details/campaign_details";
 import useFetchCampaignsDetails from "../constant/fetchCampaignDetails";
+import useFetchTotalClicks from "../constant/fetchTotalUserClicks";
+import { fetchTotalClicks } from "../app/features/user_clicks/totalclicksSlice"; 
 import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
 
 const Referral = lazy(() => import("../components/referrals/Referrals"));
@@ -35,11 +37,17 @@ const Referrals = () => {
     headers: { "Content-Type": "application/json" },
   });
 
+  const total_clicks = useFetchTotalClicks("/api/fetchtotalclicks", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
   useEffect(() => {
     if (campaigns?.length > 0) {
       dispatch(fetchCampaign(campaigns));
     }
   }, [campaigns, dispatch]);
+
   useEffect(() => {
     if (campaignsDetails?.length > 0) {
       dispatch(fetchCampaignDetails(campaignsDetails));
@@ -51,6 +59,13 @@ const Referrals = () => {
       dispatch(fetchReferrals(referrals));
     }
   }, [referrals, dispatch]);
+
+  useEffect(() => {
+    if (total_clicks > 0) {
+      dispatch(fetchTotalClicks(total_clicks));
+    }
+  }, [total_clicks, dispatch]);
+
   // Page render Scroll to Top
   useEffect(() => {
     window.scrollTo(0, 0);
