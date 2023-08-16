@@ -29,10 +29,7 @@ import pricingPlansApiEndpoints from "./middleware/get-pricing-plans-api.js";
 import SubscribePlanApiEndPoint from "./middleware/subscribe-plan-api.js";
 import campaignDetailsApiEndpoints from "./middleware/campaign_details-api.js";
 import { verifyWebhookRequest } from "./VerifyWebhook.js";
-import {
-  appUninstallEmail,
-  send_email,
-} from "./helpers/emails.js";
+import { appUninstallEmail, send_email } from "./helpers/emails.js";
 import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
 
 const USE_ONLINE_TOKENS = false;
@@ -44,6 +41,7 @@ const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
 const DB_PATH = `${process.env.DATABASE_URL}`;
+
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
@@ -57,7 +55,10 @@ Shopify.Context.initialize({
 });
 
 let emailUninstall, emailUpgradeSubscription;
-
+readFile("./email_templates/uninstall_app.txt", "utf8", (error, data) => {
+  if (error) console.log(error, "Uninstalling");
+  emailUninstall = data;
+});
 // App Uninstall Webhook to delete current app install session
 Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
   path: "/api/webhooks",
@@ -65,10 +66,6 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
     const payload = JSON.parse(_body);
     console.log(payload, "Uninstalling");
     const { email } = payload;
-    readFile("./email_templates/uninstall_app.txt", "utf8", (error, data) => {
-      if (error) throwError;
-      emailUninstall = data;
-    });
     await AppInstallations.delete(shop);
     await appUninstallEmail(
       emailUninstall,
@@ -77,7 +74,6 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
     );
   },
 });
-
 
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
 // See the ensureBilling helper to learn more about billing in this template.
@@ -142,6 +138,7 @@ export async function createServer(
       res,
       app.get("use-online-tokens")
     );
+
     const { Product } = await import(
       `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
     );
