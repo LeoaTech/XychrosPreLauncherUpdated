@@ -8,9 +8,12 @@ import {
   replace_reward_email_text,
   send_email,
 } from "../helpers/emails.js";
-import createCustomer from "../helpers/create-customer.js";
+import createCustomer, {
+  getCustomersList,
+  updateCustomer,
+} from "../helpers/create-customer.js";
+import { isProxySignatureValid } from "../helpers/authenticateSignature.js";
 import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
-import axios from "axios";
 
 const { Pool } = NewPool;
 const pool = new Pool({
@@ -56,15 +59,16 @@ export default function getUrlApi(app, secret) {
     }
   });
 
-  // endpoint to get users for Shopify Customers
-
   // Landing page API
   app.post("/api/getuser", async (req, res) => {
     try {
-      const query_signature = req.query;
 
+      // Check if Signature is Valid or not
+      const query_signature = req.query;
       let validate_proxy = isProxySignatureValid(query_signature, secret);
       console.log(validate_proxy, "Validate Signature");
+
+
       let ip_address =
         req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
       ip_address = ip_address.split(",")[0];
@@ -140,6 +144,11 @@ export default function getUrlApi(app, secret) {
         );
 
         // Check if Email Customer entered already exists in database
+        const customerExists = await pool.query(
+          `SELECT * FROM referrals where email= $1`,
+          [email]
+        );
+        console.log("Email exists in Database");
 
         let count = 1;
 
@@ -159,7 +168,6 @@ export default function getUrlApi(app, secret) {
               message: "You have already requested 2 times",
             });
           } else {
-
             // ---------------- if IP exists less than 2 times --------------------
 
             //add to Klaviyo List
@@ -210,19 +218,94 @@ export default function getUrlApi(app, secret) {
               ],
             };
 
-            // Check If Customer Already Exists in App Store or Database 
+            // Check If Customer Already Exists in App Store or Database
             try {
-              
               // if Not Exists on App Store or Database
-              if (customerExists?.rowCount == 0 && findEmail === undefined) {
+              /*               if (customerExists?.rowCount == 0 && findEmail === undefined) {
                 console.log("inside if statement to Create Customer");
                 let result2 = await createCustomer(shopSession, customerData);
                 console.log(result2, "create Customer with Referral Code");
               } else {
                 // Update customer
-                console.log("Customer already Exists with this email", findEmail?.email);
+                console.log(
+                  "Customer already Exists with this email",
+                  findEmail?.email
+                );
+              } */
+
+              if (customerExists?.rowCount !== 0 && findEmail == undefined) {
+                console.log("inside if when customer data only in db");
+                let result2 = await createCustomer(shopSession, customerData);
+                console.log(result2, "create Customer with Referral Code");
+              } else if (customerExists?.rowCount === 0 && !findEmail) {
+                console.log("inside else if no data in both db and store");
+                let result2 = await createCustomer(shopSession, customerData);
+                console.log(result2, "create Customer with Referral Code");
+              } else {
+                console.log(
+                  "Customer already Exists with this email",
+                  findEmail?.email
+                );
+                // Update existing customer tags
+                console.log(
+                  "Customer already Exists with this Email: ",
+                  findEmail?.email
+                );
+
+                // -------------------------- More than one Campaign signups Based Customer Tags---------------------------
+
+                let new_camp_name = campaign_details.rows[0].name;
+                let newTag = `${new_camp_name}`;
+
+                // if the Customer has existing tags, update tags
+                if (findEmail?.tags) {
+                  // Extract the current tags from the customer's data
+                  const tags = findEmail.tags
+                    .split(",")
+                    .map((tag) => tag.trim());
+
+                  // Check if the new tag is already present in the current tags
+
+                  // new tag doesn't exist
+                  if (!tags.includes(newTag)) {
+                    tags.push(newTag);
+                    const updatedTags = tags.join(", ");
+
+                    // Update the customer's tags
+                    const updatedCustomerData = {
+                      id: findEmail.id,
+                      tags: updatedTags,
+                    };
+
+                    await updateCustomer(shopSession, updatedCustomerData);
+                    console.log(
+                      "Customer Tags Updated Successfully - Customer Signed up for Another Campaign"
+                    );
+                  }
+                  // new tag exists already
+                  else {
+                    console.log(
+                      "Customer Already Has this Tag. No Update Needed."
+                    );
+                  }
+                }
+
+                // If the customer has no existing tags, simply add the new tag
+                else {
+                  const updatedCustomerData = {
+                    id: findEmail.id,
+                    tags: newTag,
+                  };
+
+                  await updateCustomer(shopSession, updatedCustomerData);
+                  console.log(
+                    "Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found"
+                  );
+                }
               }
             } catch (error) {
+              console.log("Error Creating/Updating Customer", error);
+
               throwError;
             }
 
@@ -253,7 +336,6 @@ export default function getUrlApi(app, secret) {
             );
           }
         } else {
-
           //add to Klaviyo List
           let klaviyo_list = await add_to_klaviyo_list(
             email,
@@ -300,16 +382,87 @@ export default function getUrlApi(app, secret) {
 
           /* Check If Customer Email is not present already on both Database and App Store  */
           try {
-            if (customerExists?.rowCount == 0 && findEmail=== undefined) {
+            /*  if (customerExists?.rowCount == 0 && findEmail === undefined) {
               console.log("inside if to ceate customer");
               let result = await createCustomer(shopSession, customerData);
               console.log(result, "customer Created without Referral Code");
             } else {
               // Update Customers data
-              console.log("Customer already Exists with this email", findEmail?.email);
+              console.log(
+                "Customer already Exists with this email",
+                findEmail?.email
+              );
+            } */
+
+            if (customerExists?.rowCount !== 0 && !findEmail) {
+              console.log("inside if when customer only in db");
+              let result = await createCustomer(shopSession, customerData);
+              console.log(result, "customer Created without Referral Code");
+            } else if (customerExists?.rowCount === 0 && !findEmail) {
+              console.log(
+                "inside else if when no customer data in db and store data is present"
+              );
+              let result = await createCustomer(shopSession, customerData);
+              console.log(result, "customer Created without Referral Code");
+            } else {
+              // Update existing customer tags
+              console.log(
+                "Customer already Exists with this Email: ",
+                findEmail?.email
+              );
+
+              // -------------------------- More than one Campaign signups Based Customer Tags---------------------------
+
+              let new_camp_name = campaign_details.rows[0].name;
+              let newTag = `${new_camp_name}`;
+
+              // if the Customer has existing tags, update tags
+              if (findEmail?.tags) {
+                // Extract the current tags from the customer's data
+                const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+
+                // Check if the new tag is already present in the current tags
+
+                // new tag doesn't exist
+                if (!tags.includes(newTag)) {
+                  tags.push(newTag);
+                  const updatedTags = tags.join(", ");
+
+                  // Update the customer's tags
+                  const updatedCustomerData = {
+                    id: findEmail.id,
+                    tags: updatedTags,
+                  };
+
+                  await updateCustomer(shopSession, updatedCustomerData);
+                  console.log(
+                    "Customer Tags Updated Successfully - Customer Signed up for Another Campaign"
+                  );
+                }
+                // new tag exists already
+                else {
+                  console.log(
+                    "Customer Already Has this Tag. No Update Needed."
+                  );
+                }
+              }
+
+              // If the customer has no existing tags, simply add the new tag
+              else {
+                const updatedCustomerData = {
+                  id: findEmail.id,
+                  tags: newTag,
+                };
+
+                await updateCustomer(shopSession, updatedCustomerData);
+                console.log(
+                  "Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found"
+                );
+              }
             }
           } catch (error) {
-            console.log(error);
+            console.log("Error Creating/Updating Customer", error);
+            throwError;
           }
 
           referralcode = getreferrals.rows[0].referral_code;
