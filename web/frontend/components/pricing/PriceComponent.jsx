@@ -64,6 +64,38 @@ const PriceComponent = () => {
     setCollectNumbers(e.target.checked);
   };
 
+  const handleConfirmAddOn = async () => {
+    console.log("Clicked button");
+    const subscribeAddOns = {
+      billing_required: true,
+      currency_code: "USD",
+      plan_name: "Collecting_phones",
+      price: "5.00",
+    };
+    const response = await fetchAuth("/api/confirm-add-ons", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...subscribeAddOns,
+        collecting_phones: collectNumbers,
+      }),
+    });
+    if (response.ok) {
+      const subscribe_data = await response.json();
+      console.log(subscribe_data, "Confirm add-ons");
+      if (subscribe_data?.confirmationUrl) {
+        redirect.dispatch(Redirect.Action.REMOTE, {
+          url: subscribe_data.confirmationUrl,
+          newContext: false,
+        });
+      }
+    } else {
+      return "No plan subscribed";
+    }
+  };
+
   // Handle Subscription plan Event
   const handlePlanSubscribe = async (id) => {
     setIsloading(true);
@@ -182,10 +214,11 @@ const PriceComponent = () => {
       {priceData?.length > 0 && (
         <div className="pricing-add-ons">
           <div className="add-on-card">
-            <h2>Select Add-Ons</h2>
-
             <div>
-              {" "}
+              <label>Select Add-ons</label>
+              <label>price</label>
+            </div>
+            <div>
               <input
                 id="collect-numbers"
                 name="collect-numbers"
@@ -194,6 +227,16 @@ const PriceComponent = () => {
                 onChange={handleCollectNumbersInput}
               />
               <label htmlFor="collect-numbers">Collecting phone numbers</label>
+              <h4 className="price-tag">$5</h4>
+            </div>
+            <div className="confirmation-btn">
+              <button
+                // disabled={collectNumbers}
+                className="btn-confirmed"
+                onClick={handleConfirmAddOn}
+              >
+                Confirm Add-Ons
+              </button>
             </div>
           </div>
         </div>

@@ -121,7 +121,7 @@
 }
 
 .add-on-card {
-  padding: 60px 90px;
+  padding: 20px 60px;
   border-radius: 13px;
   background-color: var(--secondary-text-color);
   -webkit-border-radius: 13px;
@@ -134,19 +134,21 @@
   gap: 15px;
 }
 
-.add-on-card h2{
+.add-on-card h2 {
   font-size: 20px;
   margin-bottom: 20px;
   font-weight: 700;
-  color:ghostwhite;
+  color: ghostwhite;
   text-decoration: underline;
 }
 
 .add-on-card div {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
   align-items: center;
 }
+
 .add-on-card input {
   height: 20px;
   width: 20px;
@@ -156,6 +158,17 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
+}
+
+.add-on-card .price-tag {
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.add-on-card .confirmation-btn {
+  margin-top: 2rem;
+  justify-content: center;
+  align-items: center;
 }
 
 @keyframes spinner-e04l1k {
