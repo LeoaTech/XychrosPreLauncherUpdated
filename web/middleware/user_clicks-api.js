@@ -48,8 +48,6 @@ export default function getCampaignClicks(app, secret) {
   app.get("/api/fetchtotalclicks", async (req, res) => {
     try {
       // console.log("I am here in fetch clicks API");
-      // console.log(req.query);
-      // console.log(req.body);
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
@@ -67,12 +65,10 @@ export default function getCampaignClicks(app, secret) {
     }
   });
 
-// fetch user clicks of last six months of all campaigns 
+  // fetch user clicks of last six months of all campaigns 
   app.get("/api/fetch_lastsixmonths_clicks", async (req, res) => {
     try {
-      // console.log("I am here in fetch clicks API");
-      // console.log(req.query);
-      // console.log(req.body);
+      // console.log("I am here in fetch last six months clicks API");
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
@@ -80,12 +76,57 @@ export default function getCampaignClicks(app, secret) {
       );
       const { shop } = session;
       const lastsixmonths_clicks = await pool.query(
-        "SELECT COUNT(id) AS total_clicks, to_char(created_at, 'YYYY-MM') AS created_month FROM user_clicks WHERE created_at >= date_trunc('month', CURRENT_DATE) - INTERVAL '6 months' AND created_at < date_trunc('month', CURRENT_DATE) AND shop = $1 GROUP BY created_month ORDER BY created_month ASC;", 
+        `SELECT COUNT(id) AS total_months_clicks, 
+        to_char(created_at, 'YYYY-MM') AS created_month 
+        FROM user_clicks 
+        WHERE created_at >= date_trunc('month', CURRENT_DATE) - INTERVAL '6 months' 
+        AND created_at < date_trunc('month', CURRENT_DATE) 
+        AND shop = $1 
+        GROUP BY created_month 
+        ORDER BY created_month DESC`, 
         [shop]
       );
       // console.log('user clicks of last six months: ', lastsixmonths_clicks);
-      console.log(lastsixmonths_clicks.rows);
+      // console.log(lastsixmonths_clicks.rows);
       return res.status(200).json(lastsixmonths_clicks.rows);
+    } catch (error) {
+      return res.status(500).json({ success: false, error: error});
+    }
+  });
+
+  // fetch user clicks of last four campaigns 
+  app.get("/api/fetch_lastfourcampaigns_clicks", async (req, res) => {
+    try {
+      // console.log("I am here in fetch lst four campaigns clicks API");
+      const session = await Shopify.Utils.loadCurrentSession(
+        req,
+        res,
+        app.get("use-online-tokens")
+      );
+      const { shop } = session;
+
+      const lastfourcampaigns_clicks = await pool.query(
+        `WITH CampaignClicks AS (
+          SELECT cs.campaign_id, cs.name, cs.start_date,
+          COUNT(uc.id) AS campaign_clicks, cs.shop_id
+          FROM campaign_settings cs
+          LEFT JOIN user_clicks uc ON cs.campaign_id = uc.campaign_id AND cs.shop_id = uc.shop
+          WHERE uc.shop = $1
+          AND cs.is_deleted = false
+          AND cs.start_date <= CURRENT_TIMESTAMP
+          GROUP BY cs.campaign_id, cs.shop_id
+          ORDER BY cs.start_date DESC
+          LIMIT 4
+        )
+        SELECT campaign_id, name, start_date, campaign_clicks, 
+        SUM(campaign_clicks) OVER() AS total_fourcampaigns_clicks
+        FROM CampaignClicks
+        ORDER BY start_date DESC;`,
+        [shop]
+      )
+      // console.log('user clicks of last six months: ', lastsixmonths_clicks);
+      // console.log(lastfourcampaigns_clicks.rows);
+      return res.status(200).json(lastfourcampaigns_clicks.rows);
     } catch (error) {
       return res.status(500).json({ success: false, error: error});
     }
