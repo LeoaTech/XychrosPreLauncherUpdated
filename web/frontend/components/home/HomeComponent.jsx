@@ -13,17 +13,20 @@ const SummaryCard = lazy(() => import("../ui/SummaryCard"));
 
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
+import { fetchAllLastFourCampaignsClicks } from "../../app/features/user_clicks/lastFourCampaignsClicksSlice";
 
 const HomeComponent = () => {
   const fetch = useAuthenticatedFetch();
   const dispatch = useDispatch();
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
-  const [getTotalClicks, setTotalClicks] = useState([]);
+  const [getTotalClicks, setTotalClicks] = useState(0);
 
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
-  // const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([0, 0, 0, 0, 0, 0]);
+  
+  const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
+  const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
 
   // Get Total Clicks Count
   useEffect(() => {
@@ -35,12 +38,18 @@ const HomeComponent = () => {
   // Get Last Six Months Clicks Data
   useEffect(() => {
     if (LastSixMonthsClicksList) {
-      console.log(LastSixMonthsClicksList);
       setLastSixMonthsClicksData(LastSixMonthsClicksList);
     }
   }, [LastSixMonthsClicksList]);
 
-  // chart labels of last six months according to current date
+  // Get Last Four Campaigns Clicks
+  useEffect(() => {
+    if (LastFourCampaignsClicksList) {
+      setLastFourCampaignsClicks(LastFourCampaignsClicksList);
+    }
+  }, [LastFourCampaignsClicksList]);
+
+  // line chart and radar chart labels of last six months according to current date
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
@@ -52,7 +61,7 @@ const HomeComponent = () => {
     return labelMonth;
   }).reverse();
   
-  // chart data of last six months according to current date
+  // line chart and radar chart data of last six months according to current date
   const chartClicks = Array.from({ length: 6 }, () => 0);
 
   if (getLastSixMonthsClicksData.length > 0) {
@@ -63,11 +72,11 @@ const HomeComponent = () => {
 
       const monthIndex = (currentYear - entryYear) * 12 + (currentMonth - entryMonth - 1);
 
-      chartClicks[monthIndex] = parseInt(entry.total_clicks, 10); // Convert to integer
+      chartClicks[monthIndex] = parseInt(entry.total_months_clicks, 10); // Convert to integer
     });
   }
   let finalClicks = chartClicks.reverse();
-  console.log(finalClicks);
+  // console.log(finalClicks);
   
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
@@ -162,14 +171,14 @@ const HomeComponent = () => {
       // ... other datasets
       {
         label: "Campaigns",
-        data: [45, -23, 89, 23, 110, 34, 65],
+        data: [5, 3, 9, 2, 11, 4, 5],
         borderColor: "#E0777D",
         backgroundColor: "#E0777D",
         fill: "+2",
       },
       {
         label: "Referrals",
-        data: [21, 34, 61, 38, 45, 87, 12],
+        data: [2, 4, 1, 8, 5, 7, 3],
         borderColor: "#A1F6F5",
         backgroundColor: "#A1F6F5",
         fill: "origin",
@@ -246,6 +255,17 @@ const HomeComponent = () => {
     ],
   };
 
+  // donut chart labels and data according to latest four campaigns
+  // Initialize arrays to store the extracted data
+  const donutChart_labels = [];
+  const fourcampaigns_clicks = [];
+
+  // Loop through the API data to extract the clicks details of last/latest four campaigns
+  getLastFourCampaignsClicks.forEach(item => {
+    donutChart_labels.push(`${item.name}`);
+    fourcampaigns_clicks.push(parseInt(item.campaign_clicks));
+  });
+
   // --------------- Constructing Donut Chart ---------------
   const DonutChartOptions = {
     responsive: true,
@@ -268,11 +288,10 @@ const HomeComponent = () => {
   };
 
   const DonutChartData = {
-    labels: ["Product 1", "product 2", "Product 3", "Product 4"],
+    labels: donutChart_labels,
     datasets: [
       {
-        label: "# of Votes",
-        data: [30, 20, 10, 5],
+        data: fourcampaigns_clicks,
         backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
         borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
         borderWidth: 1,

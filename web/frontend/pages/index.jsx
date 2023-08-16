@@ -19,7 +19,9 @@ import { fetchCampaignDetails } from "../app/features/campaign_details/campaign_
 import useFetchTotalClicks from "../constant/fetchTotalUserClicks";
 import { fetchTotalClicks } from "../app/features/user_clicks/totalclicksSlice";
 import useFetchLastSixMonthsClicks from "../constant/fetchLastSixMonthsClicks";
-import { fetchLastSixMonthsClicks } from "../app/features/user_clicks/lastSixMonthsClicksSlice"; 
+import { fetchLastSixMonthsClicks } from "../app/features/user_clicks/lastSixMonthsClicksSlice";
+import useFetchLastFourCampaignsClicks from "../constant/fetcLastFourCampaignsClicks";
+import { fetchLastFourCampaignsClicks } from "../app/features/user_clicks/lastFourCampaignsClicksSlice"; 
 
 export default function HomePage() {
   const { activeMenu } = useStateContext();
@@ -62,6 +64,12 @@ export default function HomePage() {
     headers: { "Content-Type": "application/json" },
   });
 
+  // Get Last Four Campaigns Clicks
+  const lastfourcampaigns_clicks = useFetchLastFourCampaignsClicks("/api/fetch_lastfourcampaigns_clicks", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
   // Dispatch API result in Redux store to get access data in the App
   useEffect(() => {
     if (billing) {
@@ -92,6 +100,13 @@ export default function HomePage() {
       dispatch(fetchLastSixMonthsClicks(lastsixmonths_clicks));
     }
   }, [lastsixmonths_clicks, dispatch]);
+
+  useEffect(() => {
+    if (lastfourcampaigns_clicks.length > 0) {
+      dispatch(fetchLastFourCampaignsClicks(lastfourcampaigns_clicks));
+    }
+  }, [lastfourcampaigns_clicks, dispatch]);
+
   return (
     <div className="app">
       {activeMenu ? (

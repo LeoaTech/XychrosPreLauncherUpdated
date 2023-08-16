@@ -9,6 +9,7 @@ import referralReducer from './features/referrals/referralSlice';
 import campaignDetailsReducer from "./features/campaign_details/campaign_details";
 import totalClicksReducer from './features/user_clicks/totalclicksSlice';
 import lastSixMonthsClicksReducer from './features/user_clicks/lastSixMonthsClicksSlice';
+import lastFourCampaignsClicksReducer from './features/user_clicks/lastFourCampaignsClicksSlice';
 
 // All Slices will be added there
 
@@ -24,5 +25,6 @@ export const store = configureStore({
     referrals: referralReducer,
     total_clicks: totalClicksReducer,
     lastsixmonths_clicks: lastSixMonthsClicksReducer,
+    lastfourcampaigns_clicks: lastFourCampaignsClicksReducer,
   },
 });
