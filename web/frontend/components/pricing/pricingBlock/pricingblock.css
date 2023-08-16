@@ -66,7 +66,7 @@
 
 }
 
-.btn-subscribe {
+.btn-subscribe, .btn-confirmed {
   height: 40px;
   background-color: rgb(233, 229, 229);
   width: 120px;
@@ -86,6 +86,11 @@
   -o-border-radius: 25px;
 }
 
+
+.btn-confirmed{
+  width: 190px;
+}
+
 .btn-subscribe.disabled{
   cursor:not-allowed;
   background-color: rgb(208, 208, 208);
@@ -98,16 +103,20 @@
   
 }
 
-
-.btn-subscribe:hover,
+.btn-subscribe:hover, 
 .btn-subscribe:focus {
   background-color: #fff;
-  /* color: var(--secondary-color); */
-  /* font-weight: 500; */
   box-shadow: 1px 0.5px 4px 3px #bab9b9;
   color:var(--secondary-text-color)
-
 }
+
+.btn-confirmed:hover,.btn-confirmed:focus{
+  background-color: #fff;
+  box-shadow: 1px 0.5px 2px 3px #bab8b8;
+  color:var(--secondary-text-color)
+}
+
+
 @media screen and (max-width: 1480px) {
   .pricing-details {
     height: 460px;
