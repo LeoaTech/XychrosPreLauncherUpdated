@@ -12,6 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { anime, BlackLogo } from "../../assets/index";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
+import { MdError } from "react-icons/md";
 import { integratelinks } from "./socialLinks";
 import { useStateContext } from "../../contexts/ContextProvider";
 import "./newcampaign.css";
@@ -33,7 +34,10 @@ import { fetchAllSettings } from "../../app/features/settings/settingsSlice";
 import { fetchAllProducts } from "../../app/features/productSlice";
 import useFetchTemplates from "../../constant/fetchTemplates";
 import { useCallbackPrompt } from "../../hooks/useNavigatingPrompt";
-import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
+import {
+  fetchCurrentPlan,
+  fetchCurrentTier,
+} from "../../app/features/current_plan/current_plan";
 import { skeletonPageLoad } from "@shopify/app-bridge/actions/Performance";
 
 const SaveDraft = lazy(() => import("../modal/SaveDraft"));
@@ -53,6 +57,8 @@ function NewCampaignForm() {
   const products = useSelector(fetchAllProducts); //Get all products of Shop
   const totalCampaigns = useSelector(getTotalCampaigns);
   const currentTier = useSelector(fetchCurrentTier);
+
+  const current_plan = useSelector(fetchCurrentPlan);
 
   const campaignById = useSelector(
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
@@ -374,8 +380,6 @@ function NewCampaignForm() {
       }
     } else if (newCampaignData?.klaviyo_api_key !== "") {
       getKlaviyoList();
-    } else {
-      getKlaviyoList();
     }
   }, [newCampaignData?.klaviyo_api_key, globalSettings?.klaviyo_api_key]);
 
@@ -479,6 +483,20 @@ function NewCampaignForm() {
         );
       }
     }
+  };
+
+  // Check if all fields in a tier are filled
+  const isTierFilled = (tier) => {
+    return (
+      newCampaignData[`reward_${tier}_tier`] &&
+      newCampaignData[`reward_${tier}_discount`] &&
+      newCampaignData[`reward_${tier}_code`]
+    );
+  };
+
+  // Enable or disable fields based on whether the previous tier is filled
+  const isFieldDisabled = (tier) => {
+    return tier > 1 && !isTierFilled(tier - 1);
   };
 
   // Reward Settings Validation for New Campaign
@@ -593,7 +611,6 @@ function NewCampaignForm() {
   };
 
   // Handle input change events
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (isEdit) {
@@ -1196,7 +1213,6 @@ function NewCampaignForm() {
                     <div className="collect-setup">
                       <div className="collect-settings">
                         <h2 className="sub-heading">Collect</h2>
-
                         <div>
                           {isEdit ? (
                             <input
@@ -1205,6 +1221,7 @@ function NewCampaignForm() {
                               name="collect_phone"
                               value="phone"
                               checked={editCampaignData?.collect_phone === true}
+                              disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
                           ) : (
@@ -1214,6 +1231,7 @@ function NewCampaignForm() {
                               name="collect_phone"
                               value="phone"
                               checked={newCampaignData?.collect_phone === true}
+                              disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
                           )}
@@ -1221,6 +1239,7 @@ function NewCampaignForm() {
                             Email Addresses and Phone Numbers{" "}
                           </label>
                         </div>
+
                         <div>
                           {isEdit ? (
                             <input
@@ -1482,12 +1501,15 @@ function NewCampaignForm() {
                     </div>
 
                     {/* Reward Tier  */}
+                    {rewardTierValidate && (
+                      <h6 className="validation">
+                        <MdError
+                          style={{ height: 18, width: 18, marginRight: 5 }}
+                        />
+                        Reward Tier 1 and Tier 2 must be Filled
+                      </h6>
+                    )}
                     <div className="rewards-container">
-                      {rewardTierValidate && (
-                        <h6 className="validation">
-                          Reward Tier 1 and Tier 2 must Required
-                        </h6>
-                      )}
                       {RewardData.map((reward) => (
                         <div key={reward.id} className="reward-card">
                           <div classname="reward-tier-card">
@@ -1500,25 +1522,53 @@ function NewCampaignForm() {
                             </div>
 
                             <div className="reward-content">
-                              <div>
-                                {/* Required Rewards and Valid Discount codes values */}
-                                <div>
-                                  {isReward2Error && reward?.id === 2 && (
-                                    <h6 className="error-message">{`Discount Value must be higher than Tier ${
+                              {/* Required Rewards and Valid Discount codes values */}
+                              <div className="reward-form-error">
+                                {isReward2Error && reward?.id === 2 && (
+                                  <h6 className="error-message">
+                                    {" "}
+                                    <MdError
+                                      style={{
+                                        height: 18,
+                                        width: 18,
+                                        marginRight: 5,
+                                      }}
+                                    />
+                                    {`Discount Value must be higher than Tier ${
                                       reward?.id - 1
-                                    }`}</h6>
-                                  )}
-                                  {isReward3Error && reward?.id === 3 && (
-                                    <h6 className="error-message">{`Discount Value must be higher than Tier ${
+                                    }`}
+                                  </h6>
+                                )}
+                                {isReward3Error && reward?.id === 3 && (
+                                  <h6 className="error-message">
+                                    {" "}
+                                    <MdError
+                                      style={{
+                                        height: 18,
+                                        width: 18,
+                                        marginRight: 5,
+                                      }}
+                                    />
+                                    {`Discount Value must be higher than Tier ${
                                       reward?.id - 1
-                                    }`}</h6>
-                                  )}
-                                  {isReward4Error && reward?.id === 4 && (
-                                    <h6 className="error-message">{`Discount Value must be higher than Tier ${
+                                    }`}
+                                  </h6>
+                                )}
+                                {isReward4Error && reward?.id === 4 && (
+                                  <h6 className="error-message">
+                                    {" "}
+                                    <MdError
+                                      style={{
+                                        height: 18,
+                                        width: 18,
+                                        marginRight: 5,
+                                      }}
+                                    />
+                                    {`Discount Value must be higher than Tier ${
                                       reward?.id - 1
-                                    }`}</h6>
-                                  )}
-                                </div>
+                                    }`}
+                                  </h6>
+                                )}
                               </div>
                               <div className="reward-form">
                                 <div className="inputfield">
@@ -1562,11 +1612,12 @@ function NewCampaignForm() {
                                       }
                                       onChange={handleChange}
                                       disabled={
-                                        reward?.id > 1 &&
-                                        reward?.id < 4 &&
-                                        !newCampaignData[
-                                          `reward_${reward?.id - 1}_tier`
-                                        ]
+                                        isFieldDisabled(reward?.id) ||
+                                        (reward?.id > 1 &&
+                                          reward?.id < 4 &&
+                                          !newCampaignData[
+                                            `reward_${reward?.id - 1}_tier`
+                                          ])
                                         // (reward?.id === 2 && !isTier1Filled) || (reward?.id === 4 && (!isTier3Filled))
                                       }
                                       // disabled={reward?.id > 1 && reward?.id < 4 && !newCampaignData[`reward_${reward?.id - 1}_tier`]}
@@ -1616,11 +1667,12 @@ function NewCampaignForm() {
                                       }
                                       onChange={handleChange}
                                       disabled={
-                                        reward?.id > 1 &&
-                                        reward?.id < 4 &&
-                                        !newCampaignData[
-                                          `reward_${reward?.id - 1}_discount`
-                                        ]
+                                        isFieldDisabled(reward?.id) ||
+                                        (reward?.id > 1 &&
+                                          reward?.id < 4 &&
+                                          !newCampaignData[
+                                            `reward_${reward?.id - 1}_discount`
+                                          ])
                                         // ||(reward?.id === 2 && !isTier1Filled) || (reward?.id === 4 && !isTier3Filled)
                                       }
                                       // disabled={reward?.id > 1 && reward?.id < 4 && !newCampaignData[`reward_${reward?.id - 1}_discount`]}
@@ -1657,29 +1709,57 @@ function NewCampaignForm() {
                                       }
                                       onChange={handleChange}
                                       disabled={
-                                        reward?.id > 1 &&
-                                        reward?.id < 4 &&
-                                        !newCampaignData[
-                                          `reward_${reward?.id - 1}_code`
-                                        ]
+                                        isFieldDisabled(reward?.id) ||
+                                        (reward?.id > 1 &&
+                                          reward?.id < 4 &&
+                                          !newCampaignData[
+                                            `reward_${reward?.id - 1}_code`
+                                          ])
                                       }
                                     />
                                   )}
                                 </div>
                               </div>
-                                      {/* Duplicates Discount Codes Error */}
+                              {/* Duplicates Discount Codes Error */}
                               <div>
                                 {discountCode1 === true && reward?.id === 1 && (
-                                  <h6 className="discount_error_text">{`Discount Code for Tier ${reward?.id} Already Exists`}</h6>
+                                  <h6 className="discount_error_text">
+                                    <MdError
+                                      style={{
+                                        height: 16,
+                                        width: 16,
+                                        marginRight: 5,
+                                      }}
+                                    />
+                                    {`Discount Code for Tier ${reward?.id} Already Exists`}
+                                  </h6>
                                 )}
                                 {discountCode2 === true && reward?.id === 2 && (
-                                  <h6 className="discount_error_text">{`Discount Code for Tier ${reward?.id} Already Exists`}</h6>
+                                  <h6 className="discount_error_text">
+                                    <MdError
+                                      style={{
+                                        height: 16,
+                                        width: 16,
+                                        marginRight: 5,
+                                      }}
+                                    />
+                                    {`Discount Code for Tier ${reward?.id} Already Exists`}
+                                  </h6>
                                 )}
                                 {discountCode3 === true && reward?.id === 3 && (
                                   <h6 className="discount_error_text">{`Discount Code for Tier ${reward?.id} Already Exists`}</h6>
                                 )}
                                 {discountCode4 === true && reward?.id === 4 && (
-                                  <h6 className="discount_error_text">{`Discount Code for Tier ${reward?.id} Already Exists`}</h6>
+                                  <h6 className="discount_error_text">
+                                    <MdError
+                                      style={{
+                                        height: 16,
+                                        width: 16,
+                                        marginRight: 5,
+                                      }}
+                                    />
+                                    {`Discount Code for Tier ${reward?.id} Already Exists`}
+                                  </h6>
                                 )}
                               </div>
                             </div>
