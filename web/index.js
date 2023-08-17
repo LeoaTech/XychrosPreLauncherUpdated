@@ -1,6 +1,6 @@
 // @ts-check
 import { join } from "path";
-import { readFileSync } from "fs";
+import { readFileSync, readFile } from "fs";
 import express from "express";
 import cookieParser from "cookie-parser";
 import {
@@ -28,8 +28,11 @@ import getUrlApi from "./middleware/geturl-api.js";
 import pricingPlansApiEndpoints from "./middleware/get-pricing-plans-api.js";
 import SubscribePlanApiEndPoint from "./middleware/subscribe-plan-api.js";
 import campaignDetailsApiEndpoints from "./middleware/campaign_details-api.js";
+import getCampaignClicks from "./middleware/user_clicks-api.js";
 import crypto from "crypto";
 import { verifyWebhookRequest } from "./VerifyWebhook.js";
+import { appUninstallEmail, send_email } from "./helpers/emails.js";
+import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
 
 const USE_ONLINE_TOKENS = false;
 
@@ -40,6 +43,7 @@ const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
 const DB_PATH = `${process.env.DATABASE_URL}`;
+
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
@@ -52,11 +56,24 @@ Shopify.Context.initialize({
   SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(DB_PATH),
 });
 
+let emailUninstall, emailUpgradeSubscription;
+readFile("./email_templates/uninstall_app.txt", "utf8", (error, data) => {
+  if (error) console.log(error, "Uninstalling");
+  emailUninstall = data;
+});
 // App Uninstall Webhook to delete current app install session
 Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
   path: "/api/webhooks",
   webhookHandler: async (_topic, shop, _body) => {
-    await AppInstallations.delete(shop);   
+    const payload = JSON.parse(_body);
+    console.log(payload, "Uninstalling");
+    const { email } = payload;
+    await AppInstallations.delete(shop);
+    await appUninstallEmail(
+      emailUninstall,
+      email,
+      "App Uninstallation Confirmation"
+    );
   },
 });
 
@@ -103,7 +120,6 @@ export async function createServer(
   app.post("/api/webhooks", async (req, res) => {
     try {
       await Shopify.Webhooks.Registry.process(req, res);
-      console.log(res.statusCode, "webhook Response");
       console.log(`Webhook processed, returned status code 200`);
       return res.statusCode;
     } catch (e) {
@@ -124,11 +140,14 @@ export async function createServer(
       res,
       app.get("use-online-tokens")
     );
+
     const { Product } = await import(
       `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
     );
 
     const countData = await Product.all({ session });
+    // await createWebhook(session);
+
     // console.log(countData);
 
     res.status(200).send(countData);
@@ -147,6 +166,7 @@ export async function createServer(
 
   SubscribePlanApiEndPoint(app);
   getUrlApi(app, process.env.SHOPIFY_API_SECRET);
+  getCampaignClicks(app, process.env.SHOPIFY_API_SECRET);
 
   // All endpoints after this point will require an active session
   app.use(

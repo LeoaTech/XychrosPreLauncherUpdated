@@ -1,6 +1,4 @@
 import { Shopify } from "@shopify/shopify-api";
-import queryString from "query-string";
-import crypto from "crypto";
 import emailValidator from "deep-email-validator";
 import { add_to_klaviyo_list } from "../helpers/klaviyoIntegrations.js";
 import NewPool from "pg";
@@ -10,52 +8,73 @@ import {
   replace_reward_email_text,
   send_email,
 } from "../helpers/emails.js";
-import createCustomer, { updateCustomer } from "../helpers/create-customer.js";
-import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
-import axios from "axios";
+import createCustomer, {
+  getCustomersList,
+  updateCustomer,
+} from "../helpers/create-customer.js";
+import { isProxySignatureValid } from "../helpers/authenticateSignature.js";
+
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: `${process.env.DATABASE_URL}`,
 });
 
+pool.connect((err, result) => {
+  if (err) throw err;
+});
+
 export default function getUrlApi(app, secret) {
   app.post("/api/geturl", async (req, res) => {
     try {
       // console.log("I am here in fetch API URL");
-      // console.log(req.query);
-      // console.log(req.body);
+      // console.log(req.query.signature,"Query");
+
+      const requestQuery = req.query;
+      let isvalid = await isProxySignatureValid(requestQuery, secret);
+      console.log(isvalid, "Signature Verified");
+
       const shop = req.query.shop;
       const campaign = req.body.campaign_name;
+      if (isvalid === true) {
+        const imageURL = await pool.query(
+          `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
+        );
 
-      // console.log(shop);
-      // console.log(campaign);
+        const campaign_details = await pool.query(
+          `SELECT * from campaign_settings where name='${campaign}' and shop_id = '${shop}'`
+        );
 
-      const imageURL = await pool.query(
-        `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
-      );
-
-      const campaign_details = await pool.query(
-        `SELECT * from campaign_settings where name='${campaign}' and shop_id = '${shop}'`
-      );
-
-      res.status(200).json({
-        success: true,
-        imageURL: imageURL?.rows[0]?.image_url,
-        campaign_data: campaign_details.rows[0],
-      });
+        res.status(200).json({
+          success: true,
+          imageURL: imageURL?.rows[0]?.image_url,
+          campaign_data: campaign_details.rows[0],
+        });
+      } else {
+        console.log("Shopify Signature verification failed, aborting");
+        return res
+          .status(401)
+          .json({ succeeded: false, message: "Not Authorized" })
+          .send();
+      }
     } catch (error) {
       console.log(error);
-      res.status(500).json({ success: false, message: error });
+      res.status(401).json({ success: false, message: error });
     }
   });
-
-  // endpoint to get users for Shopify Customers
 
   // Landing page API
   app.post("/api/getuser", async (req, res) => {
     try {
-      const query_signature = req.query.signature;
+
+      // Check if Signature is Valid or not
+      const query_signature = req.query;
+      let validate_proxy = isProxySignatureValid(query_signature, secret);
+      console.log(validate_proxy, "Validate Signature");
+
+
       let ip_address =
         req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
       ip_address = ip_address.split(",")[0];
@@ -72,55 +91,19 @@ export default function getUrlApi(app, secret) {
 
       let message = "";
 
-
-      /* -----------------     Get All Customers List of App Store     -------------------- */
-
-      // Set the base API URL for Shopify
-      const baseUrl = `https://${shopSession[0]?.shop}/admin/api/2023-04/customers.json`;
-      let store_customers;
-      try {
-        let response = await axios.get(baseUrl, {
-          headers: {
-            "X-Shopify-Access-Token": shopSession[0]?.accessToken,
-            Authorization: `Bearer ${shopSession[0]?.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        });
-        // console.log("customer mail", response?.data);
-        let customers = response?.data?.customers;
-        const customerData = customers.map((customer) => {
-          const {
-            email,
-            phone,
-            first_name,
-            last_name,
-            id,
-            tags,
-            created_at,
-            updated_at,
-          } = customer;
-          return {
-            email,
-            phone,
-            first_name,
-            last_name,
-            id,
-            tags,
-            created_at,
-            updated_at,
-          };
-        });
-
-        store_customers = customerData;
-      } catch (error) {
-        console.log(error);
-      }
-      // console.log("customer List of App Store", store_customers);
+      // Call Customer List Fetch API function
+      let store_customers = await getCustomersList(shopSession);
+      console.log("Customer List of App Store Fetched Successfully");
 
       // Check if the Email user entered is Already in App Store customers list
       let findEmail = store_customers.find((data) => data.email === email);
-      console.log(findEmail?.email, "Email Found");
+      console.log("Find Email found this Email:", findEmail?.email);
 
+      const customerExists = await pool.query(
+        `SELECT * FROM referrals where email= $1`,
+        [email]
+      );
+      console.log(customerExists?.rowCount, "Email Exists in Database");
 
       if (!email) {
         return res
@@ -131,7 +114,7 @@ export default function getUrlApi(app, secret) {
       // const shop_id = 'offline_' + shop;
 
       const campaign_details = await pool.query(
-        `SELECT * from campaign_settings where name='${campaign}' and shop_id='${shop}'`
+        `SELECT * from campaign_settings where name='${campaign}' AND shop_id='${shop}'`
       );
       const campaignID = campaign_details.rows[0].campaign_id;
 
@@ -166,13 +149,11 @@ export default function getUrlApi(app, secret) {
           `SELECT count_ip FROM ip_addresses WHERE address='${ip_address}' and campaign_id=${campaignID}`
         );
 
-        // Check if Email Customer entered already exists in database 
+        // Check if Email Customer entered already exists in database
         const customerExists = await pool.query(
           `SELECT * FROM referrals where email= $1`,
           [email]
         );
-        console.log("Email exists in Database");
-
 
         let count = 1;
 
@@ -192,7 +173,6 @@ export default function getUrlApi(app, secret) {
               message: "You have already requested 2 times",
             });
           } else {
-
             // ---------------- if IP exists less than 2 times --------------------
 
             //add to Klaviyo List
@@ -243,67 +223,85 @@ export default function getUrlApi(app, secret) {
               ],
             };
 
-            // Check If Customer Already Exists in App Store or Database 
+            // Check If Customer Already Exists in App Store or Database
 
-            try {
-              // if Not Exists on App Store or Database
-              if (customerExists?.rowCount == 0 && findEmail === undefined) {
+            // if Not Exists on App Store or Database
+            if (customerExists?.rowCount !== 0 && findEmail == undefined) {
+              console.log(
+                "Inside if When Customer Data is Present only in Database"
+              );
+              let currentCustomerData = await createCustomer(
+                shopSession,
+                customerData
+              );
+              console.log(
+                "Customer Created With Referral Code: ",
+                currentCustomerData
+              );
+            } else if (customerExists?.rowCount === 0 && !findEmail) {
+              console.log(
+                "Inside else if When No Data is Present in Both Database and Store"
+              );
+              let currentCustomerData = await createCustomer(
+                shopSession,
+                customerData
+              );
+              console.log(
+                "Customer Created With Referral Code: ",
+                currentCustomerData
+              );
+            } else {
+              console.log(
+                "Customer already Exists with this Email: ",
+                findEmail?.email
+              );
 
-                let currentCustomerData = await createCustomer(shopSession, customerData);
-                console.log("Customer Created With Referral Code having Id: ", currentCustomerData.id);
+              // --------------- More than one Campaign Signups Based Customer Tags--------------
+              let new_camp_name = campaign_details.rows[0].name;
+              let newTag = `${new_camp_name}`;
 
-              } else {
-                // Update existing customer tags
-                console.log("Customer already Exists with this Email: ", findEmail?.email);
+              // if the Customer has existing tags, update tags
+              if (findEmail?.tags) {
+                // Extract the current tags from the customer's data
+                const tags = findEmail.tags.split(",").map((tag) => tag.trim());
 
-                // -------------------------- More than one Campaign signups Based Customer Tags---------------------------
+                // Check if the new tag is already present in the current tags
 
-                let new_camp_name = campaign_details.rows[0].name;
-                let newTag = `${new_camp_name}`;
+                // new tag doesn't exist
+                if (!tags.includes(newTag)) {
+                  tags.push(newTag);
+                  const updatedTags = tags.join(", ");
 
-                // if the Customer has existing tags, update tags
-                if (findEmail?.tags) {
-
-                  // Extract the current tags from the customer's data
-                  const tags = findEmail.tags.split(',').map((tag) => tag.trim());
-
-                  // Check if the new tag is already present in the current tags
-
-                  // new tag doesn't exist
-                  if (!tags.includes(newTag)) {
-                    tags.push(newTag);
-                    const updatedTags = tags.join(', ');
-
-                    // Update the customer's tags
-                    const updatedCustomerData = {
-                      id: findEmail.id,
-                      tags: updatedTags,
-                    };
-
-                    await updateCustomer(shopSession, updatedCustomerData);
-                    console.log('Customer Tags Updated Successfully - Customer Signed up for Another Campaign');
-
-                  }
-                  // new tag exists already
-                  else {
-                    console.log('Customer Already Has this Tag. No Update Needed.');
-                  }
-                }
-
-                // If the customer has no existing tags, simply add the new tag
-                else {
+                  // Update the customer's tags
                   const updatedCustomerData = {
                     id: findEmail.id,
-                    tags: newTag,
+                    tags: updatedTags,
                   };
 
                   await updateCustomer(shopSession, updatedCustomerData);
-                  console.log('Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found');
+                  console.log(
+                    "Customer Tags Updated Successfully - Customer Signed Up for Another Campaign"
+                  );
+                }
+                // new tag exists already
+                else {
+                  console.log(
+                    "Customer Already Has this Tag. No Update Needed."
+                  );
                 }
               }
-            } catch (error) {
-              console.log("Error Creating/Updating Customer", error);
-              throwError;
+
+              // If the customer has no existing tags, simply add the new tag
+              else {
+                const updatedCustomerData = {
+                  id: findEmail.id,
+                  tags: newTag,
+                };
+                await updateCustomer(shopSession, updatedCustomerData);
+                console.log(
+                  "Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found"
+                );
+              }
             }
 
             referralcode = getreferrals.rows[0].referral_code;
@@ -323,7 +321,6 @@ export default function getUrlApi(app, secret) {
               email,
               "You have Subscribed"
             );
-            // console.log(send_message);
 
             //check referrer code and send reward unlock email or referral email
             const referrer_process = await find_referrer(
@@ -334,7 +331,6 @@ export default function getUrlApi(app, secret) {
             );
           }
         } else {
-
           //add to Klaviyo List
           let klaviyo_list = await add_to_klaviyo_list(
             email,
@@ -377,67 +373,82 @@ export default function getUrlApi(app, secret) {
             ],
           };
 
-          /* Check If Customer already exists in Database or App Store  */
+          // Check If Customer Already Exists in App Store or Database
 
-          try {
-            // if Not Exists on App Store or Database
-            if (customerExists?.rowCount == 0 && findEmail === undefined) {
+          if (customerExists?.rowCount !== 0 && !findEmail) {
+            console.log(
+              "Inside if When Customer Data is Present only in Database"
+            );
+            let currentCustomerData = await createCustomer(
+              shopSession,
+              customerData
+            );
+            console.log(
+              "Customer Created Without Referral Code: ",
+              currentCustomerData
+            );
+          } else if (customerExists?.rowCount === 0 && !findEmail) {
+            console.log(
+              "Inside else if When No Data is Present in Both Database and Store"
+            );
+            let currentCustomerData = await createCustomer(
+              shopSession,
+              customerData
+            );
+            console.log(
+              "Customer Created Without Referral Code: ",
+              currentCustomerData
+            );
+          } else {
+            console.log(
+              "Customer already Exists with this Email: ",
+              findEmail?.email
+            );
 
-              let currentCustomerData = await createCustomer(shopSession, customerData);
-              console.log("Customer Created Without Referral Code having Id: ", currentCustomerData.id);
+            // --------------- More than one Campaign signups Based Customer Tags ---------------
+            let new_camp_name = campaign_details.rows[0].name;
+            let newTag = `${new_camp_name}`;
 
-            } else {
-              // Update existing customer tags
-              console.log("Customer already Exists with this Email: ", findEmail?.email);
+            // if the Customer has existing tags, update tags
+            if (findEmail?.tags) {
+              // Extract the current tags from the customer's data
+              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
 
-              // -------------------------- More than one Campaign signups Based Customer Tags---------------------------
+              // Check if the new tag is already present in the current tags
 
-              let new_camp_name = campaign_details.rows[0].name;
-              let newTag = `${new_camp_name}`;
+              // new tag doesn't exist
+              if (!tags.includes(newTag)) {
+                tags.push(newTag);
+                const updatedTags = tags.join(", ");
 
-              // if the Customer has existing tags, update tags
-              if (findEmail?.tags) {
-
-                // Extract the current tags from the customer's data
-                const tags = findEmail.tags.split(',').map((tag) => tag.trim());
-
-                // Check if the new tag is already present in the current tags
-
-                // new tag doesn't exist
-                if (!tags.includes(newTag)) {
-                  tags.push(newTag);
-                  const updatedTags = tags.join(', ');
-
-                  // Update the customer's tags
-                  const updatedCustomerData = {
-                    id: findEmail.id,
-                    tags: updatedTags,
-                  };
-
-                  await updateCustomer(shopSession, updatedCustomerData);
-                  console.log('Customer Tags Updated Successfully - Customer Signed up for Another Campaign');
-
-                }
-                // new tag exists already
-                else {
-                  console.log('Customer Already Has this Tag. No Update Needed.');
-                }
-              }
-
-              // If the customer has no existing tags, simply add the new tag
-              else {
+                // Update the customer's tags
                 const updatedCustomerData = {
                   id: findEmail.id,
-                  tags: newTag,
+                  tags: updatedTags,
                 };
 
                 await updateCustomer(shopSession, updatedCustomerData);
-                console.log('Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found');
+                console.log(
+                  "Customer Tags Updated Successfully - Customer Signed up for Another Campaign"
+                );
+              }
+              // new tag exists already
+              else {
+                console.log("Customer Already Has this Tag. No Update Needed.");
               }
             }
-          } catch (error) {
-            console.log("Error Creating/Updating Customer", error);
-            throwError;
+
+            // If the customer has no existing tags, simply add the new tag
+            else {
+              const updatedCustomerData = {
+                id: findEmail.id,
+                tags: newTag,
+              };
+              await updateCustomer(shopSession, updatedCustomerData);
+              console.log(
+                "Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found"
+              );
+            }
           }
 
           referralcode = getreferrals.rows[0].referral_code;
@@ -528,9 +539,9 @@ export default function getUrlApi(app, secret) {
       );
       const data_ = await pool.query(
         "SELECT * FROM referrals WHERE referrer_id=$1",
-        [data.rows[0].referral_code]
+        [data.rows[0]?.referral_code]
       );
-      // console.log(data_.rows);
+      // console.log(data.rows[0].email);
       if (data_.rows.length > 0) {
         return res.status(200).json({
           success: true,
@@ -552,13 +563,15 @@ export default function getUrlApi(app, secret) {
 
   //Function for getting referrer details (Send referral email and reward unlock email if applicable)
   const find_referrer = async (refererURL, refer, campaign, shop) => {
+    console.log("im inside find_referrer function");
     if (refer) {
       const referrer = await pool.query(
         `SELECT * FROM referrals WHERE referral_code='${refer}' and campaign_id=${campaign.rows[0].campaign_id}`
       );
-      // console.log(referrer.rows);
+
       let referral_email_text = "";
       let reward_email_text = "";
+
       if (referrer.rows.length > 0) {
         let total_referrals = await pool.query(
           `SELECT * FROM referrals WHERE referrer_id='${refer}' and campaign_id=${campaign.rows[0].campaign_id}`
@@ -576,6 +589,30 @@ export default function getUrlApi(app, secret) {
           referrer.rows[0].email,
           "Friend has signed up"
         );
+
+        // ----------------- fetch customer details ----------------
+
+        let customer_email = referrer.rows[0].email;
+        console.log(customer_email);
+
+        // Get App Session from Shop Domain
+        const shopSession =
+          await Shopify.Context.SESSION_STORAGE.findSessionsByShop(shop);
+
+        // Call Customer List Fetch API function
+        let store_customers = await getCustomersList(shopSession);
+        console.log(
+          "Find Current User in Customer List of App Store having Email: ",
+          customer_email
+        );
+
+        // Get Customer Details Using Email
+        let findEmail = store_customers.find(
+          (data) => data.email === customer_email
+        );
+        console.log("User Found with this Email: ", findEmail?.email);
+
+        // -------------- tier unlocking -------------------
         let checker = null;
         if (total_referrals.rowCount == campaign.rows[0].reward_1_tier) {
           checker = "reward_1_tier";
@@ -588,6 +625,7 @@ export default function getUrlApi(app, secret) {
         }
         if (checker) {
           if (checker == "reward_1_tier") {
+            // send email
             reward_email_text = await replace_reward_email_text(
               refererURL,
               campaign,
@@ -596,7 +634,53 @@ export default function getUrlApi(app, secret) {
               total_referrals.rowCount,
               campaign.rows[0].reward_1_code
             );
+
+            // -------------------------- Tier Based Customer Tags---------------------------
+            let camp_name = campaign.rows[0].name;
+            let newTag = `${camp_name}-tier_1_unlocked`;
+            // if the Customer has existing tags, update tags
+            if (findEmail?.tags) {
+              // Extract the current tags from the customer's data
+              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+
+              // Check if the new tag is already present in the current tags
+
+              // new tag doesn't exist
+              if (!tags.includes(newTag)) {
+                tags.push(newTag);
+                const updatedTags = tags.join(", ");
+
+                // Update the customer's tags
+                const updatedCustomerData = {
+                  id: findEmail.id,
+                  tags: updatedTags,
+                };
+
+                await updateCustomer(shopSession, updatedCustomerData);
+                console.log(
+                  "Customer Tags Updated Successfully - Tier 1 Tag Added to Customer"
+                );
+              }
+              // new tag exists already
+              else {
+                console.log(
+                  "Customer Already Has Tier 1 Tag. No Update Needed."
+                );
+              }
+            }
+            // If the customer has no existing tags, simply add the new tag
+            else {
+              const updatedCustomerData = {
+                id: findEmail.id,
+                tags: newTag,
+              };
+              await updateCustomer(shopSession, updatedCustomerData);
+              console.log(
+                "Customer Tag Added Successfully - Tier 1 Tag Added to Customer, but No Existing Tags were Found"
+              );
+            }
           } else if (checker == "reward_2_tier") {
+            // send email
             reward_email_text = await replace_reward_email_text(
               refererURL,
               campaign,
@@ -605,7 +689,53 @@ export default function getUrlApi(app, secret) {
               total_referrals.rowCount,
               campaign.rows[0].reward_2_code
             );
+
+            // -------------------------- Tier Based Customer Tags---------------------------
+            let camp_name = campaign.rows[0].name;
+            let newTag = `${camp_name}-tier_2_unlocked`;
+            // if the Customer has existing tags, update tags
+            if (findEmail?.tags) {
+              // Extract the current tags from the customer's data
+              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+
+              // Check if the new tag is already present in the current tags
+
+              // new tag doesn't exist
+              if (!tags.includes(newTag)) {
+                tags.push(newTag);
+                const updatedTags = tags.join(", ");
+
+                // Update the customer's tags
+                const updatedCustomerData = {
+                  id: findEmail.id,
+                  tags: updatedTags,
+                };
+
+                await updateCustomer(shopSession, updatedCustomerData);
+                console.log(
+                  "Customer Tags Updated Successfully - Tier 2 Tag Added to Customer"
+                );
+              }
+              // new tag exists already
+              else {
+                console.log(
+                  "Customer Already Has Tier 2 Tag. No Update Needed."
+                );
+              }
+            }
+            // If the customer has no existing tags, simply add the new tag
+            else {
+              const updatedCustomerData = {
+                id: findEmail.id,
+                tags: newTag,
+              };
+              await updateCustomer(shopSession, updatedCustomerData);
+              console.log(
+                "Customer Tag Added Successfully - Tier 2 Tag Added to Customer, but No Existing Tags were Found"
+              );
+            }
           } else if (checker == "reward_3_tier") {
+            // send email
             reward_email_text = await replace_reward_email_text(
               refererURL,
               campaign,
@@ -614,7 +744,53 @@ export default function getUrlApi(app, secret) {
               total_referrals.rowCount,
               campaign.rows[0].reward_3_code
             );
+
+            // -------------------------- Tier Based Customer Tags---------------------------
+            let camp_name = campaign.rows[0].name;
+            let newTag = `${camp_name}-tier_3_unlocked`;
+            // if the Customer has existing tags, update tags
+            if (findEmail?.tags) {
+              // Extract the current tags from the customer's data
+              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+
+              // Check if the new tag is already present in the current tags
+
+              // new tag doesn't exist
+              if (!tags.includes(newTag)) {
+                tags.push(newTag);
+                const updatedTags = tags.join(", ");
+
+                // Update the customer's tags
+                const updatedCustomerData = {
+                  id: findEmail.id,
+                  tags: updatedTags,
+                };
+
+                await updateCustomer(shopSession, updatedCustomerData);
+                console.log(
+                  "Customer Tags Updated Successfully - Tier 3 Tag Added to Customer"
+                );
+              }
+              // new tag exists already
+              else {
+                console.log(
+                  "Customer Already Has Tier 3 Tag. No Update Needed."
+                );
+              }
+            }
+            // If the customer has no existing tags, simply add the new tag
+            else {
+              const updatedCustomerData = {
+                id: findEmail.id,
+                tags: newTag,
+              };
+              await updateCustomer(shopSession, updatedCustomerData);
+              console.log(
+                "Customer Tag Added Successfully - Tier 3 Tag Added to Customer, but No Existing Tags were Found"
+              );
+            }
           } else if (checker == "reward_4_tier") {
+            // send email
             reward_email_text = await replace_reward_email_text(
               refererURL,
               campaign,
@@ -623,6 +799,51 @@ export default function getUrlApi(app, secret) {
               total_referrals.rowCount,
               campaign.rows[0].reward_4_code
             );
+
+            // -------------------------- Tier Based Customer Tags---------------------------
+            let camp_name = campaign.rows[0].name;
+            let newTag = `${camp_name}-tier_4_unlocked`;
+            // if the Customer has existing tags, update tags
+            if (findEmail?.tags) {
+              // Extract the current tags from the customer's data
+              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+
+              // Check if the new tag is already present in the current tags
+
+              // new tag doesn't exist
+              if (!tags.includes(newTag)) {
+                tags.push(newTag);
+                const updatedTags = tags.join(", ");
+
+                // Update the customer's tags
+                const updatedCustomerData = {
+                  id: findEmail.id,
+                  tags: updatedTags,
+                };
+
+                await updateCustomer(shopSession, updatedCustomerData);
+                console.log(
+                  "Customer Tags Updated Successfully - Tier 4 Tag Added to Customer"
+                );
+              }
+              // new tag exists already
+              else {
+                console.log(
+                  "Customer Already Has Tier 4 Tag. No Update Needed."
+                );
+              }
+            }
+            // If the customer has no existing tags, simply add the new tag
+            else {
+              const updatedCustomerData = {
+                id: findEmail.id,
+                tags: newTag,
+              };
+              await updateCustomer(shopSession, updatedCustomerData);
+              console.log(
+                "Customer Tag Added Successfully - Tier 4 Tag Added to Customer, but No Existing Tags were Found"
+              );
+            }
           }
           await send_email(
             reward_email_text,

@@ -1,5 +1,6 @@
 <script>
   let first_page_settings = {{ block.settings | json }};
+
   async function getbackground(campaign_name) {
     return await fetch('/apps/product-prelauncher/api/geturl', {
       method: 'POST',
@@ -13,11 +14,36 @@
       return response.json();
     });
   }
+
+  // count user clicks
+
+  async function getClicks(campaign_name) {
+    try {
+      console.log('Get Clicks of: ', campaign_name);
+      const response = await fetch("/apps/frontenddev_app_v2/api/getclicks",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          campaign_name: campaign_name,
+        }),
+      }
+    );
+    const data = await response.json();
+    } catch(err){
+      console.log(err);
+    }
+  }
+
   window.onload = async (e) => {
     var el = document.querySelector('.product-prelaunch');
     el.parentElement.style.padding = '0';
-    el.parentElement.style.margin = '0';{% if block.settings.show_header_footer == false %}var node,
-        nodes = [];
+    el.parentElement.style.margin = '0';
+    {% if block.settings.show_header_footer == false %}
+      var node,
+      nodes = [];
       do {
         var parent = el.parentNode;
         // Collect element children
@@ -35,12 +61,19 @@
       // Hide the collected nodes
       nodes.forEach(function(node) {
         node.style.display = 'none';
-      });{% endif %}let urlredirect = window.location.href;
+      });
+    {% endif %}
+    
+    let urlredirect = window.location.href;
     urlredirect = urlredirect.split('/pages')[0];
+
     const campaign = document.getElementById('landing_campaign_name');
     const campaign_name = campaign.innerHTML;
     const myBackground = await getbackground(campaign_name);
     const campaign_details = myBackground.campaign_data;
+    clicks = getClicks(campaign_name);
+    // console.log('clicks api: ', clicks);
+    
     // Get Store Social Icons
     let share_facebook = document.getElementById('store-facebook-link');
     let share_instagram = document.getElementById('store-instagram-link');
@@ -48,7 +81,9 @@
     let share_tiktok = document.getElementById('store-tiktok-link');
     let share_snapchat = document.getElementById('store-snapchat-link');
     let share_discord = document.getElementById('store-discord-link');
+
     // we have to show only checked social icons on landing page, hence:
+    
     // Facebook
     if (campaign_details.show_facebook_link === false) {
       if (share_facebook) {
