@@ -16,7 +16,7 @@ const billingStyles = {
     style: {
       fontSize: "15px",
       fontWeight: "semi-bold",
-      paddingLeft: "0 4px",
+      paddingLeft: "0 6px",
       justifyContent: "center",
       color: "#FCFCFC",
       backgroundColor: "#232227",
@@ -38,7 +38,7 @@ const billingStyles = {
     style: {
       backgroundColor: "#232229",
       color: "#ECECEC",
-      // textAlign: "center",
+      textAlign: "center",
     },
     highlightOnHoverStyle: {
       color: "#f3f3f3",
@@ -135,7 +135,7 @@ const UserProfile = () => {
       name: "Charged Date",
       selector: (row) => row.created_at,
       sortable: true,
-      id: "charge_date",
+      id: "charged_date",
       style: {
         fontSize: 15,
       },
@@ -188,15 +188,17 @@ const UserProfile = () => {
       let currentPlan = {
         ...billingPlan,
         plan_name: billingPlan?.collecting_phones
-          ? billingPlan?.plan_name + " + Collecting Phones"
+          ? billingPlan?.plan_name + " + Add Ons"
           : billingPlan?.plan_name,
-        created_at: new Date(billingPlan?.created_at).toLocaleString(),
+        created_at:
+          new Date(billingPlan?.created_at).toDateString() +
+          " " +
+          new Date(billingPlan?.created_at).toLocaleTimeString(),
       };
       setTableData([currentPlan]);
     }
   }, [billingPlan]);
 
-  console.log(billingPlan)
   // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -234,10 +236,9 @@ const UserProfile = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data, "Returned by user");
           dispatch(SaveUser(data));
         })
-        .catch((err) => console.log(err));
+        .catch((err) => err);
       setIsloading(false);
     }
   };
