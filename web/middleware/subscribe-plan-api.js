@@ -3,6 +3,8 @@ import ensureBilling, {
   BillingInterval,
   cancelAppSubscription,
   getCurrentActivePricingPlan,
+  getSubscriptionCharge,
+  updateSubscription,
 } from "../helpers/ensure-billing.js";
 import NewPool from "pg";
 
@@ -34,8 +36,10 @@ export default function SubscribePlanApiEndPoint(myApp) {
         myApp.get("use-online-tokens")
       );
       try {
-        // Will Get the Current Active Subscribed Plan
+        // webhook subscription
+
         await getCurrentActivePricingPlan(session);
+
         const planExists = await pool.query(
           `select * from subscriptions_list where shop_id =$1`,
           [session?.shop]
@@ -101,7 +105,6 @@ export default function SubscribePlanApiEndPoint(myApp) {
               session,
               plan_settings
             );
-
             if (!hasPayment) {
               return res.json({ confirmationUrl: confirmationUrl });
             } else {
@@ -119,6 +122,55 @@ export default function SubscribePlanApiEndPoint(myApp) {
     } catch (err) {
       console.log(err);
       return err;
+    }
+  });
+
+  // Merchat Selects the add-ons features with Existing Tier Plan to Renew the subscription
+
+  myApp.post("/api/confirm-add-ons", async (req, res) => {
+    try {
+      const session = await Shopify.Utils.loadCurrentSession(
+        req,
+        res,
+        myApp.get("use-online-tokens")
+      );
+
+      const {
+        billing_required,
+        currency_code,
+        plan_name,
+        price,
+        collecting_phones,
+      } = req.body;
+
+      let newAmount = price;
+      // Update Plan_settings with Collecting_phones
+      const plan_settings = {
+        ...BILLING_SETTINGS,
+        required: billing_required,
+        chargeName: plan_name + " + Add-ons ",
+        amount: newAmount,
+        currencyCode: currency_code,
+        collecting_phones: collecting_phones,
+      };
+
+      // IF BilLing Required is TRUE & Subscribed to Paid Plan
+      if (plan_settings.required) {
+        const [hasPayment, confirmationUrl] = await ensureBilling(
+          session,
+          plan_settings
+        );
+        if (!hasPayment) {
+          return res.json({ confirmationUrl: confirmationUrl });
+        } else {
+          return res.json("You have already subscribed to this plan");
+        }
+      } else {
+        console.log("Billing Failed ");
+      }
+    } catch (error) {
+      console.log(error?.response?.errors, "error creating subscription");
+      return error;
     }
   });
 }
