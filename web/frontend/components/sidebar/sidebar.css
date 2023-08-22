@@ -7,7 +7,6 @@
   overflow: hidden;
 }
 
-
 .sidebar-content .sidebar-logo {
   width: 170px;
   margin-top: 15px;
@@ -42,7 +41,6 @@ a {
 
 /* New Campaign button  */
 
-
 .btn-link-add {
   display: flex;
   padding: 10px;
@@ -51,10 +49,10 @@ a {
 
 .add-button {
   border: none;
-  padding: 7px 14px;
+  padding: 5px 10px;
   display: flex;
   border-radius: 5px;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 500;
 }
 
@@ -68,11 +66,10 @@ a {
 
 .add-btn-icon {
   margin-top: 5px;
-  height: 30px;
-  width: 30px;
+  height: 24px;
+  width: 24px;
   font-weight: bold;
 }
-
 
 /* All Pages Links in Center of Sidebar */
 
@@ -121,11 +118,11 @@ a {
 }
 
 .activelink .icon-img {
-  margin-left: 15px;
+  margin-left: 27px;
 }
 
 .activelink .icon-text {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 /* In-Active Links */
@@ -140,7 +137,7 @@ a {
   padding-bottom: 15px;
   gap: 20px;
   margin-bottom: 20px;
-  margin-left: 15px;
+  margin-left: 27px;
 }
 
 .bottom .normallink .icon-text {
@@ -194,20 +191,16 @@ a {
     font-weight: bold;
   }
 
-
   .top .normallink .icon-img,
   .bottom .sidebar-link-bottom .normallink .icon-img {
     width: 24px;
     height: 24px;
   }
 
-
   .top .normallink,
   .bottom .normallink {
-
     padding-top: 10px;
     padding-bottom: 10px;
-
   }
 
   .icon-text,
@@ -297,10 +290,8 @@ a {
 
   .top .normallink,
   .bottom .normallink {
-
     padding-top: 6px;
     padding-bottom: 6px;
-
   }
 
   .icon-text,
@@ -358,7 +349,7 @@ a {
     font-weight: bold;
   }
 
-  .sidebar-content .sidebar-logo{
+  .sidebar-content .sidebar-logo {
     margin-right: 15px;
   }
 
@@ -402,7 +393,7 @@ a {
 }
 
 @media only screen and (max-width: 500px) {
-  .sidebar-content .sidebar-logo{
+  .sidebar-content .sidebar-logo {
     margin: 0 5px;
     margin-right: 10px;
   }
@@ -429,7 +420,6 @@ a {
     font-size: 15px;
     font-weight: 500;
   }
-
 
   .icon-text {
     display: block;
