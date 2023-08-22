@@ -3,8 +3,6 @@ import ensureBilling, {
   BillingInterval,
   cancelAppSubscription,
   getCurrentActivePricingPlan,
-  getSubscriptionCharge,
-  updateSubscription,
 } from "../helpers/ensure-billing.js";
 import NewPool from "pg";
 
@@ -36,8 +34,6 @@ export default function SubscribePlanApiEndPoint(myApp) {
         myApp.get("use-online-tokens")
       );
       try {
-        // webhook subscription
-
         await getCurrentActivePricingPlan(session);
 
         const planExists = await pool.query(
@@ -76,7 +72,7 @@ export default function SubscribePlanApiEndPoint(myApp) {
       const plan_settings = {
         ...BILLING_SETTINGS,
         required: billing_required,
-        chargeName: plan_name,
+        chargeName: collecting_phones ? plan_name + " + Add-ons" : plan_name,
         amount: newAmount,
         currencyCode: currency_code,
         collecting_phones: collecting_phones,
@@ -125,7 +121,7 @@ export default function SubscribePlanApiEndPoint(myApp) {
     }
   });
 
-  // Merchat Selects the add-ons features with Existing Tier Plan to Renew the subscription
+  // Merchant Selects the add-ons features with Existing Tier Plan to Renew their subscription
 
   myApp.post("/api/confirm-add-ons", async (req, res) => {
     try {
@@ -145,7 +141,7 @@ export default function SubscribePlanApiEndPoint(myApp) {
 
       let newAmount = price;
       // Update Plan_settings with Collecting_phones
-      const plan_settings = {
+      const addons_plan = {
         ...BILLING_SETTINGS,
         required: billing_required,
         chargeName: plan_name + " + Add-ons ",
@@ -155,10 +151,10 @@ export default function SubscribePlanApiEndPoint(myApp) {
       };
 
       // IF BilLing Required is TRUE & Subscribed to Paid Plan
-      if (plan_settings.required) {
+      if (addons_plan.required) {
         const [hasPayment, confirmationUrl] = await ensureBilling(
           session,
-          plan_settings
+          addons_plan
         );
         if (!hasPayment) {
           return res.json({ confirmationUrl: confirmationUrl });
@@ -166,7 +162,8 @@ export default function SubscribePlanApiEndPoint(myApp) {
           return res.json("You have already subscribed to this plan");
         }
       } else {
-        console.log("Billing Failed ");
+        // Cancel Add-on Subscription
+        console.log("Error");
       }
     } catch (error) {
       console.log(error?.response?.errors, "error creating subscription");
