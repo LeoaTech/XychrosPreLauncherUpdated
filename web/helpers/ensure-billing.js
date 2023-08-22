@@ -236,7 +236,6 @@ export async function getSubscriptionCharge(session) {
       (recurringCharge) => recurringCharge?.status === "active" //Get active charge Plan details (Id, price,status)
     );
 
-    console.log(activePlan, "Active charge");
     return activePlan;
   } catch (err) {
     console.error(err, "Error to Get Current RecurringCharge");
@@ -263,7 +262,6 @@ async function saveSubscribedPlan(subscribedPlan, session) {
     [session?.shop]
   );
   // Subscription Exists ====> Add it Into Database
-
   if (subscribedPlan) {
     const charged_name = subscribedPlan?.name.split(" + ");
     const tierName = charged_name[0]; // Extract "Tier Name"
@@ -289,7 +287,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
         const savePlan = await pool.query(
           `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id,billing_required,collecting_phones) VALUES ($1, $2, $3, $4, $5, $6, $7,$8)`,
           [
-            plan_name,
+            subscribedPlan?.name,
             totalBill,
             subscribedPlan?.created_at,
             subscriptionId,
@@ -316,7 +314,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
            WHERE 
             shop_id=$8`,
           [
-            plan_name,
+            subscribedPlan?.name,
             totalBill,
             subscribedPlan?.updated_at,
             subscriptionId,
