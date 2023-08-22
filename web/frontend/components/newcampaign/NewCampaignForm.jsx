@@ -60,6 +60,8 @@ function NewCampaignForm() {
 
   const current_plan = useSelector(fetchCurrentPlan);
 
+  console.log(currentTier, "Tier");
+  console.log(current_plan, "Plan");
   const campaignById = useSelector(
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
@@ -346,7 +348,10 @@ function NewCampaignForm() {
   //  Get Current Subscription Plan Name
   useEffect(() => {
     if (currentTier !== "") {
-      setMyPlan(currentTier);
+      const charged_name = currentTier.split(" + ");
+      const tierName = charged_name[0]; // Extract "Tier Name"
+
+      setMyPlan(tierName);
     }
 
     if (totalCampaigns) {
