@@ -16,6 +16,61 @@ pool.connect((err, result) => {
 
 const api_version = '2022-10';
 
+// delete segments - graphql api
+const deleteSegments = async (accessToken, shopURL, idsData) => {
+
+    // extract ids
+    const segment_ids = {
+        tier1_segment_id: idsData.tier1_segment_id,
+        tier2_segment_id: idsData.tier2_segment_id,
+        ...(idsData.tier3_segment_id !== null && {tier3_segment_id: idsData.tier3_segment_id}),
+        ...(idsData.tier4_segment_id !== null && {tier4_segment_id: idsData.tier4_segment_id})
+    };
+    // console.log(segment_ids);
+
+    // Set Headers
+    const headers = {
+        'X-Shopify-Access-Token': accessToken,
+        'Content-Type': 'application/json',
+    };
+
+    for (const id in segment_ids) {
+        const url = `https://${shopURL}/admin/api/${api_version}/graphql.json`;
+
+        const mutation = `
+            mutation {
+                segmentDelete(id: "gid://shopify/Segment/${segment_ids[id]}") {
+                    deletedSegmentId
+                    userErrors {
+                        field
+                        message
+                    }
+                }
+            }    
+        `;
+
+        const options = {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ query: mutation }),
+        };
+
+        try {
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            console.log('{ message:', data.segmentDelete.deletedSegmentId, 'was successfully deleted }');
+
+            if (!response.ok || data.errors) {
+                console.log('GraphQL Errors:', data.errors);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+};
+
+// other delete api calls - rest api
 const deleteFromStore = async (accessToken, shopURL, idsData) => {
 
     // extract ids
@@ -153,6 +208,7 @@ export default function deleteFromStoreApiEndpoint(app) {
             if (campaignExists?.rowCount > 0) {
                 data = campaignExists?.rows[0];
             }
+            await deleteSegments(accessToken, shop, data);
             await deleteFromStore(accessToken, shop, data);
             return res.status(200).json({ success: true, message: "Templates, Pages, Segments and Price Rules Deleted Successfully" });
 
