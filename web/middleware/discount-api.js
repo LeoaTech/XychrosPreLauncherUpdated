@@ -385,6 +385,10 @@ export default function discountApiEndpoint(app) {
 
             const campaignDetails = {
                 ...discount_details,
+                tier1_segment_id: customer_segment_ids[0] || null,
+                tier2_segment_id: customer_segment_ids[1] || null,
+                tier3_segment_id: customer_segment_ids[2] || null,
+                tier4_segment_id: customer_segment_ids[3] || null,
             }
 
             return res.status(200).json({ success: true, data: campaignDetails, message: "Discount Codes Generated Successfully" });
