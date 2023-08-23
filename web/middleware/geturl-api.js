@@ -49,7 +49,7 @@ export default function getUrlApi(app, secret) {
 
         res.status(200).json({
           success: true,
-          imageURL: imageURL?.rows[0]?.welcome_image_url,
+          imageURL: imageURL?.rows[0]?.image_url,
           campaign_data: campaign_details.rows[0],
         });
       } else {
