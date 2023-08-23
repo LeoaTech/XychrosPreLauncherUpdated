@@ -90,6 +90,25 @@ const CampaignsComponent = () => {
   const handleDelete = async (id) => {
     setDeleteId(id);
 
+    // Delete From Store API Call
+    async function deleteFromStore(id) {
+      try {
+        const response = await fetch("/api/delete_from_store", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            campaign_id: id,
+          }),
+        });
+        const responseData = await response.json();
+        console.log(responseData);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     try {
       const deletedCampaign = getCampaigns.find(
         (campaign) => campaign?.campaign_id === id
@@ -99,7 +118,8 @@ const CampaignsComponent = () => {
         (camp) => camp?.campaign_id === id
       );
       setCampaignName(deletedCampaign?.name);
-
+        
+      await deleteFromStore(id);
       const response = await fetch(`/api/campaignsettings/${id}`, {
         method: "PATCH",
         headers: {
