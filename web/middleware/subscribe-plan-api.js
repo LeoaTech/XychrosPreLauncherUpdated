@@ -121,7 +121,7 @@ export default function SubscribePlanApiEndPoint(myApp) {
     }
   });
 
-  // Merchant Selects the add-ons features with Existing Tier Plan to Renew their subscription
+  // Merchant Renew Subscription plan with add-on Confirmation or cancel add-on subscription
 
   myApp.post("/api/confirm-add-ons", async (req, res) => {
     try {
@@ -144,13 +144,13 @@ export default function SubscribePlanApiEndPoint(myApp) {
       const addons_plan = {
         ...BILLING_SETTINGS,
         required: billing_required,
-        chargeName: plan_name + " + Add-ons ",
+        chargeName: collecting_phones ? plan_name + " + Add-ons" : plan_name,
         amount: newAmount,
         currencyCode: currency_code,
         collecting_phones: collecting_phones,
       };
 
-      // IF BilLing Required is TRUE & Subscribed to Paid Plan
+      // If BilLing Required is TRUE & Subscribed to Paid Plan
       if (addons_plan.required) {
         const [hasPayment, confirmationUrl] = await ensureBilling(
           session,
@@ -163,7 +163,10 @@ export default function SubscribePlanApiEndPoint(myApp) {
         }
       } else {
         // Cancel Add-on Subscription
-        console.log("Error");
+
+        const result = await cancelAppSubscription(session, collecting_phones);
+        console.log(result, "Cancel Plan");
+        return res.status(200).json(result);
       }
     } catch (error) {
       console.log(error?.response?.errors, "error creating subscription");
