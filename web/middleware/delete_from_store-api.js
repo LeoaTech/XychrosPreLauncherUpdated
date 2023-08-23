@@ -1,6 +1,8 @@
 import { Shopify } from '@shopify/shopify-api';
 import fetch from 'node-fetch';
 import NewPool from "pg";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const { Pool } = NewPool;
 const pool = new Pool({
@@ -28,6 +30,13 @@ const deleteFromStore = async (accessToken, shopURL, idsData) => {
         landing_page: idsData.landing_page_id,
         rewards_page: idsData.rewards_page_id
     }
+
+    const price_rules_ids = {
+        tier1_price_rule_id: idsData.tier1_price_rule_id,
+        tier2_price_rule_id: idsData.tier2_price_rule_id,
+        ...(idsData.tier3_price_rule_id !== null && {tier3_price_rule_id: idsData.tier3_price_rule_id}),
+        ...(idsData.tier4_price_rule_id !== null && {tier4_price_rule_id: idsData.tier4_price_rule_id})
+    };
 
     // set headers
     const headers = {
@@ -78,8 +87,30 @@ const deleteFromStore = async (accessToken, shopURL, idsData) => {
         }
     };
 
+    // delete price_rules
+    const deletePriceRules = async () => {
+        for (const id in price_rules_ids) {
+            try {
+                const response = await fetch(
+                    `https://${shopURL}/admin/api/${api_version}/price_rules/${price_rules_ids[id]}.json`, {
+                    method: 'DELETE',
+                    headers,
+                });
+
+                if (!response.ok) {
+                    console.log(`Failed to Delete Price Rule [${price_rules_ids[id]}]`);
+                } else {
+                    console.log(`{ message: Price Rule having Id [${price_rules_ids[id]}] was successfully deleted }`);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
+
     await deleteTemplates();
     await deletePages();
+    await deletePriceRules();
 }
 
 // --------------------------------------- API ------------------------------------
