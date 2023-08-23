@@ -21,7 +21,7 @@ import { fetchTotalClicks } from "../app/features/user_clicks/totalclicksSlice";
 import useFetchLastSixMonthsClicks from "../constant/fetchLastSixMonthsClicks";
 import { fetchLastSixMonthsClicks } from "../app/features/user_clicks/lastSixMonthsClicksSlice";
 import useFetchLastFourCampaignsClicks from "../constant/fetcLastFourCampaignsClicks";
-import { fetchLastFourCampaignsClicks } from "../app/features/user_clicks/lastFourCampaignsClicksSlice"; 
+import { fetchLastFourCampaignsClicks } from "../app/features/user_clicks/lastFourCampaignsClicksSlice";
 
 export default function HomePage() {
   const { activeMenu } = useStateContext();
@@ -52,23 +52,52 @@ export default function HomePage() {
     },
   });
 
-  // Get All Campaign Clicks 
+  // Get Campaign Settings List
+  const campaigns = useFetchCampaignsData("/api/getcampaigns", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const referrals = useFetchReferralsData("/api/getallreferralcount", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  // Get All Campaign Clicks
   const total_clicks = useFetchTotalClicks("/api/fetchtotalclicks", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
 
   // Get Last Six Months Campaign Clicks Data
-  const lastsixmonths_clicks = useFetchLastSixMonthsClicks("/api/fetch_lastsixmonths_clicks", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  const lastsixmonths_clicks = useFetchLastSixMonthsClicks(
+    "/api/fetch_lastsixmonths_clicks",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 
   // Get Last Four Campaigns Clicks
-  const lastfourcampaigns_clicks = useFetchLastFourCampaignsClicks("/api/fetch_lastfourcampaigns_clicks", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  const lastfourcampaigns_clicks = useFetchLastFourCampaignsClicks(
+    "/api/fetch_lastfourcampaigns_clicks",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+
+  useEffect(() => {
+    if (campaigns?.length > 0) {
+      dispatch(fetchCampaign(campaigns));
+    }
+  }, [campaigns, dispatch]);
+
+  useEffect(() => {
+    if (referrals?.length > 0) {
+      dispatch(fetchReferrals(referrals));
+    }
+  }, [referrals, dispatch]);
 
   // Dispatch API result in Redux store to get access data in the App
   useEffect(() => {
