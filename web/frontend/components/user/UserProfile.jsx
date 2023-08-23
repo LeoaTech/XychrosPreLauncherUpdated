@@ -162,10 +162,17 @@ const UserProfile = () => {
 
   // Get Current Plan and Set Billing Details in TableData
   useEffect(() => {
+    let cardId;
     if (billingPlan !== undefined) {
-      const charged_name = billingPlan?.plan_name.split(" + ");
-      const tierName = charged_name[0]; // Extract "Tier Name"
-      let cardId = priceData?.find((plan) => plan?.plan_name === tierName);
+      if (billingPlan?.plan_name?.includes("Add-on")) {
+        const charged_name = billingPlan?.plan_name?.split(" + ");
+        const tierName = charged_name[0]; // Extract "Tier Name"
+        cardId = priceData?.find((plan) => plan?.plan_name === tierName);
+      } else {
+        cardId = priceData?.find(
+          (plan) => plan?.plan_name === billingPlan?.plan_name
+        );
+      }
       setPriceCard([{ ...cardId }]);
       setSubscribedCardId(cardId?.id);
       setUserDetails({ ...userDetails, billing_id: subscribedCardId });
