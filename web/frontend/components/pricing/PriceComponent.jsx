@@ -31,10 +31,15 @@ const PriceComponent = () => {
 
   useEffect(() => {
     if (activePlan) {
-      const charged_name = activePlan?.plan_name.split(" + ");
-      const tierName = charged_name[0]; // Extract "Tier Name"
+      let planId;
+      if (activePlan?.plan_name?.includes("Add-on")) {
+        const charged_name = activePlan?.plan_name?.split(" + ");
+        const tierName = charged_name[0]; // Extract "Tier Name"
 
-      let planId = priceData?.find((plan) => plan?.plan_name === tierName);
+        planId = priceData?.find((plan) => plan?.plan_name === tierName);
+      }else{
+        planId = priceData?.find((plan) => plan?.plan_name === activePlan?.plan_name);
+      }
       setSubscribedPlanId(planId?.id);
       setCollectNumbers(activePlan?.collecting_phones);
     }
