@@ -12,7 +12,6 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
-
 }
 
 /* .pricing-details:first-child {
@@ -24,8 +23,6 @@
   flex-direction: column;
   padding: 15px 5px;
   margin: 10px 5px;
-
-
 }
 
 .price-detail-block h3 {
@@ -56,17 +53,16 @@
   font-weight: 500;
   margin: 10px 10px;
   line-height: 1.6;
-  
+
   word-break: keep-all;
 }
 
 .feature {
   display: flex;
   gap: 10px;
-
 }
 
-.btn-subscribe, .btn-confirmed {
+.btn-subscribe {
   height: 40px;
   background-color: rgb(233, 229, 229);
   width: 120px;
@@ -86,36 +82,96 @@
   -o-border-radius: 25px;
 }
 
-
-.btn-confirmed{
+/* .btn-confirmed {
   width: 190px;
+  height: 55px;
+} */
+
+.btn-confirmed {
+  cursor: pointer;
+  position: relative;
+  padding: 10px 24px;
+  font-size: 18px;
+  color: rgb(175, 174, 174);
+  border: 2px solid rgb(175, 174, 174);
+  border-radius: 34px;
+  background-color: transparent;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
 }
 
-.btn-subscribe.disabled{
-  cursor:not-allowed;
+.btn-confirmed::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 120px;
+  height: 50px;
+  border-radius: inherit;
+  scale: 0;
+  z-index: -1;
+  background-color: rgb(207, 206, 202);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-confirmed.disabled::before {
+  background-color: rgb(183, 183, 183);
+}
+
+.btn-confirmed:hover::before {
+  scale: 3;
+}
+
+.btn-confirmed:hover {
+  color: #212121;
+  scale: 1.1;
+  box-shadow: 0 0px 20px rgba(117, 113, 95, 0.4);
+}
+
+.btn-confirmed:active {
+  scale: 1;
+}
+
+.btn-subscribe.disabled {
+  cursor: not-allowed;
   background-color: rgb(208, 208, 208);
+}
+.btn-confirmed.disabled {
+  cursor: not-allowed;
+  background-color: rgb(183, 183, 183);
+  color: #353535;
+
 }
 
 .btn-subscribe.disabled:hover,
-.btn-subscribe.disabled:focus{
+.btn-subscribe.disabled:focus {
   background-color: rgb(208, 208, 208);
   box-shadow: 0px 0px 0px 0px #1b1a1a;
-  
+}
+.btn-confirmed.disabled:hover,
+.btn-confirmed.disabled:focus,
+.btn-confirmed.disabled:active {
+  background-color: rgb(183, 183, 183);
+  box-shadow: 0px 0px 0px 0px #1b1a1a;
+  scale: 1;
+  color: rgb(117, 117, 117);
+
 }
 
-.btn-subscribe:hover, 
+.btn-subscribe:hover,
 .btn-subscribe:focus {
   background-color: #fff;
   box-shadow: 1px 0.5px 4px 3px #bab9b9;
-  color:var(--secondary-text-color)
+  color: var(--secondary-text-color);
 }
 
-.btn-confirmed:hover,.btn-confirmed:focus{
+/* .btn-confirmed:hover,
+.btn-confirmed:focus {
   background-color: #fff;
-  box-shadow: 1px 0.5px 2px 3px #bab8b8;
-  color:var(--secondary-text-color)
-}
-
+  /* box-shadow: 1px 0.5px 2px 3px #bab8b8; 
+  color: var(--secondary-text-color);
+} */
 
 @media screen and (max-width: 1480px) {
   .pricing-details {
@@ -123,10 +179,8 @@
     width: 280px;
   }
   .pricing-features {
-    
     width: 250px;
-   
-  } 
+  }
 }
 
 @media screen and (max-width: 1050px) {
@@ -135,10 +189,8 @@
     width: 220px;
   }
   .pricing-features {
-    
     width: 160px;
-   
-  } 
+  }
 }
 @media screen and (max-width: 786px) {
   .pricing-details {
@@ -146,11 +198,8 @@
     width: 210px;
   }
   .pricing-features {
-    
     width: 190px;
-   
   }
-  
 }
 
 @media screen and (max-width: 500px) {
@@ -159,9 +208,7 @@
     width: 230px;
   }
   .pricing-features {
-    
     width: 200px;
-   
   }
   .price-detail-block {
     display: flex;
@@ -174,13 +221,10 @@
     font-size: 17px;
 
     margin-bottom: 10px;
-
   }
 
   .price-bottom h2 {
     font-size: 16px;
-    margin: 15px 5PX;
-
+    margin: 15px 5px;
   }
-
 }

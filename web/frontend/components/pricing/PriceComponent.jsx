@@ -18,6 +18,7 @@ const PriceComponent = () => {
 
   const [pricePlans, setPricePlans] = useState([]);
   const [isLoading, setIsloading] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedPlanId, setSubscribedPlanId] = useState(null); //handle Biiling Card subscription ID
   const [collectNumbers, setCollectNumbers] = useState(false);
@@ -30,9 +31,10 @@ const PriceComponent = () => {
 
   useEffect(() => {
     if (activePlan) {
-      let planId = priceData?.find(
-        (plan) => plan?.plan_name === activePlan?.plan_name
-      );
+      const charged_name = activePlan?.plan_name.split(" + ");
+      const tierName = charged_name[0]; // Extract "Tier Name"
+
+      let planId = priceData?.find((plan) => plan?.plan_name === tierName);
       setSubscribedPlanId(planId?.id);
       setCollectNumbers(activePlan?.collecting_phones);
     }
@@ -65,12 +67,13 @@ const PriceComponent = () => {
   };
 
   const handleConfirmAddOn = async () => {
-    console.log("Clicked button");
+    setIsSubscribing(true);
+
+    let chargeAmount =
+      activePlan?.plan_name === "Free" ? "0.0" : activePlan?.price;
     const subscribeAddOns = {
-      billing_required: true,
-      currency_code: "USD",
-      plan_name: "Collecting_phones",
-      price: "5.00",
+      ...activePlan,
+      price: chargeAmount,
     };
     const response = await fetchAuth("/api/confirm-add-ons", {
       method: "POST",
@@ -79,20 +82,65 @@ const PriceComponent = () => {
       },
       body: JSON.stringify({
         ...subscribeAddOns,
+        currency_code: "USD",
         collecting_phones: collectNumbers,
       }),
     });
     if (response.ok) {
       const subscribe_data = await response.json();
-      console.log(subscribe_data, "Confirm add-ons");
       if (subscribe_data?.confirmationUrl) {
         redirect.dispatch(Redirect.Action.REMOTE, {
           url: subscribe_data.confirmationUrl,
           newContext: false,
         });
       }
+      setIsSubscribing(false);
     } else {
       return "No plan subscribed";
+    }
+  };
+
+  const handleCancelAddOnSubscription = async () => {
+    setIsSubscribing(true);
+
+    const charged_name = activePlan?.plan_name.split(" + ");
+    const tierName = charged_name[0]; // Extract "Tier Name"
+
+    let planId = priceData?.find((plan) => plan?.plan_name === tierName);
+    let charged_amount = planId?.price;
+    let requiredBilling = planId?.plan_name === "Free" ? false : true;
+    const subscribeAddOns = {
+      ...activePlan,
+      plan_name: planId?.plan_name,
+      price: charged_amount,
+      billing_required: requiredBilling,
+    };
+    const response = await fetchAuth("/api/confirm-add-ons", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...subscribeAddOns,
+        currency_code: "USD",
+        collecting_phones: false,
+      }),
+    });
+    if (response.ok) {
+      const subscribe_data = await response.json();
+      if (subscribe_data?.confirmationUrl) {
+        redirect.dispatch(Redirect.Action.REMOTE, {
+          url: subscribe_data.confirmationUrl,
+          newContext: false,
+        });
+        setIsSubscribing(false);
+      } else {
+        dispatch(fetchSavePlan(subscribe_data));
+        setIsSubscribing(false);
+        navigate("/");
+      }
+    } else {
+      return;
     }
   };
 
@@ -230,13 +278,33 @@ const PriceComponent = () => {
               <h4 className="price-tag">$5</h4>
             </div>
             <div className="confirmation-btn">
-              <button
-                // disabled={collectNumbers}
-                className="btn-confirmed"
-                onClick={handleConfirmAddOn}
-              >
-                Confirm Add-Ons
-              </button>
+              {collectNumbers && (
+                <button
+                  disabled={isSubscribing || activePlan?.collecting_phones}
+                  className={
+                    activePlan?.collecting_phones || isSubscribing
+                      ? "btn-confirmed disabled"
+                      : "btn-confirmed"
+                  }
+                  onClick={handleConfirmAddOn}
+                >
+                  Confirm Add-Ons
+                </button>
+              )}
+              {activePlan?.collecting_phones && (
+                <button
+                  // disabled={isSubscribing || activePlan?.collecting_phones}
+                  // className={
+                  //   activePlan?.collecting_phones || isSubscribing
+                  //     ? "btn-confirmed disabled"
+                  //     : "btn-confirmed"
+                  // }
+                  className="btn-confirmed"
+                  onClick={handleCancelAddOnSubscription}
+                >
+                  Cancel Add-on
+                </button>
+              )}
             </div>
           </div>
         </div>
