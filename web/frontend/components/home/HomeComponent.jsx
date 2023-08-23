@@ -14,21 +14,40 @@ const SummaryCard = lazy(() => import("../ui/SummaryCard"));
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
 import { fetchAllLastFourCampaignsClicks } from "../../app/features/user_clicks/lastFourCampaignsClicksSlice";
+import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
+import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
 
 const HomeComponent = () => {
   const fetch = useAuthenticatedFetch();
   const dispatch = useDispatch();
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
-  const [getTotalClicks, setTotalClicks] = useState(0);
-
-  const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
-  const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
-
+  const List = useSelector(fetchAllCampaigns);
+  const ReferralList = useSelector(fetchAllReferrals);
   const LastFourCampaignsClicksList = useSelector(
     fetchAllLastFourCampaignsClicks
   );
+  const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
+
+  const [getReferrals, setReferrals] = useState([]);
+  const [getTotalClicks, setTotalClicks] = useState(0);
+  const [campaignsList, setCampaignsList] = useState([]);
+  const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
+
+  // Get Total Campaigns Lists
+  useEffect(() => {
+    if (List?.length > 0) {
+      setCampaignsList(List);
+    }
+  }, [dispatch, List]);
+
+  // Get Referrals List
+  useEffect(() => {
+    if (ReferralList) {
+      setReferrals(ReferralList);
+    }
+  }, [dispatch, ReferralList]);
 
   // Get Total Clicks Count
   useEffect(() => {
@@ -79,7 +98,6 @@ const HomeComponent = () => {
     });
   }
   let finalClicks = chartClicks.reverse();
-  // console.log(finalClicks);
 
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
@@ -340,7 +358,7 @@ const HomeComponent = () => {
       <div className="summary-blocks">
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={4}
+            value={campaignsList?.length}
             title="Campaigns"
             icon={Marketing}
             class="campaign-icon"
@@ -348,7 +366,7 @@ const HomeComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={4}
+            value={getReferrals?.length}
             title="Referrals"
             icon={subscriber}
             class="referral-icon"
