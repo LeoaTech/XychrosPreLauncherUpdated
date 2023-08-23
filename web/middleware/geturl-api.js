@@ -40,7 +40,7 @@ export default function getUrlApi(app, secret) {
       const campaign = req.body.campaign_name;
       if (isvalid === true) {
         const imageURL = await pool.query(
-          `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
+          `select t.image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
         );
 
         const campaign_details = await pool.query(
