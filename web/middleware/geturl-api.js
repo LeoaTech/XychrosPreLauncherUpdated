@@ -40,7 +40,7 @@ export default function getUrlApi(app, secret) {
       const campaign = req.body.campaign_name;
       if (isvalid === true) {
         const imageURL = await pool.query(
-          `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
+          `select t.image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
         );
 
         const campaign_details = await pool.query(
@@ -49,7 +49,7 @@ export default function getUrlApi(app, secret) {
 
         res.status(200).json({
           success: true,
-          imageURL: imageURL?.rows[0]?.welcome_image_url,
+          imageURL: imageURL?.rows[0]?.image_url,
           campaign_data: campaign_details.rows[0],
         });
       } else {
