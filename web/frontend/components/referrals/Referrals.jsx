@@ -6,6 +6,7 @@ import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
 import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
 import { useAuthenticatedFetch } from "../../hooks";
 import { fetchCampaignsDetailsList } from "../../app/features/campaign_details/campaign_details";
+import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import SkeletonLoader from "../loading_skeletons/SkeletonTable";
 
@@ -21,6 +22,9 @@ const Referrals = () => {
   const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([...ReferralList]);
 
+  const TotalClicksList = useSelector(fetchAllCampaignClicks);
+  const [getTotalClicks, setTotalClicks] = useState(0);
+
   useEffect(() => {
     if (ReferralList) {
       setReferrals(ReferralList);
@@ -32,6 +36,13 @@ const Referrals = () => {
       setCampaigns(campaignDetails);
     }
   }, [campaignDetails]);
+
+  // Get Total Clicks Count
+  useEffect(() => {
+    if (TotalClicksList > 0) {
+      setTotalClicks(TotalClicksList);
+    }
+  }, [TotalClicksList]);
 
   const fetch = useAuthenticatedFetch();
 
@@ -55,6 +66,16 @@ const Referrals = () => {
             class="referral-icon"
           />
         </Suspense>
+
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={getTotalClicks}
+            title='Clicks'
+            icon={arrow}
+            class='clicks-icon'
+          />
+        </Suspense>
+
         {/* <SummaryCard
           value='$253,467'
           title='Revenue'

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BillingCard from "./BillingCard";
 import "./user.css";
 import { BsCheck2 } from "react-icons/bs";
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai'
+import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
 import { useAuthenticatedFetch } from "../../hooks";
 import { fetchUserDetails, SaveUser } from "../../app/features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,15 +85,14 @@ const billingStyles = {
       },
     },
   },
-}
+};
 const UserProfile = () => {
   const data = useSelector(fetchUserDetails);
   const priceData = useSelector(fetchAllpricing);
   const billingPlan = useSelector(fetchCurrentPlan);
   const dispatch = useDispatch();
 
-
-  const [subscribeMessage, setSubscribeMessage] = useState("")
+  const [subscribeMessage, setSubscribeMessage] = useState("");
   const fetch = useAuthenticatedFetch();
   // Initial User Form Data
   const formData = {
@@ -105,44 +104,43 @@ const UserProfile = () => {
   };
 
   const [userDetails, setUserDetails] = useState(formData);
-  const [isSubscribed, setIsSubscribed] = useState(false)
-  const [subscribedCardId, setSubscribedCardId] = useState(null)
-  const [priceCard, setPriceCard] = useState([])
-  const [tableData, setTableData] = useState([])
-  const [isLoading, setIsloading] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscribedCardId, setSubscribedCardId] = useState(null);
+  const [priceCard, setPriceCard] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const [isLoading, setIsloading] = useState(false);
 
   // Billing Table Columns
   const billingColumns = [
     {
-      name: 'Name',
+      name: "Name",
       selector: (row) => row.plan_name,
       sortable: true,
-      id: 'charge_name',
+      id: "charge_name",
       style: {
         fontSize: 17,
       },
     },
     {
-      name: 'Amount',
+      name: "Amount",
       selector: (row) => row.price,
       sortable: true,
-      id: 'charge_amount',
+      id: "charge_amount",
 
       style: {
         fontSize: 17,
-
       },
     },
     {
-      name: 'Charged Date',
+      name: "Charged Date",
       selector: (row) => row.created_at,
       sortable: true,
-      id: 'charge_date',
+      id: "charge_date",
       style: {
         fontSize: 15,
       },
-    }
-  ]
+    },
+  ];
 
   // Get user Details From DB(if any) and Set Values in States
   useEffect(() => {
@@ -150,7 +148,12 @@ const UserProfile = () => {
       const mydata = data[0];
       let name = mydata?.username?.split(" ");
       if (name?.length > 0) {
-        setUserDetails({ ...mydata, firstname: name[0], lastname: name[1], store_url: mydata?.store_url });
+        setUserDetails({
+          ...mydata,
+          firstname: name[0],
+          lastname: name[1],
+          store_url: mydata?.store_url,
+        });
       }
     } else {
       return;
@@ -160,33 +163,51 @@ const UserProfile = () => {
   // Get Current Plan and Set Billing Details in TableData
   useEffect(() => {
     if (billingPlan !== undefined) {
-      let cardId = priceData?.find((plan) => plan?.plan_name === billingPlan?.plan_name)
-      setPriceCard([{ ...cardId }])
-      setSubscribedCardId(cardId?.id)
-      setUserDetails({ ...userDetails, billing_id: subscribedCardId })
-      setSubscribeMessage(`Subscribed to ${billingPlan?.plan_name} price card. Billed and reset every month on the ${new Date(billingPlan?.created_at).getDate()} at ${new Date(billingPlan?.created_at).getHours()}:${new Date(billingPlan?.created_at).getMinutes()}:${new Date(billingPlan?.created_at).getSeconds()}`)
-
+      let cardId = priceData?.find(
+        (plan) => plan?.plan_name === billingPlan?.plan_name
+      );
+      setPriceCard([{ ...cardId }]);
+      setSubscribedCardId(cardId?.id);
+      setUserDetails({ ...userDetails, billing_id: subscribedCardId });
+      setSubscribeMessage(
+        `Subscribed to ${
+          billingPlan?.plan_name
+        } price card. Billed and reset every month on the ${new Date(
+          billingPlan?.created_at
+        ).getDate()} at ${new Date(
+          billingPlan?.created_at
+        ).getHours()}:${new Date(
+          billingPlan?.created_at
+        ).getMinutes()}:${new Date(billingPlan?.created_at).getSeconds()}`
+      );
     }
-  }, [billingPlan, priceData])
+  }, [billingPlan, priceData]);
 
   useEffect(() => {
     if (billingPlan) {
-      let currentPlan = { ...billingPlan, created_at: new Date(billingPlan?.created_at).toLocaleString() }
-      setTableData([currentPlan])
+      let currentPlan = {
+        ...billingPlan,
+        plan_name: billingPlan?.collecting_phones
+          ? billingPlan?.plan_name + " + Collecting Phones"
+          : billingPlan?.plan_name,
+        created_at: new Date(billingPlan?.created_at).toLocaleString(),
+      };
+      setTableData([currentPlan]);
     }
-  }, [billingPlan])
+  }, [billingPlan]);
+
+  console.log(billingPlan)
   // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-
   // Save User Account Details
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsloading(true)
+    setIsloading(true);
     if (data?.length > 0) {
       const response = await fetch("/api/userprofile", {
         method: "PUT",
@@ -194,16 +215,15 @@ const UserProfile = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userDetails),
-      })
+      });
 
       if (response.ok) {
         const newUserData = await response.json();
         await dispatch(SaveUser(newUserData));
-        setIsloading(false)
+        setIsloading(false);
       } else {
         return;
       }
-
     } else {
       await fetch("/api/userprofile", {
         method: "POST",
@@ -213,9 +233,12 @@ const UserProfile = () => {
         body: JSON.stringify(userDetails),
       })
         .then((res) => res.json())
-        .then((data) => dispatch(SaveUser(data)))
+        .then((data) => {
+          console.log(data, "Returned by user");
+          dispatch(SaveUser(data));
+        })
         .catch((err) => console.log(err));
-      setIsloading(false)
+      setIsloading(false);
     }
   };
 
@@ -288,35 +311,38 @@ const UserProfile = () => {
           <h3>Billing Details</h3>
           <p>{subscribeMessage}</p>
 
-          {priceCard?.length > 0 ? <div className="carousel" >
-            <div className="billing-cards" style={{
-            }}>
-              {priceCard?.length > 0 ? priceCard?.map((card, index) => {
-                return (
-                  <div key={index}
-                    style={{
-                    }}
-                    className="billing-card">
-                    <BillingCard
-                      className="card"
-                      key={card.id}
-                      card={card}
-                    />
-                  </div>
-                );
-              }) : <div class="spinner"></div>}
+          {priceCard?.length > 0 ? (
+            <div className="carousel">
+              <div className="billing-cards" style={{}}>
+                {priceCard?.length > 0 ? (
+                  priceCard?.map((card, index) => {
+                    return (
+                      <div key={index} style={{}} className="billing-card">
+                        <BillingCard
+                          className="card"
+                          key={card.id}
+                          card={card}
+                        />
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div class="spinner"></div>
+                )}
+              </div>
+              <div className="billing_table">
+                <DataTable
+                  columns={billingColumns}
+                  data={tableData}
+                  customStyles={billingStyles}
+                  pagination
+                  highlightOnHover
+                />
+              </div>
             </div>
-            <div className="billing_table">
-              <DataTable
-                columns={billingColumns}
-                data={tableData}
-                customStyles={billingStyles}
-                pagination
-                highlightOnHover
-              />
-            </div>
-
-          </div> : <div className="spinner"></div>}
+          ) : (
+            <div className="spinner"></div>
+          )}
 
           {/* <div className="billing-details-block">
           </div> */}
@@ -324,7 +350,12 @@ const UserProfile = () => {
 
         {/* Save the Data  */}
         <div className="account-save">
-          <button type="submit" onClick={handleSubmit} className="btnSave" disabled={userDetails?.billing_id === null}>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="btnSave"
+            disabled={userDetails?.billing_id === null}
+          >
             {isLoading ? "Saving..." : " Save"}
           </button>
         </div>

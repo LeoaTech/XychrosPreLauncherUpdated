@@ -181,20 +181,39 @@
   margin: 0 5px;
   color: #b70404;
   margin-bottom: 15px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
-
+.reward-form-error {
+  height: 20px;
+  width: 100%;
+  margin: 2px 0;
+  padding: 0 3px;
+  display: block;
+}
 .discount_error_text {
   color: #b70404;
   margin: 0 5px;
   padding: 0 10px;
   margin-top: 18px;
+  font-size: 17px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .validation {
   color: #b70404;
+  font-weight: 400;
+  font-size: 15px;
+  text-decoration: underline;
   margin: 0 5px;
   padding: 0 10px;
   margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 .form-group {
   display: flex;

@@ -6,7 +6,11 @@ import userReducer from './features/users/userSlice';
 import priceReducer from './features/pricing/pricing';
 import currentPlanReducer from './features/current_plan/current_plan';
 import referralReducer from './features/referrals/referralSlice';
-import campaignDetailsReducer from "./features/campaign_details/campaign_details"
+import campaignDetailsReducer from "./features/campaign_details/campaign_details";
+import totalClicksReducer from './features/user_clicks/totalclicksSlice';
+import lastSixMonthsClicksReducer from './features/user_clicks/lastSixMonthsClicksSlice';
+import lastFourCampaignsClicksReducer from './features/user_clicks/lastFourCampaignsClicksSlice';
+
 // All Slices will be added there
 
 export const store = configureStore({
@@ -19,5 +23,8 @@ export const store = configureStore({
     pricing: priceReducer,
     current_plan: currentPlanReducer,
     referrals: referralReducer,
+    total_clicks: totalClicksReducer,
+    lastsixmonths_clicks: lastSixMonthsClicksReducer,
+    lastfourcampaigns_clicks: lastFourCampaignsClicksReducer,
   },
 });

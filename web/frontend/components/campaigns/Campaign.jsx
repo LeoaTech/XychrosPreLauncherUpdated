@@ -14,6 +14,7 @@ import {
   fetchCampaignDetails,
   fetchCampaignsDetailsList,
 } from "../../app/features/campaign_details/campaign_details";
+import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
 
@@ -24,6 +25,7 @@ const CampaignsComponent = () => {
   const fetch = useAuthenticatedFetch();
   const { setIsEdit } = useStateContext();
   const dispatch = useDispatch();
+  
   const List = useSelector(fetchAllCampaigns);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
 
@@ -36,6 +38,9 @@ const CampaignsComponent = () => {
 
   const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([]);
+
+  const TotalClicksList = useSelector(fetchAllCampaignClicks);
+  const [getTotalClicks, setTotalClicks] = useState(0);
 
   useEffect(() => {
     if (List?.length > 0) {
@@ -56,6 +61,13 @@ const CampaignsComponent = () => {
       setDetails(campaignDetails);
     }
   }, [campaignDetails]);
+
+  // Get Total Clicks Count
+  useEffect(() => {
+    if (TotalClicksList > 0) {
+      setTotalClicks(TotalClicksList);
+    }
+  }, [TotalClicksList]);
 
   // PAGINATION
 
@@ -146,6 +158,14 @@ const CampaignsComponent = () => {
             title="Referrals"
             icon={subscriber}
             class="referral-icon"
+          />
+        </Suspense>
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={getTotalClicks}
+            title="Clicks"
+            icon={arrow}
+            class="clicks-icon"
           />
         </Suspense>
         {/* <SummaryCard
