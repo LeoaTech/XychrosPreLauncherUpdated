@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCurrentPlan } from "../../app/features/current_plan/current_plan";
 import { fetchAllpricing } from "../../app/features/pricing/pricing";
 import DataTable from "react-data-table-component";
+import ButtonLoader from "../loading_skeletons/ButtonLoader";
 
 // Billing Details Table Custom Styles
 const billingStyles = {
@@ -362,7 +363,7 @@ const UserProfile = () => {
             className="btnSave"
             disabled={userDetails?.billing_id === null}
           >
-            {isLoading ? "Saving..." : " Save"}
+            {isLoading ? <ButtonLoader /> : " Save"}
           </button>
         </div>
       </div>
