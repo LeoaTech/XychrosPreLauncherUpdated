@@ -2,7 +2,7 @@
   let first_page_settings = {{ block.settings | json }};
 
   async function getbackground(campaign_name) {
-    return await fetch('/apps/product-prelauncher/api/geturl', {
+    return await fetch('/apps/xychrosupdated/api/geturl', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -20,7 +20,7 @@
   async function getClicks(campaign_name) {
     try {
       console.log('Get Clicks of: ', campaign_name);
-      const response = await fetch("/apps/product-prelauncher/api/getclicks",
+      const response = await fetch("/apps/xychrosupdated/api/getclicks",
       {
         method: "POST",
         headers: {
