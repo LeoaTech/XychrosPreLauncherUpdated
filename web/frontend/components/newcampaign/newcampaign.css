@@ -3,6 +3,7 @@
   padding: 5px 15px;
   margin: 5px 15px;
   display: flex;
+  margin-top: 2.6rem;
   flex-direction: column;
   justify-content: space-between;
 }
@@ -75,7 +76,7 @@
   cursor: pointer;
   font-size: 18px;
   font-weight: 500;
-  margin-top: 20px;
+  margin-top: 5px;
   border-radius: 7px;
 }
 
@@ -161,8 +162,8 @@
 
 .store-links,
 .collect-setup {
-  margin: 20px 0;
-  padding: 20px 0;
+  margin: 10px 0;
+  padding: 10px 0;
 }
 
 .basic-settings-form {
@@ -375,9 +376,9 @@ label {
 
 .sub-heading {
   font-size: 20px;
-  margin-top: 30px;
+  margin-top: 20px;
   font-weight: 500;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 /* Collect Emails */

@@ -29,7 +29,7 @@ import {
 } from "../../app/features/campaigns/campaignSlice";
 import { storeLinks } from "./dummySocial";
 import { RewardData } from "./rewardTier/RewardData";
-import { useAuthenticatedFetch } from "../../hooks";
+import { useAppQuery, useAuthenticatedFetch } from "../../hooks";
 import { fetchAllSettings } from "../../app/features/settings/settingsSlice";
 import { fetchAllProducts } from "../../app/features/productSlice";
 import useFetchTemplates from "../../constant/fetchTemplates";
@@ -39,6 +39,7 @@ import {
   fetchCurrentTier,
 } from "../../app/features/current_plan/current_plan";
 import { skeletonPageLoad } from "@shopify/app-bridge/actions/Performance";
+import ButtonLoader from "../loading_skeletons/ButtonLoader";
 
 const SaveDraft = lazy(() => import("../modal/SaveDraft"));
 
@@ -60,8 +61,6 @@ function NewCampaignForm() {
 
   const current_plan = useSelector(fetchCurrentPlan);
 
-  console.log(currentTier, "Tier");
-  console.log(current_plan, "Plan");
   const campaignById = useSelector(
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
@@ -348,10 +347,13 @@ function NewCampaignForm() {
   //  Get Current Subscription Plan Name
   useEffect(() => {
     if (currentTier !== "") {
-      const charged_name = currentTier.split(" + ");
-      const tierName = charged_name[0]; // Extract "Tier Name"
+      if (currentTier?.includes("Add-on")) {
+        const charged_name = currentTier?.split(" + ");
+        const tierName = charged_name[0]; // Extract "Tier Name"
 
-      setMyPlan(tierName);
+        setMyPlan(tierName);
+      }
+      setMyPlan(currentTier);
     }
 
     if (totalCampaigns) {
@@ -362,31 +364,41 @@ function NewCampaignForm() {
   // Get Klaviyo integration Lists from API
   async function getKlaviyoList() {
     try {
-      const response = await fetch(`/api/lists`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      if (
+        globalSettings?.klaviyo_api_key !== "" ||
+        newCampaignData?.klaviyo_api_key !== ""
+      ) {
+        const response = await fetch(`/api/lists`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      const list = await response.json();
-
-      setKlaviyoList(list);
+        if (response.ok) {
+          const list = await response.json();
+          return list;
+        } else {
+          return;
+        }
+      }
     } catch (err) {
       return err;
     }
   }
 
   // Update Klaviyo API Lists in the Form
-  useEffect(() => {
+  useEffect(async () => {
     if (isEdit) {
+      let apiList = await getKlaviyoList();
+      setKlaviyoList(apiList);
+    } else {
       if (globalSettings?.klaviyo_api_key !== "") {
-        getKlaviyoList();
+        let findList = await getKlaviyoList();
+        setKlaviyoList(findList);
       }
-    } else if (newCampaignData?.klaviyo_api_key !== "") {
-      getKlaviyoList();
     }
-  }, [newCampaignData?.klaviyo_api_key, globalSettings?.klaviyo_api_key]);
+  }, [globalSettings?.klaviyo_api_key, newCampaignData?.klaviyo_api_key]);
 
   //? When user try to reload or change the route to other page
   useEffect(() => {
@@ -1225,7 +1237,9 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="phone"
-                              checked={editCampaignData?.collect_phone === true}
+                              checked={
+                                editCampaignData?.collect_phone === false
+                              }
                               disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
@@ -1235,7 +1249,7 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="phone"
-                              checked={newCampaignData?.collect_phone === true}
+                              checked={newCampaignData?.collect_phone === false}
                               disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
@@ -1252,9 +1266,7 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
-                              checked={
-                                editCampaignData?.collect_phone === false
-                              }
+                              checked={editCampaignData?.collect_phone === true}
                               onChange={handleRadioChange}
                             />
                           ) : (
@@ -1263,7 +1275,7 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
-                              checked={newCampaignData?.collect_phone === false}
+                              checked={newCampaignData?.collect_phone === true}
                               onChange={handleRadioChange}
                             />
                           )}
@@ -2131,7 +2143,7 @@ function NewCampaignForm() {
                             ) : (
                               <Link to="/settings">
                                 <p className="klaviyo-message">
-                                  {klaviyoList?.message}
+                                  Please Enable API Key in Global Settings
                                 </p>
                               </Link>
                             )}
@@ -2244,9 +2256,13 @@ function NewCampaignForm() {
                         disabled={isLoading}
                       >
                         {isEdit ? (
-                          <>{isLoading ? "Updating..." : "Update Campaign"}</>
+                          <>
+                            {isLoading ? <ButtonLoader /> : "Update Campaign"}
+                          </>
                         ) : (
-                          <>{isLoading ? "Creating..." : "Create Campaign"}</>
+                          <>
+                            {isLoading ? <ButtonLoader /> : "Create Campaign"}
+                          </>
                         )}
                       </button>
                     </>
