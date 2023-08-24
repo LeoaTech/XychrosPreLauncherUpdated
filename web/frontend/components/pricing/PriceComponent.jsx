@@ -37,8 +37,10 @@ const PriceComponent = () => {
         const tierName = charged_name[0]; // Extract "Tier Name"
 
         planId = priceData?.find((plan) => plan?.plan_name === tierName);
-      }else{
-        planId = priceData?.find((plan) => plan?.plan_name === activePlan?.plan_name);
+      } else {
+        planId = priceData?.find(
+          (plan) => plan?.plan_name === activePlan?.plan_name
+        );
       }
       setSubscribedPlanId(planId?.id);
       setCollectNumbers(activePlan?.collecting_phones);
@@ -242,7 +244,9 @@ const PriceComponent = () => {
                     }px)`,
                   }}
                   className={`pricing-card ${
-                    index === currentCardIndex ? "active" : ""
+                    index === subscribedPlanId -1
+                      ? "active"
+                      : ""
                   }`}
                 >
                   <PricingBlock
@@ -298,12 +302,6 @@ const PriceComponent = () => {
               )}
               {activePlan?.collecting_phones && (
                 <button
-                  // disabled={isSubscribing || activePlan?.collecting_phones}
-                  // className={
-                  //   activePlan?.collecting_phones || isSubscribing
-                  //     ? "btn-confirmed disabled"
-                  //     : "btn-confirmed"
-                  // }
                   className="btn-confirmed"
                   onClick={handleCancelAddOnSubscription}
                 >

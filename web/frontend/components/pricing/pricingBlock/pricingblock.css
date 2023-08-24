@@ -28,9 +28,33 @@
 .price-detail-block h3 {
   font-size: 18px;
   font-weight: 700;
+  /* margin-top: 20px; */
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
+  gap: 2rem;
+}
+
+.title-block {
+  display: flex;
+  align-items: center;
+}
+
+.title-block h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  margin-bottom: 20px;
+
+}
+
+.subscribed-icon {
+  margin-right: 10px; /* Adjust this value to control the space between icon and title */
+}
+
+.price-detail-block h3 .subscribed-icon {
+  /* margin-right: 1rem; */
 }
 
 .price-bottom h2 {
@@ -141,7 +165,6 @@
   cursor: not-allowed;
   background-color: rgb(183, 183, 183);
   color: #353535;
-
 }
 
 .btn-subscribe.disabled:hover,
@@ -156,7 +179,6 @@
   box-shadow: 0px 0px 0px 0px #1b1a1a;
   scale: 1;
   color: rgb(117, 117, 117);
-
 }
 
 .btn-subscribe:hover,
