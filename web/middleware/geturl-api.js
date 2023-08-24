@@ -1,20 +1,20 @@
-import { Shopify } from "@shopify/shopify-api";
-import emailValidator from "deep-email-validator";
-import { add_to_klaviyo_list } from "../helpers/klaviyoIntegrations.js";
-import NewPool from "pg";
+import { Shopify } from '@shopify/shopify-api';
+import emailValidator from 'deep-email-validator';
+import { add_to_klaviyo_list } from '../helpers/klaviyoIntegrations.js';
+import NewPool from 'pg';
 import {
   replace_welcome_email_text,
   replace_referral_email_text,
   replace_reward_email_text,
   send_email,
-} from "../helpers/emails.js";
+} from '../helpers/emails.js';
 import createCustomer, {
   getCustomersList,
   updateCustomer,
-} from "../helpers/create-customer.js";
-import { isProxySignatureValid } from "../helpers/authenticateSignature.js";
+} from '../helpers/create-customer.js';
+import { isProxySignatureValid } from '../helpers/authenticateSignature.js';
 
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 const { Pool } = NewPool;
@@ -27,20 +27,20 @@ pool.connect((err, result) => {
 });
 
 export default function getUrlApi(app, secret) {
-  app.post("/api/geturl", async (req, res) => {
+  app.post('/api/geturl', async (req, res) => {
     try {
       // console.log("I am here in fetch API URL");
       // console.log(req.query.signature,"Query");
 
       const requestQuery = req.query;
       let isvalid = await isProxySignatureValid(requestQuery, secret);
-      console.log(isvalid, "Signature Verified");
+      console.log(isvalid, 'Signature Verified');
 
       const shop = req.query.shop;
       const campaign = req.body.campaign_name;
       if (isvalid === true) {
         const imageURL = await pool.query(
-          `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
+          `select t.image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
         );
 
         const campaign_details = await pool.query(
@@ -53,10 +53,10 @@ export default function getUrlApi(app, secret) {
           campaign_data: campaign_details.rows[0],
         });
       } else {
-        console.log("Shopify Signature verification failed, aborting");
+        console.log('Shopify Signature verification failed, aborting');
         return res
           .status(401)
-          .json({ succeeded: false, message: "Not Authorized" })
+          .json({ succeeded: false, message: 'Not Authorized' })
           .send();
       }
     } catch (error) {
@@ -66,21 +66,19 @@ export default function getUrlApi(app, secret) {
   });
 
   // Landing page API
-  app.post("/api/getuser", async (req, res) => {
+  app.post('/api/getuser', async (req, res) => {
     try {
-
       // Check if Signature is Valid or not
       const query_signature = req.query;
       let validate_proxy = isProxySignatureValid(query_signature, secret);
-      console.log(validate_proxy, "Validate Signature");
-
+      console.log(validate_proxy, 'Validate Signature');
 
       let ip_address =
-        req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip;
-      ip_address = ip_address.split(",")[0];
+        req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+      ip_address = ip_address.split(',')[0];
 
       let refererURL = req.headers.referer;
-      refererURL = refererURL.split("?refer")[0];
+      refererURL = refererURL.split('?refer')[0];
       // console.log(refererURL);
 
       const { email, phone, refer, campaign, shop } = req.query;
@@ -89,26 +87,26 @@ export default function getUrlApi(app, secret) {
       const shopSession =
         await Shopify.Context.SESSION_STORAGE.findSessionsByShop(shop);
 
-      let message = "";
+      let message = '';
 
       // Call Customer List Fetch API function
       let store_customers = await getCustomersList(shopSession);
-      console.log("Customer List of App Store Fetched Successfully");
+      console.log('Customer List of App Store Fetched Successfully');
 
       // Check if the Email user entered is Already in App Store customers list
       let findEmail = store_customers.find((data) => data.email === email);
-      console.log("Find Email found this Email:", findEmail?.email);
+      console.log('Find Email found this Email:', findEmail?.email);
 
       const customerExists = await pool.query(
         `SELECT * FROM referrals where email= $1`,
         [email]
       );
-      console.log(customerExists?.rowCount, "Email Exists in Database");
+      console.log(customerExists?.rowCount, 'Email Exists in Database');
 
       if (!email) {
         return res
           .status(500)
-          .json({ success: false, message: "Please provide valid input" });
+          .json({ success: false, message: 'Please provide valid input' });
       }
 
       // const shop_id = 'offline_' + shop;
@@ -128,7 +126,7 @@ export default function getUrlApi(app, secret) {
       if (isemail_valid.validators.smtp.valid == false) {
         return res
           .status(404)
-          .json({ success: false, message: "Please provide a valid email" });
+          .json({ success: false, message: 'Please provide a valid email' });
       }
 
       // get referral code
@@ -136,7 +134,7 @@ export default function getUrlApi(app, secret) {
         `SELECT * FROM referrals where email='${email}' and campaign_id=${campaignID}`
       );
 
-      let referralcode = "";
+      let referralcode = '';
 
       //case of sign in
       if (users.rows[0]) {
@@ -170,7 +168,7 @@ export default function getUrlApi(app, secret) {
 
             return res.status(400).json({
               success: false,
-              message: "You have already requested 2 times",
+              message: 'You have already requested 2 times',
             });
           } else {
             // ---------------- if IP exists less than 2 times --------------------
@@ -203,22 +201,22 @@ export default function getUrlApi(app, secret) {
             let tags = `viral-launch, ${camp_name}`;
 
             const customerData = {
-              first_name: "",
-              last_name: "",
+              first_name: '',
+              last_name: '',
               email: email,
-              phone: phone || "",
+              phone: phone || '',
               verified_email: true,
               tags: tags,
               addresses: [
                 {
-                  address1: "",
-                  city: "",
-                  province: "",
-                  phone: phone || "",
-                  zip: "",
-                  last_name: "",
-                  first_name: "",
-                  country: "",
+                  address1: '',
+                  city: '',
+                  province: '',
+                  phone: phone || '',
+                  zip: '',
+                  last_name: '',
+                  first_name: '',
+                  country: '',
                 },
               ],
             };
@@ -228,31 +226,31 @@ export default function getUrlApi(app, secret) {
             // if Not Exists on App Store or Database
             if (customerExists?.rowCount !== 0 && findEmail == undefined) {
               console.log(
-                "Inside if When Customer Data is Present only in Database"
+                'Inside if When Customer Data is Present only in Database'
               );
               let currentCustomerData = await createCustomer(
                 shopSession,
                 customerData
               );
               console.log(
-                "Customer Created With Referral Code: ",
+                'Customer Created With Referral Code: ',
                 currentCustomerData
               );
             } else if (customerExists?.rowCount === 0 && !findEmail) {
               console.log(
-                "Inside else if When No Data is Present in Both Database and Store"
+                'Inside else if When No Data is Present in Both Database and Store'
               );
               let currentCustomerData = await createCustomer(
                 shopSession,
                 customerData
               );
               console.log(
-                "Customer Created With Referral Code: ",
+                'Customer Created With Referral Code: ',
                 currentCustomerData
               );
             } else {
               console.log(
-                "Customer already Exists with this Email: ",
+                'Customer already Exists with this Email: ',
                 findEmail?.email
               );
 
@@ -263,14 +261,14 @@ export default function getUrlApi(app, secret) {
               // if the Customer has existing tags, update tags
               if (findEmail?.tags) {
                 // Extract the current tags from the customer's data
-                const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+                const tags = findEmail.tags.split(',').map((tag) => tag.trim());
 
                 // Check if the new tag is already present in the current tags
 
                 // new tag doesn't exist
                 if (!tags.includes(newTag)) {
                   tags.push(newTag);
-                  const updatedTags = tags.join(", ");
+                  const updatedTags = tags.join(', ');
 
                   // Update the customer's tags
                   const updatedCustomerData = {
@@ -280,13 +278,13 @@ export default function getUrlApi(app, secret) {
 
                   await updateCustomer(shopSession, updatedCustomerData);
                   console.log(
-                    "Customer Tags Updated Successfully - Customer Signed Up for Another Campaign"
+                    'Customer Tags Updated Successfully - Customer Signed Up for Another Campaign'
                   );
                 }
                 // new tag exists already
                 else {
                   console.log(
-                    "Customer Already Has this Tag. No Update Needed."
+                    'Customer Already Has this Tag. No Update Needed.'
                   );
                 }
               }
@@ -299,7 +297,7 @@ export default function getUrlApi(app, secret) {
                 };
                 await updateCustomer(shopSession, updatedCustomerData);
                 console.log(
-                  "Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found"
+                  'Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found'
                 );
               }
             }
@@ -319,7 +317,7 @@ export default function getUrlApi(app, secret) {
             let send_message = await send_email(
               message,
               email,
-              "You have Subscribed"
+              'You have Subscribed'
             );
 
             //check referrer code and send reward unlock email or referral email
@@ -353,22 +351,22 @@ export default function getUrlApi(app, secret) {
           let tags = `viral-launch, ${camp_name}`;
 
           const customerData = {
-            first_name: "",
-            last_name: "",
+            first_name: '',
+            last_name: '',
             email: email,
-            phone: phone || "",
+            phone: phone || '',
             verified_email: true,
             tags: tags,
             addresses: [
               {
-                address1: "",
-                city: "",
-                province: "",
-                phone: phone || "",
-                zip: "",
-                last_name: "",
-                first_name: "",
-                country: "",
+                address1: '',
+                city: '',
+                province: '',
+                phone: phone || '',
+                zip: '',
+                last_name: '',
+                first_name: '',
+                country: '',
               },
             ],
           };
@@ -377,31 +375,31 @@ export default function getUrlApi(app, secret) {
 
           if (customerExists?.rowCount !== 0 && !findEmail) {
             console.log(
-              "Inside if When Customer Data is Present only in Database"
+              'Inside if When Customer Data is Present only in Database'
             );
             let currentCustomerData = await createCustomer(
               shopSession,
               customerData
             );
             console.log(
-              "Customer Created Without Referral Code: ",
+              'Customer Created Without Referral Code: ',
               currentCustomerData
             );
           } else if (customerExists?.rowCount === 0 && !findEmail) {
             console.log(
-              "Inside else if When No Data is Present in Both Database and Store"
+              'Inside else if When No Data is Present in Both Database and Store'
             );
             let currentCustomerData = await createCustomer(
               shopSession,
               customerData
             );
             console.log(
-              "Customer Created Without Referral Code: ",
+              'Customer Created Without Referral Code: ',
               currentCustomerData
             );
           } else {
             console.log(
-              "Customer already Exists with this Email: ",
+              'Customer already Exists with this Email: ',
               findEmail?.email
             );
 
@@ -412,14 +410,14 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
               // new tag doesn't exist
               if (!tags.includes(newTag)) {
                 tags.push(newTag);
-                const updatedTags = tags.join(", ");
+                const updatedTags = tags.join(', ');
 
                 // Update the customer's tags
                 const updatedCustomerData = {
@@ -429,12 +427,12 @@ export default function getUrlApi(app, secret) {
 
                 await updateCustomer(shopSession, updatedCustomerData);
                 console.log(
-                  "Customer Tags Updated Successfully - Customer Signed up for Another Campaign"
+                  'Customer Tags Updated Successfully - Customer Signed up for Another Campaign'
                 );
               }
               // new tag exists already
               else {
-                console.log("Customer Already Has this Tag. No Update Needed.");
+                console.log('Customer Already Has this Tag. No Update Needed.');
               }
             }
 
@@ -446,7 +444,7 @@ export default function getUrlApi(app, secret) {
               };
               await updateCustomer(shopSession, updatedCustomerData);
               console.log(
-                "Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found"
+                'Customer Tag Added Successfully - Customer Signed up for Another Campaign but No Existing Tags were Found'
               );
             }
           }
@@ -465,7 +463,7 @@ export default function getUrlApi(app, secret) {
           let send_message = await send_email(
             message,
             email,
-            "You have Subscribed"
+            'You have Subscribed'
           );
 
           //check referrer code and send reward unlock email or referral email
@@ -526,7 +524,7 @@ export default function getUrlApi(app, secret) {
   });
 
   // get customer information for Shopify FrontEnd (Rewards Page)
-  app.post("/api/get_referrals", async (req, res, next) => {
+  app.post('/api/get_referrals', async (req, res, next) => {
     try {
       const { referral_code, campaign_name } = req.body;
       const campaign_details = await pool.query(
@@ -534,11 +532,11 @@ export default function getUrlApi(app, secret) {
       );
       const campaign_id = campaign_details?.rows[0]?.campaign_id;
       const data = await pool.query(
-        "SELECT * FROM referrals WHERE referral_code=$1 and campaign_id=$2",
+        'SELECT * FROM referrals WHERE referral_code=$1 and campaign_id=$2',
         [referral_code, campaign_id]
       );
       const data_ = await pool.query(
-        "SELECT * FROM referrals WHERE referrer_id=$1",
+        'SELECT * FROM referrals WHERE referrer_id=$1',
         [data.rows[0]?.referral_code]
       );
       // console.log(data.rows[0].email);
@@ -563,14 +561,14 @@ export default function getUrlApi(app, secret) {
 
   //Function for getting referrer details (Send referral email and reward unlock email if applicable)
   const find_referrer = async (refererURL, refer, campaign, shop) => {
-    console.log("im inside find_referrer function");
+    console.log('im inside find_referrer function');
     if (refer) {
       const referrer = await pool.query(
         `SELECT * FROM referrals WHERE referral_code='${refer}' and campaign_id=${campaign.rows[0].campaign_id}`
       );
 
-      let referral_email_text = "";
-      let reward_email_text = "";
+      let referral_email_text = '';
+      let reward_email_text = '';
 
       if (referrer.rows.length > 0) {
         let total_referrals = await pool.query(
@@ -587,7 +585,7 @@ export default function getUrlApi(app, secret) {
         await send_email(
           referral_email_text,
           referrer.rows[0].email,
-          "Friend has signed up"
+          'Friend has signed up'
         );
 
         // ----------------- fetch customer details ----------------
@@ -602,7 +600,7 @@ export default function getUrlApi(app, secret) {
         // Call Customer List Fetch API function
         let store_customers = await getCustomersList(shopSession);
         console.log(
-          "Find Current User in Customer List of App Store having Email: ",
+          'Find Current User in Customer List of App Store having Email: ',
           customer_email
         );
 
@@ -610,21 +608,21 @@ export default function getUrlApi(app, secret) {
         let findEmail = store_customers.find(
           (data) => data.email === customer_email
         );
-        console.log("User Found with this Email: ", findEmail?.email);
+        console.log('User Found with this Email: ', findEmail?.email);
 
         // -------------- tier unlocking -------------------
         let checker = null;
         if (total_referrals.rowCount == campaign.rows[0].reward_1_tier) {
-          checker = "reward_1_tier";
+          checker = 'reward_1_tier';
         } else if (total_referrals.rowCount == campaign.rows[0].reward_2_tier) {
-          checker = "reward_2_tier";
+          checker = 'reward_2_tier';
         } else if (total_referrals.rowCount == campaign.rows[0].reward_3_tier) {
-          checker = "reward_3_tier";
+          checker = 'reward_3_tier';
         } else if (total_referrals.rowCount == campaign.rows[0].reward_4_tier) {
-          checker = "reward_4_tier";
+          checker = 'reward_4_tier';
         }
         if (checker) {
-          if (checker == "reward_1_tier") {
+          if (checker == 'reward_1_tier') {
             // send email
             reward_email_text = await replace_reward_email_text(
               refererURL,
@@ -641,14 +639,14 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
               // new tag doesn't exist
               if (!tags.includes(newTag)) {
                 tags.push(newTag);
-                const updatedTags = tags.join(", ");
+                const updatedTags = tags.join(', ');
 
                 // Update the customer's tags
                 const updatedCustomerData = {
@@ -658,13 +656,13 @@ export default function getUrlApi(app, secret) {
 
                 await updateCustomer(shopSession, updatedCustomerData);
                 console.log(
-                  "Customer Tags Updated Successfully - Tier 1 Tag Added to Customer"
+                  'Customer Tags Updated Successfully - Tier 1 Tag Added to Customer'
                 );
               }
               // new tag exists already
               else {
                 console.log(
-                  "Customer Already Has Tier 1 Tag. No Update Needed."
+                  'Customer Already Has Tier 1 Tag. No Update Needed.'
                 );
               }
             }
@@ -676,10 +674,10 @@ export default function getUrlApi(app, secret) {
               };
               await updateCustomer(shopSession, updatedCustomerData);
               console.log(
-                "Customer Tag Added Successfully - Tier 1 Tag Added to Customer, but No Existing Tags were Found"
+                'Customer Tag Added Successfully - Tier 1 Tag Added to Customer, but No Existing Tags were Found'
               );
             }
-          } else if (checker == "reward_2_tier") {
+          } else if (checker == 'reward_2_tier') {
             // send email
             reward_email_text = await replace_reward_email_text(
               refererURL,
@@ -696,14 +694,14 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
               // new tag doesn't exist
               if (!tags.includes(newTag)) {
                 tags.push(newTag);
-                const updatedTags = tags.join(", ");
+                const updatedTags = tags.join(', ');
 
                 // Update the customer's tags
                 const updatedCustomerData = {
@@ -713,13 +711,13 @@ export default function getUrlApi(app, secret) {
 
                 await updateCustomer(shopSession, updatedCustomerData);
                 console.log(
-                  "Customer Tags Updated Successfully - Tier 2 Tag Added to Customer"
+                  'Customer Tags Updated Successfully - Tier 2 Tag Added to Customer'
                 );
               }
               // new tag exists already
               else {
                 console.log(
-                  "Customer Already Has Tier 2 Tag. No Update Needed."
+                  'Customer Already Has Tier 2 Tag. No Update Needed.'
                 );
               }
             }
@@ -731,10 +729,10 @@ export default function getUrlApi(app, secret) {
               };
               await updateCustomer(shopSession, updatedCustomerData);
               console.log(
-                "Customer Tag Added Successfully - Tier 2 Tag Added to Customer, but No Existing Tags were Found"
+                'Customer Tag Added Successfully - Tier 2 Tag Added to Customer, but No Existing Tags were Found'
               );
             }
-          } else if (checker == "reward_3_tier") {
+          } else if (checker == 'reward_3_tier') {
             // send email
             reward_email_text = await replace_reward_email_text(
               refererURL,
@@ -751,14 +749,14 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
               // new tag doesn't exist
               if (!tags.includes(newTag)) {
                 tags.push(newTag);
-                const updatedTags = tags.join(", ");
+                const updatedTags = tags.join(', ');
 
                 // Update the customer's tags
                 const updatedCustomerData = {
@@ -768,13 +766,13 @@ export default function getUrlApi(app, secret) {
 
                 await updateCustomer(shopSession, updatedCustomerData);
                 console.log(
-                  "Customer Tags Updated Successfully - Tier 3 Tag Added to Customer"
+                  'Customer Tags Updated Successfully - Tier 3 Tag Added to Customer'
                 );
               }
               // new tag exists already
               else {
                 console.log(
-                  "Customer Already Has Tier 3 Tag. No Update Needed."
+                  'Customer Already Has Tier 3 Tag. No Update Needed.'
                 );
               }
             }
@@ -786,10 +784,10 @@ export default function getUrlApi(app, secret) {
               };
               await updateCustomer(shopSession, updatedCustomerData);
               console.log(
-                "Customer Tag Added Successfully - Tier 3 Tag Added to Customer, but No Existing Tags were Found"
+                'Customer Tag Added Successfully - Tier 3 Tag Added to Customer, but No Existing Tags were Found'
               );
             }
-          } else if (checker == "reward_4_tier") {
+          } else if (checker == 'reward_4_tier') {
             // send email
             reward_email_text = await replace_reward_email_text(
               refererURL,
@@ -806,14 +804,14 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(",").map((tag) => tag.trim());
+              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
               // new tag doesn't exist
               if (!tags.includes(newTag)) {
                 tags.push(newTag);
-                const updatedTags = tags.join(", ");
+                const updatedTags = tags.join(', ');
 
                 // Update the customer's tags
                 const updatedCustomerData = {
@@ -823,13 +821,13 @@ export default function getUrlApi(app, secret) {
 
                 await updateCustomer(shopSession, updatedCustomerData);
                 console.log(
-                  "Customer Tags Updated Successfully - Tier 4 Tag Added to Customer"
+                  'Customer Tags Updated Successfully - Tier 4 Tag Added to Customer'
                 );
               }
               // new tag exists already
               else {
                 console.log(
-                  "Customer Already Has Tier 4 Tag. No Update Needed."
+                  'Customer Already Has Tier 4 Tag. No Update Needed.'
                 );
               }
             }
@@ -841,14 +839,14 @@ export default function getUrlApi(app, secret) {
               };
               await updateCustomer(shopSession, updatedCustomerData);
               console.log(
-                "Customer Tag Added Successfully - Tier 4 Tag Added to Customer, but No Existing Tags were Found"
+                'Customer Tag Added Successfully - Tier 4 Tag Added to Customer, but No Existing Tags were Found'
               );
             }
           }
           await send_email(
             reward_email_text,
             referrer.rows[0].email,
-            "Reward Unlocked"
+            'Reward Unlocked'
           );
         }
       }
