@@ -272,7 +272,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
     if (planExists?.rowCount === 0) {
       try {
         const savePlan = await pool.query(
-          `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, status, shop_id,billing_required,collecting_phones) VALUES ($1, $2, $3, $4, $5, $6, $7,$8)`,
+          `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id,billing_required,collecting_phones) VALUES ($1, $2, $3, $4, $5, $6, $7,$8)`,
           [
             plan_name,
             totalBill,
@@ -295,7 +295,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
            price=$2,
            created_at=$3,
            subscription_id=$4,
-           status=$5,
+           billing_status=$5,
            billing_required=$6,
            collecting_phones = $7
            WHERE 
@@ -321,7 +321,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
     if (planExists?.rowCount <= 0) {
       try {
         const newPlan = await pool.query(
-          `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, status, shop_id, billing_required,collecting_phones) VALUES ($1, $2, $3, $4, $5, $6,$7,$8)`,
+          `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id, billing_required,collecting_phones) VALUES ($1, $2, $3, $4, $5, $6,$7,$8)`,
           [
             'Free',
             0.0,
@@ -412,7 +412,7 @@ export async function cancelAppSubscription(session, collecting_phones) {
       if (planExists?.rowCount === 0) {
         try {
           const savePlan = await pool.query(
-            `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, status, shop_id, collecting_phones,billing_required) VALUES ($1, $2, $3, $4, $5, $6,$7,$8) RETURNING *`,
+            `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id, collecting_phones,billing_required) VALUES ($1, $2, $3, $4, $5, $6,$7,$8) RETURNING *`,
             [
               'Free',
               totalBill,
@@ -437,7 +437,7 @@ export async function cancelAppSubscription(session, collecting_phones) {
            price=$2,
            created_at=$3,
            subscription_id=$4,
-           status=$5, 
+           billing_status=$5, 
            billing_required=$6,
            collecting_phones=$7
            WHERE
