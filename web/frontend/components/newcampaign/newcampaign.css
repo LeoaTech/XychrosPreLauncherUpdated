@@ -180,10 +180,20 @@
 .error-message {
   font-size: 15.6px;
   margin: 0 5px;
-  color: #b70404;
+  color: #ff3434;
   margin-bottom: 15px;
+  margin-top: 10px;
+}
+
+.discount_code-error{
+  /* font-size: 15.6px;
+  margin: 0 5px;
+  margin-bottom: 15px;
+  margin-top: 10px; */
+  color: #ff3434;
+
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 .reward-form-error {
@@ -193,6 +203,9 @@
   padding: 0 3px;
   display: block;
 }
+
+
+
 .discount_error_text {
   color: #b70404;
   margin: 0 5px;
@@ -200,7 +213,7 @@
   margin-top: 18px;
   font-size: 17px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 

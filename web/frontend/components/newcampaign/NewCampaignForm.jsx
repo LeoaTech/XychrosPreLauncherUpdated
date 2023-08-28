@@ -996,13 +996,14 @@ function NewCampaignForm() {
                       <div className="form-group">
                         <div className="inputfield">
                           <label htmlFor="name">
-                            Campaign Name *{" "}
+                            Campaign Name
                             {errorMessage && (
                               <span className="error-message">
                                 This field is required
                               </span>
                             )}
                           </label>
+
                           {isEdit ? (
                             <>
                               <input
@@ -1312,8 +1313,9 @@ function NewCampaignForm() {
                       />
                     ) : (
                       <IoIosArrowDown
+                        disabled={expanded[0]}
                         style={{ strokeWidth: "70", fill: "#fff" }}
-                        // onClick={() => handleExpand(1)}
+                        onClick={() => handleExpand(1)}
                       />
                     )}
                   </span>
@@ -1542,7 +1544,7 @@ function NewCampaignForm() {
                               {/* Required Rewards and Valid Discount codes values */}
                               <div className="reward-form-error">
                                 {isReward2Error && reward?.id === 2 && (
-                                  <h6 className="error-message">
+                                  <h6 className="discount_code-error">
                                     {" "}
                                     <MdError
                                       style={{
@@ -1557,7 +1559,7 @@ function NewCampaignForm() {
                                   </h6>
                                 )}
                                 {isReward3Error && reward?.id === 3 && (
-                                  <h6 className="error-message">
+                                  <h6 className="discount_code-error">
                                     {" "}
                                     <MdError
                                       style={{
@@ -1572,7 +1574,7 @@ function NewCampaignForm() {
                                   </h6>
                                 )}
                                 {isReward4Error && reward?.id === 4 && (
-                                  <h6 className="error-message">
+                                  <h6 className="discount_code-error">
                                     {" "}
                                     <MdError
                                       style={{
