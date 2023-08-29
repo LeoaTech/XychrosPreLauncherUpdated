@@ -62,12 +62,17 @@ const CampaignsComponent = () => {
     }
   }, [campaignDetails]);
 
+  let t_clicks = 0;
   // Get Total Clicks Count
   useEffect(() => {
-    if (TotalClicksList > 0) {
+    if (TotalClicksList.length > 0) {
       setTotalClicks(TotalClicksList);
     }
   }, [TotalClicksList]);
+  // console.log(getTotalClicks);
+  if(getTotalClicks.length > 0) {
+    t_clicks = getTotalClicks[0].total_clicks;
+  }
 
   // PAGINATION
 
@@ -182,7 +187,7 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalClicks}
+            value={t_clicks}
             title="Clicks"
             icon={arrow}
             class="clicks-icon"

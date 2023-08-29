@@ -20,7 +20,7 @@ const HomeComponent = () => {
   const dispatch = useDispatch();
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
-  const [getTotalClicks, setTotalClicks] = useState(0);
+  const [getTotalClicks, setTotalClicks] = useState([]);
 
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
@@ -28,23 +28,28 @@ const HomeComponent = () => {
   const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
 
+  let t_clicks = 0;
   // Get Total Clicks Count
   useEffect(() => {
-    if (TotalClicksList > 0) {
+    if (TotalClicksList.length > 0) {
       setTotalClicks(TotalClicksList);
     }
   }, [TotalClicksList]);
+  // console.log(getTotalClicks);
+  if(getTotalClicks.length > 0) {
+    t_clicks = getTotalClicks[0].total_clicks;
+  }
 
   // Get Last Six Months Clicks Data
   useEffect(() => {
-    if (LastSixMonthsClicksList) {
+    if (LastSixMonthsClicksList.length > 0) {
       setLastSixMonthsClicksData(LastSixMonthsClicksList);
     }
   }, [LastSixMonthsClicksList]);
 
   // Get Last Four Campaigns Clicks
   useEffect(() => {
-    if (LastFourCampaignsClicksList) {
+    if (LastFourCampaignsClicksList.length > 0 ) {
       setLastFourCampaignsClicks(LastFourCampaignsClicksList);
     }
   }, [LastFourCampaignsClicksList]);
@@ -256,7 +261,6 @@ const HomeComponent = () => {
   };
 
   // donut chart labels and data according to latest four campaigns
-  // Initialize arrays to store the extracted data
   const donutChart_labels = [];
   const fourcampaigns_clicks = [];
 
@@ -367,7 +371,7 @@ const HomeComponent = () => {
         /> */}
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalClicks}
+            value={t_clicks}
             title="Clicks"
             icon={arrow}
             class="clicks-icon"
