@@ -15,6 +15,27 @@
     });
   }
 
+    // count user clicks
+  async function getClicks(campaign_name) {
+    try {
+      console.log('Get Landing Page Clicks of: ', campaign_name);
+      const response = await fetch("/apps/product-prelauncher/api/getclicks",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          campaign_name: campaign_name,
+        }),
+      }
+    );
+    const data = await response.json();
+    } catch(err){
+      console.log(err);
+    }
+  }
+
   window.onload = async (e) => {
     var el = document.querySelector('.product-prelaunch-second-page');
     el.parentElement.style.padding = '0';
@@ -50,9 +71,10 @@
 
     const campaign = document.getElementById('review_campaign_name');
     const campaign_name = campaign.innerHTML;
-    console.log(campaign_name)
-
+    {% comment %} console.log(campaign_name); {% endcomment %}
     const myBackground = await getbackground(campaign_name);
+    clicks = getClicks(campaign_name);
+    {% comment %} console.log(clicks); {% endcomment %}
 
     if (second_page_settings.background_image) {
       let second_image_background = 'https:' + second_page_settings.background_image;
