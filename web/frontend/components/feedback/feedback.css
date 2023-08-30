@@ -1,13 +1,12 @@
 .feedback-container {
   color: white;
-  margin: 0 40px;
+  margin: 40px;
   margin-left: 5%;
-  margin-top: 2rem;
+  margin-top: 40px;
   padding: 10px;
 }
 
 .feedback-desc {
-  margin-top: 2.6em;
   font-size: 21px;
   line-height: 1.1;
 }
