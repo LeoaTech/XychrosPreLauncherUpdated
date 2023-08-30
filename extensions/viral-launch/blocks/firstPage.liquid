@@ -16,22 +16,21 @@
   }
 
   // count user clicks
-
   async function getClicks(campaign_name) {
     try {
-      console.log('Get Clicks of: ', campaign_name);
       const response = await fetch("/apps/product-prelauncher/api/getclicks",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          campaign_name: campaign_name,
-        }),
-      }
-    );
-    const data = await response.json();
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            campaign_name: campaign_name,
+          }),
+        }
+      );
+      console.log('Get Landing Page Clicks of: ', campaign_name);
+      const data = await response.json();
     } catch(err){
       console.log(err);
     }
@@ -70,9 +69,10 @@
     const campaign = document.getElementById('landing_campaign_name');
     const campaign_name = campaign.innerHTML;
     const myBackground = await getbackground(campaign_name);
+    {% comment %} console.log(myBackground); {% endcomment %}
     const campaign_details = myBackground.campaign_data;
     clicks = getClicks(campaign_name);
-    // console.log('clicks api: ', clicks);
+    {% comment %} console.log(clicks); {% endcomment %}
     
     // Get Store Social Icons
     let share_facebook = document.getElementById('store-facebook-link');
@@ -168,6 +168,8 @@
         });
       }
     }
+
+    {% comment %} bg image {% endcomment %}
     if (first_page_settings.background_image) {
       let image_background = 'https:' + first_page_settings.background_image;
       console.log(image_background);
