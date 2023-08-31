@@ -1,6 +1,8 @@
 import { Shopify } from '@shopify/shopify-api';
 import fetch from 'node-fetch';
 
+const api_version = '2022-10';
+
 // api calls
 const templateApiCalls = async (
   accessToken,
@@ -23,7 +25,7 @@ const templateApiCalls = async (
   // start of landing template settings
 
   const landing_show_header_footer = templateData.landing_show_header_footer;
-  const landing_background_overlay = templateData.landing_background_overlay; // gradient values need to be updated in database
+  const landing_background_overlay = templateData.landing_background_overlay; 
   const landing_main_color = `#${templateData.landing_main_color}`;
   const landing_accent_color = `#${templateData.landing_accent_color}`;
   const landing_divider = templateData.landing_divider;
@@ -48,7 +50,7 @@ const templateApiCalls = async (
   // start of rewards template settings
 
   const rewards_show_header_footer = templateData.rewards_show_header_footer;
-  const rewards_background_overlay = templateData.rewards_background_overlay; // need to be updated in database
+  const rewards_background_overlay = templateData.rewards_background_overlay; 
   const rewards_main_color = `#${templateData.rewards_main_color}`;
   const rewards_accent_color = `#${templateData.rewards_accent_color}`;
   const rewards_divider = templateData.rewards_divider; // need to be updated in database
@@ -161,7 +163,7 @@ const templateApiCalls = async (
   const getActiveThemeId = async () => {
     try {
       const response = await fetch(
-        `https://${shopURL}/admin/api/2022-10/themes.json`,
+        `https://${shopURL}/admin/api/${api_version}/themes.json`,
         {
           method: 'GET',
           headers,
@@ -187,19 +189,23 @@ const templateApiCalls = async (
     const uniqueTemplateName = templateName + '_' + uuid; // concatenate base name and uuid
     try {
       const response = await fetch(
-        `https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`,
-        {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({
-            asset: {
-              key: `templates/page.${uniqueTemplateName}.json`,
-              value: JSON.stringify(body1),
-            },
-          }),
-        }
-      );
+        `https://${shopURL}/admin/api/${api_version}/themes/${themeid}/assets.json`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          asset: {
+            key: `templates/page.${uniqueTemplateName}.json`,
+            value: JSON.stringify(body1),
+          },
+        }),
+      });
+
       const data = await response.json();
+
+      // retrieve and return the name of created template from the response
+      const templateName = data.asset.key.split('/')[1].split('.')[1];
+      console.log(`Template "${templateName}" Created!`);
+      
       if (!response.ok) {
         throw new Error(`Failed to create page template: ${data.errors}`);
       }
@@ -215,7 +221,7 @@ const templateApiCalls = async (
     const uniqueTemplateName = templateName + '_' + uuid; // concatenate base name and uuid
     try {
       const response = await fetch(
-        `https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`,
+        `https://${shopURL}/admin/api/${api_version}/themes/${themeid}/assets.json`,
         {
           method: 'PUT',
           headers,
@@ -228,6 +234,11 @@ const templateApiCalls = async (
         }
       );
       const data = await response.json();
+
+      // retrieve and return the name of created template from the response
+      const templateName = data.asset.key.split('/')[1].split('.')[1];
+      console.log(`Template "${templateName}" Created!`);
+
       if (!response.ok) {
         throw new Error(`Failed to create page template: ${data.errors}`);
       }
@@ -250,7 +261,7 @@ const templateApiCalls = async (
 
     try {
       const response = await fetch(
-        `https://${shopURL}/admin/api/2023-01/pages.json`,
+        `https://${shopURL}/admin/api/${api_version}/pages.json`,
         {
           method: 'POST',
           headers,
@@ -258,7 +269,8 @@ const templateApiCalls = async (
         }
       );
       const data = await response.json();
-      return data.page.handle;
+      console.log(`Page "${data.page.handle}" Created!`);
+      return data;
     } catch (error) {
       console.error(error);
     }
@@ -277,7 +289,7 @@ const templateApiCalls = async (
 
     try {
       const response = await fetch(
-        `https://${shopURL}/admin/api/2023-01/pages.json`,
+        `https://${shopURL}/admin/api/${api_version}/pages.json`,
         {
           method: 'POST',
           headers,
@@ -285,7 +297,8 @@ const templateApiCalls = async (
         }
       );
       const data = await response.json();
-      return data.page.handle;
+      console.log(`Page "${data.page.handle}" Created!`);
+      return data;
     } catch (error) {
       console.error(error);
     }
@@ -327,7 +340,7 @@ const templateApiCalls = async (
 
     try {
       const response = await fetch(
-        `https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`,
+        `https://${shopURL}/admin/api/${api_version}/themes/${themeid}/assets.json`,
         {
           method: 'PUT',
           headers,
@@ -340,6 +353,7 @@ const templateApiCalls = async (
         }
       );
       const data = await response.json();
+      console.log("Updated Template1 with second Page Handle");
       if (!response.ok) {
         throw new Error(`Failed to update page template: ${data.errors}`);
       }
@@ -383,7 +397,7 @@ const templateApiCalls = async (
 
     try {
       const response = await fetch(
-        `https://${shopURL}/admin/api/2022-10/themes/${themeid}/assets.json`,
+        `https://${shopURL}/admin/api/${api_version}/themes/${themeid}/assets.json`,
         {
           method: 'PUT',
           headers,
@@ -396,6 +410,7 @@ const templateApiCalls = async (
         }
       );
       const data = await response.json();
+      console.log("Updated Template2 with first Page Handle");
       if (!response.ok) {
         throw new Error(`Failed to update page template: ${data.errors}`);
       }
@@ -414,17 +429,23 @@ const templateApiCalls = async (
   const template1 = await createFirstPageTemplate(themeid);
   const template2 = await createSecondPageTemplate(themeid);
 
-  // retrieve the name of the created template from the response
-  const templateSuffix1 = await template1.asset.key.split('/')[1].split('.')[1];
-  const templateSuffix2 = await template2.asset.key.split('/')[1].split('.')[1];
-
   // pass template suffix to create pages assigned with created templates
-  const firstpage_handle = await createFirstPage(templateSuffix1);
-  const secondpage_handle = await createSecondPage(templateSuffix2);
+  const templateSuffix1 = template1.asset.key.split('/')[1].split('.')[1];
+  const templateSuffix2 = template2.asset.key.split('/')[1].split('.')[1];
+
+  const firstpage = await createFirstPage(templateSuffix1);
+  const secondpage = await createSecondPage(templateSuffix2);
 
   // update templates with page handles returned by create page functions
+  const firstpage_handle = firstpage.page.handle;
+  const secondpage_handle = secondpage.page.handle;
+
   await updateFirstPageTemplate(templateSuffix1, secondpage_handle);
   await updateSecondPageTemplate(templateSuffix2, firstpage_handle);
+
+  // retrieve template ids
+  const landing_template_key = template1.asset.key;
+  const rewards_template_key = template2.asset.key;
 
   // generate template links to be opened in shopify theme editor
   const landingTemplateLink = `https://${shopURL}/admin/themes/${themeid}/editor?previewPath=${encodeURIComponent(
@@ -434,6 +455,10 @@ const templateApiCalls = async (
     '/pages/' + secondpage_handle
   )}`;
 
+  // retrieve page ids
+  const landing_page_id = firstpage.page.id;
+  const rewards_page_id = secondpage.page.id;
+
   // generate page links
   const landingPageLink = `https://${shopURL}/pages/${firstpage_handle}`;
   const rewardsPageLink = `https://${shopURL}/pages/${secondpage_handle}`;
@@ -441,14 +466,15 @@ const templateApiCalls = async (
   // return campaign details
   const campaignDetails = {
     campaign_name: campaignData.name,
-    discount_code_1: campaignData.reward_1_code,
-    discount_code_2: campaignData.reward_2_code,
-    discount_code_3: campaignData.reward_3_code,
-    discount_code_4: campaignData.reward_4_code,
+    theme_id: themeid,
+    landing_template_key: landing_template_key,
     landing_template_link: landingTemplateLink,
+    landing_page_id: landing_page_id,
     landing_page_link: landingPageLink,
+    rewards_template_key: rewards_template_key,
     rewards_template_link: rewardsTemplateLink,
-    rewards_page_link: rewardsPageLink,
+    rewards_page_id: rewards_page_id,
+    rewards_page_link: rewardsPageLink
   };
 
   return campaignDetails;

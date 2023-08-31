@@ -500,11 +500,15 @@ const get_referrals = async () => {
       if (parseInt(remaining_referrals.innerText) == 1) {
         count_detail.innerText = 'Invite 1 more friend to unlock next reward!';
       }
+
     } else {
       count_referrals.innerText =
         '0 friends have joined! Invite friends to Join';
       current_referrals.innerText = 0;
       remaining_referrals.innerText = `${data.referral_data.length}`;
+      if (parseInt(remaining_referrals.innerText) == 0) {
+        count_detail.innerText = `Invite atleast ${reward_1_tier} friends to unlock first reward!`;
+      }
     }
   } else {
     console.log(data);

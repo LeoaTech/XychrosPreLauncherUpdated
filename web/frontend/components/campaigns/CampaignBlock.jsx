@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { getTotalCampaigns } from "../../app/features/campaigns/campaignSlice";
 import { fetchReferralById } from "../../app/features/referrals/referralSlice";
+import { fetchIndividualCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import { useSelector } from "react-redux";
 import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
 import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
@@ -66,6 +67,12 @@ export default function CampaignBlock({
   const [deleteEndData, setDeleteEndDate] = useState(null);
   const [isToggled, setIsToggled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(isToggled);
+
+  // Individual campaign clicks
+  const campaign_clicks = useSelector((state) =>
+  fetchIndividualCampaignClicks(state, +campaign_id)
+  );
+  // console.log(campaign_clicks);
 
   const now = new Date(); //Get the current date
 
@@ -153,16 +160,20 @@ export default function CampaignBlock({
                 className="referral-icon"
               />
             </Suspense>
-            {/* <ShortSummaryCard
-              value="$37"
-              icon={Sale}
-              className="revenue-icon"
-            />
-            <ShortSummaryCard
-              value="4568"
-              icon={arrow}
-              className="clicks-icon"
-            /> */}
+            <Suspense fallback={<SkeletonShortSummaryCard />}>
+              <ShortSummaryCard
+                value="$37"
+                icon={Sale}
+                className="revenue-icon"
+              />
+            </Suspense>
+            <Suspense fallback={<SkeletonShortSummaryCard />}>
+              <ShortSummaryCard
+                value={campaign_clicks}
+                icon={arrow}
+                className="clicks-icon"
+              />
+            </Suspense>
           </div>
           <div className="campaign-actions">
             <IconContext.Provider

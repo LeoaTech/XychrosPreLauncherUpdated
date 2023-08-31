@@ -1,7 +1,8 @@
-import { Shopify } from '@shopify/shopify-api';
-import axios from 'axios';
 
-import NewPool from 'pg';
+import { Shopify } from "@shopify/shopify-api";
+import axios from "axios";
+import NewPool from "pg";
+
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: `${process.env.DATABASE_URL}`,
@@ -43,7 +44,6 @@ export default async function ensureBilling(
   }
   /* Uncomment This line to TEST for environment */
   // isProd = isProdOverride;
-
   let hasPayment;
   let confirmationUrl = null;
 
@@ -72,7 +72,8 @@ async function hasActivePayment(session, { chargeName, interval }) {
     });
     const subscriptions =
       currentInstallations.body.data.currentAppInstallation.activeSubscriptions;
-    for (let i = 0, len = subscriptions.length; i < len; i++) {
+
+    for (let i = 0, len = subscriptions?.length; i < len; i++) {
       if (
         subscriptions[i].name === chargeName &&
         !subscriptions[i].test // !isProd ||
@@ -110,7 +111,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
   return false;
 }
 
-// When user install the app , it requests for app subscription
+// Request for Payment according to payment interval
 async function requestPayment(
   session,
   { chargeName, amount, currencyCode, interval, collecting_phones }
@@ -139,7 +140,8 @@ async function requestPayment(
     });
     data = mutationResponse.body.data.appPurchaseOneTimeCreate;
   }
-  if (data.userErrors.length) {
+  if (data.userErrors?.length) {
+    console.log(data.userErrors, "Errror in reqest payment");
     throw new ShopifyBillingError(
       'Error while billing the store',
       data.userErrors
@@ -169,7 +171,10 @@ async function requestRecurringPayment(
             plan: {
               appRecurringPricingDetails: {
                 interval,
-                price: { amount: totalBill, currencyCode }, //Update the amount with total bill
+                price: {
+                  amount: totalBill,
+                  currencyCode: currencyCode, // Set the correct currency code here
+                },
               },
             },
           },
@@ -180,13 +185,13 @@ async function requestRecurringPayment(
     },
   });
 
-  if (mutationResponse.body.errors && mutationResponse.body.errors.length) {
+  if (mutationResponse.body.errors) {
+    console.log(mutationResponse.body.errors, "Request recurring failed");
     throw new ShopifyBillingError(
       'Error while billing the store',
       mutationResponse.body.errors
     );
   }
-
   return mutationResponse;
 }
 
@@ -207,7 +212,8 @@ async function requestSinglePayment(
     },
   });
 
-  if (mutationResponse.body.errors && mutationResponse.body.errors.length) {
+  if (mutationResponse.body.errors) {
+    //&& mutationResponse.body.errors.length
     throw new ShopifyBillingError(
       'Error while billing the store',
       mutationResponse.body.errors
@@ -216,9 +222,8 @@ async function requestSinglePayment(
 
   return mutationResponse;
 }
-let subscribed_id;
-// Get Current Active Subscription Plan Object From (recurring_application_charges) API
-export async function getCurrentActivePricingPlan(session) {
+
+export async function getSubscriptionCharge(session) {
   const baseUrl = `https://${session?.shop}/admin/api/2023-04/recurring_application_charges.json`;
   try {
     let response = await axios.get(baseUrl, {
@@ -227,33 +232,42 @@ export async function getCurrentActivePricingPlan(session) {
         'Content-Type': 'application/json',
       },
     });
-
     const RecurringChargeList = response?.data?.recurring_application_charges; //return list of all recurring charges
     let activePlan = RecurringChargeList?.find(
       (recurringCharge) => recurringCharge?.status === 'active' //Get active charge Plan details (Id, price,status)
     );
 
-    subscribed_id = activePlan?.id;
-    // Save the Active plan details in subscription_list
-    await saveSubscribedPlan(activePlan, session);
+    return activePlan;
   } catch (err) {
-    console.log(err, 'Error in getting subscription');
+    console.error(err, "Error to Get Current RecurringCharge");
   }
 }
 
-// Save the Subscribed Plan into the database
+let subscribed_id;
 
+// Get Current Active Subscription Plan Object From (recurring_application_charges) API
+
+export async function getCurrentActivePricingPlan(session) {
+  // function to get all Recurring charge list (Extract only active charge)
+  let current_plan = await getSubscriptionCharge(session);
+
+  subscribed_id = current_plan?.id;
+  // Save the Active plan details in subscription_list Table of database
+  await saveSubscribedPlan(current_plan, session);
+}
+
+// Save the Subscribed Plan into the database
 async function saveSubscribedPlan(subscribedPlan, session) {
   const planExists = await pool.query(
     `select * from subscriptions_list where shop_id =$1`,
     [session?.shop]
   );
   // Subscription Exists ====> Add it Into Database
-
   if (subscribedPlan) {
-    let myPlan = price_plans?.rows.find(
-      (plan) => plan?.plan_name === subscribedPlan?.name
-    );
+    const charged_name = subscribedPlan?.name.split(" + ");
+    const tierName = charged_name[0]; // Extract "Tier Name"
+
+    let myPlan = price_plans?.rows.find((plan) => plan?.plan_name === tierName);
 
     myPlan['billing_required'] = true;
     const { plan_name, billing_required } = myPlan;
@@ -274,7 +288,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
         const savePlan = await pool.query(
           `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id,billing_required,collecting_phones) VALUES ($1, $2, $3, $4, $5, $6, $7,$8)`,
           [
-            plan_name,
+            subscribedPlan?.name,
             totalBill,
             subscribedPlan?.created_at,
             subscriptionId,
@@ -301,7 +315,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
            WHERE 
             shop_id=$8`,
           [
-            plan_name,
+            subscribedPlan?.name,
             totalBill,
             subscribedPlan?.updated_at,
             subscriptionId,
@@ -344,18 +358,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
 
 // ------------ Cancel Subscription Billing Model-------------//
 
-// Get Current App installation subscriptionID (requires for app installation function)
-
-async function getCurrentSubscriptionId(client) {
-  const currentInstallations = await client.query({
-    data: RECURRING_PURCHASES_QUERY,
-  });
-  const subscriptions =
-    currentInstallations?.body?.data?.currentAppInstallation;
-  return subscriptions?.length > 0 ? subscriptions[0]?.id : null;
-}
-
-// Request Cancel App Subscription function
+// Request Cancel App Subscription function with the app subscription ID
 
 async function requestCancelSubscription(session, myId) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
@@ -369,6 +372,7 @@ async function requestCancelSubscription(session, myId) {
   });
 
   let data = mutationResponse?.body?.data?.appSubscriptionCancel;
+
 
   if (data?.userErrors.length) {
     console.log(data.userErrors, 'Error for cancelling request');
@@ -495,6 +499,54 @@ export function ShopifyBillingError(message, errorData) {
   this.errorData = errorData;
 }
 ShopifyBillingError.prototype = new Error();
+
+// Create a webhook subscription for app subscription update
+
+const webhookAddress = `https://provision-nursery-british-interference.trycloudflare.com/api/webhooks`;
+
+// Depreciated Mutation for app subscription update webhook
+export async function updateSubscription(session) {
+  // webhookSubscriptionCreate(topic: APP_SUBSCRIPTIONS_UPDATE , webhookSubscription: {callbackUrl: "${appSubcriptionCB}", format: JSON}) {
+  //
+  // }
+
+  const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
+  const data = await client.query({
+    data: {
+      query: `mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
+      webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
+        webhookSubscription {
+              id
+              callbackUrl
+              format
+              topic
+            }
+            userErrors {
+              field
+              message
+            }
+      }
+    }
+    `,
+      variables: {
+        topic: "APP_SUBSCRIPTIONS_UPDATE",
+        webhookSubscription: {
+          callbackUrl: webhookAddress,
+          format: "JSON",
+        },
+      },
+    },
+  });
+
+  // let response = data?.body?.data?.webhookSubscriptionCreate;
+  // if (response?.userErrors) {
+  //   throw new ShopifyBillingError(
+  //     "Error while updating subscription the store",
+  //     response?.userErrors
+  //   );
+  // }
+  return data?.body?.data?.webhookSubscriptionCreate;
+}
 
 const RECURRING_PURCHASES_QUERY = `
   query appSubscription {

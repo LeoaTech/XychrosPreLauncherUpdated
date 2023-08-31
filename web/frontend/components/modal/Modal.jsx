@@ -77,7 +77,7 @@ const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
             <strong>Friends Joined:</strong> {values?.friends_joined}
           </p>
           <p>
-            <strong>Date of Joining:</strong> {values?.created_at}
+            <strong>Date of Joining:</strong> {new Date(values?.created_at).toDateString() + " "+ new Date(values?.created_at).toLocaleTimeString()}
           </p>
 
           {finalData ? (
