@@ -54,12 +54,27 @@ export default function getCampaignClicks(app, secret) {
         app.get("use-online-tokens")
       );
       const { shop } = session;
+
+      // overall clicks
       const total_clicks = await pool.query(
-        "SELECT * FROM user_clicks WHERE shop=$1", 
+        `WITH UserClicks AS (
+          SELECT
+          uc.campaign_id,
+          COUNT(uc.id) AS campaign_clicks
+          FROM user_clicks uc 
+          WHERE shop = $1
+          GROUP BY uc.campaign_id
+        )
+        SELECT 
+        campaign_id,
+        campaign_clicks, 
+        SUM(campaign_clicks) OVER() AS total_clicks
+        FROM UserClicks`, 
         [shop]
       );
-      // console.log('user clicks: ', total_clicks.rowCount);
-      return res.status(200).json(total_clicks.rowCount);
+      
+      // console.log('user clicks: ', total_clicks.rows);
+      return res.status(200).json(total_clicks.rows);
     } catch (error) {
       return res.status(500).json({ success: false, error: error});
     }
