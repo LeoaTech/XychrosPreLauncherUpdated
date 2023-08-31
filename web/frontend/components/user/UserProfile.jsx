@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCurrentPlan } from "../../app/features/current_plan/current_plan";
 import { fetchAllpricing } from "../../app/features/pricing/pricing";
 import DataTable from "react-data-table-component";
+import ButtonLoader from "../loading_skeletons/ButtonLoader";
 
 // Billing Details Table Custom Styles
 const billingStyles = {
@@ -16,7 +17,7 @@ const billingStyles = {
     style: {
       fontSize: "15px",
       fontWeight: "semi-bold",
-      paddingLeft: "0 4px",
+      paddingLeft: "0 6px",
       justifyContent: "center",
       color: "#FCFCFC",
       backgroundColor: "#232227",
@@ -38,7 +39,7 @@ const billingStyles = {
     style: {
       backgroundColor: "#232229",
       color: "#ECECEC",
-      // textAlign: "center",
+      textAlign: "center",
     },
     highlightOnHoverStyle: {
       color: "#f3f3f3",
@@ -135,7 +136,7 @@ const UserProfile = () => {
       name: "Charged Date",
       selector: (row) => row.created_at,
       sortable: true,
-      id: "charge_date",
+      id: "charged_date",
       style: {
         fontSize: 15,
       },
@@ -162,10 +163,17 @@ const UserProfile = () => {
 
   // Get Current Plan and Set Billing Details in TableData
   useEffect(() => {
+    let cardId;
     if (billingPlan !== undefined) {
-      let cardId = priceData?.find(
-        (plan) => plan?.plan_name === billingPlan?.plan_name
-      );
+      if (billingPlan?.plan_name?.includes("Add-on")) {
+        const charged_name = billingPlan?.plan_name?.split(" + ");
+        const tierName = charged_name[0]; // Extract "Tier Name"
+        cardId = priceData?.find((plan) => plan?.plan_name === tierName);
+      } else {
+        cardId = priceData?.find(
+          (plan) => plan?.plan_name === billingPlan?.plan_name
+        );
+      }
       setPriceCard([{ ...cardId }]);
       setSubscribedCardId(cardId?.id);
       setUserDetails({ ...userDetails, billing_id: subscribedCardId });
@@ -187,16 +195,16 @@ const UserProfile = () => {
     if (billingPlan) {
       let currentPlan = {
         ...billingPlan,
-        plan_name: billingPlan?.collecting_phones
-          ? billingPlan?.plan_name + " + Collecting Phones"
-          : billingPlan?.plan_name,
-        created_at: new Date(billingPlan?.created_at).toLocaleString(),
+        plan_name: billingPlan?.plan_name,
+        created_at:
+          new Date(billingPlan?.created_at).toDateString() +
+          " " +
+          new Date(billingPlan?.created_at).toLocaleTimeString(),
       };
       setTableData([currentPlan]);
     }
   }, [billingPlan]);
 
-  console.log(billingPlan)
   // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -234,10 +242,9 @@ const UserProfile = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data, "Returned by user");
           dispatch(SaveUser(data));
         })
-        .catch((err) => console.log(err));
+        .catch((err) => err);
       setIsloading(false);
     }
   };
@@ -356,7 +363,7 @@ const UserProfile = () => {
             className="btnSave"
             disabled={userDetails?.billing_id === null}
           >
-            {isLoading ? "Saving..." : " Save"}
+            {isLoading ? <ButtonLoader /> : " Save"}
           </button>
         </div>
       </div>

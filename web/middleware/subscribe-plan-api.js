@@ -34,8 +34,8 @@ export default function SubscribePlanApiEndPoint(myApp) {
         myApp.get("use-online-tokens")
       );
       try {
-        // Will Get the Current Active Subscribed Plan
         await getCurrentActivePricingPlan(session);
+
         const planExists = await pool.query(
           `select * from subscriptions_list where shop_id =$1`,
           [session?.shop]
@@ -72,7 +72,7 @@ export default function SubscribePlanApiEndPoint(myApp) {
       const plan_settings = {
         ...BILLING_SETTINGS,
         required: billing_required,
-        chargeName: plan_name,
+        chargeName: collecting_phones ? plan_name + " + Add-ons" : plan_name,
         amount: newAmount,
         currencyCode: currency_code,
         collecting_phones: collecting_phones,
@@ -101,7 +101,6 @@ export default function SubscribePlanApiEndPoint(myApp) {
               session,
               plan_settings
             );
-
             if (!hasPayment) {
               return res.json({ confirmationUrl: confirmationUrl });
             } else {
@@ -119,6 +118,59 @@ export default function SubscribePlanApiEndPoint(myApp) {
     } catch (err) {
       console.log(err);
       return err;
+    }
+  });
+
+  // Merchant Renew Subscription plan with add-on Confirmation or cancel add-on subscription
+
+  myApp.post("/api/confirm-add-ons", async (req, res) => {
+    try {
+      const session = await Shopify.Utils.loadCurrentSession(
+        req,
+        res,
+        myApp.get("use-online-tokens")
+      );
+
+      const {
+        billing_required,
+        currency_code,
+        plan_name,
+        price,
+        collecting_phones,
+      } = req.body;
+
+      let newAmount = price;
+      // Update Plan_settings with Collecting_phones
+      const addons_plan = {
+        ...BILLING_SETTINGS,
+        required: billing_required,
+        chargeName: collecting_phones ? plan_name + " + Add-ons" : plan_name,
+        amount: newAmount,
+        currencyCode: currency_code,
+        collecting_phones: collecting_phones,
+      };
+
+      // If BilLing Required is TRUE & Subscribed to Paid Plan
+      if (addons_plan.required) {
+        const [hasPayment, confirmationUrl] = await ensureBilling(
+          session,
+          addons_plan
+        );
+        if (!hasPayment) {
+          return res.json({ confirmationUrl: confirmationUrl });
+        } else {
+          return res.json("You have already subscribed to this plan");
+        }
+      } else {
+        // Cancel Add-on Subscription
+
+        const result = await cancelAppSubscription(session, collecting_phones);
+        console.log(result, "Cancel Plan");
+        return res.status(200).json(result);
+      }
+    } catch (error) {
+      console.log(error?.response?.errors, "error creating subscription");
+      return error;
     }
   });
 }

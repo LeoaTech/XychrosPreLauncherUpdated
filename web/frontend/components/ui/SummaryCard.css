@@ -7,7 +7,7 @@
   border-radius: 10px;
   margin: 10px 14px;
   display: flex;
-  padding: 13px;
+  padding: 15px;
   align-items: center;
   justify-content: space-between;
   gap: 5px;
@@ -27,7 +27,7 @@
 
 .summary-card-title {
   font-weight: 400;
-  font-size: 24px;
+  font-size: 18px;
   line-height: 29px;
   color: var(--primary-color);
 }

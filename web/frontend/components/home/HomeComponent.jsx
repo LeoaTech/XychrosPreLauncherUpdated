@@ -1,6 +1,6 @@
 import "./HomeComponent.css";
 import "./home.css";
-import { intro, about, arrow } from "../../assets/index";
+import { intro, about, arrow, Marketing, subscriber } from "../../assets/index";
 import Charts from "../ui/Charts";
 import React, { useState, useEffect, Fragment, lazy, Suspense } from "react";
 import { useStateContext } from "../../contexts/ContextProvider";
@@ -14,21 +14,44 @@ const SummaryCard = lazy(() => import("../ui/SummaryCard"));
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
 import { fetchAllLastFourCampaignsClicks } from "../../app/features/user_clicks/lastFourCampaignsClicksSlice";
+import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
+import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
 
 const HomeComponent = () => {
   const fetch = useAuthenticatedFetch();
   const dispatch = useDispatch();
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
-  const [getTotalClicks, setTotalClicks] = useState([]);
+  const List = useSelector(fetchAllCampaigns);
+  const ReferralList = useSelector(fetchAllReferrals);
+  const LastFourCampaignsClicksList = useSelector(
+    fetchAllLastFourCampaignsClicks
+  );
 
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
+
+  const [getReferrals, setReferrals] = useState([]);
+  const [getTotalClicks, setTotalClicks] = useState(0);
+  const [campaignsList, setCampaignsList] = useState([]);
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
-  
-  const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
 
-  let t_clicks = 0;
+
+  // Get Total Campaigns Lists
+  useEffect(() => {
+    if (List?.length > 0) {
+      setCampaignsList(List);
+    }
+  }, [dispatch, List]);
+
+  // Get Referrals List
+  useEffect(() => {
+    if (ReferralList) {
+      setReferrals(ReferralList);
+    }
+  }, [dispatch, ReferralList]);
+
+
   // Get Total Clicks Count
   useEffect(() => {
     if (TotalClicksList.length > 0) {
@@ -61,28 +84,28 @@ const HomeComponent = () => {
   const chartLabels = Array.from({ length: 6 }, (_, index) => {
     const tempDate = new Date(currentYear, currentMonth - index, 1);
     tempDate.setMonth(tempDate.getMonth() - 1); // Subtract 1 month
-  
-    const labelMonth = tempDate.toLocaleString('default', { month: 'long' });
+
+    const labelMonth = tempDate.toLocaleString("default", { month: "long" });
     return labelMonth;
   }).reverse();
-  
+
   // line chart and radar chart data of last six months according to current date
   const chartClicks = Array.from({ length: 6 }, () => 0);
 
   if (getLastSixMonthsClicksData.length > 0) {
-    getLastSixMonthsClicksData.forEach(entry => {
+    getLastSixMonthsClicksData.forEach((entry) => {
       const entryDate = new Date(entry.created_month);
       const entryMonth = entryDate.getMonth();
       const entryYear = entryDate.getFullYear();
 
-      const monthIndex = (currentYear - entryYear) * 12 + (currentMonth - entryMonth - 1);
+      const monthIndex =
+        (currentYear - entryYear) * 12 + (currentMonth - entryMonth - 1);
 
       chartClicks[monthIndex] = parseInt(entry.total_months_clicks, 10); // Convert to integer
     });
   }
   let finalClicks = chartClicks.reverse();
-  // console.log(finalClicks);
-  
+
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
     responsive: true,
@@ -265,7 +288,7 @@ const HomeComponent = () => {
   const fourcampaigns_clicks = [];
 
   // Loop through the API data to extract the clicks details of last/latest four campaigns
-  getLastFourCampaignsClicks.forEach(item => {
+  getLastFourCampaignsClicks.forEach((item) => {
     donutChart_labels.push(`${item.name}`);
     fourcampaigns_clicks.push(parseInt(item.campaign_clicks));
   });
@@ -338,32 +361,30 @@ const HomeComponent = () => {
   // );
   return (
     <div className="home-container">
-      <div className='summary-blocks'>
-        {/* <SummaryCard
-          value={
-            <CountUp
+      <div className="summary-blocks">
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={campaignsList?.length}
+            title="Campaigns"
+            icon={Marketing}
+            class="campaign-icon"
+          />
+        </Suspense>
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={getReferrals?.length}
+            title="Referrals"
+            icon={subscriber}
+            class="referral-icon"
+          />
+        </Suspense>
+        {/*
+        <CountUp
               start={0}
-              end={getCampaigns.length}
+              end={6}
               duration={1.4}
             />
-          }
-          title='Campaigns'
-          icon={Marketing}
-          class='campaign-icon'
-        />
-        <SummaryCard
-          value={
-            <CountUp
-              start={0}
-              end={getReferrals.length}
-              duration={1.4}
-            />
-          }
-          title='Referrals'
-          icon={subscriber}
-          class='referral-icon'
-        />
-        <SummaryCard
+         <SummaryCard
           value='$253,467'
           title='Revenue'
           icon={Sale}
@@ -378,36 +399,36 @@ const HomeComponent = () => {
           />
         </Suspense>
       </div>
-      <div className='single-chart'>
+      <div className="single-chart">
         <Charts
-          type='line'
-          header='Total Revenue'
-          value='$253467'
-          subheader='Last 6 months Data'
+          type="line"
+          header="Total Revenue"
+          value="$253467"
+          subheader="Last 6 months Data"
           LineChartOptions={LineChartOptions}
           LineChartData={LineChartData}
         />
       </div>
-      <div className='dual-charts'>
+      <div className="dual-charts">
         <Charts
-          type='radar'
-          header='Product Launch'
-          value='$2456.76'
-          subheader='August 1st, 2022 - September 5th, 2022'
+          type="radar"
+          header="Product Launch"
+          value="$2456.76"
+          subheader="August 1st, 2022 - September 5th, 2022"
           RadarChartOptions={RadarChartOptions}
           RadarChartData={RadarChartData}
         />
         <Charts
-          type='donut'
-          header='Revenue'
-          value='$15,456.98'
-          subheader='Last 4 campaigns'
+          type="donut"
+          header="Revenue"
+          value="$15,456.98"
+          subheader="Last 4 campaigns"
           DonutChartOptions={DonutChartOptions}
           DonutChartData={DonutChartData}
         />
       </div>
     </div>
-  )
+  );
 };
 
 export default HomeComponent;
