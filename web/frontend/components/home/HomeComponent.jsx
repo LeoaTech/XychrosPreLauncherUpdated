@@ -1,21 +1,21 @@
-import "./HomeComponent.css";
-import "./home.css";
-import { intro, about, arrow, Marketing, subscriber } from "../../assets/index";
-import Charts from "../ui/Charts";
-import React, { useState, useEffect, Fragment, lazy, Suspense } from "react";
-import { useStateContext } from "../../contexts/ContextProvider";
-import { useDispatch, useSelector } from "react-redux";
-import { useAuthenticatedFetch } from "../../hooks";
-import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
-import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
+import './HomeComponent.css';
+import './home.css';
+import { intro, about, arrow, Marketing, subscriber } from '../../assets/index';
+import Charts from '../ui/Charts';
+import React, { useState, useEffect, Fragment, lazy, Suspense } from 'react';
+import { useStateContext } from '../../contexts/ContextProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAuthenticatedFetch } from '../../hooks';
+import SkeletonSummaryCard from '../loading_skeletons/SkeletonSummaryCard';
+import LoadingSkeleton from '../loading_skeletons/LoadingSkeleton';
 
-const SummaryCard = lazy(() => import("../ui/SummaryCard"));
+const SummaryCard = lazy(() => import('../ui/SummaryCard'));
 
-import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
-import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
-import { fetchAllLastFourCampaignsClicks } from "../../app/features/user_clicks/lastFourCampaignsClicksSlice";
-import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
-import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
+import { fetchAllCampaignClicks } from '../../app/features/user_clicks/totalclicksSlice';
+import { fetchAllLastSixMonthsClicks } from '../../app/features/user_clicks/lastSixMonthsClicksSlice';
+import { fetchAllLastFourCampaignsClicks } from '../../app/features/user_clicks/lastFourCampaignsClicksSlice';
+import { fetchAllCampaigns } from '../../app/features/campaigns/campaignSlice';
+import { fetchAllReferrals } from '../../app/features/referrals/referralSlice';
 
 const HomeComponent = () => {
   const fetch = useAuthenticatedFetch();
@@ -31,11 +31,10 @@ const HomeComponent = () => {
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
 
   const [getReferrals, setReferrals] = useState([]);
-  const [getTotalClicks, setTotalClicks] = useState(0);
+  const [getTotalClicks, setTotalClicks] = useState([]);
   const [campaignsList, setCampaignsList] = useState([]);
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
-
 
   // Get Total Campaigns Lists
   useEffect(() => {
@@ -51,7 +50,7 @@ const HomeComponent = () => {
     }
   }, [dispatch, ReferralList]);
 
-
+  let t_clicks = 0;
   // Get Total Clicks Count
   useEffect(() => {
     if (TotalClicksList.length > 0) {
@@ -59,7 +58,7 @@ const HomeComponent = () => {
     }
   }, [TotalClicksList]);
   // console.log(getTotalClicks);
-  if(getTotalClicks.length > 0) {
+  if (getTotalClicks.length > 0) {
     t_clicks = getTotalClicks[0].total_clicks;
   }
 
@@ -72,7 +71,7 @@ const HomeComponent = () => {
 
   // Get Last Four Campaigns Clicks
   useEffect(() => {
-    if (LastFourCampaignsClicksList.length > 0 ) {
+    if (LastFourCampaignsClicksList.length > 0) {
       setLastFourCampaignsClicks(LastFourCampaignsClicksList);
     }
   }, [LastFourCampaignsClicksList]);
@@ -85,7 +84,7 @@ const HomeComponent = () => {
     const tempDate = new Date(currentYear, currentMonth - index, 1);
     tempDate.setMonth(tempDate.getMonth() - 1); // Subtract 1 month
 
-    const labelMonth = tempDate.toLocaleString("default", { month: "long" });
+    const labelMonth = tempDate.toLocaleString('default', { month: 'long' });
     return labelMonth;
   }).reverse();
 
@@ -110,16 +109,16 @@ const HomeComponent = () => {
   const LineChartOptions = {
     responsive: true,
     animation: {
-      easing: "easeInOutQuad",
+      easing: 'easeInOutQuad',
       duration: 520,
     },
     scales: {
       x: {
         grid: {
-          color: "#fff",
+          color: '#fff',
         },
         ticks: {
-          color: "#fff",
+          color: '#fff',
         },
       },
       y: {
@@ -127,11 +126,11 @@ const HomeComponent = () => {
           display: true,
         },
         grid: {
-          color: "#fff",
+          color: '#fff',
         },
         ticks: {
-          color: "#fff",
-          crossAlign: "far",
+          color: '#fff',
+          crossAlign: 'far',
           beginAtZero: true,
         },
       },
@@ -145,19 +144,19 @@ const HomeComponent = () => {
       display: false,
     },
     point: {
-      backgroundColor: "white",
+      backgroundColor: 'white',
     },
     tooltips: {
-      titleFontFamily: "Open Sans",
-      backgroundColor: "rgba(0,0,0,0.3)",
-      titleFontColor: "red",
+      titleFontFamily: 'Open Sans',
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      titleFontColor: 'red',
       caretSize: 5,
       cornerRadius: 2,
       xPadding: 10,
       yPadding: 10,
     },
     labels: {
-      color: "#FFFFFF",
+      color: '#FFFFFF',
 
       // This more specific font property overrides the global property
       font: {
@@ -169,9 +168,9 @@ const HomeComponent = () => {
         propagate: true,
       },
       legend: {
-        position: "bottom",
+        position: 'bottom',
         labels: {
-          color: "#FFFFFF",
+          color: '#FFFFFF',
 
           // This more specific font property overrides the global property
           font: {
@@ -189,27 +188,27 @@ const HomeComponent = () => {
     labels: chartLabels,
     datasets: [
       {
-        label: "Clicks",
+        label: 'Clicks',
         data: finalClicks,
-        borderColor: "#5447df",
-        backgroundColor: "#5447df",
+        borderColor: '#5447df',
+        backgroundColor: '#5447df',
         borderDash: [10, 5],
-        fill: "",
+        fill: '',
       },
       // ... other datasets
       {
-        label: "Campaigns",
+        label: 'Campaigns',
         data: [5, 3, 9, 2, 11, 4, 5],
-        borderColor: "#E0777D",
-        backgroundColor: "#E0777D",
-        fill: "+2",
+        borderColor: '#E0777D',
+        backgroundColor: '#E0777D',
+        fill: '+2',
       },
       {
-        label: "Referrals",
+        label: 'Referrals',
         data: [2, 4, 1, 8, 5, 7, 3],
-        borderColor: "#A1F6F5",
-        backgroundColor: "#A1F6F5",
-        fill: "origin",
+        borderColor: '#A1F6F5',
+        backgroundColor: '#A1F6F5',
+        fill: 'origin',
       },
     ],
   };
@@ -229,25 +228,25 @@ const HomeComponent = () => {
           },
         },
         grid: {
-          color: "#fff",
+          color: '#fff',
         },
         pointLabels: {
-          color: "#fff",
+          color: '#fff',
         },
         ticks: {
-          color: "#fff",
-          backdropColor: "transparent",
-          fontWeight: "bold",
+          color: '#fff',
+          backdropColor: 'transparent',
+          fontWeight: 'bold',
         },
       },
     },
 
     plugins: {
       legend: {
-        position: "bottom",
+        position: 'bottom',
 
         labels: {
-          color: "#FFFFFF",
+          color: '#FFFFFF',
           font: {
             size: 14,
           },
@@ -263,22 +262,22 @@ const HomeComponent = () => {
     labels: chartLabels,
     datasets: [
       {
-        label: "Referrals",
+        label: 'Referrals',
         data: [1, 3, 6, 8, 5, 2],
-        borderColor: "rgba(161, 246, 245, 0.7)",
-        backgroundColor: "rgba(161, 246, 245, 0.6)",
+        borderColor: 'rgba(161, 246, 245, 0.7)',
+        backgroundColor: 'rgba(161, 246, 245, 0.6)',
       },
       {
-        label: "Revenue",
+        label: 'Revenue',
         data: [11, 3, 6, 8, 4, 7],
-        borderColor: "rgba(245, 102, 128, 0.8)",
-        backgroundColor: "rgba(245, 102, 128, 0.5)",
+        borderColor: 'rgba(245, 102, 128, 0.8)',
+        backgroundColor: 'rgba(245, 102, 128, 0.5)',
       },
       {
-        label: "Clicks",
+        label: 'Clicks',
         data: finalClicks,
-        borderColor: "rgba(84, 71, 223, 0.7)",
-        backgroundColor: "rgba(84, 71, 223, 0.4)",
+        borderColor: 'rgba(84, 71, 223, 0.7)',
+        backgroundColor: 'rgba(84, 71, 223, 0.4)',
       },
     ],
   };
@@ -298,9 +297,9 @@ const HomeComponent = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: "right",
+        position: 'right',
         labels: {
-          color: "#FFFFFF",
+          color: '#FFFFFF',
 
           // This more specific font property overrides the global property
           font: {
@@ -319,8 +318,8 @@ const HomeComponent = () => {
     datasets: [
       {
         data: fourcampaigns_clicks,
-        backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
-        borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
+        backgroundColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
+        borderColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
         borderWidth: 1,
       },
     ],
@@ -360,22 +359,22 @@ const HomeComponent = () => {
   //   </div>
   // );
   return (
-    <div className="home-container">
-      <div className="summary-blocks">
+    <div className='home-container'>
+      <div className='summary-blocks'>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
             value={campaignsList?.length}
-            title="Campaigns"
+            title='Campaigns'
             icon={Marketing}
-            class="campaign-icon"
+            class='campaign-icon'
           />
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
             value={getReferrals?.length}
-            title="Referrals"
+            title='Referrals'
             icon={subscriber}
-            class="referral-icon"
+            class='referral-icon'
           />
         </Suspense>
         {/*
@@ -393,36 +392,36 @@ const HomeComponent = () => {
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
             value={t_clicks}
-            title="Clicks"
+            title='Clicks'
             icon={arrow}
-            class="clicks-icon"
+            class='clicks-icon'
           />
         </Suspense>
       </div>
-      <div className="single-chart">
+      <div className='single-chart'>
         <Charts
-          type="line"
-          header="Total Revenue"
-          value="$253467"
-          subheader="Last 6 months Data"
+          type='line'
+          header='Total Revenue'
+          value='$253467'
+          subheader='Last 6 months Data'
           LineChartOptions={LineChartOptions}
           LineChartData={LineChartData}
         />
       </div>
-      <div className="dual-charts">
+      <div className='dual-charts'>
         <Charts
-          type="radar"
-          header="Product Launch"
-          value="$2456.76"
-          subheader="August 1st, 2022 - September 5th, 2022"
+          type='radar'
+          header='Product Launch'
+          value='$2456.76'
+          subheader='August 1st, 2022 - September 5th, 2022'
           RadarChartOptions={RadarChartOptions}
           RadarChartData={RadarChartData}
         />
         <Charts
-          type="donut"
-          header="Revenue"
-          value="$15,456.98"
-          subheader="Last 4 campaigns"
+          type='donut'
+          header='Revenue'
+          value='$15,456.98'
+          subheader='Last 4 campaigns'
           DonutChartOptions={DonutChartOptions}
           DonutChartData={DonutChartData}
         />
