@@ -145,7 +145,7 @@ const Campaigns = () => {
   }, [referrals, dispatch]);
 
   useEffect(() => {
-    if (total_clicks > 0) {
+    if (total_clicks?.length > 0) {
       dispatch(fetchTotalClicks(total_clicks));
     }
   }, [total_clicks, dispatch]);

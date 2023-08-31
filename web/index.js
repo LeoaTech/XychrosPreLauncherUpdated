@@ -29,6 +29,7 @@ import pricingPlansApiEndpoints from "./middleware/get-pricing-plans-api.js";
 import SubscribePlanApiEndPoint from "./middleware/subscribe-plan-api.js";
 import campaignDetailsApiEndpoints from "./middleware/campaign_details-api.js";
 import getCampaignClicks from "./middleware/user_clicks-api.js";
+import deleteFromStoreApiEndpoint from "./middleware/delete_from_store-api.js";
 import crypto from "crypto";
 import { verifyWebhookRequest } from "./VerifyWebhook.js";
 import { appUninstallEmail, send_email } from "./helpers/emails.js";
@@ -186,6 +187,7 @@ export async function createServer(
   userDetailsApiEndPoint(app);
   discountApiEndpoint(app);
   pricingPlansApiEndpoints(app);
+  deleteFromStoreApiEndpoint(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);

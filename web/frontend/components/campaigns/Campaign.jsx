@@ -62,12 +62,17 @@ const CampaignsComponent = () => {
     }
   }, [campaignDetails]);
 
+  let t_clicks = 0;
   // Get Total Clicks Count
   useEffect(() => {
-    if (TotalClicksList > 0) {
+    if (TotalClicksList.length > 0) {
       setTotalClicks(TotalClicksList);
     }
   }, [TotalClicksList]);
+  // console.log(getTotalClicks);
+  if(getTotalClicks.length > 0) {
+    t_clicks = getTotalClicks[0].total_clicks;
+  }
 
   // PAGINATION
 
@@ -90,6 +95,25 @@ const CampaignsComponent = () => {
   const handleDelete = async (id) => {
     setDeleteId(id);
 
+    // Delete From Store API Call
+    async function deleteFromStore(id) {
+      try {
+        const response = await fetch("/api/delete_from_store", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            campaign_id: id,
+          }),
+        });
+        const responseData = await response.json();
+        console.log(responseData);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     try {
       const deletedCampaign = getCampaigns.find(
         (campaign) => campaign?.campaign_id === id
@@ -99,7 +123,8 @@ const CampaignsComponent = () => {
         (camp) => camp?.campaign_id === id
       );
       setCampaignName(deletedCampaign?.name);
-
+        
+      await deleteFromStore(id);
       const response = await fetch(`/api/campaignsettings/${id}`, {
         method: "PATCH",
         headers: {
@@ -162,7 +187,7 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalClicks}
+            value={t_clicks}
             title="Clicks"
             icon={arrow}
             class="clicks-icon"

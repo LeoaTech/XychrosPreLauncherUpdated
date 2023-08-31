@@ -789,6 +789,7 @@ function NewCampaignForm() {
         body: JSON.stringify({ campaignData: newCampaignData }),
       });
       const responseData = await response.json();
+      return responseData?.data;
     } catch (error) {
       console.log(error);
     }
@@ -808,7 +809,6 @@ function NewCampaignForm() {
         }),
       });
       const responseData = await response.json();
-
       return responseData?.data;
     } catch (error) {
       console.log(error);
@@ -870,11 +870,13 @@ function NewCampaignForm() {
       ) {
         setIsLoading(true);
 
-        await generateDiscounts(newCampaignData);
-        campaignDetails = await createTemplates(
-          selectedTemplateData,
-          newCampaignData
-        );
+        const discount_details = await generateDiscounts(newCampaignData);
+        const template_details = await createTemplates(selectedTemplateData,newCampaignData);
+
+        campaignDetails = {
+          ...discount_details,
+          ...template_details
+        }
 
         await fetch("/api/campaignsettings", {
           method: "POST",

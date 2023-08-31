@@ -15,6 +15,27 @@
     });
   }
 
+    // count user clicks
+  async function getClicks(campaign_name) {
+    try {
+      console.log('Get Landing Page Clicks of: ', campaign_name);
+      const response = await fetch("/apps/product-prelauncher/api/getclicks",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          campaign_name: campaign_name,
+        }),
+      }
+    );
+    const data = await response.json();
+    } catch(err){
+      console.log(err);
+    }
+  }
+
   window.onload = async (e) => {
     var el = document.querySelector('.product-prelaunch-second-page');
     el.parentElement.style.padding = '0';
@@ -50,9 +71,10 @@
 
     const campaign = document.getElementById('review_campaign_name');
     const campaign_name = campaign.innerHTML;
-    console.log(campaign_name)
-
+    {% comment %} console.log(campaign_name); {% endcomment %}
     const myBackground = await getbackground(campaign_name);
+    clicks = getClicks(campaign_name);
+    {% comment %} console.log(clicks); {% endcomment %}
 
     if (second_page_settings.background_image) {
       let second_image_background = 'https:' + second_page_settings.background_image;
@@ -61,6 +83,49 @@
     } else {
       document.getElementById('second-background-image').style.backgroundImage = second_page_settings.background_overlay + ',url(' + myBackground.imageURL + ')';
     }
+
+    {% comment %} custom scrollbar on input field {% endcomment %}
+    const scrollContainer = document.querySelector('.scroll-container');
+    const scrollThumb = document.querySelector('.scroll-thumb');
+    const referralLinkInput = document.querySelector('.referral-link-inp');
+
+    let isDragging = false;
+    let startScrollX = 0;
+    let startThumbX = 0;
+
+    scrollThumb.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startScrollX = referralLinkInput.scrollLeft;
+      startThumbX = e.clientX - scrollThumb.getBoundingClientRect().left;
+    });
+
+    scrollContainer.addEventListener('click', (e) => {
+      const clickPosition = e.clientX - scrollContainer.getBoundingClientRect().left;
+      const thumbPosition = clickPosition - scrollThumb.clientWidth / 2;
+      const maxThumbX = scrollContainer.clientWidth - scrollThumb.clientWidth;
+
+      const scrollX = (thumbPosition / maxThumbX) * (referralLinkInput.scrollWidth - scrollContainer.clientWidth);
+      referralLinkInput.scrollLeft = scrollX;
+
+      scrollThumb.style.left = `${Math.max(0, Math.min(thumbPosition, maxThumbX))}px`;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+
+      const thumbX = e.clientX - startThumbX - scrollContainer.getBoundingClientRect().left;
+      const maxThumbX = scrollContainer.clientWidth - scrollThumb.clientWidth;
+      const thumbPosition = Math.max(0, Math.min(thumbX, maxThumbX));
+
+      const scrollX = (thumbPosition / maxThumbX) * (referralLinkInput.scrollWidth - scrollContainer.clientWidth);
+      referralLinkInput.scrollLeft = scrollX;
+
+      scrollThumb.style.left = `${thumbPosition}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
   }
 </script>
 
@@ -92,6 +157,9 @@
   }
   input[value] {
     color: {{ block.settings.main_color }};
+  }
+  .scroll-thumb {
+    background-color: {{ block.settings.main_color }};
   }
   .copy-link-btn {
     border: 1px solid{{ block.settings.accent_color }};

@@ -32,7 +32,7 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
     const mutations = [];
 
     // Query for Tier 1 Segment
-    const segment1Name = `"${campaignData.name}-Tier1Segment"`
+    const segment1Name = `"${campaignData.name}-Tier1"`
     const segment1Query = `"customer_tags CONTAINS '${desiredTag1}'"`;
     const mutation1 = `
         mutation {
@@ -52,7 +52,7 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
     mutations.push(mutation1);
 
     // Query for Tier 2 Segment
-    const segment2Name = `"${campaignData.name}-Tier2Segment"`
+    const segment2Name = `"${campaignData.name}-Tier2"`
     const segment2Query = `"customer_tags CONTAINS '${desiredTag2}'"`;
     const mutation2 = `
         mutation {
@@ -73,7 +73,7 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
 
     // Query for Tier 3 Segment
     if (tierData.tier3) {
-        const segment3Name = `"${campaignData.name}-Tier3Segment"`
+        const segment3Name = `"${campaignData.name}-Tier3"`
         const segment3Query = `"customer_tags CONTAINS '${desiredTag3}'"`;
         const mutation3 = `
             mutation {
@@ -95,7 +95,7 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
 
     // Query for Tier 4 Segment
     if (tierData.tier4) {
-        const segment4Name = `"${campaignData.name}-Tier4Segment"`
+        const segment4Name = `"${campaignData.name}-Tier4"`
         const segment4Query = `"customer_tags CONTAINS '${desiredTag4}'"`;
         const mutation4 = `
             mutation {
@@ -130,18 +130,19 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
 
             if (!response.ok || data.errors) {
                 const errors = data.errors || data.data.segmentCreate.userErrors;
-                throw new Error(`Failed to create customer segments: ${JSON.stringify(errors)}`);
+                throw new Error(`Failed to Create Customer Segments: ${JSON.stringify(errors)}`);
             }
 
             const segment = data.data.segmentCreate.segment;
             if (segment) {
+                console.log(`Customer Segment "${segment.name}" Created!`);
                 let segment_id = segment.id.match(/\d+/)[0];
                 createdSegmentIds.push(parseInt(segment_id, 10));
             }
         }
     } catch (error) {
         console.error(error);
-        throw new Error('An error occurred while creating customer segments');
+        throw new Error('An Error Occurred While Creating Customer Segments');
     }
 
     console.log('Created Segment Ids:', createdSegmentIds);
@@ -306,14 +307,13 @@ const discountApiCalls = async (accessToken, shop, campaignData, customerSegment
                     throw new Error(`Failed to Create Price Rule: ${data.errors}`);
                 }
                 console.log(`Price Rule "${rule.title}" Created!`);
-                console.log(data);
                 priceRuleIds.push(data.price_rule.id);
             }
             catch (error) {
                 console.log(error);
             }
         }
-        console.log('Generated Price Rules:', priceRuleIds);
+        console.log('Generated Price Rule Ids:', priceRuleIds);
         return priceRuleIds;
     }
 
@@ -335,20 +335,33 @@ const discountApiCalls = async (accessToken, shop, campaignData, customerSegment
                     throw new Error(`Failed to Generate Discount: ${data.errors}`);
                 }
                 console.log(`Discount Code ${code.code} Created!`);
-                console.log(data);
                 discountCodes.push(data.discount_code.code);
             } catch (error) {
                 console.log(error);
             }
         }
         console.log("Generated Discount Codes: ", discountCodes);
+        return discountCodes;
     }
 
     // price rules
     const priceRuleIds = await createPriceRules();
 
     // pass price rule ids to generate discount codes
-    await createDiscountCodes(priceRuleIds);
+    const discountcodes = await createDiscountCodes(priceRuleIds);
+
+    const discountDetails = {
+        tier1_price_rule_id: priceRuleIds[0],
+        tier2_price_rule_id: priceRuleIds[1],
+        tier3_price_rule_id: priceRuleIds[2] || null,
+        tier4_price_rule_id: priceRuleIds[3] || null,
+        discount_code_1: discountcodes[0] || null,
+        discount_code_2: discountcodes[1] || null,
+        discount_code_3: discountcodes[2] || null,
+        discount_code_4: discountcodes[3] || null,
+    };
+
+    return discountDetails;
 }
 
 // ------------------- API ---------------------
@@ -368,9 +381,17 @@ export default function discountApiEndpoint(app) {
             const customer_segment_ids = await segmentApiCalls(accessToken, shop, campaignData);
 
             // discount and price rule function call
-            await discountApiCalls(accessToken, shop, campaignData, customer_segment_ids);
+            const discount_details = await discountApiCalls(accessToken, shop, campaignData, customer_segment_ids);
 
-            return res.status(200).json({ success: true, message: "Discount Codes Generated Successfully" });
+            const campaignDetails = {
+                ...discount_details,
+                tier1_segment_id: customer_segment_ids[0] || null,
+                tier2_segment_id: customer_segment_ids[1] || null,
+                tier3_segment_id: customer_segment_ids[2] || null,
+                tier4_segment_id: customer_segment_ids[3] || null,
+            }
+
+            return res.status(200).json({ success: true, data: campaignDetails, message: "Discount Codes Generated Successfully" });
         } catch (error) {
             return res.status(500).json({ success: false, message: "Failed to Generate Discount Codes", error: error.message });
         }
