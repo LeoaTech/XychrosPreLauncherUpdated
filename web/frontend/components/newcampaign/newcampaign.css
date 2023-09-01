@@ -3,6 +3,7 @@
   padding: 5px 15px;
   margin: 5px 15px;
   display: flex;
+  margin-top: 2.6rem;
   flex-direction: column;
   justify-content: space-between;
 }
@@ -26,15 +27,15 @@
 }
 
 .upgrade-btn {
-  margin-top: 30px;
-  height: 45px;
-  width: 140px;
+  margin-top: 45px;
+  height: 55px;
+  width: 200px;
   background-color: var(--secondary-color);
   border: none;
   color: white;
   float: right;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   margin-top: 20px;
   border-radius: 50px;
@@ -75,7 +76,7 @@
   cursor: pointer;
   font-size: 18px;
   font-weight: 500;
-  margin-top: 20px;
+  margin-top: 5px;
   border-radius: 7px;
 }
 
@@ -161,8 +162,8 @@
 
 .store-links,
 .collect-setup {
-  margin: 20px 0;
-  padding: 20px 0;
+  margin: 10px 0;
+  padding: 10px 0;
 }
 
 .basic-settings-form {
@@ -179,10 +180,20 @@
 .error-message {
   font-size: 15.6px;
   margin: 0 5px;
-  color: #b70404;
+  color: #ff3434;
   margin-bottom: 15px;
+  margin-top: 10px;
+}
+
+.discount_code-error{
+  /* font-size: 15.6px;
+  margin: 0 5px;
+  margin-bottom: 15px;
+  margin-top: 10px; */
+  color: #ff3434;
+
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 .reward-form-error {
@@ -192,6 +203,9 @@
   padding: 0 3px;
   display: block;
 }
+
+
+
 .discount_error_text {
   color: #b70404;
   margin: 0 5px;
@@ -199,7 +213,7 @@
   margin-top: 18px;
   font-size: 17px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 
@@ -375,9 +389,9 @@ label {
 
 .sub-heading {
   font-size: 20px;
-  margin-top: 30px;
+  margin-top: 20px;
   font-weight: 500;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 /* Collect Emails */
