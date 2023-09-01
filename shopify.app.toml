@@ -1,3 +1,27 @@
-# This file stores configurations for your Shopify app.
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
+name = "test-2-app"
+client_id = "5c477447c78bc3bbdecf326daf0aaab6"
+application_url = "https://courage-appraisal-publishers-exclusion.trycloudflare.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "read_orders, read_products, read_content, write_content, read_themes, write_themes, read_price_rules, write_price_rules, read_customers, write_customers"
+
+[auth]
+redirect_urls = [
+  "https://courage-appraisal-publishers-exclusion.trycloudflare.com/auth/callback",
+  "https://courage-appraisal-publishers-exclusion.trycloudflare.com/auth/shopify/callback",
+  "https://courage-appraisal-publishers-exclusion.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2023-07"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "app-running.myshopify.com"
