@@ -32,7 +32,6 @@ import getCampaignClicks from "./middleware/user_clicks-api.js";
 import deleteFromStoreApiEndpoint from "./middleware/delete_from_store-api.js";
 import crypto from "crypto";
 import { verifyWebhookRequest } from "./VerifyWebhook.js";
-import { appUninstallEmail, send_email } from "./helpers/emails.js";
 import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
 
 const USE_ONLINE_TOKENS = false;
@@ -42,7 +41,7 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 // TODO: There should be provided by env vars
 const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
-
+/
 const DB_PATH = `${process.env.DATABASE_URL}`;
 
 Shopify.Context.initialize({
@@ -57,26 +56,6 @@ Shopify.Context.initialize({
   SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(DB_PATH),
 });
 
-let emailUninstall, emailUpgradeSubscription;
-readFile("./email_templates/uninstall_app.txt", "utf8", (error, data) => {
-  if (error) console.log(error, "Uninstalling");
-  emailUninstall = data;
-});
-// App Uninstall Webhook to delete current app install session
-Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
-  path: "/api/webhooks",
-  webhookHandler: async (_topic, shop, _body) => {
-    const payload = JSON.parse(_body);
-    console.log(payload, "Uninstalling");
-    const { email } = payload;
-    await AppInstallations.delete(shop);
-    await appUninstallEmail(
-      emailUninstall,
-      email,
-      "App Uninstallation Confirmation"
-    );
-  },
-});
 
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
 // See the ensureBilling helper to learn more about billing in this template.
@@ -125,8 +104,9 @@ export async function createServer(
       return res.statusCode;
     } catch (e) {
       console.log(`Failed to process webhook: ${e.message}`);
+
       if (!res.headersSent) {
-        res.status(500).send(e.message);
+        res.status(401).send(e.message);
       }
     }
   });
@@ -135,7 +115,7 @@ export async function createServer(
   app.use("/api/webhooks", verifyWebhookRequest, setupGDPRWebHooks);
 
   //  API to get All Products in my Shopify Store
-  app.get("/api/2022-10/products.json", async (req, res) => {
+  app.get(`/api/2022-10/products.json`, async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(
       req,
       res,
