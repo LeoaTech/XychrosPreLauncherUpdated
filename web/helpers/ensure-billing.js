@@ -2,7 +2,6 @@
 import { Shopify } from "@shopify/shopify-api";
 import axios from "axios";
 import NewPool from "pg";
-
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: `${process.env.DATABASE_URL}`,
@@ -224,7 +223,7 @@ async function requestSinglePayment(
 }
 
 export async function getSubscriptionCharge(session) {
-  const baseUrl = `https://${session?.shop}/admin/api/2023-04/recurring_application_charges.json`;
+  const baseUrl = `https://${session?.shop}/admin/api/2022-10/recurring_application_charges.json`;
   try {
     let response = await axios.get(baseUrl, {
       headers: {
@@ -360,7 +359,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
 
 // Request Cancel App Subscription function with the app subscription ID
 
-async function requestCancelSubscription(session, myId) {
+export async function requestCancelSubscription(session, myId) {
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
   const mutationResponse = await client.query({
     data: {
