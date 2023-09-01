@@ -14,15 +14,15 @@ const SummaryCard = lazy(() => import("../ui/SummaryCard"));
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
 import { fetchAllLastFourCampaignsClicks } from "../../app/features/user_clicks/lastFourCampaignsClicksSlice";
-import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
 import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
+import { fetchCampaignsDetailsList } from "../../app/features/campaign_details/campaign_details";
 
 const HomeComponent = () => {
   const fetch = useAuthenticatedFetch();
   const dispatch = useDispatch();
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
-  const List = useSelector(fetchAllCampaigns);
+  const List = useSelector(fetchCampaignsDetailsList);
   const ReferralList = useSelector(fetchAllReferrals);
   const LastFourCampaignsClicksList = useSelector(
     fetchAllLastFourCampaignsClicks
@@ -35,7 +35,6 @@ const HomeComponent = () => {
   const [campaignsList, setCampaignsList] = useState([]);
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
-
 
   // Get Total Campaigns Lists
   useEffect(() => {
@@ -51,7 +50,6 @@ const HomeComponent = () => {
     }
   }, [dispatch, ReferralList]);
 
-
   // Get Total Clicks Count
   useEffect(() => {
     if (TotalClicksList.length > 0) {
@@ -59,7 +57,7 @@ const HomeComponent = () => {
     }
   }, [TotalClicksList]);
   // console.log(getTotalClicks);
-  if(getTotalClicks.length > 0) {
+  if (getTotalClicks.length > 0) {
     t_clicks = getTotalClicks[0].total_clicks;
   }
 
@@ -72,7 +70,7 @@ const HomeComponent = () => {
 
   // Get Last Four Campaigns Clicks
   useEffect(() => {
-    if (LastFourCampaignsClicksList.length > 0 ) {
+    if (LastFourCampaignsClicksList.length > 0) {
       setLastFourCampaignsClicks(LastFourCampaignsClicksList);
     }
   }, [LastFourCampaignsClicksList]);
@@ -392,7 +390,7 @@ const HomeComponent = () => {
         /> */}
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={t_clicks}
+            value={12}
             title="Clicks"
             icon={arrow}
             class="clicks-icon"
