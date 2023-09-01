@@ -40,6 +40,7 @@ import {
 } from "../../app/features/current_plan/current_plan";
 import { skeletonPageLoad } from "@shopify/app-bridge/actions/Performance";
 import ButtonLoader from "../loading_skeletons/ButtonLoader";
+import { fetchCampaignDetails } from "../../app/features/campaign_details/campaign_details";
 
 const SaveDraft = lazy(() => import("../modal/SaveDraft"));
 
@@ -849,6 +850,7 @@ function NewCampaignForm() {
 
     if (detailsResponse.ok) {
       const detailsData = await detailsResponse.json();
+      return detailsData;
     } else {
       console.log("Failed to insert campaign details:", detailsResponse);
     }
@@ -914,9 +916,13 @@ function NewCampaignForm() {
       } else {
         return;
       }
+
+      console.log(idExists, "Campign Exists");
+      console.log(campaignDetails, "Campaign Details");
       // IF CampaignID Exists the call the saveCampaign details function to store value in db
-      if (typeof idExists == "number" && campaignDetails) {
-        await saveCampaignDetails(campaignDetails);
+      if (typeof(idExists) == "number" && campaignDetails) {
+        let result = await saveCampaignDetails(campaignDetails);
+        if (result) dispatch(fetchCampaignDetails(result));
       } else {
         console.log("Not saved data");
       }
