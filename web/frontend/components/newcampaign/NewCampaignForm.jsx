@@ -888,12 +888,15 @@ function NewCampaignForm() {
         setIsLoading(true);
 
         const discount_details = await generateDiscounts(newCampaignData);
-        const template_details = await createTemplates(selectedTemplateData,newCampaignData);
+        const template_details = await createTemplates(
+          selectedTemplateData,
+          newCampaignData
+        );
 
         campaignDetails = {
           ...discount_details,
-          ...template_details
-        }
+          ...template_details,
+        };
 
         await fetch("/api/campaignsettings", {
           method: "POST",
@@ -1269,7 +1272,11 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
-                              checked={editCampaignData?.collect_phone === true}
+                              checked={
+                                !current_plan?.collect_phone
+                                  ? true
+                                  : editCampaignData?.collect_phone === true
+                              }
                               onChange={handleRadioChange}
                             />
                           ) : (
@@ -1278,7 +1285,11 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
-                              checked={newCampaignData?.collect_phone === true}
+                              checked={
+                                !current_plan?.collect_phone
+                                  ? true
+                                  : newCampaignData?.collect_phone === true
+                              }
                               onChange={handleRadioChange}
                             />
                           )}
@@ -1841,7 +1852,8 @@ function NewCampaignForm() {
               {expanded[3] && (
                 <>
                   <div className="email-container">
-                    <div className="email-optCheck">
+                    {/* Hide the Double OPT in email Section */}
+                    {/* <div className="email-optCheck">
                       {isEdit ? (
                         <input
                           className="checkbox-input"
@@ -1899,7 +1911,7 @@ function NewCampaignForm() {
                           )}
                         </div>
                       </div>
-                    </section>
+                    </section> */}
                     <section>
                       <div className="email-section">
                         <h2>
@@ -2061,6 +2073,9 @@ function NewCampaignForm() {
                             type="checkbox"
                             name="klaviyo_integration"
                             checked={newCampaignData?.klaviyo_integration}
+                            disabled={
+                              globalSettings?.klaviyo_integration || true
+                            }
                             onChange={handleCheckboxChange}
                           />
                         )}
