@@ -338,186 +338,114 @@ const HomeComponent = () => {
     ],
   };
 
-  // return (
-  //   <div className="home-container">
-  //     <h2>Welcome to Viral Launch!</h2>
-  //     <div className="intro-section">
-  //       <div className="intro-card">
-  //         <p>
-  //           New to Viral Launch? Get up to speed with everything about your
-  //           product/service launch!
-  //         </p>
-  //       </div>
-  //       <div className="intro-img">
-  //         <img src={intro} alt="INTRO" loading="lazy"  />
-  //       </div>
-  //     </div>
-
-  //     <div className="about-section">
-  //       <div className="about-img">
-  //         <img src={about} alt="About" />
-  //       </div>
-  //       <div className="about-card">
-  //         <p>
-  //           Create a new campaign and get your email database filled even before
-  //           you launch!
-  //         </p>
-  //       </div>
-  //     </div>
-  //     <div className="contact-us-section">
-  //       <div className="contact-us-card">
-  //         <p>Contact Us for further assistance and Feedback!</p>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
   return (
-    <div className="home-container">
-      <div className="summary-blocks">
-        <Suspense fallback={<SkeletonSummaryCard />}>
-          <SummaryCard
-            value={campaignsList?.length}
-            title="Campaigns"
-            icon={Marketing}
-            class="campaign-icon"
-          />
-        </Suspense>
-        <Suspense fallback={<SkeletonSummaryCard />}>
-          <SummaryCard
-            value={getReferrals?.length}
-            title="Referrals"
-            icon={subscriber}
-            class="referral-icon"
-          />
-        </Suspense>
-        {/*
-        <CountUp
-              start={0}
-              end={6}
-              duration={1.4}
-            />
-         <SummaryCard
-          value='$253,467'
-          title='Revenue'
-          icon={Sale}
-          class='revenue-icon'
-        /> */}
-        <Suspense fallback={<SkeletonSummaryCard />}>
-          <SummaryCard
-            value={t_clicks}
-            title="Clicks"
-            icon={arrow}
-            class="clicks-icon"
-          />
-        </Suspense>
-      </div>
-      <div className="single-chart">
-        <Charts
-          type="line"
-          header="Total Revenue"
-          value="$253467"
-          subheader="Last 6 months Data"
-          LineChartOptions={LineChartOptions}
-          LineChartData={LineChartData}
-        />
-      </div>
-      <div className="dual-charts">
-        <Charts
-          type="radar"
-          header="Product Launch"
-          value="$2456.76"
-          subheader="August 1st, 2022 - September 5th, 2022"
-          RadarChartOptions={RadarChartOptions}
-          RadarChartData={RadarChartData}
-        />
-        <Charts
-          type="donut"
-          header="Revenue"
-          value="$15,456.98"
-          subheader="Last 4 campaigns"
-          DonutChartOptions={DonutChartOptions}
-          DonutChartData={DonutChartData}
-        />
-      </div>
+    <div>
+      {campaignsList == '' ? 
+        (
+          <div className="home-container">
+            <h2>Welcome to Viral Launch!</h2>
+            <div className="intro-section">
+              <div className="intro-card">
+                <p>
+                  New to Viral Launch? Get up to speed with everything about your
+                  product/service launch!
+                </p>
+              </div>
+              <div className="intro-img">
+                <img src={intro} alt="INTRO" loading="lazy"  />
+              </div>
+            </div>
+            <div className="about-section">
+              <div className="about-img">
+                <img src={about} alt="About" />
+              </div>
+              <div className="about-card">
+                <p>
+                  Create a new campaign and get your email database filled even before
+                  you launch!
+                </p>
+              </div>
+            </div>
+            <div className="contact-us-section">
+              <div className="contact-us-card">
+                <p>Contact Us for further assistance and Feedback!</p>
+              </div>
+            </div>
+          </div> 
+        ) :
+        (
+          <div className="home-container">
+            <div className="summary-blocks">
+              <Suspense fallback={<SkeletonSummaryCard />}>
+                <SummaryCard
+                  value={campaignsList?.length}
+                  title="Campaigns"
+                  icon={Marketing}
+                  class="campaign-icon"
+                />
+              </Suspense>
+              <Suspense fallback={<SkeletonSummaryCard />}>
+                <SummaryCard
+                  value={getReferrals?.length}
+                  title="Referrals"
+                  icon={subscriber}
+                  class="referral-icon"
+                />
+              </Suspense>
+              {/*
+              <CountUp
+                    start={0}
+                    end={6}
+                    duration={1.4}
+                  />
+                <SummaryCard
+                value='$253,467'
+                title='Revenue'
+                icon={Sale}
+                class='revenue-icon'
+              /> */}
+              <Suspense fallback={<SkeletonSummaryCard />}>
+                <SummaryCard
+                  value={t_clicks}
+                  title="Clicks"
+                  icon={arrow}
+                  class="clicks-icon"
+                />
+              </Suspense>
+            </div>
+            <div className="single-chart">
+              <Charts
+                type="line"
+                header="Total Revenue"
+                value="$253467"
+                subheader="Last 6 months Data"
+                LineChartOptions={LineChartOptions}
+                LineChartData={LineChartData}
+              />
+            </div>
+            <div className="dual-charts">
+              <Charts
+                type="radar"
+                header="Product Launch"
+                value="$2456.76"
+                subheader="August 1st, 2022 - September 5th, 2022"
+                RadarChartOptions={RadarChartOptions}
+                RadarChartData={RadarChartData}
+              />
+              <Charts
+                type="donut"
+                header="Revenue"
+                value="$15,456.98"
+                subheader="Last 4 campaigns"
+                DonutChartOptions={DonutChartOptions}
+                DonutChartData={DonutChartData}
+              />
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 };
 
 export default HomeComponent;
-
-// OLD HOMEPAGE FILE
-
-{
-  /* <div className='summary-blocks'>
-        <SummaryCard
-          value={
-            <CountUp
-              start={0}
-              end={getCampaigns.length}
-              duration={1.4}
-            />
-          }
-          title='Campaigns'
-          icon={Marketing}
-          class='campaign-icon'
-        />
-        <SummaryCard
-          value={
-            <CountUp
-              start={0}
-              end={getReferrals.length}
-              duration={1.4}
-            />
-          }
-          title='Referrals'
-          icon={subscriber}
-          class='referral-icon'
-        />
-        <SummaryCard
-          value='$253,467'
-          title='Revenue'
-          icon={Sale}
-          class='revenue-icon'
-        />
-        <SummaryCard
-          value='4551678'
-          title='Clicks'
-          icon={arrow}
-          class='clicks-icon'
-        />
-      </div> */
-}
-
-{
-  /* Charts */
-}
-{
-  /* <div className='single-chart'>
-        <Charts
-          type='line'
-          header='Total Revenue'
-          value='$253467'
-          subheader='Last 7 months Data'
-          LineChartOptions={LineChartOptions}
-          LineChartData={LineChartData}
-        />
-      </div>
-      <div className='dual-charts'>
-        <Charts
-          type='radar'
-          header='Product Launch'
-          value='$2456.76'
-          subheader='August 1st, 2022 - September 5th, 2022'
-          RadarChartOptions={RadarChartOptions}
-          RadarChartData={RadarChartData}
-        />
-        <Charts
-          type='donut'
-          header='Revenue'
-          value='$15,456.98'
-          subheader='Last 4 campaigns'
-          DonutChartOptions={DonutChartOptions}
-          DonutChartData={DonutChartData}
-        />
-      </div> */
-}
