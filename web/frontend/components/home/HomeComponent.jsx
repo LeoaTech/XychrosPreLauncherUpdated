@@ -13,6 +13,7 @@ import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
 import { fetchAllSixMonthsCampaigns } from "../../app/features/campaigns/campaignSlice";
 
 import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
+import { fetchAllSixMonthsReferrals } from "../../app/features/referrals/referralSlice";
 
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
@@ -28,14 +29,17 @@ const HomeComponent = () => {
   const SixMonthCampaignList = useSelector(fetchAllSixMonthsCampaigns);
 
   const ReferralList = useSelector(fetchAllReferrals);
+  const SixMonthReferralList = useSelector(fetchAllSixMonthsReferrals);
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
 
   const [campaignsList, setCampaignsList] = useState([]);
-  const [sixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
+  const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
+
   const [getReferrals, setReferrals] = useState([]);
+  const [getSixMonthsReferralsList, setSixMonthsReferralsList] = useState([]);
 
   const [getTotalClicks, setTotalClicks] = useState([]);
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
@@ -53,6 +57,7 @@ const HomeComponent = () => {
   useEffect(() => {
     if (SixMonthCampaignList.length > 0) {
       setSixMonthsCampaignsList(SixMonthCampaignList);
+      // console.log(SixMonthCampaignList);
     }
   }, [dispatch, SixMonthCampaignList]);
 
@@ -62,6 +67,14 @@ const HomeComponent = () => {
       setReferrals(ReferralList);
     }
   }, [dispatch, ReferralList]);
+
+    // Get Last Six Months Referrals Lists
+  useEffect(() => {
+    if (SixMonthReferralList.length > 0) {
+      setSixMonthsReferralsList(SixMonthReferralList);
+      console.log(SixMonthReferralList);
+    }
+  }, [dispatch, SixMonthReferralList]);
 
   // Get Total Clicks Count
   let t_clicks = 0;
@@ -79,6 +92,7 @@ const HomeComponent = () => {
   useEffect(() => {
     if (LastSixMonthsClicksList.length > 0) {
       setLastSixMonthsClicksData(LastSixMonthsClicksList);
+      // console.log(LastSixMonthsClicksList);
     }
   }, [LastSixMonthsClicksList]);
 
@@ -208,17 +222,16 @@ const HomeComponent = () => {
         borderDash: [10, 5],
         fill: "",
       },
-      // ... other datasets
       {
         label: "Campaigns",
-        data: sixMonthsCampaignsList,
+        data: getSixMonthsCampaignsList,
         borderColor: "#E0777D",
         backgroundColor: "#E0777D",
         fill: "+2",
       },
       {
         label: "Referrals",
-        data: [2, 4, 1, 8, 5, 7, 3],
+        data: getSixMonthsReferralsList,
         borderColor: "#A1F6F5",
         backgroundColor: "#A1F6F5",
         fill: "origin",
@@ -282,13 +295,13 @@ const HomeComponent = () => {
       },
       {
         label: "Campaigns",
-        data: sixMonthsCampaignsList,
+        data: getSixMonthsCampaignsList,
         borderColor: "rgba(245, 102, 128, 0.8)",
         backgroundColor: "rgba(245, 102, 128, 0.5)",
       },
       {
         label: "Referrals",
-        data: [11, 3, 6, 8, 4, 7],
+        data: getSixMonthsReferralsList,
         borderColor: "rgba(161, 246, 245, 0.7)",
         backgroundColor: "rgba(161, 246, 245, 0.6)",
       }
