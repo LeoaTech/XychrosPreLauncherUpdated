@@ -70,7 +70,7 @@ export default function CampaignBlock({
 
   // Individual campaign clicks
   const campaign_clicks = useSelector((state) =>
-  fetchIndividualCampaignClicks(state, +campaign_id)
+    fetchIndividualCampaignClicks(state, +campaign_id)
   );
   // console.log(campaign_clicks);
 
@@ -134,20 +134,62 @@ export default function CampaignBlock({
 
         <div className="campaign_center_links">
           <div className="campaign_details_links">
-            <a href={landing_page_link} target="_blank">
+            <a
+              href={landing_page_link}
+              target="_blank"
+              disabled={!is_active}
+              style={{ cursor: is_active ? "pointer" : "not-allowed" }}
+              onClick={(e) => {
+                if (!is_active) {
+                  e.preventDefault();
+                }
+              }}
+            >
               Landing Page
             </a>
-            <a href={rewards_page_link} target="_blank">
+            <a
+              href={rewards_page_link}
+              target="_blank"
+              style={{ cursor: is_active ? "pointer" : "not-allowed" }}
+              disabled={!is_active}
+              onClick={(e) => {
+                if (!is_active) {
+                  e.preventDefault();
+                }
+              }}
+            >
               Rewards Page
             </a>
           </div>
           <div className="campaign_details_links">
-            <a href={landing_template_link} target="_blank" className="btn">
-              Show in Theme Editor
+            <a
+              href={landing_template_link}
+              target="_blank"
+              disabled={!is_active}
+              onClick={(e) => {
+                if (!is_active) {
+                  e.preventDefault();
+                }
+              }}
+              className="btn"
+              style={{ cursor: is_active ? "pointer" : "not-allowed" }}
+            >
+              Open in Editor
             </a>
 
-            <a href={rewards_template_link} target="_blank" className="btn">
-              Show in Theme Editor
+            <a
+              href={rewards_template_link}
+              target="_blank"
+              disabled={!is_active}
+              onClick={(e) => {
+                if (!is_active) {
+                  e.preventDefault();
+                }
+              }}
+              className="btn"
+              style={{ cursor: is_active ? "pointer" : "not-allowed" }}
+            >
+              Open in Editor
             </a>
           </div>
         </div>
