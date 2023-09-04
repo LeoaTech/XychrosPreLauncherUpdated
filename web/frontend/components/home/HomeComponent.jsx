@@ -51,14 +51,14 @@ const HomeComponent = () => {
     }
   }, [dispatch, ReferralList]);
 
-
   // Get Total Clicks Count
+  let t_clicks = 0;
   useEffect(() => {
     if (TotalClicksList.length > 0) {
       setTotalClicks(TotalClicksList);
     }
   }, [TotalClicksList]);
-  // console.log(getTotalClicks);
+
   if(getTotalClicks.length > 0) {
     t_clicks = getTotalClicks[0].total_clicks;
   }
@@ -83,29 +83,29 @@ const HomeComponent = () => {
   const currentYear = currentDate.getFullYear();
   const chartLabels = Array.from({ length: 6 }, (_, index) => {
     const tempDate = new Date(currentYear, currentMonth - index, 1);
-    tempDate.setMonth(tempDate.getMonth() - 1); // Subtract 1 month
-
-    const labelMonth = tempDate.toLocaleString("default", { month: "long" });
+    tempDate.setMonth(tempDate.getMonth());
+    const labelMonth = tempDate.toLocaleString('default', { month: 'long' });
     return labelMonth;
   }).reverse();
+  // console.log(chartLabels);
 
   // line chart and radar chart data of last six months according to current date
   const chartClicks = Array.from({ length: 6 }, () => 0);
 
   if (getLastSixMonthsClicksData.length > 0) {
-    getLastSixMonthsClicksData.forEach((entry) => {
+    getLastSixMonthsClicksData.forEach(entry => {
       const entryDate = new Date(entry.created_month);
       const entryMonth = entryDate.getMonth();
       const entryYear = entryDate.getFullYear();
 
-      const monthIndex =
-        (currentYear - entryYear) * 12 + (currentMonth - entryMonth - 1);
+      const monthIndex = (currentYear - entryYear) * 12 + (currentMonth - entryMonth);
 
       chartClicks[monthIndex] = parseInt(entry.total_months_clicks, 10); // Convert to integer
     });
   }
   let finalClicks = chartClicks.reverse();
-
+  // console.log(finalClicks);
+  
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
     responsive: true,
