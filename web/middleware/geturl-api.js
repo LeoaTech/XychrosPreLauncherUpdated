@@ -204,7 +204,7 @@ export default function getUrlApi(app, secret) {
               first_name: '',
               last_name: '',
               email: email,
-              phone: phone || '',
+              phone: "",
               verified_email: true,
               tags: tags,
               addresses: [
