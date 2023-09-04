@@ -59,7 +59,7 @@ const deleteSegments = async (accessToken, shopURL, idsData) => {
             const response = await fetch(url, options);
             const data = await response.json();
 
-            console.log('{ message:', data.segmentDelete.deletedSegmentId, 'was successfully deleted }');
+            console.log('{ message:', data.data.segmentDelete, '}');
 
             if (!response.ok || data.errors) {
                 console.log('GraphQL Errors:', data.errors);
