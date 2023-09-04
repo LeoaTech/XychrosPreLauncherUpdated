@@ -57,8 +57,10 @@ const HomeComponent = () => {
     }
   }, [TotalClicksList]);
   // console.log(getTotalClicks);
-  if (getTotalClicks.length > 0) {
-    t_clicks = getTotalClicks[0].total_clicks;
+
+  let t_clicks;
+  if (getTotalClicks?.length > 0) {
+    t_clicks = getTotalClicks[0]?.total_clicks;
   }
 
   // Get Last Six Months Clicks Data
@@ -390,7 +392,7 @@ const HomeComponent = () => {
         /> */}
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={12}
+            value={t_clicks}
             title="Clicks"
             icon={arrow}
             class="clicks-icon"
