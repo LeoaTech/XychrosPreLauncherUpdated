@@ -23,6 +23,7 @@ const HomeComponent = () => {
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const List = useSelector(fetchCampaignsDetailsList);
+  const campaignDetails = useSelector(fetchCampaignsDetailsList);
   const ReferralList = useSelector(fetchAllReferrals);
   const LastFourCampaignsClicksList = useSelector(
     fetchAllLastFourCampaignsClicks
@@ -33,22 +34,23 @@ const HomeComponent = () => {
   const [getReferrals, setReferrals] = useState([]);
   const [getTotalClicks, setTotalClicks] = useState(0);
   const [campaignsList, setCampaignsList] = useState([]);
+
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
 
   // Get Total Campaigns Lists
   useEffect(() => {
-    if (List?.length > 0) {
-      setCampaignsList(List);
+    if (campaignDetails?.length > 0) {
+      setCampaignsList(campaignDetails);
     }
-  }, [dispatch, List]);
+  }, [campaignDetails, dispatch]);
 
   // Get Referrals List
   useEffect(() => {
     if (ReferralList) {
       setReferrals(ReferralList);
     }
-  }, [dispatch, ReferralList]);
+  }, [ReferralList, dispatch]);
 
   // Get Total Clicks Count
   useEffect(() => {
