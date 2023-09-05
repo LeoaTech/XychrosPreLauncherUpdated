@@ -72,7 +72,7 @@ const HomeComponent = () => {
   useEffect(() => {
     if (SixMonthReferralList.length > 0) {
       setSixMonthsReferralsList(SixMonthReferralList);
-      console.log(SixMonthReferralList);
+      // console.log(SixMonthReferralList);
     }
   }, [dispatch, SixMonthReferralList]);
 
