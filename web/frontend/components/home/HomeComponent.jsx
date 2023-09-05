@@ -35,6 +35,7 @@ const HomeComponent = () => {
   const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
 
+
   const [campaignsList, setCampaignsList] = useState([]);
   const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
 
@@ -44,7 +45,6 @@ const HomeComponent = () => {
   const [getTotalClicks, setTotalClicks] = useState([]);
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
-
 
   // Get Total Campaigns Lists
   useEffect(() => {
@@ -68,6 +68,7 @@ const HomeComponent = () => {
     }
   }, [dispatch, ReferralList]);
 
+
     // Get Last Six Months Referrals Lists
   useEffect(() => {
     if (SixMonthReferralList.length > 0) {
@@ -75,6 +76,7 @@ const HomeComponent = () => {
       // console.log(SixMonthReferralList);
     }
   }, [dispatch, SixMonthReferralList]);
+
 
   // Get Total Clicks Count
   let t_clicks = 0;
@@ -84,7 +86,8 @@ const HomeComponent = () => {
     }
   }, [TotalClicksList]);
 
-  if(getTotalClicks.length > 0) {
+  // console.log(getTotalClicks);
+  if (getTotalClicks.length > 0) {
     t_clicks = getTotalClicks[0].total_clicks;
   }
 
@@ -98,7 +101,7 @@ const HomeComponent = () => {
 
   // Get Last Four Campaigns Clicks
   useEffect(() => {
-    if (LastFourCampaignsClicksList.length > 0 ) {
+    if (LastFourCampaignsClicksList.length > 0) {
       setLastFourCampaignsClicks(LastFourCampaignsClicksList);
     }
   }, [LastFourCampaignsClicksList]);
@@ -110,6 +113,7 @@ const HomeComponent = () => {
   const chartLabels = Array.from({ length: 6 }, (_, index) => {
     const tempDate = new Date(currentYear, currentMonth - index, 1);
     tempDate.setMonth(tempDate.getMonth());
+
     const labelMonth = tempDate.toLocaleString('default', { month: 'long' });
     return labelMonth;
   }).reverse();
@@ -136,16 +140,16 @@ const HomeComponent = () => {
   const LineChartOptions = {
     responsive: true,
     animation: {
-      easing: "easeInOutQuad",
+      easing: 'easeInOutQuad',
       duration: 520,
     },
     scales: {
       x: {
         grid: {
-          color: "#fff",
+          color: '#fff',
         },
         ticks: {
-          color: "#fff",
+          color: '#fff',
         },
       },
       y: {
@@ -153,11 +157,11 @@ const HomeComponent = () => {
           display: true,
         },
         grid: {
-          color: "#fff",
+          color: '#fff',
         },
         ticks: {
-          color: "#fff",
-          crossAlign: "far",
+          color: '#fff',
+          crossAlign: 'far',
           beginAtZero: true,
         },
       },
@@ -171,19 +175,19 @@ const HomeComponent = () => {
       display: false,
     },
     point: {
-      backgroundColor: "white",
+      backgroundColor: 'white',
     },
     tooltips: {
-      titleFontFamily: "Open Sans",
-      backgroundColor: "rgba(0,0,0,0.3)",
-      titleFontColor: "red",
+      titleFontFamily: 'Open Sans',
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      titleFontColor: 'red',
       caretSize: 5,
       cornerRadius: 2,
       xPadding: 10,
       yPadding: 10,
     },
     labels: {
-      color: "#FFFFFF",
+      color: '#FFFFFF',
 
       // This more specific font property overrides the global property
       font: {
@@ -195,9 +199,9 @@ const HomeComponent = () => {
         propagate: true,
       },
       legend: {
-        position: "bottom",
+        position: 'bottom',
         labels: {
-          color: "#FFFFFF",
+          color: '#FFFFFF',
 
           // This more specific font property overrides the global property
           font: {
@@ -215,12 +219,12 @@ const HomeComponent = () => {
     labels: chartLabels,
     datasets: [
       {
-        label: "Clicks",
+        label: 'Clicks',
         data: finalClicks,
-        borderColor: "#5447df",
-        backgroundColor: "#5447df",
+        borderColor: '#5447df',
+        backgroundColor: '#5447df',
         borderDash: [10, 5],
-        fill: "",
+        fill: '',
       },
       {
         label: "Campaigns",
@@ -254,25 +258,25 @@ const HomeComponent = () => {
           },
         },
         grid: {
-          color: "#fff",
+          color: '#fff',
         },
         pointLabels: {
-          color: "#fff",
+          color: '#fff',
         },
         ticks: {
-          color: "#fff",
-          backdropColor: "transparent",
-          fontWeight: "bold",
+          color: '#fff',
+          backdropColor: 'transparent',
+          fontWeight: 'bold',
         },
       },
     },
 
     plugins: {
       legend: {
-        position: "bottom",
+        position: 'bottom',
 
         labels: {
-          color: "#FFFFFF",
+          color: '#FFFFFF',
           font: {
             size: 14,
           },
@@ -305,6 +309,7 @@ const HomeComponent = () => {
         borderColor: "rgba(161, 246, 245, 0.7)",
         backgroundColor: "rgba(161, 246, 245, 0.6)",
       }
+
     ],
   };
 
@@ -323,9 +328,9 @@ const HomeComponent = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: "right",
+        position: 'right',
         labels: {
-          color: "#FFFFFF",
+          color: '#FFFFFF',
 
           // This more specific font property overrides the global property
           font: {
@@ -344,8 +349,8 @@ const HomeComponent = () => {
     datasets: [
       {
         data: fourcampaigns_clicks,
-        backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
-        borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
+        backgroundColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
+        borderColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
         borderWidth: 1,
       },
     ],
@@ -457,6 +462,7 @@ const HomeComponent = () => {
           </div>
         )
       }
+
     </div>
   );
 };
