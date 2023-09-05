@@ -70,10 +70,13 @@
     const campaign = document.getElementById('landing_campaign_name');
     const campaign_name = campaign.innerHTML;
     const myBackground = await getbackground(campaign_name);
-    {% comment %} console.log(myBackground); {% endcomment %}
     const campaign_details = myBackground.campaign_data;
-    clicks = getClicks(campaign_name);
-    {% comment %} console.log(clicks); {% endcomment %}
+    
+    const currentDate = new Date();
+    const campaign_start_date = new Date(campaign_details.start_date.split(' ')[0]);
+    if(currentDate >= campaign_start_date) {
+      clicks = getClicks(campaign_name);
+    }
     
     // Get Store Social Icons
     let share_facebook = document.getElementById('store-facebook-link');
