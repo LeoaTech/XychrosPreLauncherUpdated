@@ -23,16 +23,13 @@ import { fetchCampaignsDetailsList } from '../../app/features/campaign_details/c
 const SummaryCard = lazy(() => import('../ui/SummaryCard'));
 
 const HomeComponent = () => {
-  const fetch = useAuthenticatedFetch();
   const dispatch = useDispatch();
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
-  const List = useSelector(fetchAllCampaigns);
   const SixMonthCampaignList = useSelector(fetchAllSixMonthsCampaigns);
   const ReferralList = useSelector(fetchAllReferrals);
   const SixMonthReferralList = useSelector(fetchAllSixMonthsReferrals);
 
-  const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const LastFourCampaignsClicksList = useSelector(
     fetchAllLastFourCampaignsClicks
   );
