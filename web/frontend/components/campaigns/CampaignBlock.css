@@ -74,7 +74,7 @@
 /* Campaign Block Component */
 
 .campaign-block {
-  width: 94%;
+  width: 96%;
   background: var(--sidebar-bg-color);
   border: 1px solid #fff;
   box-shadow: 0px 4px 4px rgba(192, 191, 191, 0.343);

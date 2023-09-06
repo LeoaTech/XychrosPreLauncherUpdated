@@ -18,16 +18,18 @@ import { fetchAllSixMonthsReferrals } from "../../app/features/referrals/referra
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
 import { fetchAllLastFourCampaignsClicks } from "../../app/features/user_clicks/lastFourCampaignsClicksSlice";
+import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
+import { fetchCampaignsDetailsList } from "../../app/features/campaign_details/campaign_details";
 
 const SummaryCard = lazy(() => import("../ui/SummaryCard"));
 
 const HomeComponent = () => {
   const fetch = useAuthenticatedFetch();
   const dispatch = useDispatch();
-
+  const TotalClicksList = useSelector(fetchAllCampaignClicks);
+  const campaignDetails = useSelector(fetchCampaignsDetailsList);
   const List = useSelector(fetchAllCampaigns);
   const SixMonthCampaignList = useSelector(fetchAllSixMonthsCampaigns);
-
   const ReferralList = useSelector(fetchAllReferrals);
   const SixMonthReferralList = useSelector(fetchAllSixMonthsReferrals);
 
@@ -37,6 +39,7 @@ const HomeComponent = () => {
 
 
   const [campaignsList, setCampaignsList] = useState([]);
+
   const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
 
   const [getReferrals, setReferrals] = useState([]);
@@ -48,10 +51,10 @@ const HomeComponent = () => {
 
   // Get Total Campaigns Lists
   useEffect(() => {
-    if (List?.length > 0) {
-      setCampaignsList(List);
+    if (campaignDetails?.length > 0) {
+      setCampaignsList(campaignDetails);
     }
-  }, [dispatch, List]);
+  }, [campaignDetails, dispatch]);
 
   // Get Last Six Months Campaigns Lists
   useEffect(() => {
@@ -66,8 +69,7 @@ const HomeComponent = () => {
     if (ReferralList) {
       setReferrals(ReferralList);
     }
-  }, [dispatch, ReferralList]);
-
+  }, [ReferralList, dispatch]);
 
     // Get Last Six Months Referrals Lists
   useEffect(() => {
@@ -87,6 +89,7 @@ const HomeComponent = () => {
   }, [TotalClicksList]);
 
   // console.log(getTotalClicks);
+
   if (getTotalClicks.length > 0) {
     t_clicks = getTotalClicks[0].total_clicks;
   }
