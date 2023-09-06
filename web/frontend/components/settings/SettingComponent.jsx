@@ -668,7 +668,7 @@ const SettingComponent = () => {
           {currentExpanded[3] && (
             <>
               <div className="email-container">
-                <div className="email-optCheck">
+                {/* <div className="email-optCheck">
                   <input
                     className="checkbox-input"
                     type="checkbox"
@@ -704,7 +704,7 @@ const SettingComponent = () => {
                       />
                     </div>
                   </div>
-                </section>
+                </section> */}
                 <section>
                   <div className="email-section">
                     <h2>
@@ -849,6 +849,7 @@ const SettingComponent = () => {
                       id="klaviyo_api_key"
                       placeholder="Enter API Key"
                       value={settingsData?.klaviyo_api_key}
+                      disabled={!settingsData?.klaviyo_integration}
                       onChange={handleChange}
                     />
                   </div>
