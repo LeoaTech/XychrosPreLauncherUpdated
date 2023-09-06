@@ -15,10 +15,10 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
     };
 
     // [Update] - Will be retrieved from campaign data
-    const desiredTag1 = 'eligibleFirstTier';
-    const desiredTag2 = 'eligibleSecondTier';
-    const desiredTag3 = 'eligibleThirdTier';
-    const desiredTag4 = 'eligibleFourthTier';
+    const desiredTag1 = `${campaignData.name}-tier_1_unlocked`;
+    const desiredTag2 = `${campaignData.name}-tier_2_unlocked`;
+    const desiredTag3 = `${campaignData.name}-tier_3_unlocked`;
+    const desiredTag4 = `${campaignData.name}-tier_4_unlocked`;
 
     // tier data from campaign details
     const tierData = {

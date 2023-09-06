@@ -2,7 +2,7 @@
   let first_page_settings = {{ block.settings | json }};
 
   async function getbackground(campaign_name) {
-    return await fetch('/apps/product-prelauncher/api/geturl', {
+    return await fetch('/apps/xychrosupdated/api/geturl', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -18,7 +18,7 @@
   // count user clicks
   async function getClicks(campaign_name) {
     try {
-      const response = await fetch("/apps/product-prelauncher/api/getclicks",
+      const response = await fetch("/apps/xychrosupdated/api/getclicks",
         {
           method: "POST",
           headers: {
@@ -31,6 +31,7 @@
       );
       console.log('Get Landing Page Clicks of: ', campaign_name);
       const data = await response.json();
+
     } catch(err){
       console.log(err);
     }
@@ -69,10 +70,13 @@
     const campaign = document.getElementById('landing_campaign_name');
     const campaign_name = campaign.innerHTML;
     const myBackground = await getbackground(campaign_name);
-    {% comment %} console.log(myBackground); {% endcomment %}
     const campaign_details = myBackground.campaign_data;
-    clicks = getClicks(campaign_name);
-    {% comment %} console.log(clicks); {% endcomment %}
+    
+    const currentDate = new Date();
+    const campaign_start_date = new Date(campaign_details.start_date.split(' ')[0]);
+    if(currentDate >= campaign_start_date) {
+      clicks = getClicks(campaign_name);
+    }
     
     // Get Store Social Icons
     let share_facebook = document.getElementById('store-facebook-link');

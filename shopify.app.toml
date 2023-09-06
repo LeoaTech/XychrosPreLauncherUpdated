@@ -1,8 +1,8 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-name = "test-2-app"
-client_id = "5c477447c78bc3bbdecf326daf0aaab6"
-application_url = "https://courage-appraisal-publishers-exclusion.trycloudflare.com"
+name = "XychrosUpdatedTestServer"
+client_id = "038304675f7b4a7b2b16705368a68a45"
+application_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ scopes = "read_orders, read_products, read_content, write_content, read_themes, 
 
 [auth]
 redirect_urls = [
-  "https://courage-appraisal-publishers-exclusion.trycloudflare.com/auth/callback",
-  "https://courage-appraisal-publishers-exclusion.trycloudflare.com/auth/shopify/callback",
-  "https://courage-appraisal-publishers-exclusion.trycloudflare.com/api/auth/callback"
+  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/auth/callback",
+  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/auth/shopify/callback",
+  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -24,4 +24,4 @@ embedded = false
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "app-running.myshopify.com"
+dev_store_url = "xychrostest.myshopify.com"
