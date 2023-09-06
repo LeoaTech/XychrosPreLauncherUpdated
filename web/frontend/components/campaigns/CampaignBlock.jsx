@@ -162,33 +162,11 @@ export default function CampaignBlock({
             </a>
           </div>
           <div className="campaign_details_links">
-            <a
-              href={landing_template_link}
-              target="_blank"
-              disabled={!is_active}
-              onClick={(e) => {
-                if (!is_active) {
-                  e.preventDefault();
-                }
-              }}
-              className="btn"
-              style={{ cursor: is_active ? "pointer" : "not-allowed" }}
-            >
+            <a href={landing_template_link} target="_blank" className="btn">
               Open in Editor
             </a>
 
-            <a
-              href={rewards_template_link}
-              target="_blank"
-              disabled={!is_active}
-              onClick={(e) => {
-                if (!is_active) {
-                  e.preventDefault();
-                }
-              }}
-              className="btn"
-              style={{ cursor: is_active ? "pointer" : "not-allowed" }}
-            >
+            <a href={rewards_template_link} target="_blank" className="btn">
               Open in Editor
             </a>
           </div>
@@ -260,7 +238,7 @@ export default function CampaignBlock({
                     setDeleteEndDate(endDate);
                     checkAndDeleteCampaign(deleteEndData);
                   }}
-                  // disabled={!is_active}
+                  disabled={!is_active}
 
                   style={
                     is_active
