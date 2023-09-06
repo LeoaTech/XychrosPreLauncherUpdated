@@ -33,7 +33,7 @@ const referralsStyles = {
       textAlign: "center",
     },
     highlightOnHoverStyle: {
-      color: "#f3f3f3",
+      color: "#fcfcfc",
       backgroundColor: "gray",
       transitionDuration: "0.15s",
       transitionProperty: "background-color",
@@ -47,8 +47,8 @@ const referralsStyles = {
     style: {
       color: "#232229",
       fontSize: "13px",
-      minHeight: "56px",
-      backgroundColor: "white",
+      minHeight: "50px",
+      backgroundColor: "fcfcfc",
       border: "1px solid #ccc",
       borderTop: "none",
     },
@@ -65,8 +65,8 @@ const referralsStyles = {
       backgroundColor: "transparent",
       "&:disabled": {
         cursor: "unset",
-        color: "#000",
-        fill: "#000",
+        color: "#333",
+        fill: "#333",
       },
       "&:hover:not(:disabled)": {
         backgroundColor: "#000",
@@ -125,6 +125,7 @@ const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
                   columns={modalColumns}
                   pagination
                   highlightOnHover
+                  pointerOnHover
                 />
               </div>
             </div>
