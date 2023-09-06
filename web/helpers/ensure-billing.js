@@ -358,27 +358,47 @@ async function saveSubscribedPlan(subscribedPlan, session) {
 
 // Request Cancel App Subscription function with the app subscription ID
 
+
 export async function requestCancelSubscription(session, myId) {
-  const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
-  const mutationResponse = await client.query({
-    data: {
-      query: CANCEL_MUTATION,
-      variables: {
-        id: myId,
-      },
-    },
-  });
+ 
+    try {
+      const client = new Shopify.Clients.Graphql(
+        session.shop,
+        session.accessToken
+      );
 
-  let data = mutationResponse?.body?.data?.appSubscriptionCancel;
+      const mutationResponse = await client.query({
+        data: {
+          query: CANCEL_MUTATION,
+          variables: {
+            id: myId,
+          },
+        },
+      });
 
-  if (data?.userErrors?.length) {
-    console.log(data.userErrors, "Error for cancelling request");
-    throw new ShopifyBillingError(
-      "Error while billing the store",
-      data.userErrors
-    );
-  }
-  return data;
+      let data = mutationResponse?.body?.data?.appSubscriptionCancel;
+
+      if (data?.userErrors?.length) {
+        console.log(data.userErrors, "Error for cancelling request");
+        throw new ShopifyBillingError(
+          "Error while billing the store",
+          data.userErrors
+        );
+      }
+
+      return data;
+    } catch (e) {
+      if (
+        e instanceof Shopify.Errors.HttpResponseError &&
+        e.response.code === 401
+      ) {
+        // We only want to catch 401s here, anything else should bubble up
+        console.log(e);
+      } else {
+        throw e;
+      }
+    }
+  
 }
 
 // Cancel App Subscriptions & save Data to DB
@@ -645,3 +665,5 @@ const ONE_TIME_PURCHASE_MUTATION = `
     }
   }
 `;
+
+// Cancel Recurring charge
