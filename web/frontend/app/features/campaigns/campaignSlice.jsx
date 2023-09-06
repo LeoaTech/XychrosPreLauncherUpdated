@@ -39,11 +39,13 @@ export const fetchAllSixMonthsCampaigns = (state) => {
   const campaignCountsByMonth = [0, 0, 0, 0, 0, 0];
 
   state?.campaign?.campaigns?.forEach((campaign) => {
-    const campaignStartDate = new Date(campaign.start_date.split(' ')[0]);
+    if(!campaign.is_deleted) {
+      const campaignStartDate = new Date(campaign.start_date.split(' ')[0]);
     
-    if (campaignStartDate >= sixMonthsAgo && campaignStartDate <= currentDate) {
-      const monthDiff = monthDiffBetweenDates(sixMonthsAgo, campaignStartDate);
-      campaignCountsByMonth[monthDiff]++;
+      if (campaignStartDate >= sixMonthsAgo && campaignStartDate <= currentDate) {
+        const monthDiff = monthDiffBetweenDates(sixMonthsAgo, campaignStartDate);
+        campaignCountsByMonth[monthDiff]++;
+      }
     }
   });
 

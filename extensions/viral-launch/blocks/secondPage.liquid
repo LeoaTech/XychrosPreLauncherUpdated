@@ -71,10 +71,15 @@
 
     const campaign = document.getElementById('review_campaign_name');
     const campaign_name = campaign.innerHTML;
-    {% comment %} console.log(campaign_name); {% endcomment %}
     const myBackground = await getbackground(campaign_name);
-    clicks = getClicks(campaign_name);
-    {% comment %} console.log(clicks); {% endcomment %}
+    const campaign_details_r = myBackground.campaign_data;
+    
+    const currentDate = new Date();
+    const campaign_start_date = new Date(campaign_details_r.start_date.split(' ')[0]);
+    if(currentDate >= campaign_start_date) {
+      clicks = getClicks(campaign_name);
+      console.log(clicks);
+    }
 
     if (second_page_settings.background_image) {
       let second_image_background = 'https:' + second_page_settings.background_image;
