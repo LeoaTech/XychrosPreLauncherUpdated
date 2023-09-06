@@ -29,7 +29,7 @@ import {
 } from "../../app/features/campaigns/campaignSlice";
 import { storeLinks } from "./dummySocial";
 import { RewardData } from "./rewardTier/RewardData";
-import { useAuthenticatedFetch } from "../../hooks";
+import { useAppQuery, useAuthenticatedFetch } from "../../hooks";
 import { fetchAllSettings } from "../../app/features/settings/settingsSlice";
 import { fetchAllProducts } from "../../app/features/productSlice";
 import useFetchTemplates from "../../constant/fetchTemplates";
@@ -39,6 +39,8 @@ import {
   fetchCurrentTier,
 } from "../../app/features/current_plan/current_plan";
 import { skeletonPageLoad } from "@shopify/app-bridge/actions/Performance";
+import ButtonLoader from "../loading_skeletons/ButtonLoader";
+import { fetchCampaignDetails } from "../../app/features/campaign_details/campaign_details";
 
 const SaveDraft = lazy(() => import("../modal/SaveDraft"));
 
@@ -346,6 +348,12 @@ function NewCampaignForm() {
   //  Get Current Subscription Plan Name
   useEffect(() => {
     if (currentTier !== "") {
+      if (currentTier?.includes("Add-on")) {
+        const charged_name = currentTier?.split(" + ");
+        const tierName = charged_name[0]; // Extract "Tier Name"
+
+        setMyPlan(tierName);
+      }
       setMyPlan(currentTier);
     }
 
@@ -357,31 +365,41 @@ function NewCampaignForm() {
   // Get Klaviyo integration Lists from API
   async function getKlaviyoList() {
     try {
-      const response = await fetch(`/api/lists`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      if (
+        globalSettings?.klaviyo_api_key !== "" ||
+        newCampaignData?.klaviyo_api_key !== ""
+      ) {
+        const response = await fetch(`/api/lists`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      const list = await response.json();
-
-      setKlaviyoList(list);
+        if (response.ok) {
+          const list = await response.json();
+          return list;
+        } else {
+          return;
+        }
+      }
     } catch (err) {
       return err;
     }
   }
 
   // Update Klaviyo API Lists in the Form
-  useEffect(() => {
+  useEffect(async () => {
     if (isEdit) {
+      let apiList = await getKlaviyoList();
+      setKlaviyoList(apiList);
+    } else {
       if (globalSettings?.klaviyo_api_key !== "") {
-        getKlaviyoList();
+        let findList = await getKlaviyoList();
+        setKlaviyoList(findList);
       }
-    } else if (newCampaignData?.klaviyo_api_key !== "") {
-      getKlaviyoList();
     }
-  }, [newCampaignData?.klaviyo_api_key, globalSettings?.klaviyo_api_key]);
+  }, [globalSettings?.klaviyo_api_key, newCampaignData?.klaviyo_api_key]);
 
   //? When user try to reload or change the route to other page
   useEffect(() => {
@@ -789,6 +807,7 @@ function NewCampaignForm() {
         body: JSON.stringify({ campaignData: newCampaignData }),
       });
       const responseData = await response.json();
+      return responseData?.data;
     } catch (error) {
       console.log(error);
     }
@@ -808,7 +827,6 @@ function NewCampaignForm() {
         }),
       });
       const responseData = await response.json();
-
       return responseData?.data;
     } catch (error) {
       console.log(error);
@@ -832,6 +850,7 @@ function NewCampaignForm() {
 
     if (detailsResponse.ok) {
       const detailsData = await detailsResponse.json();
+      return detailsData;
     } else {
       console.log("Failed to insert campaign details:", detailsResponse);
     }
@@ -870,11 +889,16 @@ function NewCampaignForm() {
       ) {
         setIsLoading(true);
 
-        await generateDiscounts(newCampaignData);
-        campaignDetails = await createTemplates(
+        const discount_details = await generateDiscounts(newCampaignData);
+        const template_details = await createTemplates(
           selectedTemplateData,
           newCampaignData
         );
+
+        campaignDetails = {
+          ...discount_details,
+          ...template_details,
+        };
 
         await fetch("/api/campaignsettings", {
           method: "POST",
@@ -892,9 +916,13 @@ function NewCampaignForm() {
       } else {
         return;
       }
+
+      console.log(idExists, "Campign Exists");
+      console.log(campaignDetails, "Campaign Details");
       // IF CampaignID Exists the call the saveCampaign details function to store value in db
-      if (typeof idExists == "number" && campaignDetails) {
-        await saveCampaignDetails(campaignDetails);
+      if (typeof(idExists) == "number" && campaignDetails) {
+        let result = await saveCampaignDetails(campaignDetails);
+        if (result) dispatch(fetchCampaignDetails(result));
       } else {
         console.log("Not saved data");
       }
@@ -979,13 +1007,14 @@ function NewCampaignForm() {
                       <div className="form-group">
                         <div className="inputfield">
                           <label htmlFor="name">
-                            Campaign Name *{" "}
+                            Campaign Name
                             {errorMessage && (
                               <span className="error-message">
                                 This field is required
                               </span>
                             )}
                           </label>
+
                           {isEdit ? (
                             <>
                               <input
@@ -1220,7 +1249,9 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="phone"
-                              checked={editCampaignData?.collect_phone === true}
+                              checked={
+                                editCampaignData?.collect_phone === false
+                              }
                               disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
@@ -1230,7 +1261,7 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="phone"
-                              checked={newCampaignData?.collect_phone === true}
+                              checked={newCampaignData?.collect_phone === false}
                               disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
@@ -1248,7 +1279,9 @@ function NewCampaignForm() {
                               name="collect_phone"
                               value="email"
                               checked={
-                                editCampaignData?.collect_phone === false
+                                !current_plan?.collect_phone
+                                  ? true
+                                  : editCampaignData?.collect_phone === true
                               }
                               onChange={handleRadioChange}
                             />
@@ -1258,7 +1291,11 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
-                              checked={newCampaignData?.collect_phone === false}
+                              checked={
+                                !current_plan?.collect_phone
+                                  ? true
+                                  : newCampaignData?.collect_phone === true
+                              }
                               onChange={handleRadioChange}
                             />
                           )}
@@ -1295,8 +1332,9 @@ function NewCampaignForm() {
                       />
                     ) : (
                       <IoIosArrowDown
+                        disabled={expanded[0]}
                         style={{ strokeWidth: "70", fill: "#fff" }}
-                        // onClick={() => handleExpand(1)}
+                        onClick={() => handleExpand(1)}
                       />
                     )}
                   </span>
@@ -1525,7 +1563,7 @@ function NewCampaignForm() {
                               {/* Required Rewards and Valid Discount codes values */}
                               <div className="reward-form-error">
                                 {isReward2Error && reward?.id === 2 && (
-                                  <h6 className="error-message">
+                                  <h6 className="discount_code-error">
                                     {" "}
                                     <MdError
                                       style={{
@@ -1540,7 +1578,7 @@ function NewCampaignForm() {
                                   </h6>
                                 )}
                                 {isReward3Error && reward?.id === 3 && (
-                                  <h6 className="error-message">
+                                  <h6 className="discount_code-error">
                                     {" "}
                                     <MdError
                                       style={{
@@ -1555,7 +1593,7 @@ function NewCampaignForm() {
                                   </h6>
                                 )}
                                 {isReward4Error && reward?.id === 4 && (
-                                  <h6 className="error-message">
+                                  <h6 className="discount_code-error">
                                     {" "}
                                     <MdError
                                       style={{
@@ -1820,7 +1858,8 @@ function NewCampaignForm() {
               {expanded[3] && (
                 <>
                   <div className="email-container">
-                    <div className="email-optCheck">
+                    {/* Hide the Double OPT in email Section */}
+                    {/* <div className="email-optCheck">
                       {isEdit ? (
                         <input
                           className="checkbox-input"
@@ -1878,7 +1917,7 @@ function NewCampaignForm() {
                           )}
                         </div>
                       </div>
-                    </section>
+                    </section> */}
                     <section>
                       <div className="email-section">
                         <h2>
@@ -2040,6 +2079,9 @@ function NewCampaignForm() {
                             type="checkbox"
                             name="klaviyo_integration"
                             checked={newCampaignData?.klaviyo_integration}
+                            disabled={
+                              globalSettings?.klaviyo_integration || true
+                            }
                             onChange={handleCheckboxChange}
                           />
                         )}
@@ -2126,7 +2168,7 @@ function NewCampaignForm() {
                             ) : (
                               <Link to="/settings">
                                 <p className="klaviyo-message">
-                                  {klaviyoList?.message}
+                                  Please Enable API Key in Global Settings
                                 </p>
                               </Link>
                             )}
@@ -2239,9 +2281,13 @@ function NewCampaignForm() {
                         disabled={isLoading}
                       >
                         {isEdit ? (
-                          <>{isLoading ? "Updating..." : "Update Campaign"}</>
+                          <>
+                            {isLoading ? <ButtonLoader /> : "Update Campaign"}
+                          </>
                         ) : (
-                          <>{isLoading ? "Creating..." : "Create Campaign"}</>
+                          <>
+                            {isLoading ? <ButtonLoader /> : "Create Campaign"}
+                          </>
                         )}
                       </button>
                     </>

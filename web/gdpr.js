@@ -1,9 +1,12 @@
 import { Shopify } from "@shopify/shopify-api";
 import NewPool from "pg";
+import { readFile } from "fs";
+import { AppInstallations } from "./app_installations.js";
+import { appUninstallEmail } from "./helpers/emails.js";
+
 const { Pool } = NewPool;
 const pool = new Pool({
-    connectionString: `${process.env.DATABASE_URL}`,
-
+  connectionString: `${process.env.DATABASE_URL}`,
 });
 
 export function setupGDPRWebHooks(path) {
@@ -21,18 +24,15 @@ export function setupGDPRWebHooks(path) {
       // Define a function to request Customer data
 
       try {
-
         // Check if customer data present in database
         const getCustomer = await pool.query(
           `select * from referrals where email = $1`,
           [payload?.customer?.email]
         );
 
-
         if (getCustomer?.rows?.length > 0) {
           let customerData = getCustomer?.rows;
           console.log(customerData, "Customer data from DB");
-
 
           // Extract required fields from customer data List
           function extractData(arr) {
@@ -69,7 +69,6 @@ export function setupGDPRWebHooks(path) {
           // return extractedDataArray;
         } else {
           console.log("Customer not found");
-          
         }
       } catch (error) {
         console.log(error);
@@ -151,11 +150,45 @@ export function setupGDPRWebHooks(path) {
   });
 
   // Every Time User update Plan, this webhook will Trigger
-  Shopify.Webhooks.Registry.addHandler("APP_SUBSCRIPTIONS_UPDATE", {
+  /* Shopify.Webhooks.Registry.addHandler("APP_SUBSCRIPTIONS_UPDATE", {
     path,
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
       console.log(payload, "Update Subscriptions payload");
+    },
+  }); */
+
+  // Send Emai User when Uninstalls the app.
+  let emailUninstall = "";
+  readFile("./email_templates/uninstall_app.txt", "utf8", (error, data) => {
+    if (error) console.log(error, "for some reason");
+    emailUninstall = data;
+  });
+
+  // App Uninstall webhook To Cancel App Subscription of Merchant
+  Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
+    path: "/api/webhooks",
+    webhookHandler: async (topic, shop, body) => {
+      const payload = JSON.parse(body);
+      console.log(payload, "Payload for Uninstalling webhook");
+      const { email } = payload;
+
+      try {
+        // Send Email to Merchant for App Uninstall
+        await appUninstallEmail(
+          emailUninstall,
+          email,
+          "App Uninstallation Confirmation"
+        );
+
+        try {
+          await AppInstallations.delete(shop); //Delete Shop session and subscriptions from database
+        } catch (error) {
+          console.log(error, "Error deleting Shop session");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 

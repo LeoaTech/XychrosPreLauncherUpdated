@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { getTotalCampaigns } from "../../app/features/campaigns/campaignSlice";
 import { fetchReferralById } from "../../app/features/referrals/referralSlice";
+import { fetchIndividualCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import { useSelector } from "react-redux";
 import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
 import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
@@ -66,6 +67,12 @@ export default function CampaignBlock({
   const [deleteEndData, setDeleteEndDate] = useState(null);
   const [isToggled, setIsToggled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(isToggled);
+
+  // Individual campaign clicks
+  const campaign_clicks = useSelector((state) =>
+    fetchIndividualCampaignClicks(state, +campaign_id)
+  );
+  // console.log(campaign_clicks);
 
   const now = new Date(); //Get the current date
 
@@ -127,20 +134,40 @@ export default function CampaignBlock({
 
         <div className="campaign_center_links">
           <div className="campaign_details_links">
-            <a href={landing_page_link} target="_blank">
+            <a
+              href={landing_page_link}
+              target="_blank"
+              disabled={!is_active}
+              style={{ cursor: is_active ? "pointer" : "not-allowed" }}
+              onClick={(e) => {
+                if (!is_active) {
+                  e.preventDefault();
+                }
+              }}
+            >
               Landing Page
             </a>
-            <a href={rewards_page_link} target="_blank">
+            <a
+              href={rewards_page_link}
+              target="_blank"
+              style={{ cursor: is_active ? "pointer" : "not-allowed" }}
+              disabled={!is_active}
+              onClick={(e) => {
+                if (!is_active) {
+                  e.preventDefault();
+                }
+              }}
+            >
               Rewards Page
             </a>
           </div>
           <div className="campaign_details_links">
             <a href={landing_template_link} target="_blank" className="btn">
-              Show in Theme Editor
+              Open in Editor
             </a>
 
             <a href={rewards_template_link} target="_blank" className="btn">
-              Show in Theme Editor
+              Open in Editor
             </a>
           </div>
         </div>
@@ -153,16 +180,20 @@ export default function CampaignBlock({
                 className="referral-icon"
               />
             </Suspense>
-            {/* <ShortSummaryCard
-              value="$37"
-              icon={Sale}
-              className="revenue-icon"
-            />
-            <ShortSummaryCard
-              value="4568"
-              icon={arrow}
-              className="clicks-icon"
-            /> */}
+            <Suspense fallback={<SkeletonShortSummaryCard />}>
+              <ShortSummaryCard
+                value="$37"
+                icon={Sale}
+                className="revenue-icon"
+              />
+            </Suspense>
+            <Suspense fallback={<SkeletonShortSummaryCard />}>
+              <ShortSummaryCard
+                value={campaign_clicks}
+                icon={arrow}
+                className="clicks-icon"
+              />
+            </Suspense>
           </div>
           <div className="campaign-actions">
             <IconContext.Provider
@@ -207,7 +238,7 @@ export default function CampaignBlock({
                     setDeleteEndDate(endDate);
                     checkAndDeleteCampaign(deleteEndData);
                   }}
-                  // disabled={!is_active}
+                  disabled={!is_active}
 
                   style={
                     is_active

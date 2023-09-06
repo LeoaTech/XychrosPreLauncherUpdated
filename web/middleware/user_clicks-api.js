@@ -54,12 +54,27 @@ export default function getCampaignClicks(app, secret) {
         app.get("use-online-tokens")
       );
       const { shop } = session;
+
+      // overall clicks
       const total_clicks = await pool.query(
-        "SELECT * FROM user_clicks WHERE shop=$1", 
+        `WITH UserClicks AS (
+          SELECT
+          uc.campaign_id,
+          COUNT(uc.id) AS campaign_clicks
+          FROM user_clicks uc 
+          WHERE shop = $1
+          GROUP BY uc.campaign_id
+        )
+        SELECT 
+        campaign_id,
+        campaign_clicks, 
+        SUM(campaign_clicks) OVER() AS total_clicks
+        FROM UserClicks`, 
         [shop]
       );
-      // console.log('user clicks: ', total_clicks.rowCount);
-      return res.status(200).json(total_clicks.rowCount);
+      
+      // console.log('user clicks: ', total_clicks.rows);
+      return res.status(200).json(total_clicks.rows);
     } catch (error) {
       return res.status(500).json({ success: false, error: error});
     }
@@ -79,8 +94,8 @@ export default function getCampaignClicks(app, secret) {
         `SELECT COUNT(id) AS total_months_clicks, 
         to_char(created_at, 'YYYY-MM') AS created_month 
         FROM user_clicks 
-        WHERE created_at >= date_trunc('month', CURRENT_DATE) - INTERVAL '6 months' 
-        AND created_at < date_trunc('month', CURRENT_DATE) 
+        WHERE created_at >= CURRENT_DATE - INTERVAL '5 months'
+        AND created_at <= CURRENT_DATE
         AND shop = $1 
         GROUP BY created_month 
         ORDER BY created_month DESC`, 
