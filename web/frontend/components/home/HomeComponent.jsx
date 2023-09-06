@@ -1,42 +1,39 @@
-import "./HomeComponent.css";
-import "./home.css";
-import { intro, about, arrow, Marketing, subscriber } from "../../assets/index";
-import Charts from "../ui/Charts";
-import React, { useState, useEffect, Fragment, lazy, Suspense } from "react";
-import { useStateContext } from "../../contexts/ContextProvider";
-import { useDispatch, useSelector } from "react-redux";
-import { useAuthenticatedFetch } from "../../hooks";
-import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
-import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
+import './HomeComponent.css';
+import './home.css';
+import { intro, about, arrow, Marketing, subscriber } from '../../assets/index';
+import Charts from '../ui/Charts';
+import React, { useState, useEffect, Fragment, lazy, Suspense } from 'react';
+import { useStateContext } from '../../contexts/ContextProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAuthenticatedFetch } from '../../hooks';
+import SkeletonSummaryCard from '../loading_skeletons/SkeletonSummaryCard';
+import LoadingSkeleton from '../loading_skeletons/LoadingSkeleton';
 
-import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
-import { fetchAllSixMonthsCampaigns } from "../../app/features/campaigns/campaignSlice";
+import { fetchAllCampaigns } from '../../app/features/campaigns/campaignSlice';
+import { fetchAllSixMonthsCampaigns } from '../../app/features/campaigns/campaignSlice';
 
-import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
-import { fetchAllSixMonthsReferrals } from "../../app/features/referrals/referralSlice";
+import { fetchAllReferrals } from '../../app/features/referrals/referralSlice';
+import { fetchAllSixMonthsReferrals } from '../../app/features/referrals/referralSlice';
 
-import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
-import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
-import { fetchAllLastFourCampaignsClicks } from "../../app/features/user_clicks/lastFourCampaignsClicksSlice";
-import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
-import { fetchCampaignsDetailsList } from "../../app/features/campaign_details/campaign_details";
+import { fetchAllCampaignClicks } from '../../app/features/user_clicks/totalclicksSlice';
+import { fetchAllLastSixMonthsClicks } from '../../app/features/user_clicks/lastSixMonthsClicksSlice';
+import { fetchAllLastFourCampaignsClicks } from '../../app/features/user_clicks/lastFourCampaignsClicksSlice';
+import { fetchCampaignsDetailsList } from '../../app/features/campaign_details/campaign_details';
 
-const SummaryCard = lazy(() => import("../ui/SummaryCard"));
+const SummaryCard = lazy(() => import('../ui/SummaryCard'));
 
 const HomeComponent = () => {
-  const fetch = useAuthenticatedFetch();
   const dispatch = useDispatch();
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
-  const List = useSelector(fetchAllCampaigns);
   const SixMonthCampaignList = useSelector(fetchAllSixMonthsCampaigns);
   const ReferralList = useSelector(fetchAllReferrals);
   const SixMonthReferralList = useSelector(fetchAllSixMonthsReferrals);
 
-  const TotalClicksList = useSelector(fetchAllCampaignClicks);
-  const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
+  const LastFourCampaignsClicksList = useSelector(
+    fetchAllLastFourCampaignsClicks
+  );
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
-
 
   const [campaignsList, setCampaignsList] = useState([]);
 
@@ -71,14 +68,13 @@ const HomeComponent = () => {
     }
   }, [ReferralList, dispatch]);
 
-    // Get Last Six Months Referrals Lists
+  // Get Last Six Months Referrals Lists
   useEffect(() => {
     if (SixMonthReferralList.length > 0) {
       setSixMonthsReferralsList(SixMonthReferralList);
       // console.log(SixMonthReferralList);
     }
   }, [dispatch, SixMonthReferralList]);
-
 
   // Get Total Clicks Count
   let t_clicks = 0;
@@ -126,19 +122,20 @@ const HomeComponent = () => {
   const chartClicks = Array.from({ length: 6 }, () => 0);
 
   if (getLastSixMonthsClicksData.length > 0) {
-    getLastSixMonthsClicksData.forEach(entry => {
+    getLastSixMonthsClicksData.forEach((entry) => {
       const entryDate = new Date(entry.created_month);
       const entryMonth = entryDate.getMonth();
       const entryYear = entryDate.getFullYear();
 
-      const monthIndex = (currentYear - entryYear) * 12 + (currentMonth - entryMonth);
+      const monthIndex =
+        (currentYear - entryYear) * 12 + (currentMonth - entryMonth);
 
       chartClicks[monthIndex] = parseInt(entry.total_months_clicks, 10); // Convert to integer
     });
   }
   let finalClicks = chartClicks.reverse();
   // console.log(finalClicks);
-  
+
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
     responsive: true,
@@ -230,18 +227,18 @@ const HomeComponent = () => {
         fill: '',
       },
       {
-        label: "Campaigns",
+        label: 'Campaigns',
         data: getSixMonthsCampaignsList,
-        borderColor: "#E0777D",
-        backgroundColor: "#E0777D",
-        fill: "+2",
+        borderColor: '#E0777D',
+        backgroundColor: '#E0777D',
+        fill: '+2',
       },
       {
-        label: "Referrals",
+        label: 'Referrals',
         data: getSixMonthsReferralsList,
-        borderColor: "#A1F6F5",
-        backgroundColor: "#A1F6F5",
-        fill: "origin",
+        borderColor: '#A1F6F5',
+        backgroundColor: '#A1F6F5',
+        fill: 'origin',
       },
     ],
   };
@@ -295,24 +292,23 @@ const HomeComponent = () => {
     labels: chartLabels,
     datasets: [
       {
-        label: "Clicks",
+        label: 'Clicks',
         data: finalClicks,
-        borderColor: "rgba(84, 71, 223, 0.7)",
-        backgroundColor: "rgba(84, 71, 223, 0.4)",
+        borderColor: 'rgba(84, 71, 223, 0.7)',
+        backgroundColor: 'rgba(84, 71, 223, 0.4)',
       },
       {
-        label: "Campaigns",
+        label: 'Campaigns',
         data: getSixMonthsCampaignsList,
-        borderColor: "rgba(245, 102, 128, 0.8)",
-        backgroundColor: "rgba(245, 102, 128, 0.5)",
+        borderColor: 'rgba(245, 102, 128, 0.8)',
+        backgroundColor: 'rgba(245, 102, 128, 0.5)',
       },
       {
-        label: "Referrals",
+        label: 'Referrals',
         data: getSixMonthsReferralsList,
-        borderColor: "rgba(161, 246, 245, 0.7)",
-        backgroundColor: "rgba(161, 246, 245, 0.6)",
-      }
-
+        borderColor: 'rgba(161, 246, 245, 0.7)',
+        backgroundColor: 'rgba(161, 246, 245, 0.6)',
+      },
     ],
   };
 
@@ -361,59 +357,64 @@ const HomeComponent = () => {
 
   return (
     <div>
-      {campaignsList == '' ? 
-        (
-          <div className="home-container">
-            <h2>Welcome to Viral Launch!</h2>
-            <div className="intro-section">
-              <div className="intro-card">
-                <p>
-                  New to Viral Launch? Get up to speed with everything about your
-                  product/service launch!
-                </p>
-              </div>
-              <div className="intro-img">
-                <img src={intro} alt="INTRO" loading="lazy"  />
-              </div>
+      {campaignsList == '' ? (
+        <div className='home-container'>
+          <h2>Welcome to Viral Launch!</h2>
+          <div className='intro-section'>
+            <div className='intro-card'>
+              <p>
+                New to Viral Launch? Get up to speed with everything about your
+                product/service launch!
+              </p>
             </div>
-            <div className="about-section">
-              <div className="about-img">
-                <img src={about} alt="About" />
-              </div>
-              <div className="about-card">
-                <p>
-                  Create a new campaign and get your email database filled even before
-                  you launch!
-                </p>
-              </div>
+            <div className='intro-img'>
+              <img
+                src={intro}
+                alt='INTRO'
+                loading='lazy'
+              />
             </div>
-            <div className="contact-us-section">
-              <div className="contact-us-card">
-                <p>Contact Us for further assistance and Feedback!</p>
-              </div>
+          </div>
+          <div className='about-section'>
+            <div className='about-img'>
+              <img
+                src={about}
+                alt='About'
+              />
             </div>
-          </div> 
-        ) :
-        (
-          <div className="home-container">
-            <div className="summary-blocks">
-              <Suspense fallback={<SkeletonSummaryCard />}>
-                <SummaryCard
-                  value={campaignsList?.length}
-                  title="Campaigns"
-                  icon={Marketing}
-                  class="campaign-icon"
-                />
-              </Suspense>
-              <Suspense fallback={<SkeletonSummaryCard />}>
-                <SummaryCard
-                  value={getReferrals?.length}
-                  title="Referrals"
-                  icon={subscriber}
-                  class="referral-icon"
-                />
-              </Suspense>
-              {/*
+            <div className='about-card'>
+              <p>
+                Create a new campaign and get your email database filled even
+                before you launch!
+              </p>
+            </div>
+          </div>
+          <div className='contact-us-section'>
+            <div className='contact-us-card'>
+              <p>Contact Us for further assistance and Feedback!</p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className='home-container'>
+          <div className='summary-blocks'>
+            <Suspense fallback={<SkeletonSummaryCard />}>
+              <SummaryCard
+                value={campaignsList?.length}
+                title='Campaigns'
+                icon={Marketing}
+                class='campaign-icon'
+              />
+            </Suspense>
+            <Suspense fallback={<SkeletonSummaryCard />}>
+              <SummaryCard
+                value={getReferrals?.length}
+                title='Referrals'
+                icon={subscriber}
+                class='referral-icon'
+              />
+            </Suspense>
+            {/*
               <CountUp
                     start={0}
                     end={6}
@@ -425,47 +426,45 @@ const HomeComponent = () => {
                 icon={Sale}
                 class='revenue-icon'
               /> */}
-              <Suspense fallback={<SkeletonSummaryCard />}>
-                <SummaryCard
-                  value={t_clicks}
-                  title="Clicks"
-                  icon={arrow}
-                  class="clicks-icon"
-                />
-              </Suspense>
-            </div>
-            <div className="single-chart">
-              <Charts
-                type="line"
-                header="Total Revenue"
-                value="$253467"
-                subheader="Last 6 months Data"
-                LineChartOptions={LineChartOptions}
-                LineChartData={LineChartData}
+            <Suspense fallback={<SkeletonSummaryCard />}>
+              <SummaryCard
+                value={t_clicks}
+                title='Clicks'
+                icon={arrow}
+                class='clicks-icon'
               />
-            </div>
-            <div className="dual-charts">
-              <Charts
-                type="radar"
-                header="Product Launch"
-                value="$2456.76"
-                subheader="August 1st, 2022 - September 5th, 2022"
-                RadarChartOptions={RadarChartOptions}
-                RadarChartData={RadarChartData}
-              />
-              <Charts
-                type="donut"
-                header="Revenue"
-                value="$15,456.98"
-                subheader="Last 4 campaigns"
-                DonutChartOptions={DonutChartOptions}
-                DonutChartData={DonutChartData}
-              />
-            </div>
+            </Suspense>
           </div>
-        )
-      }
-
+          <div className='single-chart'>
+            <Charts
+              type='line'
+              header='Total Revenue'
+              value='$253467'
+              subheader='Last 6 months Data'
+              LineChartOptions={LineChartOptions}
+              LineChartData={LineChartData}
+            />
+          </div>
+          <div className='dual-charts'>
+            <Charts
+              type='radar'
+              header='Product Launch'
+              value='$2456.76'
+              subheader='August 1st, 2022 - September 5th, 2022'
+              RadarChartOptions={RadarChartOptions}
+              RadarChartData={RadarChartData}
+            />
+            <Charts
+              type='donut'
+              header='Revenue'
+              value='$15,456.98'
+              subheader='Last 4 campaigns'
+              DonutChartOptions={DonutChartOptions}
+              DonutChartData={DonutChartData}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
