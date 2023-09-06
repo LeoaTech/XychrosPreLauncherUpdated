@@ -1,10 +1,9 @@
 import { Shopify } from "@shopify/shopify-api";
 import NewPool from "pg";
 import { readFile } from "fs";
-
-import { requestCancelSubscription } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 import { appUninstallEmail } from "./helpers/emails.js";
+
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: `${process.env.DATABASE_URL}`,
@@ -151,17 +150,16 @@ export function setupGDPRWebHooks(path) {
   });
 
   // Every Time User update Plan, this webhook will Trigger
-  Shopify.Webhooks.Registry.addHandler("APP_SUBSCRIPTIONS_UPDATE", {
+  /* Shopify.Webhooks.Registry.addHandler("APP_SUBSCRIPTIONS_UPDATE", {
     path,
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
       console.log(payload, "Update Subscriptions payload");
     },
-  });
-
+  }); */
 
   // Send Emai User when Uninstalls the app.
-  let emailUninstall;
+  let emailUninstall = "";
   readFile("./email_templates/uninstall_app.txt", "utf8", (error, data) => {
     if (error) console.log(error, "for some reason");
     emailUninstall = data;
@@ -174,78 +172,22 @@ export function setupGDPRWebHooks(path) {
       const payload = JSON.parse(body);
       console.log(payload, "Payload for Uninstalling webhook");
       const { email } = payload;
-      let appSession;
 
-      const shopSessions =
-        await Shopify.Context.SESSION_STORAGE.findSessionsByShop(shop);
-
-      if (shopSessions?.length > 0) {
-        for (const session of shopSessions) {
-          if (session.accessToken) {
-            appSession = session;
-          }
-        }
-      } else {
-        return false;
-      }
-
-      console.log(appSession, "Session to Cancel App Subscription");
       try {
-        console.log("inside try block");
+        // Send Email to Merchant for App Uninstall
         await appUninstallEmail(
           emailUninstall,
           email,
           "App Uninstallation Confirmation"
         );
 
-        // Find if subscriptionId exists in my database
-        const subscriptionExist = await pool.query(
-          `select * from subscriptions_list where shop_id =$1`,
-          [shop]
-        );
-
-        console.log(subscriptionExist?.rows[0], "Exists in my database");
-
-        // If Subscription Plan is Not Free or User has not already cancelled subscription
-        if (subscriptionExist?.rowCount > 0) {
-          let planId = subscriptionExist?.rows[0]?.subscription_id;
-          console.log(planId, "Plan Id in Table");
-
-          if (
-            planId?.length == 0 ||
-            (planId === "" && subscriptionExist?.rows[0]?.plan_name === "Free")
-          ) {
-
-            // No action needed to Cancel App Subscription
-            console.log("inside if statemnent");
-          } else {
-            console.log("inside else");
-
-
-            // Here we cancel the subscription Plan if any also if (plan is Free with Add-ons)
-            let cancelSubscription = await requestCancelSubscription(
-              appSession,
-              planId
-            );
-
-            console.log(cancelSubscription, "cancel subscription webhook");
-          }
-        } else {
-          return;
-        }
-
-        // Delete all data from the subscription table for the shop url and also delete the shopify session of that shop
         try {
-          await pool.query(
-            `DELETE FROM subscriptions_list WHERE shop_id = $1`,
-            [shop]
-          );
-          await AppInstallations.delete(shop);
-        } catch (err) {
-          console.log(err, "delete subscription details for shop url");
+          await AppInstallations.delete(shop); //Delete Shop session and subscriptions from database
+        } catch (error) {
+          console.log(error, "Error deleting Shop session");
         }
       } catch (error) {
-        console.log(error, "App uninstall webhook Error");
+        console.log(error);
       }
     },
   });

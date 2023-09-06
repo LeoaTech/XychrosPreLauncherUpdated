@@ -53,7 +53,7 @@ export default function HomePage() {
   });
 
   // Get Campaign Settings List
-  const campaigns = useFetchCampaignsData("/api/getcampaigns", {
+  const campaignsDetails = useFetchCampaignsDetails("/api/campaigndetails", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -87,11 +87,11 @@ export default function HomePage() {
     }
   );
 
-  useEffect(() => {
-    if (campaigns?.length > 0) {
-      dispatch(fetchCampaign(campaigns));
+ useEffect(() => {
+    if (campaignsDetails?.length > 0) {
+      dispatch(fetchCampaignDetails(campaignsDetails));
     }
-  }, [campaigns, dispatch]);
+  }, [campaignsDetails, dispatch]);
 
   useEffect(() => {
     if (referrals?.length > 0) {

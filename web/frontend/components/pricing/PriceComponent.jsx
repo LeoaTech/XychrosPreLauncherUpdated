@@ -81,6 +81,7 @@ const PriceComponent = () => {
     const subscribeAddOns = {
       ...activePlan,
       price: chargeAmount,
+      billing_required: true,    //Billing required true for Free plan with add-ons selected
     };
     const response = await fetchAuth("/api/confirm-add-ons", {
       method: "POST",
@@ -244,9 +245,7 @@ const PriceComponent = () => {
                     }px)`,
                   }}
                   className={`pricing-card ${
-                    index === subscribedPlanId -1
-                      ? "active"
-                      : ""
+                    index === subscribedPlanId - 1 ? "active" : ""
                   }`}
                 >
                   <PricingBlock

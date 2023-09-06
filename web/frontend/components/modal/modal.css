@@ -113,7 +113,7 @@
 .referral_detail-table {
   border: 1px solid rgb(186, 182, 182);
   /* padding: 4px ; */
-  background-color: var(--primary-color);
+  /* background-color: var(--primary-color); */
   height: 300px;
   width: 500px;
   margin-top: 20px;
