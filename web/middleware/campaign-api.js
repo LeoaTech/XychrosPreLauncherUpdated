@@ -1,30 +1,29 @@
-import { Shopify } from '@shopify/shopify-api';
+import { Shopify } from "@shopify/shopify-api";
 
-import NewPool from 'pg';
+import NewPool from "pg";
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: `${process.env.DATABASE_URL}`,
-
 });
 
 pool.connect((err, result) => {
   if (err) throw err;
-  console.log('Connected');
+  console.log("Connected");
 });
 
 export default function campaignApiEndpoints(app) {
   //read all campaign
 
-  app.get('/api/getcampaigns', async (req, res) => {
+  app.get("/api/getcampaigns", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
 
       const campaigns = await pool.query(
-        'select * from campaign_settings where shop_id = $1 ',
+        "select * from campaign_settings where shop_id = $1 ",
         [session?.shop]
       );
       return res.status(200).json(campaigns.rows);
@@ -35,12 +34,12 @@ export default function campaignApiEndpoints(app) {
   //get one campaign
 
   //create campaign
-  app.post('/api/campaignsettings', async (req, res) => {
+  app.post("/api/campaignsettings", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
 
       const {
@@ -162,8 +161,7 @@ export default function campaignApiEndpoints(app) {
         ]
       );
 
-
-      console.log(campaigns?.rowCount, "Inserted")
+      console.log(campaigns?.rowCount, "Inserted");
       return res.status(201).json(campaigns.rows);
     } catch (err) {
       return res.status(500).json(err.message);
@@ -172,12 +170,12 @@ export default function campaignApiEndpoints(app) {
 
   //update campaign
 
-  app.put('/api/campaignsettings/:campaign_id', async (req, res) => {
+  app.put("/api/campaignsettings/:campaign_id", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
       const { campaign_id } = req.params;
       const {
@@ -368,14 +366,14 @@ export default function campaignApiEndpoints(app) {
     }
   });
 
-  //Update campaign data when delete a campaign
+  //Update campaign details data when delete a campaign
 
-  app.patch('/api/campaignsettings/:campaign_id', async (req, res) => {
+  app.patch("/api/campaignsettings/:campaign_id", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
       const { campaign_id } = req.params;
       const {
@@ -561,6 +559,48 @@ export default function campaignApiEndpoints(app) {
       return res.json(campaigns?.rows[0]);
     } catch (err) {
       return res.status(500).json(err.message);
+    }
+  });
+
+  //delete campaign
+
+  app.delete("/api/campaignsettings/:campaign_id", async (req, res) => {
+    try {
+      const session = await Shopify.Utils.loadCurrentSession(
+        req,
+        res,
+        app.get("use-online-tokens")
+      );
+      const { campaign_id } = req.params;
+
+      // First Delete campaign ID from campaign details table
+      const deleteCampaignDetailsID = await pool.query(
+        `DELETE FROM campaign_details WHERE campaign_id =$1 AND shop_id= $2 RETURNING *`,
+        [campaign_id, session?.shop]
+      );
+
+      if (deleteCampaignDetailsID.rowCount > 0) {
+        // If Delete ID from CampaignDetails, then delete the campaign from Settings table of campaign
+        const deleteCampaignSettingsID = await pool.query(
+          `DELETE FROM campaign_settings WHERE campaign_id =$1 AND shop_id= $2 RETURNING *`,
+          [campaign_id, session?.shop]
+        );
+
+        if (deleteCampaignSettingsID.rowCount > 0) {
+          return res
+            .status(204)
+            .json({ message: "Campaign deleted successfully" });
+        } else {
+          return res
+            .status(500)
+            .json({ error: "Failed to delete campaign settings" });
+        }
+      } else {
+        return res.status(403).json({ error: "No id available" });
+      }
+    } catch (err) {
+      console.error("Error deleting campaign:", err);
+      return res.status(500).json({ error: err.message });
     }
   });
 }
