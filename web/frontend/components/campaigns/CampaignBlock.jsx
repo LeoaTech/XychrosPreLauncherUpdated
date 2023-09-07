@@ -23,6 +23,7 @@ export default function CampaignBlock({
   data,
   handleDelete,
   handleEdit,
+  handleDeleteCampaign,
   setDeleteModal,
   deleteModal,
   deleteId,
@@ -239,7 +240,6 @@ export default function CampaignBlock({
                     checkAndDeleteCampaign(deleteEndData);
                   }}
                   disabled={!is_active}
-
                   style={
                     is_active
                       ? { height: 24, width: 24, color: "#CB624C" }
@@ -262,7 +262,7 @@ export default function CampaignBlock({
           isToggled={isToggled}
           openModal={deleteModal}
           setDeleteModal={setDeleteModal}
-          handleDelete={handleDelete}
+          handleDelete={handleDeleteCampaign}
         />{" "}
       </div>
     </>
