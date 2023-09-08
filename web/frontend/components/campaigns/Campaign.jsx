@@ -196,7 +196,6 @@ const CampaignsComponent = () => {
             (campaign) => campaign?.campaign_id !== camp_id
           );
 
-          console.log(newDetails, "New Details");
           await dispatch(fetchCampaign(newData));
           await dispatch(fetchCampaignDetails(newDetails));
           setCampaigns([...newData]);
