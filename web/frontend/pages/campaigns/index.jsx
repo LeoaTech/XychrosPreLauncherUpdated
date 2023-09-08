@@ -45,7 +45,7 @@ const Campaigns = () => {
     headers: { "Content-Type": "application/json" },
   });
 
-  // Get All Campaign Clicks 
+  // Get All Campaign Clicks
   const total_clicks = useFetchTotalClicks("/api/fetchtotalclicks", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -92,7 +92,7 @@ const Campaigns = () => {
 
       // CASE 1   "Free" Active only Lates Campaign ( created or updated recently)
 
-      if (currentTier === "Free") {
+      if (currentTier === "Free" || currentTier === "Free + Add-ons") {
         // Update App Component with all other campaign remain INACTIVE except the Latest campaign
         const updateCampaigns = sortedCampaigns?.map((camp) =>
           camp.campaign_id === latestCampaign?.campaign_id
@@ -115,13 +115,21 @@ const Campaigns = () => {
         dispatch(fetchCampaignDetails(updateCampaigns));
       }
       // CASE 3  "TIER 2 to Tier 8"
-      if (currentTier !== "Free" && currentTier !== "Tier 1") {
+      if (
+        (currentTier !== "Free" && currentTier !== "Tier 1") ||
+        currentTier === "Free + Add-ons" ||
+        currentTier === "Tier 1 + Add-ons"
+      ) {
         const updateCampaigns = campaignsDetails?.map((camp) => {
           const startDate = new Date(camp?.start_date);
           const endDate = new Date(camp?.end_date);
           const currentDate = new Date();
 
-          if (currentDate >= startDate && currentDate <= endDate) {
+          if (
+            // (endDate != currentDate && startDate != currentDate) ||
+            currentDate >= startDate &&
+            currentDate <= endDate
+          ) {
             return { ...camp, is_active: true };
           } else {
             return { ...camp, is_active: false };
