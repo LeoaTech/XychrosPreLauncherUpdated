@@ -192,6 +192,16 @@ export function setupGDPRWebHooks(path) {
     },
   });
 
+  // Every Time User Places an Order, this Webhook will Trigger
+  Shopify.Webhooks.Registry.addHandler("ORDERS_CREATE", {
+    path: "/api/webhooks",
+    webhookHandler: async (topic, shop, body) => {
+      const payload = JSON.parse(body);
+      // console.log("Order Created Payload: ", payload);
+    },
+  });
+  
+
   /**
    * 48 hours after a store owner uninstalls your app, Shopify invokes this
    * webhook.
