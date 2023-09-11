@@ -196,8 +196,10 @@ export function setupGDPRWebHooks(path) {
   Shopify.Webhooks.Registry.addHandler("ORDERS_CREATE", {
     path: "/api/webhooks",
     webhookHandler: async (topic, shop, body) => {
+      // Parse the incoming create/orders payload as JSON
       const payload = JSON.parse(body);
       // console.log("Order Created Payload: ", payload);
+
       const orders_data = {
         order_id: parseInt(payload?.id),
         name: payload?.name,
@@ -211,50 +213,63 @@ export function setupGDPRWebHooks(path) {
       }
       console.log(orders_data);
 
-      try {
-        // Parse the incoming create/orders payload as JSON and store required fields in database
-        const query = `
-          INSERT INTO order_details(
-            order_id,
-            order_name,
-            subtotal_price,
-            total_discounts,
-            total_tax,
-            total_price,
-            discount_codes,
-            currency,
-            customer_tags,
-            shop_id
-          )
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-        `;
+      const appNameTag = "viral-launch";
 
-        const orders = await pool.query(query, [
-          parseInt(payload?.id),
-          payload?.name,
-          parseFloat(payload?.subtotal_price),
-          parseFloat(payload?.total_discounts),
-          parseFloat(payload?.total_tax),
-          parseFloat(payload?.total_price),
-          payload?.discount_codes[0]?.code,
-          payload?.currency,
-          payload?.customer?.tags,
-          payload?.order_status_url.match(/\/\/([^/]+)/)[1],
-        ]);
-
-        if (orders) {
-          // console.log(orders);
-          console.log('Query is successful');
+      // Check if customer has signed up using our app
+      if (payload?.customer?.tags) {
+        const customerTagsArray = payload.customer.tags.split(',').map(tag => tag.trim());
+        if (customerTagsArray.includes(appNameTag)) {
+          console.log(`Customer has signed up using our app`);
+          // store required fields in database
+          try {
+            const query = `
+              INSERT INTO order_details(
+                order_id,
+                order_name,
+                subtotal_price,
+                total_discounts,
+                total_tax,
+                total_price,
+                discount_codes,
+                currency,
+                customer_tags,
+                shop_id
+              )
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            `;
+    
+            const orders = await pool.query(query, [
+              parseInt(payload?.id),
+              payload?.name,
+              parseFloat(payload?.subtotal_price),
+              parseFloat(payload?.total_discounts),
+              parseFloat(payload?.total_tax),
+              parseFloat(payload?.total_price),
+              payload?.discount_codes[0]?.code,
+              payload?.currency,
+              payload?.customer?.tags,
+              payload?.order_status_url.match(/\/\/([^/]+)/)[1],
+            ]);
+    
+            if (orders) {
+              // console.log(orders);
+              console.log('Query is successful');
+            } else {
+              console.log('Query failed');
+            }
+    
+            return { status: 200, message: "Orders Data Processed Successfully" };
+          } catch (error) {
+            // Handle any errors that occur during payload parsing or processing
+            console.error("Error Processing Webhook Data:", error);
+            // Send an error response to Shopify, indicating the issue
+            return { status: 500, message: "Internal Server Error", error: error.message };
+          }
         } else {
-          console.log('Query failed');
+          console.log(`Customer hasn't signed up using our app`);
         }
-
-        return { status: 200, message: "Orders Data Processed Successfully" };
-      } catch (error) {
-        // Handle any errors that occur during payload parsing or processing
-        console.error("Error Processing Webhook:", error);
-        // Send an error response to Shopify, indicating the issue
-        return { status: 500, message: "Internal Server Error", error: error.message };
+      } else {
+        console.log("Customer has no tags..");
       }
     },
   });
