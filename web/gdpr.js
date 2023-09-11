@@ -198,6 +198,64 @@ export function setupGDPRWebHooks(path) {
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
       // console.log("Order Created Payload: ", payload);
+      const orders_data = {
+        order_id: parseInt(payload?.id),
+        name: payload?.name,
+        subtotal_price: payload?.subtotal_price,
+        total_discounts: payload?.total_discounts,
+        total_price: parseFloat(payload?.total_price),
+        discount_codes: payload?.discount_codes[0]?.code,
+        currency: payload?.currency,
+        customer_tags: payload?.customer?.tags,
+        shop: payload?.order_status_url.match(/\/\/([^/]+)/)[1],
+      }
+      console.log(orders_data);
+
+      try {
+        // Parse the incoming create/orders payload as JSON and store required fields in database
+        const query = `
+          INSERT INTO order_details(
+            order_id,
+            order_name,
+            subtotal_price,
+            total_discounts,
+            total_tax,
+            total_price,
+            discount_codes,
+            currency,
+            customer_tags,
+            shop_id
+          )
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        `;
+
+        const orders = await pool.query(query, [
+          parseInt(payload?.id),
+          payload?.name,
+          parseFloat(payload?.subtotal_price),
+          parseFloat(payload?.total_discounts),
+          parseFloat(payload?.total_tax),
+          parseFloat(payload?.total_price),
+          payload?.discount_codes[0]?.code,
+          payload?.currency,
+          payload?.customer?.tags,
+          payload?.order_status_url.match(/\/\/([^/]+)/)[1],
+        ]);
+
+        if (orders) {
+          // console.log(orders);
+          console.log('Query is successful');
+        } else {
+          console.log('Query failed');
+        }
+
+        return { status: 200, message: "Orders Data Processed Successfully" };
+      } catch (error) {
+        // Handle any errors that occur during payload parsing or processing
+        console.error("Error Processing Webhook:", error);
+        // Send an error response to Shopify, indicating the issue
+        return { status: 500, message: "Internal Server Error", error: error.message };
+      }
     },
   });
   
