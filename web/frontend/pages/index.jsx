@@ -22,6 +22,8 @@ import useFetchLastSixMonthsClicks from "../constant/fetchLastSixMonthsClicks";
 import { fetchLastSixMonthsClicks } from "../app/features/user_clicks/lastSixMonthsClicksSlice";
 import useFetchLastFourCampaignsClicks from "../constant/fetcLastFourCampaignsClicks";
 import { fetchLastFourCampaignsClicks } from "../app/features/user_clicks/lastFourCampaignsClicksSlice";
+import useFetchTotalRevenue from "../constant/fetchTotalRevenue";
+import { fetchTotalRevenue } from "../app/features/revenue/totalRevenueSlice";
 
 export default function HomePage() {
   const { activeMenu } = useStateContext();
@@ -58,6 +60,7 @@ export default function HomePage() {
     headers: { "Content-Type": "application/json" },
   });
 
+  // Get All Referral Details
   const referrals = useFetchReferralsData("/api/getallreferralcount", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -87,7 +90,15 @@ export default function HomePage() {
     }
   );
 
- useEffect(() => {
+  // Get Total Revenue
+  const total_revenue = useFetchTotalRevenue("/api/generate_revenue", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  // Dispatch API result in Redux store to get access data in the App
+
+  useEffect(() => {
     if (campaignsDetails?.length > 0) {
       dispatch(fetchCampaignDetails(campaignsDetails));
     }
@@ -99,7 +110,6 @@ export default function HomePage() {
     }
   }, [referrals, dispatch]);
 
-  // Dispatch API result in Redux store to get access data in the App
   useEffect(() => {
     if (billing) {
       dispatch(fetchSavePlan(billing)); //Save Current Billing Details in App Store
@@ -135,6 +145,12 @@ export default function HomePage() {
       dispatch(fetchLastFourCampaignsClicks(lastfourcampaigns_clicks));
     }
   }, [lastfourcampaigns_clicks, dispatch]);
+
+  useEffect(() => {
+    if (total_revenue.length > 0) {
+      dispatch(fetchTotalRevenue(total_revenue));
+    }
+  }, [total_revenue, dispatch]);
 
   return (
     <div className="app">

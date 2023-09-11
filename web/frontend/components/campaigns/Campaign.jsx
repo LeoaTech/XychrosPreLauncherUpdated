@@ -15,6 +15,8 @@ import {
   fetchCampaignsDetailsList,
 } from "../../app/features/campaign_details/campaign_details";
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
+import { fetchAllCampaignsRevenue } from "../../app/features/revenue/totalRevenueSlice";
+
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
 
@@ -40,7 +42,10 @@ const CampaignsComponent = () => {
   const [getReferrals, setReferrals] = useState([]);
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
-  const [getTotalClicks, setTotalClicks] = useState(0);
+  const [getTotalClicks, setTotalClicks] = useState([]);
+
+  const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
+  const [getTotalRevenue, setTotalRevenue] = useState([0]);
 
   useEffect(() => {
     if (List?.length > 0) {
@@ -74,8 +79,14 @@ const CampaignsComponent = () => {
     t_clicks = getTotalClicks[0].total_clicks;
   }
 
-  // PAGINATION
+  // Get Total Revenue
+  useEffect(() => {
+    if (TotalRevenueList) {
+      setTotalRevenue(TotalRevenueList[0].total_revenue);
+    }
+  }, [TotalRevenueList]);
 
+  // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(getDetails?.length / itemsPerPage);
@@ -193,18 +204,14 @@ const CampaignsComponent = () => {
             class="clicks-icon"
           />
         </Suspense>
-        {/* <SummaryCard
-          value='$253,467'
-          title='Revenue'
-          icon={Sale}
-          class='revenue-icon'
-        />
-        <SummaryCard
-          value='4551678'
-          title='Clicks'
-          icon={arrow}
-          class='clicks-icon'
-        /> */}
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={getTotalRevenue}
+            title='Revenue'
+            icon={Sale}
+            class='revenue-icon'
+          />
+        </Suspense>
       </div>
       <div className="campaigns">
         {getDetails?.length > 0 ? (
