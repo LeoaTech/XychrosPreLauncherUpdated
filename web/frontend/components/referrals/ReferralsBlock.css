@@ -26,11 +26,10 @@
   margin-top: 2px;
 }
 
-[data-column-id='friends_joined'].rdt_TableCol,
-[data-column-id='details'].rdt_TableCol {
-  max-width: 12px
+/* [data-column-id='friends_joined'].rdt_TableCol, */
+[data-column-id="details"].rdt_TableCol {
+  max-width: 12px;
 }
-
 
 .rdt_Table {
   /* border: 1px solid #fcfcfc; */
@@ -63,19 +62,16 @@
   border-right: 1px solid rgb(249, 246, 246);
 }
 
+/* [data-column-id='join_date'].rdt_TableCol { */
 
-[data-column-id='join_date'].rdt_TableCol {
+/* [data-column-id='status'].rdt_TableCol { */
+[data-column-id="join_date"].rdt_TableCol {
   border-top-left-radius: 10px;
 }
 
-[data-column-id='details'].rdt_TableCol {
+[data-column-id="details"].rdt_TableCol {
   border-top-right-radius: 10px;
 }
-
-
-
-
-
 
 /* .rdt_TableCol {
   border-bottom: none;
