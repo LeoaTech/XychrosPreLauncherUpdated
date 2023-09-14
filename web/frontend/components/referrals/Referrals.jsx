@@ -56,7 +56,7 @@ const Referrals = () => {
 
   // Get Total Revenue
   useEffect(() => {
-    if (TotalRevenueList) {
+    if (TotalRevenueList.length > 0) {
       setTotalRevenue(TotalRevenueList[0].total_revenue);
     }
   }, [TotalRevenueList]);
