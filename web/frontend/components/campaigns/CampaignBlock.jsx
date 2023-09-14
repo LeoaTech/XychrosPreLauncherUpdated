@@ -56,7 +56,7 @@ export default function CampaignBlock({
   const campaignActionButtonStyle = {
     // backgroundColor: is_active ? "#e0e0e0" : "",
     cursor: is_active ? "default" : "pointer",
-    pointerEvents: is_active ? "none" : "none",
+    pointerEvents: is_active ? "none" : "auto",
     color: is_active ? "#C0C0C0	" : "#e0e0e0",
   };
 
@@ -105,9 +105,7 @@ export default function CampaignBlock({
 
   return (
     <>
-      <div
-        className={`campaign-block ${is_deactivated ? "deactive" : ""}`}
-      >
+      <div className={`campaign-block ${is_deactivated ? "deactive" : ""}`}>
         <div className="campaign-details">
           <div
             className={`camapign-block-name ${
@@ -260,7 +258,7 @@ export default function CampaignBlock({
               // MdBlock
               data-tooltip-id="deactivate-campaigns-tooltip"
               className="deactivated"
-              style={{ height: 24, width: 24, color: "red" }}
+              style={{ height: 24, width: 24, color: "crimson" }}
             />
           ) : (
             <div className="campaign-actions">
@@ -268,20 +266,21 @@ export default function CampaignBlock({
                 value={{
                   size: 24,
                 }}
+                // disabled={!is_active}
               >
                 <div
                   className="icon-image"
                   style={campaignActionButtonStyle}
-                  onMouseEnter={() => setHovered(true)}
-                  onMouseLeave={() => setHovered(false)}
+                  // onMouseEnter={() => setHovered(true)}
+                  // onMouseLeave={() => setHovered(false)}
                 >
-                  <Link
-                    to={`/campaigns/${campaign_id}`}
-                    onClick={() => handleEdit(campaign_id)}
-                    style={{ textDecoration: "none" }}
-                    disabled={isDisabled}
-                  >
-                    <FaEdit style={{ height: 24, width: 24, cursor: "none" }} />
+                  <Link to={`/campaigns/${campaign_id}`}>
+                    <FaEdit
+                      style={{ height: 24, width: 24, cursor: "pointer" }}
+                      onClick={() => handleEdit(campaign_id)}
+                      // style={{ textDecoration: "none" }}
+                      disabled={isDisabled}
+                    />
                     <div>
                       <span>Edit</span>
                     </div>
@@ -310,7 +309,7 @@ export default function CampaignBlock({
                             height: 24,
                             width: 24,
                             color: "#CB624C",
-                            cursor: "none",
+                            cursor: "default",
                           }
                         : { height: 24, width: 24, color: "red" }
                     }
