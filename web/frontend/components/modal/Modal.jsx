@@ -1,6 +1,8 @@
 import "../modal/modal.css";
 import DataTable from "react-data-table-component";
 import { modalColumns, referralRows } from "../referrals/dummyData";
+import { MdOfflineBolt } from "react-icons/md";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 // Data Table custom styles
 const referralsStyles = {
@@ -74,13 +76,19 @@ const referralsStyles = {
       "&:focus": {
         outline: "none",
         backgroundColor: "#ccc",
-        color:"black"
+        color: "black",
       },
     },
   },
 };
 
-const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
+const ShowModal = ({
+  openModal,
+  setOpenModal,
+  values,
+  fulldata,
+  campaignName,
+}) => {
   const handleClose = () => {
     setOpenModal((prev) => !prev);
   };
@@ -97,9 +105,32 @@ const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
       <div className="modal_container">
         <nav className="modal__nav">
           <h6>Referral Details</h6>
-          <p className="referral__id">Campaign: {values?.campaign_name}</p>
+          <p className="referral__id">
+            Campaign:{" "}
+            {campaignName?.includes(values?.campaign_name) ? (
+              <>
+                {" "}
+                <MdOfflineBolt
+                  data-tooltip-id="deactivate-campaigns-tooltip"
+                  style={{
+                    fill: "crimson",
+                    height: 18,
+                    width: 18,
+                    marginLeft: 10,
+                    marginRight: 10,
+                  }}
+                />
+                {values?.campaign_name}
+              </>
+            ) : (
+              values?.campaign_name
+            )}
+          </p>
         </nav>
-        <section className="modal__body">
+        <section
+          className="modal__body"
+          data-tooltip-id="deactivate-campaigns-tooltip"
+        >
           <p>
             <strong>Email:</strong> {values?.email}
           </p>
@@ -136,6 +167,13 @@ const ShowModal = ({ openModal, setOpenModal, values, fulldata }) => {
           Close
         </button>
       </div>
+      <ReactTooltip
+        id="deactivate-campaigns-tooltip"
+        place="top-left"
+        variant="info"
+        offset={20}
+        content="This campaign is now inactive"
+      />
     </div>
   ) : null;
 };
