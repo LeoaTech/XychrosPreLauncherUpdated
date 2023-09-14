@@ -29,6 +29,21 @@ export const fetchCampaignsDetailsList = (state) =>
     (camp) => camp?.is_deleted === false
   );
 
+//Get Camapign which has expired and are deactivated
+export const fetchDeactivatedCampaignsByName = (state) => {
+  let result = [];
+
+  state?.campaign_details?.campaigns_details?.filter((camp) => {
+    if (
+      new Date(camp?.end_date) < new Date() &&
+      new Date(camp?.start_date) < new Date()
+    ) {
+      result.push(camp?.name);
+    }
+  });
+  return result;
+};
+
 // All Action of the campaign
 
 export const { fetchCampaignDetails, updateCampaignDetails } =
