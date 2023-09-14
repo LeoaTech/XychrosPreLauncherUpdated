@@ -24,31 +24,44 @@ export default function revenueApiEndpoint(app) {
             );
 
             const revenue = await pool.query(
-                `WITH CampaignRevenue AS (
+                `WITH TotalRevenue AS (
+                    SELECT
+                        SUM(total_price) AS total_revenue
+                    FROM
+                        order_details
+                    WHERE
+                        shop_id = $1
+                ),
+                CampaignRevenue AS (
                     SELECT
                         cs.campaign_id,
-                        SUM(CASE WHEN DATE_TRUNC('day', CAST(od.created_at AS DATE)) = DATE_TRUNC('day', CAST(cs.start_date AS DATE))
-                        OR DATE_TRUNC('day', CAST(od.created_at AS DATE)) = DATE_TRUNC('day', CAST(cs.end_date AS DATE))
-                        OR DATE_TRUNC('day', CAST(od.created_at AS DATE)) BETWEEN DATE_TRUNC('day', CAST(cs.start_date AS DATE)) AND DATE_TRUNC('day', CAST(cs.end_date AS DATE))
-                        THEN od.total_price ELSE 0 END) AS campaign_revenue
+                        SUM(CASE
+                            WHEN (DATE_TRUNC('day', CAST(od.created_at AS DATE)) 
+                            BETWEEN DATE_TRUNC('day', CAST(cs.start_date AS DATE)) 
+                            AND DATE_TRUNC('day', CAST(cs.end_date AS DATE)))
+                            AND customer_tags LIKE '%' || cs.name || '%'
+                            THEN od.total_price
+                            ELSE 0
+                        END) AS campaign_revenue
                     FROM
                         campaign_settings cs
                     JOIN
-                        order_details od
-                    ON
-                        cs.shop_id = od.shop_id
-                        WHERE od.shop_id = $1
+                        order_details od ON cs.shop_id = od.shop_id
+                    WHERE
+                        od.shop_id = $1
                     GROUP BY
                         cs.campaign_id
                 )
                 SELECT
-                    campaign_id,
-                    campaign_revenue,
-                    SUM(campaign_revenue) OVER () AS total_revenue
+                    cr.campaign_id,
+                    cr.campaign_revenue,
+                    tr.total_revenue
                 FROM
-                    CampaignRevenue
+                    CampaignRevenue cr
+                JOIN
+                    TotalRevenue tr ON 1=1
                 ORDER BY
-                    campaign_id;
+                    cr.campaign_id;
                 `,
                 [session?.shop]
             );

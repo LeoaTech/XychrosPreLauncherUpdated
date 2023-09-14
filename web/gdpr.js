@@ -198,20 +198,7 @@ export function setupGDPRWebHooks(path) {
     webhookHandler: async (topic, shop, body) => {
       // Parse the incoming create/orders payload as JSON
       const payload = JSON.parse(body);
-      // console.log("Order Created Payload: ", payload);
-
-      const orders_data = {
-        order_id: parseInt(payload?.id),
-        name: payload?.name,
-        subtotal_price: payload?.subtotal_price,
-        total_discounts: payload?.total_discounts,
-        total_price: parseFloat(payload?.total_price),
-        discount_codes: payload?.discount_codes[0]?.code,
-        currency: payload?.currency,
-        customer_tags: payload?.customer?.tags,
-        shop: payload?.order_status_url.match(/\/\/([^/]+)/)[1],
-      }
-      console.log(orders_data);
+      console.log("Orders/Create Payload: ", payload);
 
       const appNameTag = "viral-launch";
 
