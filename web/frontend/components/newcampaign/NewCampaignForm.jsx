@@ -232,6 +232,21 @@ function NewCampaignForm() {
     }
   }, [globalSettings]);
 
+  useEffect(() => {
+    // Set initial state based on isEdit and current_plan.collecting_phone
+    if (isEdit) {
+      setNewCampaignData((prevCampaign) => ({
+        ...prevCampaign,
+        collect_phone: current_plan?.collecting_phone || false,
+      }));
+    } else {
+      setNewCampaignData((prevCampaign) => ({
+        ...prevCampaign,
+        collect_phone: false, // Default value for new form when editing
+      }));
+    }
+  }, [isEdit, current_plan]);
+
   // Fetch Templates Data from API
   const templateData = useFetchTemplates("/api/templates", {
     method: "GET",
@@ -355,11 +370,8 @@ function NewCampaignForm() {
   useEffect(() => {
     if (currentTier !== "") {
       if (currentTier?.includes("Add-ons")) {
-        console.log(currentTier);
         const charged_name = currentTier?.split(" + ");
         const tierName = charged_name[0]; // Extract "Tier Name"
-
-        console.log(tierName, "Plan name");
 
         setMyPlan(tierName);
       } else {
@@ -818,7 +830,6 @@ function NewCampaignForm() {
         body: JSON.stringify({ campaignData: newCampaignData }),
       });
 
-      // console.log(response, "Response");
       if (response?.ok) {
         toast.update(toastId.current, {
           render: "Discount Codes Generated for Campaign",
@@ -828,8 +839,6 @@ function NewCampaignForm() {
           autoClose: 1000,
         });
         const responseData = await response.json();
-
-        console.log(responseData, "Response Data");
 
         setTimeout(() => {
           toast.dismiss(toastId.current);
@@ -848,7 +857,6 @@ function NewCampaignForm() {
         return "Failed to Generate Discount Codes for Campaign";
       }
     } catch (error) {
-      console.log(error);
       toast.update(toastId.current, {
         render: "Error Generating Discount Codes for Campaign",
         type: "error",
@@ -858,6 +866,8 @@ function NewCampaignForm() {
       setTimeout(() => {
         toast.dismiss(toastId.current);
       }, 3000);
+
+      return error;
     }
   }
 
@@ -996,8 +1006,6 @@ function NewCampaignForm() {
           }
         );
 
-        console.log(updateCampaignSettings, "Settinfs");
-
         if (updateCampaignSettings.ok) {
           setTimeout(() => {
             toast.update(updateCampaignSettingsId, {
@@ -1010,7 +1018,6 @@ function NewCampaignForm() {
           }, 3000);
 
           let updatedCamapignData = await updateCampaignSettings.json();
-          console.log(updatedCamapignData, "udate");
 
           // dispatch(updateCampaign(updatedCamapignData));
         } else {
@@ -1078,8 +1085,6 @@ function NewCampaignForm() {
             body: JSON.stringify(newCampaignData),
           });
 
-          console.log(campaignSetting, "Settings");
-
           if (campaignSetting.ok) {
             setTimeout(() => {
               toast.update(campaignSettingsId, {
@@ -1095,8 +1100,6 @@ function NewCampaignForm() {
             setTimeout(() => {
               toast.dismiss(campaignSettingsId);
             }, 3000);
-
-            console.log(campaignData, "Settings data");
 
             dispatch(addNewCampaign(campaignData));
             idExists = campaignData?.campaign_id;
@@ -1116,7 +1119,6 @@ function NewCampaignForm() {
             return "Failed to Create Campaign";
           }
         } catch (err) {
-          console.log(err);
           toast.update(campaignSettingsId, {
             render: "Error Creating Campaign",
             type: "error",
@@ -1139,7 +1141,6 @@ function NewCampaignForm() {
         if (result) dispatch(fetchCampaignDetails(result));
       } else {
         throw new Error();
-        console.log("Not saved data");
       }
 
       setIsLoading(false);
@@ -1164,7 +1165,6 @@ function NewCampaignForm() {
       return;
     }
   };
-
 
   return (
     <>
@@ -1475,9 +1475,7 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="phone"
-                              checked={
-                                editCampaignData?.collect_phone === false
-                              }
+                              checked={editCampaignData?.collect_phone === true}
                               disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
@@ -1504,11 +1502,15 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
+                              // checked={
+                              //   !current_plan?.collect_phone
+                              //     ? true
+                              //     : editCampaignData?.collect_phone === true
+                              // }
                               checked={
-                                !current_plan?.collect_phone
-                                  ? true
-                                  : editCampaignData?.collect_phone === true
+                                editCampaignData?.collect_phone === false
                               }
+                              // disabled={!current_plan?.collecting_phone}
                               onChange={handleRadioChange}
                             />
                           ) : (
@@ -1517,11 +1519,14 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
-                              checked={
-                                !current_plan?.collect_phone
-                                  ? true
-                                  : newCampaignData?.collect_phone == false
-                              }
+                              // disabled={!current_plan?.collecting_phone}
+                              // checked={
+                              //   !current_plan?.collect_phone
+                              //     ? true
+                              //     : newCampaignData?.collect_phone == false
+                              // }
+
+                              checked={newCampaignData?.collect_phone === false}
                               onChange={handleRadioChange}
                             />
                           )}
