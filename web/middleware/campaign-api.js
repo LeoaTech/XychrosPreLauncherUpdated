@@ -162,7 +162,7 @@ export default function campaignApiEndpoints(app) {
       );
 
       console.log(campaigns?.rowCount, "Inserted");
-      return res.status(201).json(campaigns.rows);
+      return res.status(201).json(campaigns.rows[0]);
     } catch (err) {
       return res.status(500).json(err.message);
     }
@@ -360,7 +360,7 @@ export default function campaignApiEndpoints(app) {
         ]
       );
 
-      return res.status(200).send(campaigns.rows);
+      return res.status(200).send(campaigns.rows[0]);
     } catch (err) {
       return res.status(500).json(err.message);
     }
