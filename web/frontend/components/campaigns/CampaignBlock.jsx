@@ -1,5 +1,7 @@
 import { subscriber, Sale, arrow } from "../../assets/index";
 import { IconContext } from "react-icons";
+import { BsToggleOff } from "react-icons/bs";
+import { MdBlock, MdTimerOff, MdOfflineBolt } from "react-icons/md";
 import { FaEdit, FaHourglassEnd } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { IoCalendarSharp } from "react-icons/io5";
@@ -15,6 +17,7 @@ import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
 import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
 import SkeletonShortSummaryCard from "../loading_skeletons/SkeletonShortSummaryCard";
 import { DeleteModal, AlertInfoModal } from "../modal/index";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 // const DeleteModal = lazy(() => import("../modal/DeleteModal"));
 // const ToggleSwitch = lazy(() => import("./toggleSwitch/ToggleSwitch"));
@@ -24,6 +27,7 @@ export default function CampaignBlock({
   data,
   handleDelete,
   handleEdit,
+  handleDeleteCampaign,
   setDeleteModal,
   deleteModal,
   deleteId,
@@ -40,7 +44,6 @@ export default function CampaignBlock({
     start_date,
     end_date,
     is_active,
-    is_draft,
     landing_page_link,
     rewards_page_link,
     landing_template_link,
@@ -49,7 +52,7 @@ export default function CampaignBlock({
 
   const [alertModal, setAlertModal] = useState(false);
 
-  const [hovered, setHovered] = useState(false);
+  const [hovered, setHovered] = useState(true);
 
   const campaignActionButtonStyle = {
     // backgroundColor: is_active ? "#e0e0e0" : "",
@@ -68,6 +71,7 @@ export default function CampaignBlock({
   const [deleteEndData, setDeleteEndDate] = useState(null);
   const [isToggled, setIsToggled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(isToggled);
+  const [isDeactivated, setIsDeactivated] = useState(false);
 
   // Individual campaign clicks
   const campaign_clicks = useSelector((state) =>
@@ -104,24 +108,48 @@ export default function CampaignBlock({
     }
   }, [is_active]);
 
+  let is_deactivated = new Date(end_date) < now;
+
   return (
     <>
-      <div className="campaign-block">
+      <div className={`campaign-block ${is_deactivated ? "deactive" : ""}`}>
         <div className="campaign-details">
-          <div className="camapign-block-name">
+          <div
+            className={`camapign-block-name ${
+              is_deactivated ? "deactive" : ""
+            }`}
+            data-tooltip-id={
+              is_deactivated ? "deactivate-campaigns-tooltip" : ""
+            }
+          >
             {name}
-            <span>
-              <ToggleSwitch
-                rounded={true}
-                isToggled={isToggled}
-                id={campaign_id}
-                start_date={start_date}
-                end_date={end_date}
-              />
-            </span>
+            {is_deactivated ? (
+              <span>
+                {" "}
+                <BsToggleOff style={{ height: 31, width: 30, color: "#ccc" }} />
+              </span>
+            ) : (
+              <span>
+                <ToggleSwitch
+                  rounded={true}
+                  isToggled={isToggled}
+                  id={campaign_id}
+                  start_date={start_date}
+                  end_date={end_date}
+                />
+              </span>
+            )}
           </div>
 
-          <Link to={product} className="campaign-block-product-name">
+          <Link
+            to={product}
+            className={`campaign-block-product-name ${
+              is_deactivated ? "deactive" : ""
+            }`}
+            data-tooltip-id={
+              is_deactivated ? "deactivate-campaigns-tooltip" : ""
+            }
+          >
             {product ? product : "Product Name"}
           </Link>
 
@@ -132,15 +160,15 @@ export default function CampaignBlock({
             {startDate} - {endDate}
           </div>
         </div>
-
-        {is_draft && (
-          <div className="draft-campaign">
-            <span className="draft">draft</span>
-          </div>
-        )}
-
-        <div className="campaign_center_links">
-          <div className="campaign_details_links">
+        <div
+          className="campaign_center_links"
+          data-tooltip-id={is_deactivated ? "deactivate-pages-tooltip" : ""}
+        >
+          <div
+            className={`campaign_details_links ${
+              is_deactivated ? "deactive" : ""
+            }`}
+          >
             <a
               href={landing_page_link}
               target="_blank"
@@ -168,12 +196,38 @@ export default function CampaignBlock({
               Rewards Page
             </a>
           </div>
-          <div className="campaign_details_links">
-            <a href={landing_template_link} target="_blank" className="btn">
+          <div
+            className={`campaign_details_links ${
+              is_deactivated ? "deactive" : ""
+            }`}
+          >
+            <a
+              href={landing_template_link}
+              target="_blank"
+              className="btn"
+              disabled={!is_deactivated}
+              style={{ cursor: !is_deactivated ? "pointer" : "not-allowed" }}
+              onClick={(e) => {
+                if (is_deactivated) {
+                  e.preventDefault();
+                }
+              }}
+            >
               Open in Editor
             </a>
 
-            <a href={rewards_template_link} target="_blank" className="btn">
+            <a
+              href={rewards_template_link}
+              target="_blank"
+              className="btn"
+              disabled={!is_deactivated}
+              style={{ cursor: !is_deactivated ? "pointer" : "not-allowed" }}
+              onClick={(e) => {
+                if (is_deactivated) {
+                  e.preventDefault();
+                }
+              }}
+            >
               Open in Editor
             </a>
           </div>
@@ -182,6 +236,7 @@ export default function CampaignBlock({
           <div className="campaign-kpis">
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
+                is_deactivated={is_deactivated}
                 value={referralsById}
                 icon={subscriber}
                 className="referral-icon"
@@ -196,69 +251,82 @@ export default function CampaignBlock({
             </Suspense>
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
+                is_deactivated={is_deactivated}
                 value={campaign_clicks}
                 icon={arrow}
                 className="clicks-icon"
               />
             </Suspense>
           </div>
-          <div className="campaign-actions">
-            <IconContext.Provider
-              value={{
-                size: 24,
-              }}
-            >
-              <div
-                className="icon-image"
-                style={campaignActionButtonStyle}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
-              >
-                <Link
-                  to={`/campaigns/${campaign_id}`}
-                  onClick={() => handleEdit(campaign_id)}
-                  style={{ textDecoration: "none" }}
-                  disabled={isDisabled}
-                >
-                  <FaEdit style={{ height: 24, width: 24 }} />
-                  <div>
-                    <span>Edit</span>
-                  </div>
-                </Link>
-                {hovered && (
-                  <div className="hover-message">{campaignActionMessage}</div>
-                )}
-              </div>
-            </IconContext.Provider>
-            <IconContext.Provider
-              value={{
-                color: "red",
-                size: 24,
-              }}
-              disabled={!is_active}
-            >
-              <div className="icon-image" style={campaignActionButtonStyle}>
-                <RiDeleteBin6Line
-                  onClick={() => {
-                    setDeleteId(campaign_id);
-                    setCampaignName(name);
-                    setDeleteEndDate(endDate);
-                    checkAndDeleteCampaign(deleteEndData);
-                  }}
-                  disabled={!is_active}
 
-                  style={
-                    is_active
-                      ? { height: 24, width: 24, color: "#CB624C" }
-                      : { height: 24, width: 24, color: "red" }
-                  }
-                />
-                <div>
-                  <span>Delete</span>
+          {is_deactivated ? (
+            <MdOfflineBolt
+              // MdBlock
+              data-tooltip-id="deactivate-campaigns-tooltip"
+              className="deactivated"
+              style={{ height: 24, width: 24, color: "crimson" }}
+            />
+          ) : (
+            <div className="campaign-actions">
+              <IconContext.Provider
+                value={{
+                  size: 24,
+                }}
+                // disabled={!is_active}
+              >
+                <div
+                  className="icon-image"
+                  style={campaignActionButtonStyle}
+                  // onMouseEnter={() => setHovered(true)}
+                  // onMouseLeave={() => setHovered(false)}
+                >
+                  <Link to={`/campaigns/${campaign_id}`}>
+                    <FaEdit
+                      style={{ height: 24, width: 24, cursor: "pointer" }}
+                      onClick={() => handleEdit(campaign_id)}
+                      // style={{ textDecoration: "none" }}
+                      disabled={isDisabled}
+                    />
+                    <div>
+                      <span>Edit</span>
+                    </div>
+                  </Link>
                 </div>
-              </div>
-            </IconContext.Provider>
-          </div>
+              </IconContext.Provider>
+              <IconContext.Provider
+                value={{
+                  color: "red",
+                  size: 24,
+                }}
+                disabled={!is_active}
+              >
+                <div className="icon-image" style={campaignActionButtonStyle}>
+                  <RiDeleteBin6Line
+                    onClick={() => {
+                      setDeleteId(campaign_id);
+                      setCampaignName(name);
+                      setDeleteEndDate(endDate);
+                      checkAndDeleteCampaign(deleteEndData);
+                    }}
+                    disabled={!is_active}
+                    style={
+                      is_active
+                        ? {
+                            height: 24,
+                            width: 24,
+                            color: "#CB624C",
+                            cursor: "default",
+                          }
+                        : { height: 24, width: 24, color: "red" }
+                    }
+                  />
+                  <div>
+                    <span>Delete</span>
+                  </div>
+                </div>
+              </IconContext.Provider>
+            </div>
+          )}
         </div>
       </div>
       <div>
@@ -269,9 +337,24 @@ export default function CampaignBlock({
           isToggled={isToggled}
           openModal={deleteModal}
           setDeleteModal={setDeleteModal}
-          handleDelete={handleDelete}
+          handleDelete={handleDeleteCampaign}
         />{" "}
       </div>
+      <ReactTooltip
+        id="deactivate-campaigns-tooltip"
+        place="top-left"
+        variant="info"
+        offset={20}
+        content="Campaign is deactivated"
+      />
+
+      <ReactTooltip
+        id="deactivate-pages-tooltip"
+        place="top-left"
+        variant="info"
+        offset={20}
+        content="Links are no longer available"
+      />
     </>
   );
 }

@@ -7,6 +7,7 @@ import { appUninstallEmail } from "./helpers/emails.js";
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: `${process.env.DATABASE_URL}`,
+
 });
 
 export function setupGDPRWebHooks(path) {
@@ -150,13 +151,13 @@ export function setupGDPRWebHooks(path) {
   });
 
   // Every Time User update Plan, this webhook will Trigger
-  /* Shopify.Webhooks.Registry.addHandler("APP_SUBSCRIPTIONS_UPDATE", {
+  Shopify.Webhooks.Registry.addHandler("APP_SUBSCRIPTIONS_UPDATE", {
     path,
     webhookHandler: async (topic, shop, body) => {
       const payload = JSON.parse(body);
       console.log(payload, "Update Subscriptions payload");
     },
-  }); */
+  });
 
   // Send Emai User when Uninstalls the app.
   let emailUninstall = "";

@@ -9,7 +9,7 @@ export default function applyAuthMiddleware(
   { billing = { required: false } } = { billing: { required: false } }
 ) {
   app.get("/api/auth", async (req, res) => {
-    return redirectToAuth(req, res, app)
+    return redirectToAuth(req, res, app);
   });
 
   app.get("/api/auth/callback", async (req, res) => {
@@ -53,6 +53,40 @@ export default function applyAuthMiddleware(
         accessToken: session.accessToken,
       });
 
+      // Registered App Uninstalled Webhook
+
+      const response = await Shopify.Webhooks.Registry.register({
+        path: "/api/webhooks",
+        topic: "APP_UNINSTALLED",
+        accessToken: session.accessToken,
+        shop: session.shop,
+      });
+
+      console.log("response webhook registered", response);
+
+      if (!response["APP_UNINSTALLED"].success) {
+        console.log(
+          `Failed to register APP_UNINSTALLED webhook: ${response.result}`
+        );
+      }
+
+      // Registered App Subscription Update Webhook
+
+      const appSubscription = await Shopify.Webhooks.Registry.register({
+        path: "/api/webhooks",
+        topic: "APP_SUBSCRIPTIONS_UPDATE",
+        accessToken: session.accessToken,
+        shop: session.shop,
+      });
+
+      console.log("response webhook registered", appSubscription);
+
+      if (!appSubscription["APP_SUBSCRIPTIONS_UPDATE"].success) {
+        console.log(
+          `Failed to register APP_SUBSCRIPTIONS_UPDATE webhook: ${appSubscription.result}`
+        );
+      }
+
       Object.entries(responses).map(([topic, response]) => {
         // The response from registerAll will include errors for the GDPR topics.  These can be safely ignored.
         // To register the GDPR topics, please set the appropriate webhook endpoint in the
@@ -64,9 +98,11 @@ export default function applyAuthMiddleware(
             );
           } else {
             console.log(
-              `Failed to register ${topic} webhook: ${
-                JSON.stringify(response.result.data, undefined, 2)
-              }`
+              `Failed to register ${topic} webhook: ${JSON.stringify(
+                response.result.data,
+                undefined,
+                2
+              )}`
             );
           }
         }

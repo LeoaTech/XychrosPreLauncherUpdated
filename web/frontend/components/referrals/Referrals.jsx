@@ -98,6 +98,7 @@ const Referrals = () => {
             class='revenue-icon'
           />
         </Suspense>
+
       </div>
 
       <div className="referral_table">

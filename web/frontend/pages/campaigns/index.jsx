@@ -48,7 +48,7 @@ const Campaigns = () => {
     headers: { "Content-Type": "application/json" },
   });
 
-  // Get All Campaign Clicks 
+  // Get All Campaign Clicks
   const total_clicks = useFetchTotalClicks("/api/fetchtotalclicks", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -74,15 +74,16 @@ const Campaigns = () => {
 
   // USE CASE 3 : Current Billing Plan > Tier I All Campaigns will be Active if NOT In Draft  (if Any campaign exists in table)
 
-  let mostLatestCampaign, latestCampaign;
+  let mostLatestCampaign, latestCampaign, sortedCampaigns, deactivatedCampaigns;
 
   useEffect(() => {
     if (campaignsDetails?.length > 0) {
-      const sortedCampaigns = campaignsDetails
+      // Then Sort by Date Difference
+      sortedCampaigns = campaignsDetails
         ?.slice()
         .sort((a, b) => new Date(b.end_date) - new Date(a.end_date));
 
-      // For Free Tier Get 1 Latest Campaign which has ending date not expired yet
+      // For Free Tier Get max 1 Latest Campaign which has ending date not expired yet
       latestCampaign = sortedCampaigns?.find(
         (camp) =>
           new Date(camp?.start_date) <= new Date() &&
@@ -93,16 +94,17 @@ const Campaigns = () => {
       mostLatestCampaign = sortedCampaigns?.filter(
         (camp) =>
           new Date(camp?.start_date) <= new Date() &&
-          new Date(camp?.end_date) > new Date()
+          new Date(camp?.end_date) > new Date() &&
+          camp.is_active === true
       );
 
       // For Tier1 Get 2 Latest Campaigns which has ending date not expired yet
-      mostLatestCampaign = mostLatestCampaign?.slice(0, 2);
+      let mostTwoLatestCampaign = mostLatestCampaign?.splice(0, 2);
 
       // CASE 1   "Free" Active only Lates Campaign ( created or updated recently)
 
-      if (currentTier === "Free") {
-        // Update App Component with all other campaign remain INACTIVE except the Latest campaign
+      if (currentTier === "Free" || currentTier === "Free + Add-ons") {
+        // Update App Component with all other campaigns remaining INACTIVE except the Latest campaign
         const updateCampaigns = sortedCampaigns?.map((camp) =>
           camp.campaign_id === latestCampaign?.campaign_id
             ? { ...camp, is_active: true }
@@ -113,18 +115,36 @@ const Campaigns = () => {
       }
       // CASE 2   "TIER 1"
 
-      if (currentTier === "Tier 1") {
-        const updateCampaigns = sortedCampaigns?.map((camp) => {
-          const isActive = mostLatestCampaign.some(
+      if (currentTier === "Tier 1" || currentTier === "Tier 1 + Add-ons") {
+        /* const updateCampaigns = sortedCampaigns?.map((camp) => {
+          const isActive = mostTwoLatestCampaign?.some(
             (mc) => mc.campaign_id === camp.campaign_id
           );
+          return { ...camp, is_active: isActive };
+        }); */
+
+        const updateCampaigns = sortedCampaigns?.map((camp) => {
+          let isActive = false;
+          if (
+            new Date(camp?.start_date) <= new Date() &&
+            new Date(camp?.end_date) > new Date()
+          ) {
+            isActive = mostTwoLatestCampaign?.some(
+              (mc) => mc.campaign_id === camp.campaign_id
+            );
+          }
           return { ...camp, is_active: isActive };
         });
 
         dispatch(fetchCampaignDetails(updateCampaigns));
       }
       // CASE 3  "TIER 2 to Tier 8"
-      if (currentTier !== "Free" && currentTier !== "Tier 1") {
+      if (
+        currentTier !== "Free" &&
+        currentTier !== "Tier 1" &&
+        currentTier !== "Free + Add-ons" &&
+        currentTier !== "Tier 1 + Add-ons"
+      ) {
         const updateCampaigns = campaignsDetails?.map((camp) => {
           const startDate = new Date(camp?.start_date);
           const endDate = new Date(camp?.end_date);
