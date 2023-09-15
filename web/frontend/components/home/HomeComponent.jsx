@@ -1,6 +1,6 @@
 import './HomeComponent.css';
 import './home.css';
-import { intro, about, arrow, Marketing, subscriber } from '../../assets/index';
+import { intro, about, arrow, Marketing, subscriber, Sale } from '../../assets/index';
 import Charts from '../ui/Charts';
 import React, { useState, useEffect, Fragment, lazy, Suspense } from 'react';
 import { useStateContext } from '../../contexts/ContextProvider';
@@ -20,23 +20,22 @@ import { fetchAllLastSixMonthsClicks } from '../../app/features/user_clicks/last
 import { fetchAllLastFourCampaignsClicks } from '../../app/features/user_clicks/lastFourCampaignsClicksSlice';
 import { fetchCampaignsDetailsList } from '../../app/features/campaign_details/campaign_details';
 
+import { fetchAllCampaignsRevenue } from '../../app/features/revenue/totalRevenueSlice';
+
 const SummaryCard = lazy(() => import('../ui/SummaryCard'));
 
 const HomeComponent = () => {
   const dispatch = useDispatch();
-  const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
-  const SixMonthCampaignList = useSelector(fetchAllSixMonthsCampaigns);
+  const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const ReferralList = useSelector(fetchAllReferrals);
+  const SixMonthCampaignList = useSelector(fetchAllSixMonthsCampaigns);
   const SixMonthReferralList = useSelector(fetchAllSixMonthsReferrals);
-
-  const LastFourCampaignsClicksList = useSelector(
-    fetchAllLastFourCampaignsClicks
-  );
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
+  const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
+  const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
 
   const [campaignsList, setCampaignsList] = useState([]);
-
   const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
 
   const [getReferrals, setReferrals] = useState([]);
@@ -45,6 +44,8 @@ const HomeComponent = () => {
   const [getTotalClicks, setTotalClicks] = useState([]);
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
+
+  const [getTotalRevenue, setTotalRevenue] = useState([0]);
 
   // Get Total Campaigns Lists
   useEffect(() => {
@@ -104,6 +105,14 @@ const HomeComponent = () => {
       setLastFourCampaignsClicks(LastFourCampaignsClicksList);
     }
   }, [LastFourCampaignsClicksList]);
+
+  // Get Total Revenue
+  useEffect(() => {
+    if (TotalRevenueList.length > 0) {
+      setTotalRevenue(TotalRevenueList[0].total_revenue);
+      // console.log(TotalRevenueList);
+    }
+  }, [TotalRevenueList]);
 
   // line chart and radar chart labels of last six months according to current date
   const currentDate = new Date();
@@ -414,18 +423,6 @@ const HomeComponent = () => {
                 class='referral-icon'
               />
             </Suspense>
-            {/*
-              <CountUp
-                    start={0}
-                    end={6}
-                    duration={1.4}
-                  />
-                <SummaryCard
-                value='$253,467'
-                title='Revenue'
-                icon={Sale}
-                class='revenue-icon'
-              /> */}
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
                 value={t_clicks}
@@ -433,6 +430,14 @@ const HomeComponent = () => {
                 icon={arrow}
                 class='clicks-icon'
               />
+            </Suspense>
+            <Suspense fallback={<SkeletonSummaryCard />}>
+              <SummaryCard
+                  value={getTotalRevenue}
+                  title='Revenue'
+                  icon={Sale}
+                  class='revenue-icon'
+                />
             </Suspense>
           </div>
           <div className='single-chart'>

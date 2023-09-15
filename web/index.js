@@ -30,9 +30,12 @@ import SubscribePlanApiEndPoint from "./middleware/subscribe-plan-api.js";
 import campaignDetailsApiEndpoints from "./middleware/campaign_details-api.js";
 import getCampaignClicks from "./middleware/user_clicks-api.js";
 import deleteFromStoreApiEndpoint from "./middleware/delete_from_store-api.js";
+import revenueApiEndpoint from "./middleware/revenue-api.js";
 import crypto from "crypto";
 import { verifyWebhookRequest } from "./VerifyWebhook.js";
 import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const USE_ONLINE_TOKENS = false;
 
@@ -168,6 +171,7 @@ export async function createServer(
   discountApiEndpoint(app);
   pricingPlansApiEndpoints(app);
   deleteFromStoreApiEndpoint(app);
+  revenueApiEndpoint(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);

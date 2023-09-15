@@ -20,6 +20,34 @@ export default function applyAuthMiddleware(
         req.query
       );
 
+      // Register ORDERS_CREATE Webhook on App Installation
+      const createOrder = await Shopify.Webhooks.Registry.register({
+        path: '/api/webhooks',
+        topic: 'ORDERS_CREATE',
+        accessToken: session.accessToken,
+        shop: session.shop,
+      });
+
+      Object.entries(createOrder).map(([topic, response]) => {
+        if (!response.success && !gdprTopics.includes(topic)) {
+          if (response.result.errors) {
+            console.log(
+              `Failed to register ${topic} webhook: ${response.result.errors[0].message}`
+            );
+          } else {
+            console.log(
+              `Failed to register ${topic} webhook: ${
+                JSON.stringify(response.result.data, undefined, 2)
+              }`
+            );
+          }
+        } else {
+          console.log(
+            `Webhook ${topic} Registered Successfully. Results: ${response}`
+          );
+        }
+      });
+
       const responses = await Shopify.Webhooks.Registry.registerAll({
         shop: session.shop,
         accessToken: session.accessToken,

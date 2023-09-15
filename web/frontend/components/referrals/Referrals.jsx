@@ -7,6 +7,8 @@ import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
 import { useAuthenticatedFetch } from "../../hooks";
 import { fetchCampaignsDetailsList } from "../../app/features/campaign_details/campaign_details";
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
+import { fetchAllCampaignsRevenue } from "../../app/features/revenue/totalRevenueSlice";
+
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import SkeletonLoader from "../loading_skeletons/SkeletonTable";
 
@@ -23,7 +25,10 @@ const Referrals = () => {
   const [getReferrals, setReferrals] = useState([...ReferralList]);
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
-  const [getTotalClicks, setTotalClicks] = useState(0);
+  const [getTotalClicks, setTotalClicks] = useState([]);
+
+  const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
+  const [getTotalRevenue, setTotalRevenue] = useState([0]);
 
   useEffect(() => {
     if (ReferralList) {
@@ -49,6 +54,13 @@ const Referrals = () => {
     t_clicks = getTotalClicks[0].total_clicks;
   }
 
+  // Get Total Revenue
+  useEffect(() => {
+    if (TotalRevenueList.length > 0) {
+      setTotalRevenue(TotalRevenueList[0].total_revenue);
+    }
+  }, [TotalRevenueList]);
+
   const fetch = useAuthenticatedFetch();
 
   return (
@@ -62,7 +74,6 @@ const Referrals = () => {
             className="campaign-icon"
           />
         </Suspense>
-
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
             value={getReferrals.length}
@@ -71,7 +82,6 @@ const Referrals = () => {
             class="referral-icon"
           />
         </Suspense>
-
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
             value={t_clicks}
@@ -80,14 +90,15 @@ const Referrals = () => {
             class='clicks-icon'
           />
         </Suspense>
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={getTotalRevenue}
+            title='Revenue'
+            icon={Sale}
+            class='revenue-icon'
+          />
+        </Suspense>
 
-        {/* <SummaryCard
-          value='$253,467'
-          title='Revenue'
-          icon={Sale}
-          class='revenue-icon'
-        />
-        */}
       </div>
 
       <div className="referral_table">
