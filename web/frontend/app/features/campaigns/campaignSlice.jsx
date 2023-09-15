@@ -59,15 +59,13 @@ function monthDiffBetweenDates(date1, date2) {
 }
 
 
-export const fetchAllCampaigns = (state) =>
-  state?.campaign?.campaigns?.filter(
-    (campaign) => campaign?.is_deleted === false
-  );
+
 //  Get Camapign By ID
 export const fetchCampaignById = (state, campaignId) =>
   state?.campaign?.campaigns?.find(
     (campaign) => campaign?.campaign_id === campaignId
   );
+  
   
 //  Get Campaigns By Names
 export const fetchCampaignByName = (state) => {
