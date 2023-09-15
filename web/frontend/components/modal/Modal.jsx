@@ -129,7 +129,10 @@ const ShowModal = ({
         </nav>
         <section
           className="modal__body"
-          data-tooltip-id="deactivate-campaigns-tooltip"
+          data-tooltip-id={
+            campaignName?.includes(values?.campaign_name) &&
+            "deactivate-campaigns-tooltip"
+          }
         >
           <p>
             <strong>Email:</strong> {values?.email}
