@@ -87,12 +87,7 @@ const Referrals = () => {
           icon={Sale}
           class='revenue-icon'
         />
-        <SummaryCard
-          value='4551678'
-          title='Clicks'
-          icon={arrow}
-          class='clicks-icon'
-        /> */}
+        */}
       </div>
 
       <div className="referral_table">

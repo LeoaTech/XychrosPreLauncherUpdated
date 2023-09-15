@@ -91,6 +91,16 @@
   -o-border-radius: 10px;
 }
 
+.campaign-block.deactive {
+  border: 1px solid #585757;
+}
+
+.camapign-block-name.deactive,
+.campaign-block-product-name.deactive,
+.campaign_details_links.deactive {
+  color: rgb(177, 175, 175);
+}
+
 .camapign-block-name {
   font-weight: 500;
   font-size: 19px;
@@ -103,6 +113,8 @@
 
 .hover-message {
   color: #fff;
+  font-size: 18px;
+  color: green;
 }
 .campaign-block-product-name {
   font-weight: 400;
@@ -163,6 +175,13 @@
   font-size: 12px;
   cursor: pointer;
   flex-direction: column;
+}
+
+.deactivated {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .campaign-actions div span {

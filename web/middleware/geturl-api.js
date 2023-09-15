@@ -40,7 +40,7 @@ export default function getUrlApi(app, secret) {
       const campaign = req.body.campaign_name;
       if (isvalid === true) {
         const imageURL = await pool.query(
-          `select t.image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
+          `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
         );
 
         const campaign_details = await pool.query(
@@ -94,7 +94,7 @@ export default function getUrlApi(app, secret) {
       console.log('Customer List of App Store Fetched Successfully');
 
       // Check if the Email user entered is Already in App Store customers list
-      let findEmail = store_customers.find((data) => data.email === email);
+      let findEmail = store_customers?.find((data) => data?.email === email);
       console.log('Find Email found this Email:', findEmail?.email);
 
       const customerExists = await pool.query(
@@ -261,7 +261,7 @@ export default function getUrlApi(app, secret) {
               // if the Customer has existing tags, update tags
               if (findEmail?.tags) {
                 // Extract the current tags from the customer's data
-                const tags = findEmail.tags.split(',').map((tag) => tag.trim());
+                const tags = findEmail?.tags.split(',').map((tag) => tag.trim());
 
                 // Check if the new tag is already present in the current tags
 
@@ -272,7 +272,7 @@ export default function getUrlApi(app, secret) {
 
                   // Update the customer's tags
                   const updatedCustomerData = {
-                    id: findEmail.id,
+                    id: findEmail?.id,
                     tags: updatedTags,
                   };
 
@@ -292,7 +292,7 @@ export default function getUrlApi(app, secret) {
               // If the customer has no existing tags, simply add the new tag
               else {
                 const updatedCustomerData = {
-                  id: findEmail.id,
+                  id: findEmail?.id,
                   tags: newTag,
                 };
                 await updateCustomer(shopSession, updatedCustomerData);
@@ -410,7 +410,7 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
+              const tags = findEmail?.tags?.split(',')?.map((tag) => tag?.trim());
 
               // Check if the new tag is already present in the current tags
 
@@ -421,7 +421,7 @@ export default function getUrlApi(app, secret) {
 
                 // Update the customer's tags
                 const updatedCustomerData = {
-                  id: findEmail.id,
+                  id: findEmail?.id,
                   tags: updatedTags,
                 };
 
@@ -439,7 +439,7 @@ export default function getUrlApi(app, secret) {
             // If the customer has no existing tags, simply add the new tag
             else {
               const updatedCustomerData = {
-                id: findEmail.id,
+                id: findEmail?.id,
                 tags: newTag,
               };
               await updateCustomer(shopSession, updatedCustomerData);
@@ -605,8 +605,8 @@ export default function getUrlApi(app, secret) {
         );
 
         // Get Customer Details Using Email
-        let findEmail = store_customers.find(
-          (data) => data.email === customer_email
+        let findEmail = store_customers?.find(
+          (data) => data?.email === customer_email
         );
         console.log('User Found with this Email: ', findEmail?.email);
 
@@ -639,12 +639,12 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
+              const tags = findEmail?.tags?.split(',')?.map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
               // new tag doesn't exist
-              if (!tags.includes(newTag)) {
+              if (!tags?.includes(newTag)) {
                 tags.push(newTag);
                 const updatedTags = tags.join(', ');
 
@@ -669,7 +669,7 @@ export default function getUrlApi(app, secret) {
             // If the customer has no existing tags, simply add the new tag
             else {
               const updatedCustomerData = {
-                id: findEmail.id,
+                id: findEmail?.id,
                 tags: newTag,
               };
               await updateCustomer(shopSession, updatedCustomerData);
@@ -694,7 +694,7 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
+              const tags = findEmail?.tags.split(',').map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
@@ -705,7 +705,7 @@ export default function getUrlApi(app, secret) {
 
                 // Update the customer's tags
                 const updatedCustomerData = {
-                  id: findEmail.id,
+                  id: findEmail?.id,
                   tags: updatedTags,
                 };
 
@@ -724,7 +724,7 @@ export default function getUrlApi(app, secret) {
             // If the customer has no existing tags, simply add the new tag
             else {
               const updatedCustomerData = {
-                id: findEmail.id,
+                id: findEmail?.id,
                 tags: newTag,
               };
               await updateCustomer(shopSession, updatedCustomerData);
@@ -749,7 +749,7 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
+              const tags = findEmail?.tags.split(',').map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
@@ -760,7 +760,7 @@ export default function getUrlApi(app, secret) {
 
                 // Update the customer's tags
                 const updatedCustomerData = {
-                  id: findEmail.id,
+                  id: findEmail?.id,
                   tags: updatedTags,
                 };
 
@@ -779,7 +779,7 @@ export default function getUrlApi(app, secret) {
             // If the customer has no existing tags, simply add the new tag
             else {
               const updatedCustomerData = {
-                id: findEmail.id,
+                id: findEmail?.id,
                 tags: newTag,
               };
               await updateCustomer(shopSession, updatedCustomerData);
@@ -804,7 +804,7 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail.tags.split(',').map((tag) => tag.trim());
+              const tags = findEmail?.tags.split(',').map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
@@ -815,7 +815,7 @@ export default function getUrlApi(app, secret) {
 
                 // Update the customer's tags
                 const updatedCustomerData = {
-                  id: findEmail.id,
+                  id: findEmail?.id,
                   tags: updatedTags,
                 };
 
@@ -834,7 +834,7 @@ export default function getUrlApi(app, secret) {
             // If the customer has no existing tags, simply add the new tag
             else {
               const updatedCustomerData = {
-                id: findEmail.id,
+                id: findEmail?.id,
                 tags: newTag,
               };
               await updateCustomer(shopSession, updatedCustomerData);
