@@ -21,7 +21,7 @@ export const fetchIndividualCampaignRevenue = (state, campaign_id) => {
     const filteredrevenue = state.total_revenue.total_revenue.filter(
         campaign_revenue => campaign_revenue.campaign_id === campaign_id
     );
-    console.log(filteredrevenue);
+    // console.log(filteredrevenue);
     if (filteredrevenue.length > 0) {
         return parseInt(filteredrevenue[0].campaign_revenue, 10);
     } else {

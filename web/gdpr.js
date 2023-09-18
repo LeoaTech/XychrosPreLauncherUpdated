@@ -199,7 +199,7 @@ export function setupGDPRWebHooks(path) {
     webhookHandler: async (topic, shop, body) => {
       // Parse the incoming create/orders payload as JSON
       const payload = JSON.parse(body);
-      console.log("Orders/Create Payload: ", payload);
+      console.log("Orders/Create Payload");
 
       const appNameTag = "viral-launch";
 
@@ -224,7 +224,7 @@ export function setupGDPRWebHooks(path) {
                 customer_tags,
                 shop_id
               )
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
             `;
     
             const orders = await pool.query(query, [
@@ -237,6 +237,7 @@ export function setupGDPRWebHooks(path) {
               parseFloat(payload?.total_price),
               payload?.discount_codes[0]?.code,
               payload?.currency,
+              payload?.customer?.email,
               payload?.customer?.tags,
               shop,
             ]);
