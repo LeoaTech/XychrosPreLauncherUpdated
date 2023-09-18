@@ -32,7 +32,6 @@ const CampaignsComponent = () => {
   const List = useSelector(fetchAllCampaigns);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
   const ReferralList = useSelector(fetchAllReferrals);
-  const TotalClicksList = useSelector(fetchAllCampaignClicks);
 
   const [getCampaigns, setCampaigns] = useState([]);
   const [getDetails, setDetails] = useState([]);
