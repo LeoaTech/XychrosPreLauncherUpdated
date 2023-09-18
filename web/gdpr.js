@@ -221,6 +221,7 @@ export function setupGDPRWebHooks(path) {
                 total_price,
                 discount_codes,
                 currency,
+                customer_email,
                 customer_tags,
                 shop_id
               )
@@ -265,6 +266,78 @@ export function setupGDPRWebHooks(path) {
     },
   });
   
+
+  // Every Time User Updates an Order, this Webhook will Trigger
+  Shopify.Webhooks.Registry.addHandler("ORDERS_UPDATED", {
+    path: "/api/webhooks",
+    webhookHandler: async (topic, shop, body) => {
+      // Parse the incoming updated/orders payload as JSON
+      const payload = JSON.parse(body);
+      console.log("Orders/Updated Payload");
+
+      try {
+        // Find if order exists in my database
+        const orderExists = await pool.query(
+          `select * from order_details where order_id = $1`,
+          [payload?.id]
+        );
+
+        // If order found
+        if (orderExists?.rowCount > 0) {
+          //  Update order data
+          await pool.query(
+            `UPDATE order_details SET 
+            subtotal_price = $1,
+            total_discounts = $2,
+            total_tax = $3,
+            total_price = $4,
+            discount_codes =$5,
+            currency = $6,
+            customer_email = $7,
+            customer_tags = $8
+            WHERE order_id = $9`, 
+            [payload?.subtotal_price, payload?.total_discounts, payload?.total_tax, payload?.total_price, payload?.discount_codes[0]?.code, payload?.currency, payload?.customer?.email, payload?.customer?.tags, orderExists?.rows[0]?.order_id]
+          );
+          console.log("Order Exists, Data Updated Successfully");
+        } else {
+          console.log("Order Not Found. Cannot Update");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
+  // Every Time User Deleted an Order, this Webhook will Trigger
+  Shopify.Webhooks.Registry.addHandler("ORDERS_CANCELLED", {
+    path: "/api/webhooks",
+    webhookHandler: async (topic, shop, body) => {
+      // Parse the incoming cancelled/orders payload as JSON
+      const payload = JSON.parse(body);
+      console.log("Orders/Cancelled Payload");
+
+      try {
+        // Find if order exists in my database
+        const orderExists = await pool.query(
+          `select * from order_details where order_id = $1`,
+          [payload?.id]
+        );
+
+        // If order found
+        if (orderExists?.rowCount > 0) {
+          //  Update order data
+          await pool.query(`DELETE from order_details where order_id = $1`, [
+            orderExists?.rows[0]?.order_id,
+          ]);
+          console.log("Order Exists, Data Deleted Successfully");
+        } else {
+          console.log("Order Not Found. Cannot Delete");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
 
   /**
    * 48 hours after a store owner uninstalls your app, Shopify invokes this
