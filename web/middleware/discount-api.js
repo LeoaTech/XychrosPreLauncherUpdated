@@ -141,11 +141,10 @@ const segmentApiCalls = async (accessToken, shop, campaignData) => {
             }
         }
     } catch (error) {
-        console.error(error);
-        throw new Error('An Error Occurred While Creating Customer Segments');
+        throw new Error(`An Error Occurred While Creating Customer Segments ${error?.message}`);
     }
 
-    console.log('Created Segment Ids:', createdSegmentIds);
+    // console.log('Created Segment Ids:', createdSegmentIds);
     return createdSegmentIds;
 };
 
@@ -304,16 +303,16 @@ const discountApiCalls = async (accessToken, shop, campaignData, customerSegment
                 });
                 const data = await response.json();
                 if (!response.ok) {
-                    throw new Error(`Failed to Create Price Rule: ${data.errors}`);
+                    throw new Error(`Failed to Create Price Rule: ${data?.errors?.message}`);
                 }
-                console.log(`Price Rule "${rule.title}" Created!`);
-                priceRuleIds.push(data.price_rule.id);
+                console.log(`Price Rule "${rule?.title}" Created!`);
+                priceRuleIds.push(data?.price_rule?.id);
             }
             catch (error) {
-                console.log(error);
+                throw new Error(`Failed to Create Price Rule: ${error?.message}`);
             }
         }
-        console.log('Generated Price Rule Ids:', priceRuleIds);
+        // console.log('Generated Price Rule Ids:', priceRuleIds);
         return priceRuleIds;
     }
 
@@ -332,15 +331,15 @@ const discountApiCalls = async (accessToken, shop, campaignData, customerSegment
                 });
                 const data = await response.json();
                 if (!response.ok) {
-                    throw new Error(`Failed to Generate Discount: ${data.errors}`);
+                    throw new Error(`Failed to Generate Discount: ${data?.errors?.message}`);
                 }
-                console.log(`Discount Code ${code.code} Created!`);
-                discountCodes.push(data.discount_code.code);
+                console.log(`Discount Code ${code?.code} Created!`);
+                discountCodes.push(data?.discount_code?.code);
             } catch (error) {
-                console.log(error);
+                throw new Error(`Failed to Generate Discount Codes: ${error?.message}`);
             }
         }
-        console.log("Generated Discount Codes: ", discountCodes);
+        // console.log("Generated Discount Codes: ", discountCodes);
         return discountCodes;
     }
 
@@ -378,10 +377,20 @@ export default function discountApiEndpoint(app) {
             const { campaignData } = req.body;
 
             // customer segments function call
-            const customer_segment_ids = await segmentApiCalls(accessToken, shop, campaignData);
+            let customer_segment_ids;
+            try {
+                customer_segment_ids = await segmentApiCalls(accessToken, shop, campaignData);
+            } catch (segmentError) {
+                return res.status(500).json({ success: false, message: "Failed to Create Customer Segments", error: segmentError.message });
+            }
 
             // discount and price rule function call
-            const discount_details = await discountApiCalls(accessToken, shop, campaignData, customer_segment_ids);
+            let discount_details;
+            try {
+                discount_details = await discountApiCalls(accessToken, shop, campaignData, customer_segment_ids);
+            } catch (discountError) {
+                return res.status(500).json({ success: false, message: "Failed to Generate Discounts", error: discountError.message });
+            }
 
             const campaignDetails = {
                 ...discount_details,
