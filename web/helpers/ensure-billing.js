@@ -41,7 +41,7 @@ export default async function ensureBilling(
     throw `Unrecognized billing interval '${interval}'`;
   }
   /* Uncomment This line to TEST for environment */
-  // isProd = isProdOverride;
+  isProd = isProdOverride;
   let hasPayment;
   let confirmationUrl = null;
 
@@ -74,7 +74,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
     for (let i = 0, len = subscriptions?.length; i < len; i++) {
       if (
         subscriptions[i].name === chargeName &&
-        !subscriptions[i].test // !isProd ||
+        !subscriptions[i].test // ||!isProd 
       ) {
         return true;
       }
@@ -146,6 +146,7 @@ async function requestPayment(
     );
   }
 
+  console.log(data, "PAYMENT");
   return data.confirmationUrl;
 }
 
@@ -620,7 +621,7 @@ const RECURRING_PURCHASE_MUTATION = `
     ) {
       confirmationUrl
       appSubscription {
-        id,status
+        id,status,test,
         lineItems {
           id
           plan {
