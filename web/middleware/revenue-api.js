@@ -88,4 +88,32 @@ export default function revenueApiEndpoint(app) {
             return res.status(500).json({ success: false, message: "Failed to Fetch Revenue", error: error.message });
         }
     });
+
+    // last six months revenue
+    app.get("/api/fetch_revenue", async (req, res) => {
+        try {
+            const session = await Shopify.Utils.loadCurrentSession(
+                req,
+                res,
+                app.get("use-online-tokens")
+            );
+
+            const six_months_revenue = await pool.query(
+                `SELECT SUM(total_price) AS total_months_revenue, 
+                to_char(CAST(created_at::DATE AS DATE), 'YYYY-MM') AS created_month 
+                FROM order_details 
+                WHERE CAST(created_at::DATE AS DATE) >= CURRENT_DATE - INTERVAL '5 months'
+                AND CAST(created_at::DATE AS DATE) <= CURRENT_DATE
+                AND shop_id = $1 
+                GROUP BY created_month 
+                ORDER BY created_month DESC
+                `,
+                [session?.shop]
+            );
+            // console.log(six_months_revenue.rows);
+            return res.status(200).json(six_months_revenue.rows);
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Failed to Fetch Last Six Months Revenue", error: error.message });
+        }
+    });
 }
