@@ -11,7 +11,7 @@ import totalClicksReducer from './features/user_clicks/totalclicksSlice';
 import lastSixMonthsClicksReducer from './features/user_clicks/lastSixMonthsClicksSlice';
 import lastFourCampaignsClicksReducer from './features/user_clicks/lastFourCampaignsClicksSlice';
 import totalRevenueReducer from './features/revenue/totalRevenueSlice';
-
+import lastSixMonthsRevenueReducer from './features/revenue/lastSixMonthsRevenueSlice';
 // All Slices will be added there
 
 export const store = configureStore({
@@ -28,5 +28,6 @@ export const store = configureStore({
     lastsixmonths_clicks: lastSixMonthsClicksReducer,
     lastfourcampaigns_clicks: lastFourCampaignsClicksReducer,
     total_revenue: totalRevenueReducer,
+    six_months_revenue: lastSixMonthsRevenueReducer
   },
 });
