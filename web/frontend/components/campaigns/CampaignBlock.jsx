@@ -11,6 +11,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { getTotalCampaigns } from "../../app/features/campaigns/campaignSlice";
 import { fetchReferralById } from "../../app/features/referrals/referralSlice";
 import { fetchIndividualCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
+import { fetchIndividualCampaignRevenue } from "../../app/features/revenue/totalRevenueSlice";
 import { useSelector } from "react-redux";
 import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
 import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
@@ -75,6 +76,12 @@ export default function CampaignBlock({
   // Individual campaign clicks
   const campaign_clicks = useSelector((state) =>
     fetchIndividualCampaignClicks(state, +campaign_id)
+  );
+  // console.log(campaign_clicks);
+
+  // Individual campaign revenue
+  const campaign_revenue = useSelector((state) =>
+    fetchIndividualCampaignRevenue(state, +campaign_id)
   );
   // console.log(campaign_clicks);
 
@@ -237,8 +244,7 @@ export default function CampaignBlock({
             </Suspense>
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
-                is_deactivated={is_deactivated}
-                value="$37"
+                value={campaign_revenue}
                 icon={Sale}
                 className="revenue-icon"
               />

@@ -4,10 +4,7 @@ import { gdprTopics } from "@shopify/shopify-api/dist/webhooks/registry.js";
 import ensureBilling from "../helpers/ensure-billing.js";
 import redirectToAuth from "../helpers/redirect-to-auth.js";
 
-export default function applyAuthMiddleware(
-  app,
-  { billing = { required: false } } = { billing: { required: false } }
-) {
+export default function applyAuthMiddleware(app, { billing = { required: false } } = { billing: { required: false } }) {
   app.get("/api/auth", async (req, res) => {
     return redirectToAuth(req, res, app);
   });
@@ -25,8 +22,26 @@ export default function applyAuthMiddleware(
         accessToken: session.accessToken,
       });
 
-      // Registered App Uninstalled Webhook
+      Object.entries(responses).map(([topic, response]) => {
+        // The response from registerAll will include errors for the GDPR topics.  These can be safely ignored.
+        // To register the GDPR topics, please set the appropriate webhook endpoint in the
+        // 'GDPR mandatory webhooks' section of 'App setup' in the Partners Dashboard.
+        if (!response.success && !gdprTopics.includes(topic)) {
+          if (response.result.errors) {
+            console.log(
+              `Failed to register ${topic} webhook: ${response.result.errors[0].message}`
+            );
+          } else {
+            console.log(
+              `Failed to register ${topic} webhook: ${
+                JSON.stringify(response.result.data, undefined, 2)
+              }`
+            );
+          }
+        }
+      });
 
+      // Registered App Uninstalled Webhook
       const response = await Shopify.Webhooks.Registry.register({
         path: "/api/webhooks",
         topic: "APP_UNINSTALLED",
@@ -43,7 +58,6 @@ export default function applyAuthMiddleware(
       }
 
       // Registered App Subscription Update Webhook
-
       const appSubscription = await Shopify.Webhooks.Registry.register({
         path: "/api/webhooks",
         topic: "APP_SUBSCRIPTIONS_UPDATE",
@@ -59,10 +73,43 @@ export default function applyAuthMiddleware(
         );
       }
 
-      Object.entries(responses).map(([topic, response]) => {
-        // The response from registerAll will include errors for the GDPR topics.  These can be safely ignored.
-        // To register the GDPR topics, please set the appropriate webhook endpoint in the
-        // 'GDPR mandatory webhooks' section of 'App setup' in the Partners Dashboard.
+      // Register ORDERS_CREATE Webhook on App Installation
+      const createOrder = await Shopify.Webhooks.Registry.register({
+        path: '/api/webhooks',
+        topic: 'ORDERS_CREATE',
+        accessToken: session.accessToken,
+        shop: session.shop,
+      });
+
+      Object.entries(createOrder).map(([topic, response]) => {
+        if (!response.success && !gdprTopics.includes(topic)) {
+          if (response.result.errors) {
+            console.log(
+              `Failed to register ${topic} webhook: ${response.result.errors[0].message}`
+            );
+          } else {
+            console.log(
+              `Failed to register ${topic} webhook: ${
+                JSON.stringify(response.result.data, undefined, 2)
+              }`
+            );
+          }
+        } else {
+          console.log(
+            `Webhook ${topic} Registered Successfully.`
+          );
+        }
+      });
+
+      // Register ORDERS_UPDATED Webhook on App Installation
+      const updatedOrder = await Shopify.Webhooks.Registry.register({
+        path: '/api/webhooks',
+        topic: 'ORDERS_UPDATED',
+        accessToken: session.accessToken,
+        shop: session.shop,
+      });
+
+      Object.entries(updatedOrder).map(([topic, response]) => {
         if (!response.success && !gdprTopics.includes(topic)) {
           if (response.result.errors) {
             console.log(
@@ -77,6 +124,38 @@ export default function applyAuthMiddleware(
               )}`
             );
           }
+        } else {
+          console.log(
+            `Webhook ${topic} Registered Successfully.`
+          );
+        }
+      });
+
+      // Register ORDERS_CANCELLED Webhook on App Installation
+      const cancelOrder = await Shopify.Webhooks.Registry.register({
+        path: '/api/webhooks',
+        topic: 'ORDERS_CANCELLED',
+        accessToken: session.accessToken,
+        shop: session.shop,
+      });
+
+      Object.entries(cancelOrder).map(([topic, response]) => {
+        if (!response.success && !gdprTopics.includes(topic)) {
+          if (response.result.errors) {
+            console.log(
+              `Failed to register ${topic} webhook: ${response.result.errors[0].message}`
+            );
+          } else {
+            console.log(
+              `Failed to register ${topic} webhook: ${
+                JSON.stringify(response.result.data, undefined, 2)
+              }`
+            );
+          }
+        } else {
+          console.log(
+            `Webhook ${topic} Registered Successfully.`
+          );
         }
       });
 

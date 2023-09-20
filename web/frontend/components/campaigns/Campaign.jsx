@@ -16,6 +16,8 @@ import {
   updateCampaignDetails,
 } from "../../app/features/campaign_details/campaign_details";
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
+import { fetchAllCampaignsRevenue } from "../../app/features/revenue/totalRevenueSlice";
+
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
 
@@ -30,7 +32,6 @@ const CampaignsComponent = () => {
   const List = useSelector(fetchAllCampaigns);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
   const ReferralList = useSelector(fetchAllReferrals);
-  const TotalClicksList = useSelector(fetchAllCampaignClicks);
 
   const [getCampaigns, setCampaigns] = useState([]);
   const [getDetails, setDetails] = useState([]);
@@ -39,7 +40,13 @@ const CampaignsComponent = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [campaignName, setCampaignName] = useState("");
   const [getReferrals, setReferrals] = useState([]);
-  const [getTotalClicks, setTotalClicks] = useState(0);
+
+  const TotalClicksList = useSelector(fetchAllCampaignClicks);
+  const [getTotalClicks, setTotalClicks] = useState([]);
+
+  const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
+  const [getTotalRevenue, setTotalRevenue] = useState([0]);
+
 
   useEffect(() => {
     if (List?.length > 0) {
@@ -73,8 +80,14 @@ const CampaignsComponent = () => {
     t_clicks = getTotalClicks[0].total_clicks;
   }
 
-  // PAGINATION
+  // Get Total Revenue
+  useEffect(() => {
+    if (TotalRevenueList.length > 0) {
+      setTotalRevenue(TotalRevenueList[0].total_revenue);
+    }
+  }, [TotalRevenueList]);
 
+  // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   const totalPages = Math.ceil(getDetails?.length / itemsPerPage);
@@ -245,13 +258,15 @@ const CampaignsComponent = () => {
             class="clicks-icon"
           />
         </Suspense>
-        {/* <SummaryCard
-          value='$253,467'
-          title='Revenue'
-          icon={Sale}
-          class='revenue-icon'
-        />
-       */}
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={getTotalRevenue}
+            title='Revenue'
+            icon={Sale}
+            class='revenue-icon'
+          />
+        </Suspense>
+
       </div>
       <div className="campaigns">
         {getDetails?.length > 0 ? (
