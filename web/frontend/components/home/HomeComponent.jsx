@@ -22,6 +22,7 @@ import { fetchCampaignsDetailsList } from '../../app/features/campaign_details/c
 
 import { fetchAllCampaignsRevenue } from '../../app/features/revenue/totalRevenueSlice';
 import { fetchAllLastSixMonthsRevenue } from '../../app/features/revenue/lastSixMonthsRevenueSlice';
+import { fetchLatestFourCampaignsRevenue } from '../../app/features/revenue/totalRevenueSlice';
 
 const SummaryCard = lazy(() => import('../ui/SummaryCard'));
 
@@ -36,6 +37,7 @@ const HomeComponent = () => {
   const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
   const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
   const LastSixMonthsRevenueList = useSelector(fetchAllLastSixMonthsRevenue);
+  const LastFourCampaignsRevenueList = useSelector(fetchLatestFourCampaignsRevenue);
 
   const [campaignsList, setCampaignsList] = useState([]);
   const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
@@ -49,6 +51,7 @@ const HomeComponent = () => {
 
   const [getTotalRevenue, setTotalRevenue] = useState([0]);
   const [getLastSixMonthsRevenue, setLastSixMonthsRevenue] = useState([]);
+  const [getLastFourCampaignsRevenue, setLastFourCampaignsRevenue] = useState([]);
 
   // Get Total Campaigns Lists
   useEffect(() => {
@@ -124,6 +127,14 @@ const HomeComponent = () => {
       // console.log(LastSixMonthsRevenueList);
     }
   }, [LastSixMonthsRevenueList]);
+
+  // Get Last Four Campaigns Revenue
+  useEffect(() => {
+    if (LastFourCampaignsRevenueList) {
+      setLastFourCampaignsRevenue(TotalRevenueList[0]?.currency + LastFourCampaignsRevenueList);
+      // console.log(LastFourCampaignsRevenueList);
+    }
+  }, [LastFourCampaignsRevenueList]);
 
   // line chart and radar chart labels of last six months according to current date
   const currentDate = new Date();
@@ -508,8 +519,8 @@ const HomeComponent = () => {
             <Charts
               type='donut'
               header='Revenue'
-              value='$15,456.98'
-              subheader='Last 4 campaigns'
+              value={getLastFourCampaignsRevenue}
+              subheader='Last 4 Campaigns'
               DonutChartOptions={DonutChartOptions}
               DonutChartData={DonutChartData}
             />
