@@ -35,6 +35,7 @@ export default function CampaignBlock({
   setDeleteId,
   campaignName,
   setCampaignName,
+  TotalRevenueList,
 }) {
   // Campaign Card Block Data Properties
   const {
@@ -80,10 +81,11 @@ export default function CampaignBlock({
   // console.log(campaign_clicks);
 
   // Individual campaign revenue
-  const campaign_revenue = useSelector((state) =>
+  let campaign_revenue = 0;
+  campaign_revenue = TotalRevenueList[0]?.currency + useSelector((state) =>
     fetchIndividualCampaignRevenue(state, +campaign_id)
   );
-  // console.log(campaign_clicks);
+  // console.log(campaign_revenue);
 
   const now = new Date(); //Get the current date
 

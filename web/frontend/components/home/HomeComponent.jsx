@@ -22,6 +22,7 @@ import { fetchCampaignsDetailsList } from '../../app/features/campaign_details/c
 
 import { fetchAllCampaignsRevenue } from '../../app/features/revenue/totalRevenueSlice';
 import { fetchAllLastSixMonthsRevenue } from '../../app/features/revenue/lastSixMonthsRevenueSlice';
+import { fetchLatestFourCampaignsRevenue } from '../../app/features/revenue/totalRevenueSlice';
 
 const SummaryCard = lazy(() => import('../ui/SummaryCard'));
 
@@ -36,6 +37,7 @@ const HomeComponent = () => {
   const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
   const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
   const LastSixMonthsRevenueList = useSelector(fetchAllLastSixMonthsRevenue);
+  const LastFourCampaignsRevenueList = useSelector(fetchLatestFourCampaignsRevenue);
 
   const [campaignsList, setCampaignsList] = useState([]);
   const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
@@ -49,6 +51,7 @@ const HomeComponent = () => {
 
   const [getTotalRevenue, setTotalRevenue] = useState([0]);
   const [getLastSixMonthsRevenue, setLastSixMonthsRevenue] = useState([]);
+  const [getLastFourCampaignsRevenue, setLastFourCampaignsRevenue] = useState([]);
 
   // Get Total Campaigns Lists
   useEffect(() => {
@@ -112,7 +115,7 @@ const HomeComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].total_revenue);
+      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue);
       // console.log(TotalRevenueList);
     }
   }, [TotalRevenueList]);
@@ -124,6 +127,14 @@ const HomeComponent = () => {
       // console.log(LastSixMonthsRevenueList);
     }
   }, [LastSixMonthsRevenueList]);
+
+  // Get Last Four Campaigns Revenue
+  useEffect(() => {
+    if (LastFourCampaignsRevenueList) {
+      setLastFourCampaignsRevenue(TotalRevenueList[0]?.currency + LastFourCampaignsRevenueList);
+      // console.log(LastFourCampaignsRevenueList);
+    }
+  }, [LastFourCampaignsRevenueList]);
 
   // line chart and radar chart labels of last six months according to current date
   const currentDate = new Date();
@@ -166,11 +177,16 @@ const HomeComponent = () => {
       const monthIndex =
         (currentYear - entryYear) * 12 + (currentMonth - entryMonth);
 
-      chartRevenue[monthIndex] = parseInt(entry.total_months_revenue, 10); // Convert to integer
+      chartRevenue[monthIndex] = parseFloat(entry.total_months_revenue, 10); // Convert to integer
     });
   }
   let finalRevenue = chartRevenue.reverse();
   // console.log(finalRevenue);
+
+  // Calculate the total revenue for the last six months
+  let six_months_total_revenue = 0;
+  const lastSixMonthsTotalRevenue = finalRevenue?.slice(0, 6).reduce((acc, currentValue) => acc + currentValue, 0);
+  six_months_total_revenue = TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue;
 
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
@@ -336,6 +352,12 @@ const HomeComponent = () => {
     labels: chartLabels,
     datasets: [
       {
+        label: 'Revenue',
+        data: finalRevenue,
+        borderColor: 'rgba(22,91,170, 0.7)',
+        backgroundColor: 'rgba(22,91,170, 0.6)',
+      },
+      {
         label: 'Clicks',
         data: finalClicks,
         borderColor: 'rgba(84, 71, 223, 0.7)',
@@ -352,12 +374,6 @@ const HomeComponent = () => {
         data: getSixMonthsReferralsList,
         borderColor: 'rgba(161, 246, 245, 0.7)',
         backgroundColor: 'rgba(161, 246, 245, 0.6)',
-      },
-      {
-        label: 'Revenue',
-        data: finalRevenue,
-        borderColor: 'rgba(22,91,170, 0.7)',
-        backgroundColor: 'rgba(22,91,170, 0.6)',
       },
     ],
   };
@@ -485,8 +501,8 @@ const HomeComponent = () => {
             <Charts
               type='line'
               header='Total Revenue'
-              value='$253467'
-              subheader='Last 6 months Data'
+              value={six_months_total_revenue}
+              subheader='Last 6 Months Data'
               LineChartOptions={LineChartOptions}
               LineChartData={LineChartData}
             />
@@ -503,8 +519,8 @@ const HomeComponent = () => {
             <Charts
               type='donut'
               header='Revenue'
-              value='$15,456.98'
-              subheader='Last 4 campaigns'
+              value={getLastFourCampaignsRevenue}
+              subheader='Last 4 Campaigns'
               DonutChartOptions={DonutChartOptions}
               DonutChartData={DonutChartData}
             />

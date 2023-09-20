@@ -83,7 +83,7 @@ const CampaignsComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].total_revenue);
+      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue);
     }
   }, [TotalRevenueList]);
 
@@ -287,6 +287,7 @@ const CampaignsComponent = () => {
                     handleDelete={handleDelete}
                     handleDeleteCampaign={handleDeleteCampaign}
                     handleEdit={handleEdit}
+                    TotalRevenueList={TotalRevenueList}
                   />
                 </Suspense>
               ))}
