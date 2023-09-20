@@ -2,7 +2,7 @@
   let first_page_settings = {{ block.settings | json }};
 
   async function getbackground(campaign_name) {
-    return await fetch('/apps/xychrosupdated/api/geturl', {
+    return await fetch('/apps/product-prelauncher/api/geturl', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -18,7 +18,7 @@
   // count user clicks
   async function getClicks(campaign_name) {
     try {
-      const response = await fetch("/apps/xychrosupdated/api/getclicks",
+      const response = await fetch("/apps/product-prelauncher/api/getclicks",
         {
           method: "POST",
           headers: {
@@ -208,6 +208,7 @@
       } else if (response.status == '500') {
         showSnackbar("snackbar3");
       } else {
+        console.log(response);
         showSnackbar('snackbar2');
       }
       return;
