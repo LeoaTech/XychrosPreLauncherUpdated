@@ -25,21 +25,15 @@ export default function revenueApiEndpoint(app) {
 
             const revenue = await pool.query(
                 `WITH TotalRevenue AS (
-                    SELECT
-                        SUM(total_price) AS total_revenue
-                    FROM
-                        order_details
-                    WHERE
-                        shop_id = $1
+                    SELECT currency, SUM(total_price) AS total_revenue
+                    FROM order_details
+                    WHERE shop_id = $1
+                    Group by currency
                 ),
                 CustomerLastSubscription AS (
-                    SELECT
-                        r.email,
-                        MAX(r.created_at::DATE) AS last_subscription_date
-                    FROM
-                        referrals r
-                    GROUP BY
-                        r.email
+                    SELECT r.email, MAX(r.created_at::DATE) AS last_subscription_date
+                    FROM referrals r
+                    GROUP BY r.email
                 ),
                 CampaignRevenue AS (
                     SELECT
@@ -58,27 +52,16 @@ export default function revenueApiEndpoint(app) {
                             THEN od.total_price
                             ELSE 0
                         END) AS campaign_revenue
-                    FROM
-                        campaign_settings cs
-                    JOIN
-                        order_details od ON cs.shop_id = od.shop_id
-                    LEFT JOIN
-                        CustomerLastSubscription lr ON lr.email = od.customer_email
-                    WHERE
-                        od.shop_id = $1
-                    GROUP BY
-                        cs.campaign_id
+                    FROM campaign_settings cs
+                    JOIN order_details od ON cs.shop_id = od.shop_id
+                    LEFT JOIN CustomerLastSubscription lr ON lr.email = od.customer_email
+                    WHERE od.shop_id = $1
+                    GROUP BY cs.campaign_id
                 )
-                SELECT
-                    cr.campaign_id,
-                    cr.campaign_revenue,
-                    tr.total_revenue
-                FROM
-                    CampaignRevenue cr
-                JOIN
-                    TotalRevenue tr ON 1=1
-                ORDER BY
-                    cr.campaign_id;
+                SELECT cr.campaign_id, cr.campaign_revenue, tr.total_revenue, tr.currency
+                FROM CampaignRevenue cr
+                JOIN TotalRevenue tr ON 1=1
+                ORDER BY cr.campaign_id;
                 `,
                 [session?.shop]
             );

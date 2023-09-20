@@ -112,7 +112,7 @@ const HomeComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].total_revenue);
+      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue);
       // console.log(TotalRevenueList);
     }
   }, [TotalRevenueList]);
@@ -166,7 +166,7 @@ const HomeComponent = () => {
       const monthIndex =
         (currentYear - entryYear) * 12 + (currentMonth - entryMonth);
 
-      chartRevenue[monthIndex] = parseInt(entry.total_months_revenue, 10); // Convert to integer
+      chartRevenue[monthIndex] = parseFloat(entry.total_months_revenue, 10); // Convert to integer
     });
   }
   let finalRevenue = chartRevenue.reverse();
