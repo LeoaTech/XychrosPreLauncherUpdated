@@ -172,6 +172,11 @@ const HomeComponent = () => {
   let finalRevenue = chartRevenue.reverse();
   // console.log(finalRevenue);
 
+  // Calculate the total revenue for the last six months
+  let six_months_total_revenue = 0;
+  const lastSixMonthsTotalRevenue = finalRevenue?.slice(0, 6).reduce((acc, currentValue) => acc + currentValue, 0);
+  six_months_total_revenue = TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue;
+
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
     responsive: true,
@@ -336,6 +341,12 @@ const HomeComponent = () => {
     labels: chartLabels,
     datasets: [
       {
+        label: 'Revenue',
+        data: finalRevenue,
+        borderColor: 'rgba(22,91,170, 0.7)',
+        backgroundColor: 'rgba(22,91,170, 0.6)',
+      },
+      {
         label: 'Clicks',
         data: finalClicks,
         borderColor: 'rgba(84, 71, 223, 0.7)',
@@ -352,12 +363,6 @@ const HomeComponent = () => {
         data: getSixMonthsReferralsList,
         borderColor: 'rgba(161, 246, 245, 0.7)',
         backgroundColor: 'rgba(161, 246, 245, 0.6)',
-      },
-      {
-        label: 'Revenue',
-        data: finalRevenue,
-        borderColor: 'rgba(22,91,170, 0.7)',
-        backgroundColor: 'rgba(22,91,170, 0.6)',
       },
     ],
   };
@@ -485,8 +490,8 @@ const HomeComponent = () => {
             <Charts
               type='line'
               header='Total Revenue'
-              value='$253467'
-              subheader='Last 6 months Data'
+              value={six_months_total_revenue}
+              subheader='Last 6 Months Data'
               LineChartOptions={LineChartOptions}
               LineChartData={LineChartData}
             />
