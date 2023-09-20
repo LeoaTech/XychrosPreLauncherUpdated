@@ -49,7 +49,7 @@ export const referralColumns = [
       textAlign: 'center',
       alignItems: 'center',
       fontSize: 17,
-      maxWidth: '12px',
+      // maxWidth: '12px',
     },
   },
 ];
@@ -154,3 +154,5 @@ export const referralRows = [
     friends_joined: 2,
   },
 ];
+
+

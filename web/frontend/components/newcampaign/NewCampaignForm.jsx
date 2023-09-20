@@ -41,10 +41,14 @@ import {
 import { skeletonPageLoad } from "@shopify/app-bridge/actions/Performance";
 import ButtonLoader from "../loading_skeletons/ButtonLoader";
 import { fetchCampaignDetails } from "../../app/features/campaign_details/campaign_details";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SaveDraft = lazy(() => import("../modal/SaveDraft"));
 
 function NewCampaignForm() {
+  const toastId = useRef(null);
+
   const { isEdit, setIsEdit } = useStateContext();
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
@@ -70,8 +74,10 @@ function NewCampaignForm() {
   let today = new Date();
   let getStartDate = new Date();
   let getNextDate = new Date();
-  getNextDate.setDate(today.getDate() + 6); //Get End Date
   getStartDate.setDate(today.getDate() + 1); // Get Start Date
+  getNextDate.setDate(today.getDate() + 6); //Get End Date
+  getStartDate.setHours(0, 0, 0, 0); //Start Camapign with Midnight Time
+  getNextDate.setHours(0, 0, 0, 0); //End Camapign with Midnight Time
 
   // Local States of Components
 
@@ -226,6 +232,21 @@ function NewCampaignForm() {
     }
   }, [globalSettings]);
 
+  useEffect(() => {
+    // Set initial state based on isEdit and current_plan.collecting_phone
+    if (isEdit) {
+      setNewCampaignData((prevCampaign) => ({
+        ...prevCampaign,
+        collect_phone: current_plan?.collecting_phone || false,
+      }));
+    } else {
+      setNewCampaignData((prevCampaign) => ({
+        ...prevCampaign,
+        collect_phone: false, // Default value for new form when editing
+      }));
+    }
+  }, [isEdit, current_plan]);
+
   // Fetch Templates Data from API
   const templateData = useFetchTemplates("/api/templates", {
     method: "GET",
@@ -348,13 +369,14 @@ function NewCampaignForm() {
   //  Get Current Subscription Plan Name
   useEffect(() => {
     if (currentTier !== "") {
-      if (currentTier?.includes("Add-on")) {
+      if (currentTier?.includes("Add-ons")) {
         const charged_name = currentTier?.split(" + ");
         const tierName = charged_name[0]; // Extract "Tier Name"
 
         setMyPlan(tierName);
+      } else {
+        setMyPlan(currentTier);
       }
-      setMyPlan(currentTier);
     }
 
     if (totalCampaigns) {
@@ -390,16 +412,14 @@ function NewCampaignForm() {
 
   // Update Klaviyo API Lists in the Form
   useEffect(async () => {
-    if (isEdit) {
+    if (isEdit && globalSettings?.klaviyo_api_key != "") {
       let apiList = await getKlaviyoList();
       setKlaviyoList(apiList);
-    } else {
-      if (globalSettings?.klaviyo_api_key !== "") {
-        let findList = await getKlaviyoList();
-        setKlaviyoList(findList);
-      }
+    } else if (!isEdit && globalSettings?.klaviyo_api_key != null) {
+      let findList = await getKlaviyoList();
+      setKlaviyoList(findList);
     }
-  }, [globalSettings?.klaviyo_api_key, newCampaignData?.klaviyo_api_key]);
+  }, [globalSettings?.klaviyo_api_key]);
 
   //? When user try to reload or change the route to other page
   useEffect(() => {
@@ -631,6 +651,7 @@ function NewCampaignForm() {
   // Handle input change events
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (isEdit) {
       setEditCampaignData((prevState) => ({
         ...prevState,
@@ -728,6 +749,7 @@ function NewCampaignForm() {
 
   function handleRadioChange(event) {
     const { name, value } = event.target;
+
     // Update the state with the new value
     if (isEdit) {
       setEditCampaignData((prevcampaignData) => ({
@@ -798,6 +820,7 @@ function NewCampaignForm() {
 
   // Discounts API Call
   async function generateDiscounts(newCampaignData) {
+    toastId.current = toast.loading("Generating discount codes...");
     try {
       const response = await fetch("/api/generate_discount", {
         method: "POST",
@@ -806,15 +829,53 @@ function NewCampaignForm() {
         },
         body: JSON.stringify({ campaignData: newCampaignData }),
       });
-      const responseData = await response.json();
-      return responseData?.data;
+
+      if (response?.ok) {
+        toast.update(toastId.current, {
+          render: "Discount Codes Generated for Campaign",
+          type: "success",
+          isLoading: true,
+          position: "top-right",
+          autoClose: 1000,
+        });
+        const responseData = await response.json();
+
+        setTimeout(() => {
+          toast.dismiss(toastId.current);
+        }, 1000);
+        return responseData?.data;
+      } else {
+        toast.update(toastId.current, {
+          render: "Failed to Generate Discount Codes for Campaign",
+          type: "error",
+          isLoading: "false",
+          autoClose: 3000,
+        });
+        setTimeout(() => {
+          toast.dismiss(toastId.current);
+        }, 3000);
+        return "Failed to Generate Discount Codes for Campaign";
+      }
     } catch (error) {
-      console.log(error);
+      toast.update(toastId.current, {
+        render: "Error Generating Discount Codes for Campaign",
+        type: "error",
+        isLoading: "false",
+        autoClose: 5000,
+      });
+      setTimeout(() => {
+        toast.dismiss(toastId.current);
+      }, 3000);
+
+      return error;
     }
   }
 
   // Template Create API Call
   async function createTemplates(selectedTemplateData, newCampaignData) {
+    // toastId.current
+    const id = toast.loading("Creating Templates for Campaigns...");
+
     try {
       const response = await fetch("/api/create_template", {
         method: "POST",
@@ -826,16 +887,56 @@ function NewCampaignForm() {
           campaignData: newCampaignData,
         }),
       });
-      const responseData = await response.json();
-      return responseData?.data;
+      if (response.ok) {
+        setTimeout(() => {
+          toast.update(id, {
+            render: "Template Pages Created for Campaign",
+            type: "success",
+            isLoading: true,
+            position: "top-right",
+            autoClose: 3000,
+          });
+        }, 1000);
+
+        const responseData = await response.json();
+        setTimeout(() => {
+          toast.dismiss(id);
+        }, 2000);
+        return responseData?.data;
+      } else {
+        setTimeout(() => {
+          toast.update(id, {
+            render: "Failed to Create Template Pages for Campaigns",
+            type: "error",
+            isLoading: "false",
+            autoClose: 2000,
+          });
+        }, 1000);
+
+        setTimeout(() => {
+          toast.dismiss(id);
+        }, 3000);
+        return "Failed to Create Template Pages for Campaign";
+      }
     } catch (error) {
       console.log(error);
+      toast.update(id, {
+        render: "Error Creating Template Pages for Campaign",
+        type: "error",
+        isLoading: "false",
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        toast.dismiss(id);
+      }, 3000);
     }
   }
 
   // Save Campaign Details in database
   const saveCampaignDetails = async (campaign_details) => {
     // Send POST Request to save Details From database
+
+    let campaignDetailsId = toast.loading("Saving Discount Codes and Pages");
     const detailsResponse = await fetch("/api/campaigndetails", {
       method: "POST",
       headers: {
@@ -844,14 +945,40 @@ function NewCampaignForm() {
       body: JSON.stringify({
         ...campaign_details,
         is_draft: false,
-        is_active: true,
+        is_active: false,
       }),
     });
 
     if (detailsResponse.ok) {
+      setTimeout(() => {
+        toast.update(campaignDetailsId, {
+          render: "Saved discount codes and templates for campaign",
+          type: "success",
+          isLoading: true,
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }, 1000);
+
+      setTimeout(() => {
+        toast.dismiss(campaignDetailsId);
+      }, 2000);
       const detailsData = await detailsResponse.json();
       return detailsData;
     } else {
+      setTimeout(() => {
+        toast.update(campaignDetailsId, {
+          render: "Error Saving Template Pages and Discount Codes for Campaign",
+          type: "error",
+          isLoading: true,
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }, 1000);
+
+      setTimeout(() => {
+        toast.dismiss(campaignDetailsId);
+      }, 2000);
       console.log("Failed to insert campaign details:", detailsResponse);
     }
   };
@@ -864,20 +991,67 @@ function NewCampaignForm() {
     // Editing Camapign Data Form
     if (isEdit) {
       setDraftModal(false);
+      let updateCampaignSettingsId = toast.loading(
+        "Updating campaign settings..."
+      );
+      try {
+        const updateCampaignSettings = await fetch(
+          `/api/campaignsettings/${campaignsid}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(editCampaignData),
+          }
+        );
 
-      await fetch(`/api/campaignsettings/${campaignsid}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editCampaignData),
-      })
-        .then((res) => res.json())
-        .then((data) => dispatch(updateCampaign(data)))
-        .catch((err) => console.log(err));
-      setIsLoading(false);
-      setIsEdit(false);
-      navigate("/campaigns");
+        if (updateCampaignSettings.ok) {
+          setTimeout(() => {
+            toast.update(updateCampaignSettingsId, {
+              render: "Updated Campaign Settings",
+              type: "success",
+              isLoading: true,
+              position: "top-right",
+              autoClose: 5000,
+            });
+          }, 3000);
+
+          let updatedCamapignData = await updateCampaignSettings.json();
+
+          // dispatch(updateCampaign(updatedCamapignData));
+        } else {
+          setTimeout(() => {
+            toast.update(updateCampaignSettingsId, {
+              render: "Failed to Update Campaign Settings",
+              type: "error",
+              isLoading: "false",
+              autoClose: 2000,
+            });
+          }, 1000);
+
+          setTimeout(() => {
+            toast.dismiss(updateCampaignSettingsId);
+          }, 3000);
+        }
+        setIsLoading(false);
+        setTimeout(() => {
+          toast.dismiss(updateCampaignSettingsId);
+        }, 3000);
+        setIsEdit(false);
+        navigate("/campaigns");
+      } catch (err) {
+        console.log(err);
+        toast.update(updateCampaignSettingsId, {
+          render: "Error Updating Campaign...",
+          type: "error",
+          isLoading: "false",
+          autoClose: 2000,
+        });
+        setTimeout(() => {
+          toast.dismiss(updateCampaignSettingsId);
+        }, 3000);
+      }
     }
     // Adding A New Campaign and Save in Database
     else {
@@ -890,6 +1064,7 @@ function NewCampaignForm() {
         setIsLoading(true);
 
         const discount_details = await generateDiscounts(newCampaignData);
+
         const template_details = await createTemplates(
           selectedTemplateData,
           newCampaignData
@@ -900,35 +1075,76 @@ function NewCampaignForm() {
           ...template_details,
         };
 
-        await fetch("/api/campaignsettings", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newCampaignData),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            dispatch(addNewCampaign(data));
-            idExists = data[0]?.campaign_id;
-          })
-          .catch((err) => console.log(err));
+        let campaignSettingsId = toast.loading("Saving campaign settings...");
+        try {
+          const campaignSetting = await fetch("/api/campaignsettings", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newCampaignData),
+          });
+
+          if (campaignSetting.ok) {
+            setTimeout(() => {
+              toast.update(campaignSettingsId, {
+                render: "Saved Campaign Settings",
+                type: "success",
+                isLoading: true,
+                position: "top-right",
+                autoClose: 3000,
+              });
+            }, 1000);
+
+            const campaignData = await campaignSetting.json();
+            setTimeout(() => {
+              toast.dismiss(campaignSettingsId);
+            }, 3000);
+
+            dispatch(addNewCampaign(campaignData));
+            idExists = campaignData?.campaign_id;
+          } else {
+            setTimeout(() => {
+              toast.update(campaignSettingsId, {
+                render: "Failed to Create Campaigns",
+                type: "error",
+                isLoading: "false",
+                autoClose: 2000,
+              });
+            }, 1000);
+
+            setTimeout(() => {
+              toast.dismiss(campaignSettingsId);
+            }, 3000);
+            return "Failed to Create Campaign";
+          }
+        } catch (err) {
+          toast.update(campaignSettingsId, {
+            render: "Error Creating Campaign",
+            type: "error",
+            isLoading: "false",
+            autoClose: 2000,
+          });
+          setTimeout(() => {
+            toast.dismiss(campaignSettingsId);
+          }, 3000);
+
+          throw err;
+        }
       } else {
         return;
       }
 
-      console.log(idExists, "Campign Exists");
-      console.log(campaignDetails, "Campaign Details");
-      // IF CampaignID Exists the call the saveCampaign details function to store value in db
-      if (typeof(idExists) == "number" && campaignDetails) {
+      // If CampaignID Exists the call the saveCampaign details function to store value in db
+      if (typeof idExists == "number" && campaignDetails) {
         let result = await saveCampaignDetails(campaignDetails);
         if (result) dispatch(fetchCampaignDetails(result));
       } else {
-        console.log("Not saved data");
+        throw new Error();
       }
 
       setIsLoading(false);
-      navigate("/campaigns");
+      // navigate("/campaigns");
     }
   };
 
@@ -952,8 +1168,9 @@ function NewCampaignForm() {
 
   return (
     <>
-      {(myPlan === "Free" && TotalCampaign >= 1 && !isEdit) ||
-      (myPlan === "Tier 1" && TotalCampaign >= 2 && !isEdit) ? (
+      {((myPlan == "Free" && TotalCampaign >= 1) ||
+        (myPlan == "Tier 1" && TotalCampaign >= 2)) &&
+      !isEdit ? (
         <div className="upgrade-container">
           <p>Upgrade Your Account </p>
           <button className="upgrade-btn" onClick={() => navigate("/price")}>
@@ -974,6 +1191,15 @@ function NewCampaignForm() {
               handleSaveDraft={handleSaveDraft}
             />
           </Suspense>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick={true}
+            draggable
+            // theme="colored"
+          />
           <form onSubmit={handleSaveClick}>
             {/* Basic Settings Input Form Section  */}
             <section className="newcampaign-settings">
@@ -1249,9 +1475,7 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="phone"
-                              checked={
-                                editCampaignData?.collect_phone === false
-                              }
+                              checked={editCampaignData?.collect_phone === true}
                               disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
@@ -1261,7 +1485,7 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="phone"
-                              checked={newCampaignData?.collect_phone === false}
+                              checked={newCampaignData?.collect_phone == true}
                               disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
@@ -1278,11 +1502,15 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
+                              // checked={
+                              //   !current_plan?.collect_phone
+                              //     ? true
+                              //     : editCampaignData?.collect_phone === true
+                              // }
                               checked={
-                                !current_plan?.collect_phone
-                                  ? true
-                                  : editCampaignData?.collect_phone === true
+                                editCampaignData?.collect_phone === false
                               }
+                              // disabled={!current_plan?.collecting_phone}
                               onChange={handleRadioChange}
                             />
                           ) : (
@@ -1291,11 +1519,14 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
-                              checked={
-                                !current_plan?.collect_phone
-                                  ? true
-                                  : newCampaignData?.collect_phone === true
-                              }
+                              // disabled={!current_plan?.collecting_phone}
+                              // checked={
+                              //   !current_plan?.collect_phone
+                              //     ? true
+                              //     : newCampaignData?.collect_phone == false
+                              // }
+
+                              checked={newCampaignData?.collect_phone === false}
                               onChange={handleRadioChange}
                             />
                           )}
@@ -2281,13 +2512,9 @@ function NewCampaignForm() {
                         disabled={isLoading}
                       >
                         {isEdit ? (
-                          <>
-                            {isLoading ? <ButtonLoader /> : "Update Campaign"}
-                          </>
+                          <>{isLoading ? "Updating..." : "Update Campaign"}</>
                         ) : (
-                          <>
-                            {isLoading ? <ButtonLoader /> : "Create Campaign"}
-                          </>
+                          <>{isLoading ? "Saving..." : "Create Campaign"}</>
                         )}
                       </button>
                     </>
@@ -2296,6 +2523,7 @@ function NewCampaignForm() {
               )}
             </section>
           </form>
+          {/* <ToastContainer /> */}
 
           {/* Loading Animation  */}
           <div id="loading-overlay">

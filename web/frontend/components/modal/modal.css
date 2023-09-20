@@ -92,11 +92,14 @@
 
 
 .referral__id {
-  margin-top: 20px;
+  /* margin-top: 20px; */
   font-weight: 500;
   font-size: 18px;
   margin-right: 20px;
   color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal__body {

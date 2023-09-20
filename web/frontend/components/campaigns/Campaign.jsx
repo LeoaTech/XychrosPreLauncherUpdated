@@ -13,6 +13,7 @@ import { fetchAllReferrals } from "../../app/features/referrals/referralSlice";
 import {
   fetchCampaignDetails,
   fetchCampaignsDetailsList,
+  updateCampaignDetails,
 } from "../../app/features/campaign_details/campaign_details";
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
@@ -25,9 +26,11 @@ const CampaignsComponent = () => {
   const fetch = useAuthenticatedFetch();
   const { setIsEdit } = useStateContext();
   const dispatch = useDispatch();
-  
+
   const List = useSelector(fetchAllCampaigns);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
+  const ReferralList = useSelector(fetchAllReferrals);
+  const TotalClicksList = useSelector(fetchAllCampaignClicks);
 
   const [getCampaigns, setCampaigns] = useState([]);
   const [getDetails, setDetails] = useState([]);
@@ -35,11 +38,7 @@ const CampaignsComponent = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [campaignName, setCampaignName] = useState("");
-
-  const ReferralList = useSelector(fetchAllReferrals);
   const [getReferrals, setReferrals] = useState([]);
-
-  const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const [getTotalClicks, setTotalClicks] = useState(0);
 
   useEffect(() => {
@@ -53,14 +52,14 @@ const CampaignsComponent = () => {
     if (ReferralList) {
       setReferrals(ReferralList);
     }
-  }, [ReferralList]);
+  }, [ReferralList, dispatch]);
 
   // Get Details of Campaign
   useEffect(() => {
     if (campaignDetails?.length > 0) {
       setDetails(campaignDetails);
     }
-  }, [campaignDetails]);
+  }, [campaignDetails, dispatch]);
 
   let t_clicks = 0;
   // Get Total Clicks Count
@@ -70,7 +69,7 @@ const CampaignsComponent = () => {
     }
   }, [TotalClicksList]);
   // console.log(getTotalClicks);
-  if(getTotalClicks.length > 0) {
+  if (getTotalClicks.length > 0) {
     t_clicks = getTotalClicks[0].total_clicks;
   }
 
@@ -82,6 +81,8 @@ const CampaignsComponent = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = getDetails?.slice(startIndex, endIndex);
+
+
   // Handle Previous Page Click events
   const handlePrevClick = () => {
     setCurrentPage((currentPage) => currentPage - 1);
@@ -91,7 +92,7 @@ const CampaignsComponent = () => {
     setCurrentPage((currentPage) => currentPage + 1);
   };
 
-  //HANDLE DELETE CAMPAIGN FUNCTION
+  // OLD HANDLE DELETE CAMPAIGN FUNCTION  [will only set True the is_Deleted flag but not removing camapigns ]
   const handleDelete = async (id) => {
     setDeleteId(id);
 
@@ -123,7 +124,7 @@ const CampaignsComponent = () => {
         (camp) => camp?.campaign_id === id
       );
       setCampaignName(deletedCampaign?.name);
-        
+
       await deleteFromStore(id);
       const response = await fetch(`/api/campaignsettings/${id}`, {
         method: "PATCH",
@@ -157,6 +158,57 @@ const CampaignsComponent = () => {
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+
+  // Campaign is removed from both frontend and backend campaign Table List
+
+  const handleDeleteCampaign = async (camp_id) => {
+    setDeleteId(camp_id);
+    const deletedCampaign = getCampaigns.find(
+      (campaign) => campaign?.campaign_id === camp_id
+    );
+    const deletedDetails = getDetails?.find(
+      (camp) => camp?.campaign_id === camp_id
+    );
+
+    setCampaignName(deletedCampaign?.name);
+    try {
+      const response2 = await fetch(`/api/campaignsettings/${camp_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response2.ok) {
+        // Update the state after a successful deletion
+
+        await dispatch(updateCampaign(deletedCampaign));
+        await dispatch(updateCampaignDetails(deletedDetails));
+        try {
+          const newData = await getCampaigns?.filter(
+            (campaign) => campaign.campaign_id !== camp_id
+          );
+
+          const newDetails = getDetails?.filter(
+            (campaign) => campaign?.campaign_id !== camp_id
+          );
+
+          await dispatch(fetchCampaign(newData));
+          await dispatch(fetchCampaignDetails(newDetails));
+          setCampaigns([...newData]);
+          setDetails([...newDetails]);
+        } catch (error) {
+          console.log(error, "Updating states");
+        }
+        console.log("Campaign deleted successfully");
+      } else {
+        console.error("Failed to delete campaign");
+      }
+    } catch (error) {
+      console.error("Error deleting campaign:", error);
     }
   };
 
@@ -199,12 +251,7 @@ const CampaignsComponent = () => {
           icon={Sale}
           class='revenue-icon'
         />
-        <SummaryCard
-          value='4551678'
-          title='Clicks'
-          icon={arrow}
-          class='clicks-icon'
-        /> */}
+       */}
       </div>
       <div className="campaigns">
         {getDetails?.length > 0 ? (
@@ -223,27 +270,30 @@ const CampaignsComponent = () => {
                     deleteModal={deleteModal}
                     setDeleteModal={setDeleteModal}
                     handleDelete={handleDelete}
+                    handleDeleteCampaign={handleDeleteCampaign}
                     handleEdit={handleEdit}
                   />
                 </Suspense>
               ))}
             </div>
             {/* Pagination */}
-            <div className="pagination-content">
-              {currentPage > 1 && (
-                <button className="prev-btn" onClick={handlePrevClick}>
-                  Prev
-                </button>
-              )}
-              <span className="pagination-text">
-                Page {currentPage} of {totalPages}
-              </span>
-              {currentPage < totalPages && (
-                <button className="next-btn" onClick={handleNextClick}>
-                  Next
-                </button>
-              )}
-            </div>
+            {getDetails?.length > 0 && (
+              <div className="pagination-content">
+                {currentPage > 1 && (
+                  <button className="prev-btn" onClick={handlePrevClick}>
+                    Prev
+                  </button>
+                )}
+                <span className="pagination-text">
+                  Page {currentPage} of {totalPages}
+                </span>
+                {currentPage < totalPages && (
+                  <button className="next-btn" onClick={handleNextClick}>
+                    Next
+                  </button>
+                )}
+              </div>
+            )}
           </>
         ) : (
           <h1
