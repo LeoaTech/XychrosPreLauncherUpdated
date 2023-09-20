@@ -24,6 +24,8 @@ import useFetchLastFourCampaignsClicks from "../constant/fetcLastFourCampaignsCl
 import { fetchLastFourCampaignsClicks } from "../app/features/user_clicks/lastFourCampaignsClicksSlice";
 import useFetchTotalRevenue from "../constant/fetchTotalRevenue";
 import { fetchTotalRevenue } from "../app/features/revenue/totalRevenueSlice";
+import useFetchLastSixMonthsRevenue from "../constant/fetchLastSixMonthsRevenue";
+import { fetchLastSixMonthsRevenue } from "../app/features/revenue/lastSixMonthsRevenueSlice";
 
 export default function HomePage() {
   const { activeMenu } = useStateContext();
@@ -96,6 +98,15 @@ export default function HomePage() {
     headers: { "Content-Type": "application/json" },
   });
 
+  // Get Last Six Months Revenue
+  const six_months_revenue = useFetchLastSixMonthsRevenue(
+    "/api/fetch_revenue",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+
   // Dispatch API result in Redux store to get access data in the App
 
   useEffect(() => {
@@ -151,6 +162,12 @@ export default function HomePage() {
       dispatch(fetchTotalRevenue(total_revenue));
     }
   }, [total_revenue, dispatch]);
+
+  useEffect(() => {
+    if (six_months_revenue.length > 0) {
+      dispatch(fetchLastSixMonthsRevenue(six_months_revenue));
+    }
+  }, [six_months_revenue, dispatch]);
 
   return (
     <div className="app">

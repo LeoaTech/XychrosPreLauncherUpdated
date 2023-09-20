@@ -32,14 +32,29 @@ export default function revenueApiEndpoint(app) {
                     WHERE
                         shop_id = $1
                 ),
+                CustomerLastSubscription AS (
+                    SELECT
+                        r.email,
+                        MAX(r.created_at::DATE) AS last_subscription_date
+                    FROM
+                        referrals r
+                    GROUP BY
+                        r.email
+                ),
                 CampaignRevenue AS (
                     SELECT
                         cs.campaign_id,
                         SUM(CASE
-                            WHEN (DATE_TRUNC('day', CAST(od.created_at AS DATE)) 
-                            BETWEEN DATE_TRUNC('day', CAST(cs.start_date AS DATE)) 
-                            AND DATE_TRUNC('day', CAST(cs.end_date AS DATE)))
-                            AND customer_tags LIKE '%' || cs.name || '%'
+                            WHEN (
+                                od.customer_tags LIKE '%' || cs.name || '%' AND
+                                (
+                                    lr.last_subscription_date IS NULL OR
+                                    (
+                                        CAST(cs.start_date AS DATE) <= CAST(od.created_at::DATE AS DATE) AND
+                                        (lr.last_subscription_date > CAST(od.created_at::DATE AS DATE) OR lr.last_subscription_date <= CAST(cs.end_date AS DATE))
+                                    )
+                                )
+                            )
                             THEN od.total_price
                             ELSE 0
                         END) AS campaign_revenue
@@ -47,6 +62,8 @@ export default function revenueApiEndpoint(app) {
                         campaign_settings cs
                     JOIN
                         order_details od ON cs.shop_id = od.shop_id
+                    LEFT JOIN
+                        CustomerLastSubscription lr ON lr.email = od.customer_email
                     WHERE
                         od.shop_id = $1
                     GROUP BY
@@ -65,10 +82,38 @@ export default function revenueApiEndpoint(app) {
                 `,
                 [session?.shop]
             );
-            console.log(revenue.rows);
+            // console.log(revenue.rows);
             return res.status(200).json(revenue.rows);
         } catch (error) {
             return res.status(500).json({ success: false, message: "Failed to Fetch Revenue", error: error.message });
+        }
+    });
+
+    // last six months revenue
+    app.get("/api/fetch_revenue", async (req, res) => {
+        try {
+            const session = await Shopify.Utils.loadCurrentSession(
+                req,
+                res,
+                app.get("use-online-tokens")
+            );
+
+            const six_months_revenue = await pool.query(
+                `SELECT SUM(total_price) AS total_months_revenue, 
+                to_char(CAST(created_at::DATE AS DATE), 'YYYY-MM') AS created_month 
+                FROM order_details 
+                WHERE CAST(created_at::DATE AS DATE) >= CURRENT_DATE - INTERVAL '5 months'
+                AND CAST(created_at::DATE AS DATE) <= CURRENT_DATE
+                AND shop_id = $1 
+                GROUP BY created_month 
+                ORDER BY created_month DESC
+                `,
+                [session?.shop]
+            );
+            // console.log(six_months_revenue.rows);
+            return res.status(200).json(six_months_revenue.rows);
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Failed to Fetch Last Six Months Revenue", error: error.message });
         }
     });
 }

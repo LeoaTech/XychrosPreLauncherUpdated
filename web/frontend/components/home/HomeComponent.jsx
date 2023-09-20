@@ -21,6 +21,7 @@ import { fetchAllLastFourCampaignsClicks } from '../../app/features/user_clicks/
 import { fetchCampaignsDetailsList } from '../../app/features/campaign_details/campaign_details';
 
 import { fetchAllCampaignsRevenue } from '../../app/features/revenue/totalRevenueSlice';
+import { fetchAllLastSixMonthsRevenue } from '../../app/features/revenue/lastSixMonthsRevenueSlice';
 
 const SummaryCard = lazy(() => import('../ui/SummaryCard'));
 
@@ -34,6 +35,7 @@ const HomeComponent = () => {
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
   const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
   const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
+  const LastSixMonthsRevenueList = useSelector(fetchAllLastSixMonthsRevenue);
 
   const [campaignsList, setCampaignsList] = useState([]);
   const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
@@ -46,6 +48,7 @@ const HomeComponent = () => {
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
 
   const [getTotalRevenue, setTotalRevenue] = useState([0]);
+  const [getLastSixMonthsRevenue, setLastSixMonthsRevenue] = useState([]);
 
   // Get Total Campaigns Lists
   useEffect(() => {
@@ -114,6 +117,14 @@ const HomeComponent = () => {
     }
   }, [TotalRevenueList]);
 
+  // Get Last Six Months Revenue
+  useEffect(() => {
+    if (LastSixMonthsRevenueList.length > 0) {
+      setLastSixMonthsRevenue(LastSixMonthsRevenueList);
+      // console.log(LastSixMonthsRevenueList);
+    }
+  }, [LastSixMonthsRevenueList]);
+
   // line chart and radar chart labels of last six months according to current date
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
@@ -129,6 +140,7 @@ const HomeComponent = () => {
 
   // line chart and radar chart data of last six months according to current date
   const chartClicks = Array.from({ length: 6 }, () => 0);
+  const chartRevenue = Array.from({ length: 6 }, () => 0);
 
   if (getLastSixMonthsClicksData.length > 0) {
     getLastSixMonthsClicksData.forEach((entry) => {
@@ -144,6 +156,21 @@ const HomeComponent = () => {
   }
   let finalClicks = chartClicks.reverse();
   // console.log(finalClicks);
+
+  if (getLastSixMonthsRevenue.length > 0) {
+    getLastSixMonthsRevenue.forEach((entry) => {
+      const entryDate = new Date(entry.created_month);
+      const entryMonth = entryDate.getMonth();
+      const entryYear = entryDate.getFullYear();
+
+      const monthIndex =
+        (currentYear - entryYear) * 12 + (currentMonth - entryMonth);
+
+      chartRevenue[monthIndex] = parseInt(entry.total_months_revenue, 10); // Convert to integer
+    });
+  }
+  let finalRevenue = chartRevenue.reverse();
+  // console.log(finalRevenue);
 
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
@@ -227,6 +254,14 @@ const HomeComponent = () => {
   const LineChartData = {
     labels: chartLabels,
     datasets: [
+      {
+        label: 'Revenue',
+        data: finalRevenue,
+        borderColor: '#165BAA',
+        backgroundColor: '#165BAA',
+        borderDash: [5, 5],
+        fill: '',
+      },
       {
         label: 'Clicks',
         data: finalClicks,
@@ -317,6 +352,12 @@ const HomeComponent = () => {
         data: getSixMonthsReferralsList,
         borderColor: 'rgba(161, 246, 245, 0.7)',
         backgroundColor: 'rgba(161, 246, 245, 0.6)',
+      },
+      {
+        label: 'Revenue',
+        data: finalRevenue,
+        borderColor: 'rgba(22,91,170, 0.7)',
+        backgroundColor: 'rgba(22,91,170, 0.6)',
       },
     ],
   };
