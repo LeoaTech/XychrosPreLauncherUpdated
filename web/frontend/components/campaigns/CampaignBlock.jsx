@@ -83,7 +83,7 @@ export default function CampaignBlock({
   const campaign_revenue = useSelector((state) =>
     fetchIndividualCampaignRevenue(state, +campaign_id)
   );
-  // console.log(campaign_clicks);
+  // console.log(campaign_revenue);
 
   const now = new Date(); //Get the current date
 

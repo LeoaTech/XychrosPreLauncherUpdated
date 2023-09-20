@@ -23,7 +23,7 @@ export const fetchIndividualCampaignRevenue = (state, campaign_id) => {
     );
     // console.log(filteredrevenue);
     if (filteredrevenue.length > 0) {
-        return parseInt(filteredrevenue[0].campaign_revenue, 10);
+        return parseFloat(filteredrevenue[0].campaign_revenue, 10);
     } else {
         return 0;
     }
