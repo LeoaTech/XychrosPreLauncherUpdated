@@ -45,7 +45,7 @@ const CampaignsComponent = () => {
   const [getTotalClicks, setTotalClicks] = useState([]);
 
   const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
-  const [getTotalRevenue, setTotalRevenue] = useState([0]);
+  const [getTotalRevenue, setTotalRevenue] = useState([]);
 
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const CampaignsComponent = () => {
 
   // Get Referrals List
   useEffect(() => {
-    if (ReferralList) {
+    if (ReferralList.length > 0) {
       setReferrals(ReferralList);
     }
   }, [ReferralList, dispatch]);
@@ -68,22 +68,17 @@ const CampaignsComponent = () => {
     }
   }, [campaignDetails, dispatch]);
 
-  let t_clicks = 0;
   // Get Total Clicks Count
   useEffect(() => {
     if (TotalClicksList.length > 0) {
       setTotalClicks(TotalClicksList);
     }
   }, [TotalClicksList]);
-  // console.log(getTotalClicks);
-  if (getTotalClicks.length > 0) {
-    t_clicks = getTotalClicks[0].total_clicks;
-  }
 
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue);
+      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue.toFixed(2));
     }
   }, [TotalRevenueList]);
 
@@ -252,7 +247,7 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={t_clicks}
+            value={getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks}
             title="Clicks"
             icon={arrow}
             class="clicks-icon"
@@ -260,7 +255,7 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalRevenue}
+            value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
             title='Revenue'
             icon={Sale}
             class='revenue-icon'

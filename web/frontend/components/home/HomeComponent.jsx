@@ -49,7 +49,7 @@ const HomeComponent = () => {
   const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
 
-  const [getTotalRevenue, setTotalRevenue] = useState([0]);
+  const [getTotalRevenue, setTotalRevenue] = useState([]);
   const [getLastSixMonthsRevenue, setLastSixMonthsRevenue] = useState([]);
   const [getLastFourCampaignsRevenue, setLastFourCampaignsRevenue] = useState([]);
 
@@ -84,20 +84,13 @@ const HomeComponent = () => {
   }, [dispatch, SixMonthReferralList]);
 
   // Get Total Clicks Count
-  let t_clicks = 0;
   useEffect(() => {
     if (TotalClicksList.length > 0) {
       setTotalClicks(TotalClicksList);
     }
   }, [TotalClicksList]);
 
-  // console.log(getTotalClicks);
-
-  if (getTotalClicks.length > 0) {
-    t_clicks = getTotalClicks[0].total_clicks;
-  }
-
-  // Get Last Six Months Clicks Data
+  // Get Last Six Months Clicks
   useEffect(() => {
     if (LastSixMonthsClicksList.length > 0) {
       setLastSixMonthsClicksData(LastSixMonthsClicksList);
@@ -115,7 +108,7 @@ const HomeComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue);
+      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue.toFixed(2));
       // console.log(TotalRevenueList);
     }
   }, [TotalRevenueList]);
@@ -166,7 +159,6 @@ const HomeComponent = () => {
     });
   }
   let finalClicks = chartClicks.reverse();
-  // console.log(finalClicks);
 
   if (getLastSixMonthsRevenue.length > 0) {
     getLastSixMonthsRevenue.forEach((entry) => {
@@ -177,16 +169,17 @@ const HomeComponent = () => {
       const monthIndex =
         (currentYear - entryYear) * 12 + (currentMonth - entryMonth);
 
-      chartRevenue[monthIndex] = parseFloat(entry.total_months_revenue, 10); // Convert to integer
+      chartRevenue[monthIndex] = parseFloat(entry.total_months_revenue.toFixed(2));
     });
   }
   let finalRevenue = chartRevenue.reverse();
-  // console.log(finalRevenue);
 
-  // Calculate the total revenue for the last six months
-  let six_months_total_revenue = 0;
-  const lastSixMonthsTotalRevenue = finalRevenue?.slice(0, 6).reduce((acc, currentValue) => acc + currentValue, 0);
-  six_months_total_revenue = TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue;
+  // Get Total Revenue For Last Six Months
+  let six_months_total_revenue;
+  if(getLastSixMonthsRevenue.length > 0) {
+    const lastSixMonthsTotalRevenue = finalRevenue?.slice(0, 6).reduce((acc, currentValue) => acc + currentValue, 0);
+    six_months_total_revenue = TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue.toFixed(2);
+  }
 
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
@@ -482,7 +475,7 @@ const HomeComponent = () => {
             </Suspense>
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
-                value={t_clicks}
+                value={getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks}
                 title='Clicks'
                 icon={arrow}
                 class='clicks-icon'
@@ -490,7 +483,7 @@ const HomeComponent = () => {
             </Suspense>
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
-                  value={getTotalRevenue}
+                  value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
                   title='Revenue'
                   icon={Sale}
                   class='revenue-icon'
@@ -501,7 +494,7 @@ const HomeComponent = () => {
             <Charts
               type='line'
               header='Total Revenue'
-              value={six_months_total_revenue}
+              value={six_months_total_revenue || 0}
               subheader='Last 6 Months Data'
               LineChartOptions={LineChartOptions}
               LineChartData={LineChartData}
