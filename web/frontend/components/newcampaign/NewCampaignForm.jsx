@@ -1227,6 +1227,7 @@ function NewCampaignForm() {
             setIsLoading(false);
             handleExpand(0);
 
+            navigate("/campaigns");
           }
         } else {
           setIsLoading(false);
