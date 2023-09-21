@@ -1077,6 +1077,7 @@ function NewCampaignForm() {
     let campaignDetails;
     // Editing Camapign Data Form
     if (isEdit) {
+      e.preventDefault();
       setDraftModal(false);
       let updateCampaignSettingsId = toast.loading(
         "Updating campaign settings..."
@@ -1142,6 +1143,7 @@ function NewCampaignForm() {
     }
     // Adding A New Campaign and Save in Database
     else {
+      e.preventDefault();
 
       setDraftModal(false);
       if (
