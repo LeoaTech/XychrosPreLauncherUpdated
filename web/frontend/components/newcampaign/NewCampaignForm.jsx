@@ -203,7 +203,6 @@ function NewCampaignForm() {
     headers: { "Content-Type": "application/json" },
   });
 
-  console.log(fetchCodes, "Codes");
   useEffect(() => {
     if (fetchCodes.length > 0) {
       setDiscountList([...discountList, ...fetchCodes]);
@@ -215,7 +214,6 @@ function NewCampaignForm() {
     if (campaignsDiscountCode?.length > 0) {
       // Use Set to remove duplicates and convert back to an array
       let uniqueCodes = [...new Set(campaignsDiscountCode)];
-      console.log(uniqueCodes, "uniqueCodes");
 
       let codesList = [...uniqueCodes, ...discountList];
       setDiscountList([...new Set(codesList)]);
@@ -232,7 +230,6 @@ function NewCampaignForm() {
       });
 
       let uniqueList = codesList?.filter((code) => code !== null);
-      console.log(uniqueList, "unique List");
 
       let uniqudiscounts = [...uniqueList, ...discountList];
       setDiscountList([...new Set(uniqudiscounts)]);
@@ -849,7 +846,6 @@ function NewCampaignForm() {
     }
   }
 
-  console.log(discountList, "Codes Lists");
 
   // Handle Radio button Change events
 
