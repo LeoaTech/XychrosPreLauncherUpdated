@@ -6,7 +6,6 @@ import { SideBar, Header } from "../components/index";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import useFetchAllProducts from "../constant/fetchProducts";
 import { useStateContext } from "../contexts/ContextProvider";
-import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
 import useFetchCampaignsDetails from "../constant/fetchCampaignDetails";
@@ -18,7 +17,7 @@ const NewCampaignForm = lazy(() =>
 
 const NewCampaign = () => {
   const { activeMenu } = useStateContext();
-  const { darkTheme } = useThemeContext();
+
   const dispatch = useDispatch();
   // Page render Scroll to Top
   useEffect(() => {
@@ -31,7 +30,6 @@ const NewCampaign = () => {
     headers: { "Content-Type": "application/json" },
   });
 
-  console.log(campaignsDetails)
   let productsList = useFetchAllProducts("/api/2022-10/products.json", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
