@@ -47,6 +47,7 @@ import {
 } from "../../app/features/campaign_details/campaign_details";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useFetchDiscountCodes from "../../constant/fetchDiscountCodes";
 
 const SaveDraft = lazy(() => import("../modal/SaveDraft"));
 
@@ -197,12 +198,27 @@ function NewCampaignForm() {
     }
   }, [isEdit]);
 
+  const fetchCodes = useFetchDiscountCodes("/api/fetch_discount_codes", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  console.log(fetchCodes, "Codes");
+  useEffect(() => {
+    if (fetchCodes.length > 0) {
+      setDiscountList([...discountList, ...fetchCodes]);
+    }
+  }, [fetchCodes]);
+
   // Get All Campaigns Discount Code List
   useEffect(() => {
     if (campaignsDiscountCode?.length > 0) {
       // Use Set to remove duplicates and convert back to an array
       let uniqueCodes = [...new Set(campaignsDiscountCode)];
-      setDiscountList(uniqueCodes);
+      console.log(uniqueCodes, "uniqueCodes");
+
+      let codesList = [...uniqueCodes, ...discountList];
+      setDiscountList([...new Set(codesList)]);
     }
 
     // Get All Campaigns Discount Code
@@ -216,8 +232,10 @@ function NewCampaignForm() {
       });
 
       let uniqueList = codesList?.filter((code) => code !== null);
+      console.log(uniqueList, "unique List");
 
-      setDiscountList(uniqueList);
+      let uniqudiscounts = [...uniqueList, ...discountList];
+      setDiscountList([...new Set(uniqudiscounts)]);
     }
   }, [campaignsDiscountCode, fetchCampaign]);
 
@@ -276,7 +294,6 @@ function NewCampaignForm() {
       "Content-Type": "application/json",
     },
   });
-
   // if Fetch result is successful store the result in templateList
   useEffect(() => {
     if (templateData?.length > 0) {
@@ -831,6 +848,8 @@ function NewCampaignForm() {
       setNewCampaignData({ ...newCampaignData, [name]: checked });
     }
   }
+
+  console.log(discountList, "Codes Lists");
 
   // Handle Radio button Change events
 
@@ -2196,9 +2215,9 @@ function NewCampaignForm() {
                       <button
                         className="nextBtn"
                         onClick={() => handleDiscountValidation(3)}
-                      
                         disabled={
-                          (newCampaignData?.reward_3_tier && !isReward3Filled) ||
+                          (newCampaignData?.reward_3_tier &&
+                            !isReward3Filled) ||
                           (newCampaignData?.reward_4_tier && !isReward4Filled)
                         }
                       >
