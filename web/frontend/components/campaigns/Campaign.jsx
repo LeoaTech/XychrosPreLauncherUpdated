@@ -100,28 +100,28 @@ const CampaignsComponent = () => {
     setCurrentPage((currentPage) => currentPage + 1);
   };
 
+  // Delete From Store API Call
+  async function deleteFromStore(id) {
+    try {
+      const response = await fetch("/api/delete_from_store", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          campaign_id: id,
+        }),
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // OLD HANDLE DELETE CAMPAIGN FUNCTION  [will only set True the is_Deleted flag but not removing camapigns ]
   const handleDelete = async (id) => {
     setDeleteId(id);
-
-    // Delete From Store API Call
-    async function deleteFromStore(id) {
-      try {
-        const response = await fetch("/api/delete_from_store", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            campaign_id: id,
-          }),
-        });
-        const responseData = await response.json();
-        console.log(responseData);
-      } catch (error) {
-        console.log(error);
-      }
-    }
 
     try {
       const deletedCampaign = getCampaigns.find(
@@ -133,7 +133,7 @@ const CampaignsComponent = () => {
       );
       setCampaignName(deletedCampaign?.name);
 
-      await deleteFromStore(id);
+      // await deleteFromStore(id);
       const response = await fetch(`/api/campaignsettings/${id}`, {
         method: "PATCH",
         headers: {
@@ -183,6 +183,7 @@ const CampaignsComponent = () => {
 
     setCampaignName(deletedCampaign?.name);
     try {
+      await deleteFromStore(camp_id);
       const response2 = await fetch(`/api/campaignsettings/${camp_id}`, {
         method: "DELETE",
         headers: {
@@ -192,7 +193,6 @@ const CampaignsComponent = () => {
 
       if (response2.ok) {
         // Update the state after a successful deletion
-
         await dispatch(updateCampaign(deletedCampaign));
         await dispatch(updateCampaignDetails(deletedDetails));
         try {
