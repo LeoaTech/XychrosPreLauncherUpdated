@@ -551,30 +551,33 @@ const HomeComponent = () => {
             />
           </div>
           <div className='dual-charts'>
-            {Array.isArray(getLastFourCampaignsClicks) && getLastFourCampaignsClicks.length > 0 &&
-            Array.isArray(getLastFourCampaignsReferrals) && getLastFourCampaignsReferrals.length > 0 ? (
-              <>
-                <Charts
-                  type='donut'
-                  header='Total Referrals'
-                  value={sumOfLastFourCampaignsReferrals || 0}
-                  subheader='Last 4 Campaigns Data'
-                  DonutChartOptions={DonutChartOptions}
-                  DonutChartData={DonutChartData2}
-                />
-                <Charts
-                  type='donut'
-                  header='Total Clicks'
-                  value={sumOfLastFourCampaignsClicks || 0}
-                  subheader='Last 4 Campaigns Data'
-                  DonutChartOptions={DonutChartOptions}
-                  DonutChartData={DonutChartData}
-                />
-              </>
-              ) : (
-                <div className='intro-section'>
-                  <div className='intro-card'><p>Loading Last Four Campaigns Data...</p></div>
-                </div>
+            {Array.isArray(getLastFourCampaignsClicks) && getLastFourCampaignsClicks.length > 0 ? (
+              <Charts
+                type='donut'
+                header='Total Clicks'
+                value={sumOfLastFourCampaignsClicks || 0}
+                subheader='Last 4 Campaigns Data'
+                DonutChartOptions={DonutChartOptions}
+                DonutChartData={DonutChartData}
+              />
+            ) : (
+              <div className='intro-section'>
+                <div className='intro-card'><p>No Last Four Campaigns Clicks Data Available Yet</p></div>
+              </div>
+            )}
+            {Array.isArray(getLastFourCampaignsReferrals) && getLastFourCampaignsReferrals.length > 0 ? (
+              <Charts
+                type='donut'
+                header='Total Referrals'
+                value={sumOfLastFourCampaignsReferrals || 0}
+                subheader='Last 4 Campaigns Data'
+                DonutChartOptions={DonutChartOptions}
+                DonutChartData={DonutChartData2}
+              />
+            ) : (
+              <div className='intro-section'>
+                <div className='intro-card'><p>Not Last Four Campaigns Referrals Data Available Yet</p></div>
+              </div>
             )}
           </div>
         </div>
