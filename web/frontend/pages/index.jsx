@@ -57,6 +57,12 @@ export default function HomePage() {
   });
 
   // Get Campaign Settings List
+  const campaigns = useFetchCampaignsData("/api/getcampaigns", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  // Get Campaign Details List
   const campaignsDetails = useFetchCampaignsDetails("/api/campaigndetails", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -108,7 +114,12 @@ export default function HomePage() {
   );
 
   // Dispatch API result in Redux store to get access data in the App
-
+  useEffect(() => {
+    if (campaigns?.length > 0) {
+      dispatch(fetchCampaign(campaigns));
+    }
+  }, [campaigns, dispatch]);
+  
   useEffect(() => {
     if (campaignsDetails?.length > 0) {
       dispatch(fetchCampaignDetails(campaignsDetails));
