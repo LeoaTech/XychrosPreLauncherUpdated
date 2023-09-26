@@ -20,83 +20,90 @@ export default function discountCodesApiEndpoints(app) {
   });
 }
 
-// Mutation to get Each type of Discounts and their associated Codes
+
+// Get Discount Codes From Store 
 async function getCodesListNode(session) {
   try {
     const client = new Shopify.Clients.Graphql(
       session?.shop,
       session?.accessToken
     );
-    const mutationResponse = await client.query({
+
+    let allDiscountCodes = [];
+
+    const mutationResponse2 = await client.query({
       data: `query {
-        codeDiscountNodes(first: 10) {
-          nodes {
-            id
-            codeDiscount {
-              __typename
-              ... on DiscountCodeBasic {
-                title
-                createdAt
-                startsAt
-                endsAt
-                status
-                summary
-                codes(first: 2) {
+        discountNodes(first: 100) {
+          edges {
+            node {
+              id
+              discount {
+                ... on DiscountCodeBasic {
+                  title
+                   codes(first: 5) {
                   nodes {
                     code
                   }
                 }
-              }
-              ... on DiscountCodeBxgy {
-                title
-                createdAt
-                startsAt
-                endsAt
-                status
-                summary
-                codes(first: 2) {
+                }
+                ... on DiscountCodeBxgy {
+                  title
+                codes(first: 5) {
                   nodes {
                     code
                   }
                 }
-              }
-              ... on DiscountCodeFreeShipping {
-                title
-                createdAt
-                startsAt
-                endsAt
-                status
-                summary
-                codes(first: 2) {
-                  nodes {
-                    code
+                }
+                ... on DiscountCodeFreeShipping {
+                  title
+                  codes(first: 5) {
+                    nodes {
+                      code
+                    }
                   }
                 }
+                ... on DiscountAutomaticApp {
+                  title
+                  
+                }
+                ... on DiscountAutomaticBasic {
+                  title
+                  
+                }
+                ... on DiscountAutomaticBxgy {
+                  title
+                 
+                }
+              
               }
             }
           }
         }
-        }`,
+      }`,
     });
 
-    console.log(
-      mutationResponse?.body?.data?.codeDiscountNodes?.nodes,
-      "Mutation Response"
-    );
+    // console.log(
+    //   mutationResponse2?.body?.data?.discountNodes?.edges[0]?.node?.discount,
+    //   "Mutation Response"
+    // );
 
-    let discountCodes =
-      mutationResponse?.body?.data?.codeDiscountNodes?.nodes?.map(
-        (disc) => disc?.codeDiscount?.codes?.nodes[0]?.code
+    let discountNodes = mutationResponse2?.body?.data?.discountNodes?.edges;
+    if (discountNodes) {
+      console.log(discountNodes);
+
+      allDiscountCodes = allDiscountCodes.concat(
+        discountNodes?.map(
+          (disc) => disc?.node?.discount?.codes?.nodes[0]?.code
+        )
       );
-    console.log(discountCodes, "Codes");
-
-    if (discountCodes) {
-      return discountCodes;
-    } else {
-      return [];
     }
+
+    console.log(allDiscountCodes, "All Codes");
+
+    return allDiscountCodes;
   } catch (error) {
     console.log(error?.response?.errors, "Mutation Response Error");
+    return [];
   }
 }
 
