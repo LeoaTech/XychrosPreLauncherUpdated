@@ -25,8 +25,10 @@ export const fetchReferralById = (state, campaign_id) =>
 
 // Get Last Four Campaigns' Referrals
 export const fetchLastFourCampaignsReferrals = (state) => {
-  const four_latest_campaigns = [...state.campaign.campaigns];
-  four_latest_campaigns.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+  const currentDate = new Date();
+  const four_latest_campaigns = [...state.campaign.campaigns]
+    .filter((campaign) => !campaign.is_deleted && new Date(campaign.start_date.split(' ')[0]) <= currentDate)
+    .sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
   const latestFourCampaigns = four_latest_campaigns.slice(0, 4);
   const totalReferralsByCampaign = latestFourCampaigns.map((campaign) => {
     const referral = state.referrals.referrals.find((referral) => referral.campaign_id === campaign.campaign_id);
