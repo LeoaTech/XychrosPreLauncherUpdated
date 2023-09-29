@@ -124,6 +124,7 @@ export default function getUrlApi(app, secret) {
       let isemail_valid = await emailValidator.validate(email);
 
       if (isemail_valid.validators.smtp.valid == false) {
+        console.log(res);
         return res
           .status(404)
           .json({ success: false, message: 'Please provide a valid email' });
@@ -204,7 +205,7 @@ export default function getUrlApi(app, secret) {
               first_name: '',
               last_name: '',
               email: email,
-              phone: "",
+              phone: '',
               verified_email: true,
               tags: tags,
               addresses: [
