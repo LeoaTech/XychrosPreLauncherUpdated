@@ -1,4 +1,3 @@
-
 import { Shopify } from "@shopify/shopify-api";
 import axios from "axios";
 import NewPool from "pg";
@@ -12,9 +11,9 @@ pool.connect((err, result) => {
 const price_plans = await pool.query(`SELECT * FROM  pricing_plans`);
 
 export const BillingInterval = {
-  OneTime: 'ONE_TIME',
-  Every30Days: 'EVERY_30_DAYS',
-  Annual: 'ANNUAL',
+  OneTime: "ONE_TIME",
+  Every30Days: "EVERY_30_DAYS",
+  Annual: "ANNUAL",
 };
 
 const RECURRING_INTERVALS = [
@@ -36,13 +35,13 @@ export default async function ensureBilling(
   session,
   { chargeName, amount, currencyCode, interval, collecting_phones },
 
-  isProdOverride = process.env.NODE_ENV === 'production'
+  isProdOverride = process.env.NODE_ENV === "production"
 ) {
   if (!Object.values(BillingInterval).includes(interval)) {
     throw `Unrecognized billing interval '${interval}'`;
   }
   /* Uncomment This line to TEST for environment */
-  // isProd = isProdOverride;
+  isProd = isProdOverride;
   let hasPayment;
   let confirmationUrl = null;
 
@@ -75,7 +74,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
     for (let i = 0, len = subscriptions?.length; i < len; i++) {
       if (
         subscriptions[i].name === chargeName &&
-        !subscriptions[i].test // !isProd ||
+        !subscriptions[i].test // ||!isProd 
       ) {
         return true;
       }
@@ -98,7 +97,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
         if (
           node.name === chargeName &&
           !node.test && //!isProd ||
-          node.status === 'ACTIVE'
+          node.status === "ACTIVE"
         ) {
           return true;
         }
@@ -118,7 +117,7 @@ async function requestPayment(
   const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
   const returnUrl = `https://${Shopify.Context.HOST_NAME}?shop=${
     session.shop
-  }&host=${Buffer.from(`${session.shop}/admin`).toString('base64')}`;
+  }&host=${Buffer.from(`${session.shop}/admin`).toString("base64")}`;
 
   let data;
   if (isRecurring(interval)) {
@@ -142,11 +141,12 @@ async function requestPayment(
   if (data.userErrors?.length) {
     console.log(data.userErrors, "Errror in reqest payment");
     throw new ShopifyBillingError(
-      'Error while billing the store',
+      "Error while billing the store",
       data.userErrors
     );
   }
 
+  console.log(data, "PAYMENT");
   return data.confirmationUrl;
 }
 
@@ -179,7 +179,7 @@ async function requestRecurringPayment(
           },
         ],
         returnUrl,
-        test: true, //!isProd,
+        test: null || false, //!isProd,
       },
     },
   });
@@ -187,7 +187,7 @@ async function requestRecurringPayment(
   if (mutationResponse.body.errors) {
     console.log(mutationResponse.body.errors, "Request recurring failed");
     throw new ShopifyBillingError(
-      'Error while billing the store',
+      "Error while billing the store",
       mutationResponse.body.errors
     );
   }
@@ -206,7 +206,7 @@ async function requestSinglePayment(
         name: chargeName,
         price: { amount, currencyCode },
         returnUrl,
-        test: process.env.NODE_ENV !== 'production',
+        test: process.env.NODE_ENV !== "production",
       },
     },
   });
@@ -214,7 +214,7 @@ async function requestSinglePayment(
   if (mutationResponse.body.errors) {
     //&& mutationResponse.body.errors.length
     throw new ShopifyBillingError(
-      'Error while billing the store',
+      "Error while billing the store",
       mutationResponse.body.errors
     );
   }
@@ -227,13 +227,13 @@ export async function getSubscriptionCharge(session) {
   try {
     let response = await axios.get(baseUrl, {
       headers: {
-        'X-Shopify-Access-Token': session?.accessToken,
-        'Content-Type': 'application/json',
+        "X-Shopify-Access-Token": session?.accessToken,
+        "Content-Type": "application/json",
       },
     });
     const RecurringChargeList = response?.data?.recurring_application_charges; //return list of all recurring charges
     let activePlan = RecurringChargeList?.find(
-      (recurringCharge) => recurringCharge?.status === 'active' //Get active charge Plan details (Id, price,status)
+      (recurringCharge) => recurringCharge?.status === "active" //Get active charge Plan details (Id, price,status)
     );
 
     return activePlan;
@@ -268,7 +268,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
 
     let myPlan = price_plans?.rows.find((plan) => plan?.plan_name === tierName);
 
-    myPlan['billing_required'] = true;
+    myPlan["billing_required"] = true;
     const { plan_name, billing_required } = myPlan;
     let totalBill, collectingPhones, subscriptionId;
 
@@ -328,7 +328,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
         return error;
       }
     }
-    return 'Updated DB';
+    return "Updated DB";
   } else {
     // Save the Free Plan Details Only when user Installs the App first time
     if (planExists?.rowCount <= 0) {
@@ -336,17 +336,17 @@ async function saveSubscribedPlan(subscribedPlan, session) {
         const newPlan = await pool.query(
           `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id, billing_required,collecting_phones) VALUES ($1, $2, $3, $4, $5, $6,$7,$8)`,
           [
-            'Free',
+            "Free",
             0.0,
             date.toISOString(),
-            '',
-            'NOT ACTIVE',
+            "",
+            "NOT ACTIVE",
             session?.shop,
             false,
             false,
           ]
         );
-        return 'Update Free Plan';
+        return "Update Free Plan";
       } catch (err) {
         console.log(err);
         return err;
@@ -359,49 +359,44 @@ async function saveSubscribedPlan(subscribedPlan, session) {
 
 // Request Cancel App Subscription function with the app subscription ID
 
-
 export async function requestCancelSubscription(session, myId) {
- 
-    try {
-      const client = new Shopify.Clients.Graphql(
-        session.shop,
-        session.accessToken
-      );
+  try {
+    const client = new Shopify.Clients.Graphql(
+      session.shop,
+      session.accessToken
+    );
 
-      const mutationResponse = await client.query({
-        data: {
-          query: CANCEL_MUTATION,
-          variables: {
-            id: myId,
-          },
+    const mutationResponse = await client.query({
+      data: {
+        query: CANCEL_MUTATION,
+        variables: {
+          id: myId,
         },
-      });
+      },
+    });
 
+    let data = mutationResponse?.body?.data?.appSubscriptionCancel;
 
-      let data = mutationResponse?.body?.data?.appSubscriptionCancel;
-
-      if (data?.userErrors?.length) {
-        console.log(data.userErrors, "Error for cancelling request");
-        throw new ShopifyBillingError(
-          "Error while billing the store",
-          data.userErrors
-        );
-      }
-
-      return data;
-    } catch (e) {
-      if (
-        e instanceof Shopify.Errors.HttpResponseError &&
-        e.response.code === 401
-      ) {
-        // We only want to catch 401s here, anything else should bubble up
-        console.log(e);
-      } else {
-        throw e;
-      }
+    if (data?.userErrors?.length) {
+      console.log(data.userErrors, "Error for cancelling request");
+      throw new ShopifyBillingError(
+        "Error while billing the store",
+        data.userErrors
+      );
     }
-  
 
+    return data;
+  } catch (e) {
+    if (
+      e instanceof Shopify.Errors.HttpResponseError &&
+      e.response.code === 401
+    ) {
+      // We only want to catch 401s here, anything else should bubble up
+      console.log(e);
+    } else {
+      throw e;
+    }
+  }
 }
 
 // Cancel App Subscriptions & save Data to DB
@@ -416,7 +411,7 @@ export async function cancelAppSubscription(session, collecting_phones) {
   let plan_Id = planExists?.rows[0]?.subscription_id;
 
   // let currentId = await getCurrentSubscriptionId(client);
-  let totalBill = parseFloat('0.0');
+  let totalBill = parseFloat("0.0");
   if (collecting_phones === true) {
     totalBill += 5.0;
   } else {
@@ -429,7 +424,7 @@ export async function cancelAppSubscription(session, collecting_phones) {
     //  error on cancel Subscription
     if (cancel_plan?.userErrors?.length) {
       throw new ShopifyBillingError(
-        'Error while cancel the store subscription',
+        "Error while cancel the store subscription",
         cancel_plan?.userErrors
       );
     } else {
@@ -438,11 +433,11 @@ export async function cancelAppSubscription(session, collecting_phones) {
           const savePlan = await pool.query(
             `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id, collecting_phones,billing_required) VALUES ($1, $2, $3, $4, $5, $6,$7,$8) RETURNING *`,
             [
-              'Free',
+              "Free",
               totalBill,
               date.toISOString(),
-              '',
-              '',
+              "",
+              "",
               session?.shop,
               collecting_phones,
               false,
@@ -467,10 +462,10 @@ export async function cancelAppSubscription(session, collecting_phones) {
            WHERE
            shop_id=$8 RETURNING *`,
             [
-              'Free',
+              "Free",
               totalBill,
               date.toISOString(),
-              '',
+              "",
               cancelSubscription?.status,
               false,
               collecting_phones,
@@ -490,11 +485,11 @@ export async function cancelAppSubscription(session, collecting_phones) {
       const savePlan = await pool.query(
         `INSERT INTO subscriptions_list (plan_name, price, created_at, subscription_id, billing_status, shop_id,collecting_phones, billing_required) VALUES ($1, $2, $3, $4, $5, $6,$7,$8) RETURNING *`,
         [
-          'Free',
+          "Free",
           totalBill,
           date.toISOString(),
-          '',
-          '',
+          "",
+          "",
           session?.shop,
           false,
           false,
@@ -512,7 +507,7 @@ function isRecurring(interval) {
 }
 
 export function ShopifyBillingError(message, errorData) {
-  this.name = 'ShopifyBillingError';
+  this.name = "ShopifyBillingError";
   this.stack = new Error().stack;
 
   this.message = message;
@@ -626,7 +621,7 @@ const RECURRING_PURCHASE_MUTATION = `
     ) {
       confirmationUrl
       appSubscription {
-        id,status
+        id,status,test,
         lineItems {
           id
           plan {

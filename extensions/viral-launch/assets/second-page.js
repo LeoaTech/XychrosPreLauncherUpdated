@@ -173,7 +173,7 @@ function updateReferralCountValue(referralCount, lastHighestTier) {
 const get_referrals = async () => {
   console.log('I came here');
   console.log(campaign_name.innerHTML);
-  const url = '/apps/xychrosupdated/api/get_referrals';
+  const url = '/apps/product-prelauncher/api/get_referrals';
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -500,7 +500,6 @@ const get_referrals = async () => {
       if (parseInt(remaining_referrals.innerText) == 1) {
         count_detail.innerText = 'Invite 1 more friend to unlock next reward!';
       }
-
     } else {
       count_referrals.innerText =
         '0 friends have joined! Invite friends to Join';

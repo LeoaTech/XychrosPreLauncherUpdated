@@ -6,9 +6,10 @@ import { SideBar, Header } from "../components/index";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import useFetchAllProducts from "../constant/fetchProducts";
 import { useStateContext } from "../contexts/ContextProvider";
-import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
+import useFetchCampaignsDetails from "../constant/fetchCampaignDetails";
+import { fetchCampaignDetails } from "../app/features/campaign_details/campaign_details";
 
 const NewCampaignForm = lazy(() =>
   import("../components/newcampaign/NewCampaignForm")
@@ -16,12 +17,19 @@ const NewCampaignForm = lazy(() =>
 
 const NewCampaign = () => {
   const { activeMenu } = useStateContext();
-  const { darkTheme } = useThemeContext();
+
   const dispatch = useDispatch();
   // Page render Scroll to Top
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Get Campaign details List
+  const campaignsDetails = useFetchCampaignsDetails("/api/campaigndetails", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
   let productsList = useFetchAllProducts("/api/2022-10/products.json", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -43,6 +51,12 @@ const NewCampaign = () => {
       dispatch(fetchProducts(productsList));
     }
   }, [dispatch, productsList]);
+
+  useEffect(() => {
+    if (campaignsDetails?.length > 0) {
+      dispatch(fetchCampaignDetails(campaignsDetails));
+    }
+  }, [campaignsDetails, dispatch]);
 
   return (
     <div className="app">

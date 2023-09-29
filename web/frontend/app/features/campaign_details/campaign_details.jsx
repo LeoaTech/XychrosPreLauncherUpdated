@@ -29,6 +29,20 @@ export const fetchCampaignsDetailsList = (state) =>
     (camp) => camp?.is_deleted === false
   );
 
+export const fetchCampaignsDiscountCodes = (state) => {
+  let discountList = [];
+
+  state?.campaign_details?.campaigns_details?.forEach((campaign) => {
+    discountList.push(campaign?.reward_1_code);
+    discountList.push(campaign?.reward_2_code);
+    discountList.push(campaign?.reward_3_code);
+    discountList.push(campaign?.reward_4_code);
+  });
+
+  let uniqueList = discountList?.filter((code) => code !== null);
+
+  return uniqueList;
+};
 //Get Camapign which has expired and are deactivated
 export const fetchDeactivatedCampaignsByName = (state) => {
   let result = [];

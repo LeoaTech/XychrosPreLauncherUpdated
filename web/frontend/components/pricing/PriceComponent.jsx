@@ -81,7 +81,7 @@ const PriceComponent = () => {
     const subscribeAddOns = {
       ...activePlan,
       price: chargeAmount,
-      billing_required: true,    //Billing required true for Free plan with add-ons selected
+      billing_required: true, //Billing required true for Free plan with add-ons selected
     };
     const response = await fetchAuth("/api/confirm-add-ons", {
       method: "POST",
@@ -236,16 +236,26 @@ const PriceComponent = () => {
         <div className="price-block">
           {pricePlans?.length ? (
             pricePlans?.map((price, index) => {
+              const isCurrentSubscribedPlan = price.id === subscribedPlanId;
+
               return (
                 <div
                   key={index}
+                  // style={{
+                  //   transform: `translateX(-${
+                  //     currentCardIndex * (cardWidth + 10)
+                  //   }px)`,
+                  // }}
+                  // className={`pricing-card ${
+                  //   index === subscribedPlanId - 1 ? "" : "active"
+                  // }`}
                   style={{
                     transform: `translateX(-${
                       currentCardIndex * (cardWidth + 10)
                     }px)`,
                   }}
                   className={`pricing-card ${
-                    index === subscribedPlanId - 1 ? "active" : ""
+                    isCurrentSubscribedPlan ? "active" : ""
                   }`}
                 >
                   <PricingBlock

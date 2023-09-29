@@ -25,7 +25,7 @@ const templateApiCalls = async (
   // start of landing template settings
 
   const landing_show_header_footer = templateData.landing_show_header_footer;
-  const landing_background_overlay = templateData.landing_background_overlay; 
+  const landing_background_overlay = templateData.landing_background_overlay;
   const landing_main_color = `#${templateData.landing_main_color}`;
   const landing_accent_color = `#${templateData.landing_accent_color}`;
   const landing_divider = templateData.landing_divider;
@@ -50,7 +50,7 @@ const templateApiCalls = async (
   // start of rewards template settings
 
   const rewards_show_header_footer = templateData.rewards_show_header_footer;
-  const rewards_background_overlay = templateData.rewards_background_overlay; 
+  const rewards_background_overlay = templateData.rewards_background_overlay;
   const rewards_main_color = `#${templateData.rewards_main_color}`;
   const rewards_accent_color = `#${templateData.rewards_accent_color}`;
   const rewards_divider = templateData.rewards_divider; // need to be updated in database
@@ -189,23 +189,25 @@ const templateApiCalls = async (
     const uniqueTemplateName = templateName + '_' + uuid; // concatenate base name and uuid
     try {
       const response = await fetch(
-        `https://${shopURL}/admin/api/${api_version}/themes/${themeid}/assets.json`, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify({
-          asset: {
-            key: `templates/page.${uniqueTemplateName}.json`,
-            value: JSON.stringify(body1),
-          },
-        }),
-      });
+        `https://${shopURL}/admin/api/${api_version}/themes/${themeid}/assets.json`,
+        {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({
+            asset: {
+              key: `templates/page.${uniqueTemplateName}.json`,
+              value: JSON.stringify(body1),
+            },
+          }),
+        }
+      );
 
       const data = await response.json();
 
       // retrieve and return the name of created template from the response
       const templateName = data.asset.key.split('/')[1].split('.')[1];
       console.log(`Template "${templateName}" Created!`);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to create page template: ${data.errors}`);
       }
@@ -353,7 +355,7 @@ const templateApiCalls = async (
         }
       );
       const data = await response.json();
-      console.log("Updated Template1 with second Page Handle");
+      console.log('Updated Template1 with second Page Handle');
       if (!response.ok) {
         throw new Error(`Failed to update page template: ${data.errors}`);
       }
@@ -410,7 +412,7 @@ const templateApiCalls = async (
         }
       );
       const data = await response.json();
-      console.log("Updated Template2 with first Page Handle");
+      console.log('Updated Template2 with first Page Handle');
       if (!response.ok) {
         throw new Error(`Failed to update page template: ${data.errors}`);
       }
@@ -474,7 +476,7 @@ const templateApiCalls = async (
     rewards_template_key: rewards_template_key,
     rewards_template_link: rewardsTemplateLink,
     rewards_page_id: rewards_page_id,
-    rewards_page_link: rewardsPageLink
+    rewards_page_link: rewardsPageLink,
   };
 
   return campaignDetails;
@@ -501,21 +503,17 @@ export default function createTemplateApiEndpoint(app) {
         templateData,
         campaignData
       );
-      return res
-        .status(200)
-        .json({
-          success: true,
-          data: campaign_details,
-          message: 'Templates and Pages Created Successfully',
-        });
+      return res.status(200).json({
+        success: true,
+        data: campaign_details,
+        message: 'Templates and Pages Created Successfully',
+      });
     } catch (error) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: 'Failed to Create Templates and Pages',
-          error: error.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: 'Failed to Create Templates and Pages',
+        error: error.message,
+      });
     }
   });
 }
