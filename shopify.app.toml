@@ -1,8 +1,8 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-name = "test-2-app"
-client_id = "5c477447c78bc3bbdecf326daf0aaab6"
-application_url = "https://americas-dns-handhelds-group.trycloudflare.com"
+name = "XychrosUpdatedTestServer"
+client_id = "038304675f7b4a7b2b16705368a68a45"
+application_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com"
 embedded = true
 
 [access_scopes]
@@ -11,22 +11,22 @@ scopes = "read_orders,read_products,read_content,write_content,read_themes,write
 
 [auth]
 redirect_urls = [
-  "https://americas-dns-handhelds-group.trycloudflare.com/auth/callback",
-  "https://americas-dns-handhelds-group.trycloudflare.com/auth/shopify/callback",
-  "https://americas-dns-handhelds-group.trycloudflare.com/api/auth/callback"
+  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/auth/callback",
+  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/auth/shopify/callback",
+  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/auth/callback"
 ]
 
 [webhooks]
 api_version = "2023-07"
 
   [webhooks.privacy_compliance]
-  customer_deletion_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
-  customer_data_request_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
-  shop_deletion_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
+  customer_deletion_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
+  customer_data_request_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
+  shop_deletion_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
 
 [app_proxy]
-url = "https://americas-dns-handhelds-group.trycloudflare.com"
-subpath = "test-2-app"
+url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com"
+subpath = "product-prelauncher"
 prefix = "apps"
 
 [pos]
@@ -34,4 +34,4 @@ embedded = false
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "app-running.myshopify.com"
+dev_store_url = "billing-test-xychros.myshopify.com"
