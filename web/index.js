@@ -52,13 +52,15 @@ const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
-  SCOPES: process.env.SCOPES.split(","),
-  HOST_NAME: process.env.HOST.replace(/https?:\/\//, ""),
-  HOST_SCHEME: process.env.HOST.split("://")[0],
+  SCOPES: process.env.SCOPES.split(','),
+  HOST_NAME: process.env.HOST.replace(/https?:\/\//, ''),
+  HOST_SCHEME: process.env.HOST.split('://')[0],
   API_VERSION: LATEST_API_VERSION,
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
-  SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(DB_PATH),
+  SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(
+    process.env.DB_PATH
+  ),
 });
 
 
