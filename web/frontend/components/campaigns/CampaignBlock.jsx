@@ -11,6 +11,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { getTotalCampaigns } from "../../app/features/campaigns/campaignSlice";
 import { fetchReferralById } from "../../app/features/referrals/referralSlice";
 import { fetchIndividualCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
+import { fetchIndividualCampaignRevenue } from "../../app/features/revenue/totalRevenueSlice";
 import { useSelector } from "react-redux";
 import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
 import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
@@ -34,6 +35,7 @@ export default function CampaignBlock({
   setDeleteId,
   campaignName,
   setCampaignName,
+  TotalRevenueList,
 }) {
   // Campaign Card Block Data Properties
   const {
@@ -76,7 +78,11 @@ export default function CampaignBlock({
   const campaign_clicks = useSelector((state) =>
     fetchIndividualCampaignClicks(state, +campaign_id)
   );
-  // console.log(campaign_clicks);
+
+  // Individual campaign revenue
+  const campaign_revenue = useSelector((state) =>
+    fetchIndividualCampaignRevenue(state, +campaign_id)
+  );
 
   const now = new Date(); //Get the current date
 
@@ -237,8 +243,7 @@ export default function CampaignBlock({
             </Suspense>
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
-                is_deactivated={is_deactivated}
-                value="$37"
+                value={campaign_revenue === 0 ? 0 : TotalRevenueList[0]?.currency + campaign_revenue}
                 icon={Sale}
                 className="revenue-icon"
               />
@@ -246,7 +251,7 @@ export default function CampaignBlock({
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
                 is_deactivated={is_deactivated}
-                value={campaign_clicks}
+                value={campaign_clicks || 0}
                 icon={arrow}
                 className="clicks-icon"
               />

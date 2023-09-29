@@ -7,6 +7,8 @@ import { fetchAllCampaigns } from "../../app/features/campaigns/campaignSlice";
 import { useAuthenticatedFetch } from "../../hooks";
 import { fetchCampaignsDetailsList } from "../../app/features/campaign_details/campaign_details";
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
+import { fetchAllCampaignsRevenue } from "../../app/features/revenue/totalRevenueSlice";
+
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import SkeletonLoader from "../loading_skeletons/SkeletonTable";
 
@@ -23,7 +25,10 @@ const Referrals = () => {
   const [getReferrals, setReferrals] = useState([...ReferralList]);
 
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
-  const [getTotalClicks, setTotalClicks] = useState(0);
+  const [getTotalClicks, setTotalClicks] = useState([]);
+
+  const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
+  const [getTotalRevenue, setTotalRevenue] = useState([0]);
 
   useEffect(() => {
     if (ReferralList) {
@@ -37,17 +42,19 @@ const Referrals = () => {
     }
   }, [campaignDetails]);
 
-  let t_clicks = 0;
   // Get Total Clicks Count
   useEffect(() => {
     if (TotalClicksList.length > 0) {
       setTotalClicks(TotalClicksList);
     }
   }, [TotalClicksList]);
-  // console.log(getTotalClicks);
-  if(getTotalClicks.length > 0) {
-    t_clicks = getTotalClicks[0].total_clicks;
-  }
+
+  // Get Total Revenue
+  useEffect(() => {
+    if (TotalRevenueList.length > 0) {
+      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue.toFixed(2));
+    }
+  }, [TotalRevenueList]);
 
   const fetch = useAuthenticatedFetch();
 
@@ -62,7 +69,6 @@ const Referrals = () => {
             className="campaign-icon"
           />
         </Suspense>
-
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
             value={getReferrals.length}
@@ -71,23 +77,23 @@ const Referrals = () => {
             class="referral-icon"
           />
         </Suspense>
-
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={t_clicks}
+            value={getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks}
             title='Clicks'
             icon={arrow}
             class='clicks-icon'
           />
         </Suspense>
+        <Suspense fallback={<SkeletonSummaryCard />}>
+          <SummaryCard
+            value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
+            title='Revenue'
+            icon={Sale}
+            class='revenue-icon'
+          />
+        </Suspense>
 
-        {/* <SummaryCard
-          value='$253,467'
-          title='Revenue'
-          icon={Sale}
-          class='revenue-icon'
-        />
-        */}
       </div>
 
       <div className="referral_table">

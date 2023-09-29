@@ -121,25 +121,29 @@ export default function getCampaignClicks(app, secret) {
       const { shop } = session;
 
       const lastfourcampaigns_clicks = await pool.query(
-        `WITH CampaignClicks AS (
-          SELECT cs.campaign_id, cs.name, cs.start_date,
-          COUNT(uc.id) AS campaign_clicks, cs.shop_id
+        `WITH LatestCampaigns AS (
+          SELECT cs.campaign_id, cs.name, cs.start_date, cs.shop_id
           FROM campaign_settings cs
-          LEFT JOIN user_clicks uc ON cs.campaign_id = uc.campaign_id AND cs.shop_id = uc.shop
-          WHERE uc.shop = $1
-          AND cs.is_deleted = false
-          AND cs.start_date <= CURRENT_TIMESTAMP
-          GROUP BY cs.campaign_id, cs.shop_id
+          WHERE cs.is_deleted = false AND cs.start_date <= CURRENT_TIMESTAMP
           ORDER BY cs.start_date DESC
           LIMIT 4
+        ),
+        CampaignClicks AS (
+          SELECT lc.campaign_id, lc.name, lc.start_date, COUNT(uc.id) AS campaign_clicks
+          FROM LatestCampaigns lc
+          LEFT JOIN user_clicks uc
+          ON lc.campaign_id = uc.campaign_id AND lc.shop_id = uc.shop
+          WHERE uc.shop = $1
+          GROUP BY lc.campaign_id, lc.name, lc.start_date
         )
-        SELECT campaign_id, name, start_date, campaign_clicks, 
-        SUM(campaign_clicks) OVER() AS total_fourcampaigns_clicks
-        FROM CampaignClicks
-        ORDER BY start_date DESC;`,
+        SELECT c.campaign_id, c.name, 
+          COALESCE(cc.campaign_clicks, 0) AS campaign_clicks,
+          SUM(COALESCE(cc.campaign_clicks, 0)) OVER () AS total_fourcampaigns_clicks
+        FROM LatestCampaigns c LEFT JOIN CampaignClicks cc 
+        ON c.campaign_id = cc.campaign_id
+        ORDER BY c.start_date DESC;`,
         [shop]
       )
-      // console.log('user clicks of last six months: ', lastsixmonths_clicks);
       // console.log(lastfourcampaigns_clicks.rows);
       return res.status(200).json(lastfourcampaigns_clicks.rows);
     } catch (error) {
