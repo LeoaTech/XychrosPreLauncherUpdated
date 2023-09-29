@@ -8,50 +8,42 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAuthenticatedFetch } from '../../hooks';
 import SkeletonSummaryCard from '../loading_skeletons/SkeletonSummaryCard';
 import LoadingSkeleton from '../loading_skeletons/LoadingSkeleton';
-
-import { fetchAllCampaigns } from '../../app/features/campaigns/campaignSlice';
-import { fetchAllSixMonthsCampaigns } from '../../app/features/campaigns/campaignSlice';
-
-import { fetchAllReferrals } from '../../app/features/referrals/referralSlice';
-import { fetchAllSixMonthsReferrals } from '../../app/features/referrals/referralSlice';
-
+import { fetchAllCampaigns, fetchLastActiveCampaign, fetchAllSixMonthsCampaigns } from '../../app/features/campaigns/campaignSlice';
+import { fetchAllReferrals, fetchLastFourCampaignsReferrals, fetchAllSixMonthsReferrals } from '../../app/features/referrals/referralSlice';
 import { fetchAllCampaignClicks } from '../../app/features/user_clicks/totalclicksSlice';
 import { fetchAllLastSixMonthsClicks } from '../../app/features/user_clicks/lastSixMonthsClicksSlice';
 import { fetchAllLastFourCampaignsClicks } from '../../app/features/user_clicks/lastFourCampaignsClicksSlice';
 import { fetchCampaignsDetailsList } from '../../app/features/campaign_details/campaign_details';
-
 import { fetchAllCampaignsRevenue } from '../../app/features/revenue/totalRevenueSlice';
 import { fetchAllLastSixMonthsRevenue } from '../../app/features/revenue/lastSixMonthsRevenueSlice';
-import { fetchLatestFourCampaignsRevenue } from '../../app/features/revenue/totalRevenueSlice';
 
 const SummaryCard = lazy(() => import('../ui/SummaryCard'));
 
 const HomeComponent = () => {
   const dispatch = useDispatch();
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
-  const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const ReferralList = useSelector(fetchAllReferrals);
+  const TotalClicksList = useSelector(fetchAllCampaignClicks);
+  const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
+  const LastFourCampaignsReferralsList = useSelector(fetchLastFourCampaignsReferrals);
+  const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
   const SixMonthCampaignList = useSelector(fetchAllSixMonthsCampaigns);
   const SixMonthReferralList = useSelector(fetchAllSixMonthsReferrals);
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
-  const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
-  const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
   const LastSixMonthsRevenueList = useSelector(fetchAllLastSixMonthsRevenue);
-  const LastFourCampaignsRevenueList = useSelector(fetchLatestFourCampaignsRevenue);
-
+  const lastActiveCampaign = useSelector(fetchLastActiveCampaign);
+  
   const [campaignsList, setCampaignsList] = useState([]);
-  const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
-
   const [getReferrals, setReferrals] = useState([]);
-  const [getSixMonthsReferralsList, setSixMonthsReferralsList] = useState([]);
-
   const [getTotalClicks, setTotalClicks] = useState([]);
-  const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
+  const [getTotalRevenue, setTotalRevenue] = useState([]);
+  const [getLastFourCampaignsReferrals, setLastFourCampaignsReferrals] = useState([]);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
-
-  const [getTotalRevenue, setTotalRevenue] = useState([0]);
+  const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
+  const [getSixMonthsReferralsList, setSixMonthsReferralsList] = useState([]);
+  const [getLastSixMonthsClicksData, setLastSixMonthsClicksData] = useState([]);
   const [getLastSixMonthsRevenue, setLastSixMonthsRevenue] = useState([]);
-  const [getLastFourCampaignsRevenue, setLastFourCampaignsRevenue] = useState([]);
+  const [getLastActiveCampaign, setLastActiveCampaign] = useState({});
 
   // Get Total Campaigns Lists
   useEffect(() => {
@@ -60,13 +52,27 @@ const HomeComponent = () => {
     }
   }, [campaignDetails, dispatch]);
 
+  // Get Last Active Campaign
+  useEffect(() => {
+    if (lastActiveCampaign) {
+      setLastActiveCampaign(lastActiveCampaign);
+    }
+  }, [lastActiveCampaign, dispatch]);
+
+  // Get Last Campaigns Total Revenue
+  let last_campaign_revenue;
+  const lastCampaignRevenueInfo = TotalRevenueList?.find((item) => item.campaign_id === lastActiveCampaign?.campaign_id);
+  if (lastCampaignRevenueInfo) {
+    last_campaign_revenue = lastCampaignRevenueInfo.campaign_revenue;
+  }
+
   // Get Last Six Months Campaigns Lists
   useEffect(() => {
     if (SixMonthCampaignList.length > 0) {
       setSixMonthsCampaignsList(SixMonthCampaignList);
       // console.log(SixMonthCampaignList);
     }
-  }, [dispatch, SixMonthCampaignList]);
+  }, [SixMonthCampaignList, dispatch]);
 
   // Get Referrals List
   useEffect(() => {
@@ -75,50 +81,49 @@ const HomeComponent = () => {
     }
   }, [ReferralList, dispatch]);
 
+  // Get Last Four Campaigns Referrals
+  useEffect(() => {
+    if (LastFourCampaignsReferralsList.length > 0) {
+      setLastFourCampaignsReferrals(LastFourCampaignsReferralsList);
+    }
+  }, [LastFourCampaignsReferralsList, dispatch]);
+
   // Get Last Six Months Referrals Lists
   useEffect(() => {
     if (SixMonthReferralList.length > 0) {
       setSixMonthsReferralsList(SixMonthReferralList);
       // console.log(SixMonthReferralList);
     }
-  }, [dispatch, SixMonthReferralList]);
+  }, [SixMonthReferralList, dispatch]);
 
   // Get Total Clicks Count
-  let t_clicks = 0;
   useEffect(() => {
     if (TotalClicksList.length > 0) {
       setTotalClicks(TotalClicksList);
     }
-  }, [TotalClicksList]);
+  }, [TotalClicksList, dispatch]);
 
-  // console.log(getTotalClicks);
-
-  if (getTotalClicks.length > 0) {
-    t_clicks = getTotalClicks[0].total_clicks;
-  }
-
-  // Get Last Six Months Clicks Data
+  // Get Last Six Months Clicks
   useEffect(() => {
     if (LastSixMonthsClicksList.length > 0) {
       setLastSixMonthsClicksData(LastSixMonthsClicksList);
       // console.log(LastSixMonthsClicksList);
     }
-  }, [LastSixMonthsClicksList]);
+  }, [LastSixMonthsClicksList, dispatch]);
 
   // Get Last Four Campaigns Clicks
   useEffect(() => {
     if (LastFourCampaignsClicksList.length > 0) {
       setLastFourCampaignsClicks(LastFourCampaignsClicksList);
     }
-  }, [LastFourCampaignsClicksList]);
+  }, [LastFourCampaignsClicksList, dispatch]);
 
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue);
-      // console.log(TotalRevenueList);
+      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue.toFixed(2));
     }
-  }, [TotalRevenueList]);
+  }, [TotalRevenueList, dispatch]);
 
   // Get Last Six Months Revenue
   useEffect(() => {
@@ -126,15 +131,7 @@ const HomeComponent = () => {
       setLastSixMonthsRevenue(LastSixMonthsRevenueList);
       // console.log(LastSixMonthsRevenueList);
     }
-  }, [LastSixMonthsRevenueList]);
-
-  // Get Last Four Campaigns Revenue
-  useEffect(() => {
-    if (LastFourCampaignsRevenueList) {
-      setLastFourCampaignsRevenue(TotalRevenueList[0]?.currency + LastFourCampaignsRevenueList);
-      // console.log(LastFourCampaignsRevenueList);
-    }
-  }, [LastFourCampaignsRevenueList]);
+  }, [LastSixMonthsRevenueList, dispatch]);
 
   // line chart and radar chart labels of last six months according to current date
   const currentDate = new Date();
@@ -166,8 +163,7 @@ const HomeComponent = () => {
     });
   }
   let finalClicks = chartClicks.reverse();
-  // console.log(finalClicks);
-
+  
   if (getLastSixMonthsRevenue.length > 0) {
     getLastSixMonthsRevenue.forEach((entry) => {
       const entryDate = new Date(entry.created_month);
@@ -177,16 +173,17 @@ const HomeComponent = () => {
       const monthIndex =
         (currentYear - entryYear) * 12 + (currentMonth - entryMonth);
 
-      chartRevenue[monthIndex] = parseFloat(entry.total_months_revenue, 10); // Convert to integer
+      chartRevenue[monthIndex] = parseFloat(entry.total_months_revenue.toFixed(2));
     });
   }
   let finalRevenue = chartRevenue.reverse();
-  // console.log(finalRevenue);
 
-  // Calculate the total revenue for the last six months
-  let six_months_total_revenue = 0;
-  const lastSixMonthsTotalRevenue = finalRevenue?.slice(0, 6).reduce((acc, currentValue) => acc + currentValue, 0);
-  six_months_total_revenue = TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue;
+  // Get Total Revenue For Last Six Months
+  let six_months_total_revenue;
+  if(getLastSixMonthsRevenue.length > 0) {
+    const lastSixMonthsTotalRevenue = finalRevenue?.slice(0, 6).reduce((acc, currentValue) => acc + currentValue, 0);
+    six_months_total_revenue = TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue.toFixed(2);
+  }
 
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
@@ -303,7 +300,20 @@ const HomeComponent = () => {
     ],
   };
 
-  // --------------- Constructing Radar Chart ---------------
+  // // --------------- Constructing Radar Chart ---------------
+  // let radarChartLabels = [];
+  // if (getLastActiveCampaign) {
+  //   const startDate = new Date(getLastActiveCampaign.start_date);
+  //   const endDate = new Date(getLastActiveCampaign.end_date);
+  //   const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+  //   for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
+  //     const formattedDate = date.toLocaleDateString('en-US', options);
+  //     radarChartLabels.push(formattedDate);
+  //   }
+  
+  //   console.log(radarChartLabels);
+  // }
+
   const RadarChartOptions = {
     responsive: true,
 
@@ -381,12 +391,33 @@ const HomeComponent = () => {
   // donut chart labels and data according to latest four campaigns
   const donutChart_labels = [];
   const fourcampaigns_clicks = [];
+  const donutChart_labels2 = [];
+  const four_campaigns_referrals = [];
 
-  // Loop through the API data to extract the clicks details of last/latest four campaigns
-  getLastFourCampaignsClicks.forEach((item) => {
-    donutChart_labels.push(`${item.name}`);
-    fourcampaigns_clicks.push(parseInt(item.campaign_clicks));
-  });
+  // Loop through clicks details of last/latest four campaigns
+  let sumOfLastFourCampaignsClicks;
+  if(getLastFourCampaignsClicks.length > 0) {
+      getLastFourCampaignsClicks.forEach((item) => {
+      donutChart_labels.push(`${item.name}`);
+      fourcampaigns_clicks.push(parseInt(item.campaign_clicks));
+    });
+    // Sum of the Last Four Campaigns' Clicks
+    sumOfLastFourCampaignsClicks = parseInt(getLastFourCampaignsClicks[0].total_fourcampaigns_clicks);
+  }
+
+  // Loop through referrals details of last/latest four campaigns
+  let sumOfLastFourCampaignsReferrals;
+  if(getLastFourCampaignsReferrals.length > 0) {
+      getLastFourCampaignsReferrals.forEach((item) => {
+      donutChart_labels2.push(`${item.campaignName}`);
+      four_campaigns_referrals.push(parseInt(item.totalReferrals));
+    });
+    // Sum of the Last Four Campaigns' Clicks
+    sumOfLastFourCampaignsReferrals = four_campaigns_referrals.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+  }
 
   // --------------- Constructing Donut Chart ---------------
   const DonutChartOptions = {
@@ -421,9 +452,21 @@ const HomeComponent = () => {
     ],
   };
 
+  const DonutChartData2 = {
+    labels: donutChart_labels2,
+    datasets: [
+      {
+        data: four_campaigns_referrals,
+        backgroundColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
+        borderColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
     <div>
-      {campaignsList == '' ? (
+      {campaignsList === '' ? (
         <div className='home-container'>
           <h2>Welcome to Viral Launch!</h2>
           <div className='intro-section'>
@@ -482,7 +525,7 @@ const HomeComponent = () => {
             </Suspense>
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
-                value={t_clicks}
+                value={getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks}
                 title='Clicks'
                 icon={arrow}
                 class='clicks-icon'
@@ -490,7 +533,7 @@ const HomeComponent = () => {
             </Suspense>
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
-                  value={getTotalRevenue}
+                  value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
                   title='Revenue'
                   icon={Sale}
                   class='revenue-icon'
@@ -501,29 +544,41 @@ const HomeComponent = () => {
             <Charts
               type='line'
               header='Total Revenue'
-              value={six_months_total_revenue}
+              value={six_months_total_revenue || 0}
               subheader='Last 6 Months Data'
               LineChartOptions={LineChartOptions}
               LineChartData={LineChartData}
             />
           </div>
           <div className='dual-charts'>
-            <Charts
-              type='radar'
-              header='Product Launch'
-              value='$2456.76'
-              subheader='August 1st, 2022 - September 5th, 2022'
-              RadarChartOptions={RadarChartOptions}
-              RadarChartData={RadarChartData}
-            />
-            <Charts
-              type='donut'
-              header='Revenue'
-              value={getLastFourCampaignsRevenue}
-              subheader='Last 4 Campaigns'
-              DonutChartOptions={DonutChartOptions}
-              DonutChartData={DonutChartData}
-            />
+            {Array.isArray(getLastFourCampaignsClicks) && getLastFourCampaignsClicks.length > 0 ? (
+              <Charts
+                type='donut'
+                header='Total Clicks'
+                value={sumOfLastFourCampaignsClicks || 0}
+                subheader='Last 4 Campaigns Data'
+                DonutChartOptions={DonutChartOptions}
+                DonutChartData={DonutChartData}
+              />
+            ) : (
+              <div className='intro-section'>
+                <div className='intro-card'><p>No Last Four Campaigns Clicks Data Available Yet</p></div>
+              </div>
+            )}
+            {Array.isArray(getLastFourCampaignsReferrals) && getLastFourCampaignsReferrals.length > 0 ? (
+              <Charts
+                type='donut'
+                header='Total Referrals'
+                value={sumOfLastFourCampaignsReferrals || 0}
+                subheader='Last 4 Campaigns Data'
+                DonutChartOptions={DonutChartOptions}
+                DonutChartData={DonutChartData2}
+              />
+            ) : (
+              <div className='intro-section'>
+                <div className='intro-card'><p>Not Last Four Campaigns Referrals Data Available Yet</p></div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -35,6 +35,9 @@ import crypto from "crypto";
 import { verifyWebhookRequest } from "./VerifyWebhook.js";
 import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
 import * as dotenv from "dotenv";
+import discountCodesApiEndpoints from "./middleware/discount-codes-api.js";
+
+
 dotenv.config();
 
 const USE_ONLINE_TOKENS = false;
@@ -45,7 +48,6 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
-const DB_PATH = `${process.env.DATABASE_URL}`;
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -172,7 +174,7 @@ export async function createServer(
   pricingPlansApiEndpoints(app);
   deleteFromStoreApiEndpoint(app);
   revenueApiEndpoint(app);
-
+  discountCodesApiEndpoints(app);
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
     if (Shopify.Context.IS_EMBEDDED_APP && shop) {

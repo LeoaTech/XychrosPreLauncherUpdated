@@ -180,7 +180,7 @@
 .error-message {
   font-size: 15.6px;
   margin: 0 5px;
-  color: #ff3434;
+  color: crimson;
   margin-bottom: 15px;
   margin-top: 10px;
 }
@@ -190,7 +190,7 @@
   margin: 0 5px;
   margin-bottom: 15px;
   margin-top: 10px; */
-  color: #ff3434;
+  color: crimson;
 
   display: flex;
   justify-content: center;

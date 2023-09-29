@@ -30,6 +30,33 @@ export const campaignSlice = createSlice({
 // Get All Campaigns
 export const fetchAllCampaigns = (state) => state?.campaign?.campaigns?.filter((campaign) => campaign?.is_deleted === false);
 
+// Get Last Active Campaign
+export const fetchLastActiveCampaign = (state) => {
+  const campaigns = state?.campaign?.campaigns;
+  if (!campaigns || campaigns.length === 0) {
+    return null;
+  }
+  const activeCampaigns = campaigns
+    .filter((campaign) => !campaign.is_deleted)
+    .sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+
+  if (activeCampaigns.length === 0) {
+    return null;
+  }
+  const currentCampaign = activeCampaigns[0];
+  // console.log(currentCampaign);
+  const campaignsBeforeCurrentCampaign = activeCampaigns.filter(
+    (campaign) => new Date(campaign.start_date) < new Date(currentCampaign.start_date)
+  );
+
+  if (campaignsBeforeCurrentCampaign.length === 0) {
+    return null;
+  }
+  campaignsBeforeCurrentCampaign.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+  // console.log(campaignsBeforeCurrentCampaign[0]);
+  return campaignsBeforeCurrentCampaign[0];
+};
+
 // Get Campaigns of Last Six Months
 export const fetchAllSixMonthsCampaigns = (state) => {
   const currentDate = new Date();
@@ -58,15 +85,13 @@ function monthDiffBetweenDates(date1, date2) {
   return yearDiff * 12 + monthDiff;
 }
 
-
-
 //  Get Camapign By ID
 export const fetchCampaignById = (state, campaignId) =>
   state?.campaign?.campaigns?.find(
     (campaign) => campaign?.campaign_id === campaignId
   );
-  
-  
+
+
 //  Get Campaigns By Names
 export const fetchCampaignByName = (state) => {
   let result = [];

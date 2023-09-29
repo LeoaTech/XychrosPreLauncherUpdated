@@ -78,14 +78,11 @@ export default function CampaignBlock({
   const campaign_clicks = useSelector((state) =>
     fetchIndividualCampaignClicks(state, +campaign_id)
   );
-  // console.log(campaign_clicks);
 
   // Individual campaign revenue
-  let campaign_revenue = 0;
-  campaign_revenue = TotalRevenueList[0]?.currency + useSelector((state) =>
+  const campaign_revenue = useSelector((state) =>
     fetchIndividualCampaignRevenue(state, +campaign_id)
   );
-  // console.log(campaign_revenue);
 
   const now = new Date(); //Get the current date
 
@@ -246,7 +243,7 @@ export default function CampaignBlock({
             </Suspense>
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
-                value={campaign_revenue}
+                value={campaign_revenue === 0 ? 0 : TotalRevenueList[0]?.currency + campaign_revenue}
                 icon={Sale}
                 className="revenue-icon"
               />
@@ -254,7 +251,7 @@ export default function CampaignBlock({
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
                 is_deactivated={is_deactivated}
-                value={campaign_clicks}
+                value={campaign_clicks || 0}
                 icon={arrow}
                 className="clicks-icon"
               />
