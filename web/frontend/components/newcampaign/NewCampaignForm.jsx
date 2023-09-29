@@ -26,6 +26,7 @@ import {
   addNewCampaign,
   getTotalCampaigns,
   fetchCampaignsDiscount,
+  fetchAllCampaigns,
 } from "../../app/features/campaigns/campaignSlice";
 import { storeLinks } from "./dummySocial";
 import { RewardData } from "./rewardTier/RewardData";
@@ -40,20 +41,30 @@ import {
 } from "../../app/features/current_plan/current_plan";
 import { skeletonPageLoad } from "@shopify/app-bridge/actions/Performance";
 import ButtonLoader from "../loading_skeletons/ButtonLoader";
-import { fetchCampaignDetails } from "../../app/features/campaign_details/campaign_details";
+import {
+  fetchCampaignDetails,
+  fetchCampaignsDiscountCodes,
+} from "../../app/features/campaign_details/campaign_details";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import useFetchDiscountCodes from "../../constant/fetchDiscountCodes";
 
 const SaveDraft = lazy(() => import("../modal/SaveDraft"));
 
 function NewCampaignForm() {
+  const toastId = useRef(null);
+
   const { isEdit, setIsEdit } = useStateContext();
   const fetch = useAuthenticatedFetch();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { campaignsid } = useParams();
 
+  const fetchCampaign = useSelector(fetchAllCampaigns); // To Get Campaigns Reward Codes List
+
   // Get Values from Redux-Store
   const campaignName = useSelector(fetchCampaignByName); //Get the Campaign Name to verify unique campaign name
-  const campaignsDiscountCode = useSelector(fetchCampaignsDiscount);
+  const campaignsDiscountCode = useSelector(fetchCampaignsDiscountCodes);
 
   const settings = useSelector(fetchAllSettings); //Settings Data
   const products = useSelector(fetchAllProducts); //Get all products of Shop
@@ -70,8 +81,10 @@ function NewCampaignForm() {
   let today = new Date();
   let getStartDate = new Date();
   let getNextDate = new Date();
-  getNextDate.setDate(today.getDate() + 6); //Get End Date
   getStartDate.setDate(today.getDate() + 1); // Get Start Date
+  getNextDate.setDate(today.getDate() + 6); //Get End Date
+  getStartDate.setHours(0, 0, 0, 0); //Start Camapign with Midnight Time
+  getNextDate.setHours(0, 0, 0, 0); //End Camapign with Midnight Time
 
   // Local States of Components
 
@@ -104,8 +117,6 @@ function NewCampaignForm() {
   const [myPlan, setMyPlan] = useState("");
   const [TotalCampaign, setTotalCampaign] = useState();
 
-  const [validTier, setValidTier] = useState({ tiersValidated: false });
-  const [isReward1Error, setIsReward1Error] = useState(false);
   const [isReward2Error, setIsReward2Error] = useState(false);
   const [isReward3Error, setIsReward3Error] = useState(false);
   const [isReward4Error, setIsReward4Error] = useState(false);
@@ -114,7 +125,8 @@ function NewCampaignForm() {
   const [discountCode3, setDiscountCode3] = useState(false);
   const [discountCode4, setDiscountCode4] = useState(false);
   const [rewardTierValidate, setRewardTierValidate] = useState(false);
-  const [rewardTier2Error, setRewardTier2Error] = useState(false);
+  const [discountInvalidError, setDiscountInvalidError] = useState(false); // To Get Validation error for Duplicate codes on Store
+  const [fillInputs, setFillInputs] = useState(false); // Is Rward tiers filled or not
 
   //? New Campaign Form Data Fields
   const [newCampaignData, setNewCampaignData] = useState({
@@ -186,14 +198,43 @@ function NewCampaignForm() {
     }
   }, [isEdit]);
 
+  const fetchCodes = useFetchDiscountCodes("/api/fetch_discount_codes", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  useEffect(() => {
+    if (fetchCodes.length > 0) {
+      setDiscountList([...discountList, ...fetchCodes]);
+    }
+  }, [fetchCodes]);
+
   // Get All Campaigns Discount Code List
   useEffect(() => {
     if (campaignsDiscountCode?.length > 0) {
       // Use Set to remove duplicates and convert back to an array
       let uniqueCodes = [...new Set(campaignsDiscountCode)];
-      setDiscountList(uniqueCodes);
+
+      let codesList = [...uniqueCodes, ...discountList];
+      setDiscountList([...new Set(codesList)]);
     }
-  }, [campaignsDiscountCode]);
+
+    // Get All Campaigns Discount Code
+    if (fetchCampaign?.length > 0) {
+      let codesList = [];
+      fetchCampaign.forEach((campaign) => {
+        codesList.push(campaign?.reward_1_code);
+        codesList.push(campaign?.reward_2_code);
+        codesList.push(campaign?.reward_3_code);
+        codesList.push(campaign?.reward_4_code);
+      });
+
+      let uniqueList = codesList?.filter((code) => code !== null);
+
+      let uniqudiscounts = [...uniqueList, ...discountList];
+      setDiscountList([...new Set(uniqudiscounts)]);
+    }
+  }, [campaignsDiscountCode, fetchCampaign]);
 
   // Get the Data with Campaigns ID for Edit campaign
   useEffect(() => {
@@ -226,6 +267,23 @@ function NewCampaignForm() {
     }
   }, [globalSettings]);
 
+  useEffect(() => {
+    // Set initial state based on isEdit and current_plan.collecting_phone
+    if (isEdit) {
+      setNewCampaignData((prevCampaign) => ({
+        ...prevCampaign,
+        collect_phone: current_plan?.collecting_phone || false,
+      }));
+    } else {
+      setNewCampaignData((prevCampaign) => ({
+        ...prevCampaign,
+        collect_phone: current_plan?.collecting_phone
+          ? globalSettings?.collect_phone
+          : false, // Default value for new form when editing
+      }));
+    }
+  }, [isEdit, current_plan, globalSettings]);
+
   // Fetch Templates Data from API
   const templateData = useFetchTemplates("/api/templates", {
     method: "GET",
@@ -233,7 +291,6 @@ function NewCampaignForm() {
       "Content-Type": "application/json",
     },
   });
-
   // if Fetch result is successful store the result in templateList
   useEffect(() => {
     if (templateData?.length > 0) {
@@ -348,13 +405,14 @@ function NewCampaignForm() {
   //  Get Current Subscription Plan Name
   useEffect(() => {
     if (currentTier !== "") {
-      if (currentTier?.includes("Add-on")) {
+      if (currentTier?.includes("Add-ons")) {
         const charged_name = currentTier?.split(" + ");
         const tierName = charged_name[0]; // Extract "Tier Name"
 
         setMyPlan(tierName);
+      } else {
+        setMyPlan(currentTier);
       }
-      setMyPlan(currentTier);
     }
 
     if (totalCampaigns) {
@@ -390,16 +448,14 @@ function NewCampaignForm() {
 
   // Update Klaviyo API Lists in the Form
   useEffect(async () => {
-    if (isEdit) {
+    if (isEdit && editCampaignData?.klaviyo_api_key != "") {
       let apiList = await getKlaviyoList();
       setKlaviyoList(apiList);
-    } else {
-      if (globalSettings?.klaviyo_api_key !== "") {
-        let findList = await getKlaviyoList();
-        setKlaviyoList(findList);
-      }
+    } else if (!isEdit && globalSettings?.klaviyo_api_key != null) {
+      let findList = await getKlaviyoList();
+      setKlaviyoList(findList);
     }
-  }, [globalSettings?.klaviyo_api_key, newCampaignData?.klaviyo_api_key]);
+  }, [globalSettings?.klaviyo_api_key, editCampaignData?.klaviyo_api_key]);
 
   //? When user try to reload or change the route to other page
   useEffect(() => {
@@ -453,6 +509,8 @@ function NewCampaignForm() {
 
   // Handle Previous Step event for each Form
   const handlePrevious = (index) => {
+    setNewCampaignData((prev) => ({ ...prev, template_id: null }));
+
     setExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
     );
@@ -537,9 +595,56 @@ function NewCampaignForm() {
     !!newCampaignData[`reward_4_discount`] &&
     !!newCampaignData[`reward_4_code`];
 
+  // Validation of  Required fields of the Form
+  const validateForm = () => {
+    const requiredFields = document.querySelectorAll(
+      "input[required], select[required]"
+    );
+    let isFormValid = true;
+    requiredFields.forEach((field) => {
+      if (!field.value) {
+        isFormValid = false;
+        setErrorMessage(true);
+      } else {
+        setErrorMessage(false);
+      }
+    });
+    return isFormValid;
+  };
+
   // Handle Discount Codes Validation on Next Button click
   const handleDiscountValidation = (index) => {
     if (!isEdit) {
+      // Validate Discount values and Discount codes in New campaign data onChange event
+
+      const ValidateDiscountValue = isValidDiscount();
+      setIsReward2Error(ValidateDiscountValue?.Reward1Error);
+      setIsReward3Error(ValidateDiscountValue?.Reward2Error);
+      setIsReward4Error(ValidateDiscountValue?.Reward3Error);
+
+      const validateDiscountCodes = isValidDiscountCode();
+      setDiscountCode1(validateDiscountCodes?.Reward1CodeError);
+      setDiscountCode2(validateDiscountCodes?.Reward2CodeError);
+      setDiscountCode3(validateDiscountCodes?.Reward3CodeError);
+      setDiscountCode4(validateDiscountCodes?.Reward4CodeError);
+
+      // Check if any error is true in isValidDiscount or isValidDiscountCode
+      if (
+        ValidateDiscountValue.Reward1Error ||
+        ValidateDiscountValue.Reward2Error ||
+        ValidateDiscountValue.Reward3Error ||
+        validateDiscountCodes.Reward1CodeError ||
+        validateDiscountCodes.Reward2CodeError ||
+        validateDiscountCodes.Reward3CodeError ||
+        validateDiscountCodes.Reward4CodeError
+      ) {
+        // Display error messages and keep the form open
+        setExpanded((prevExpand) =>
+          prevExpand.map((state, i) => i === index - 1 && true)
+        );
+        return;
+      }
+
       const duplicateTiers = []; // Array to store tier IDs with duplicate discount codes
       const userDiscountCodes = RewardData?.map((reward) => {
         const rewardId = reward.id;
@@ -560,6 +665,10 @@ function NewCampaignForm() {
         // Step 3: Handle duplicate discount codes
         if (duplicateTiers?.length > 0) {
           // Display error message on the corresponding tiers' cards
+          // duplicateTiers.forEach((tierId) => {
+          //   setDiscountCode(tierId, true);
+          // });
+
           if (duplicateTiers?.includes(1)) {
             setDiscountCode1(true);
             setExpanded((prevExpand) =>
@@ -592,6 +701,7 @@ function NewCampaignForm() {
           setDiscountCode2(false);
           setDiscountCode3(false);
           setDiscountCode4(false);
+          clearDiscountCodes(); // Clear discount code errors
 
           // Open Next Form .... and Proceed
           setExpanded((prevExpand) =>
@@ -611,99 +721,111 @@ function NewCampaignForm() {
     }
   };
 
-  // Validation of  Required fields of the Form
-  const validateForm = () => {
-    const requiredFields = document.querySelectorAll(
-      "input[required], select[required]"
-    );
-    let isFormValid = true;
-    requiredFields.forEach((field) => {
-      if (!field.value) {
-        isFormValid = false;
-        setErrorMessage(true);
-      } else {
-        setErrorMessage(false);
+  //  function to clear discount code errors
+  const clearDiscountCodes = () => {
+    setDiscountCode1(false);
+    setDiscountCode2(false);
+    setDiscountCode3(false);
+    setDiscountCode4(false);
+  };
+  //? Validate if discount codes are unique in Each Reward tiers discount code input field
+  const isValidDiscountCode = () => {
+    const reward1Code = newCampaignData["reward_1_code"];
+    const reward2Code = newCampaignData["reward_2_code"];
+    const reward3Code = newCampaignData["reward_3_code"];
+    const reward4Code = newCampaignData["reward_4_code"];
+
+    let Reward1CodeError = false;
+    let Reward2CodeError = false;
+    let Reward3CodeError = false;
+    let Reward4CodeError = false;
+
+    if (isReward1Filled && isReward2Filled) {
+      if (reward1Code === reward2Code) {
+        Reward2CodeError = true;
       }
-    });
-    return isFormValid;
+    }
+    if (isReward3Filled && isReward4Filled) {
+      if (reward3Code === reward4Code) {
+        Reward4CodeError = true;
+      }
+    }
+
+    if (isReward2Filled && isReward3Filled) {
+      if (reward2Code === reward3Code) {
+        Reward3CodeError = true;
+      }
+    }
+    if (isReward1Filled && isReward4Filled) {
+      if (reward1Code === reward4Code) {
+        Reward4CodeError = true;
+      }
+    }
+
+    return {
+      Reward1CodeError,
+      Reward2CodeError,
+      Reward3CodeError,
+      Reward4CodeError,
+    };
   };
 
-  // Handle input change events
+  //? Validate if rewards tiers are not having same Discount Value in Each Tiers
+  const isValidDiscount = () => {
+    const reward1Discount = parseFloat(newCampaignData["reward_1_discount"]);
+    const reward2Discount = parseFloat(newCampaignData["reward_2_discount"]);
+    const reward3Discount = parseFloat(newCampaignData["reward_3_discount"]);
+    const reward4Discount = parseFloat(newCampaignData["reward_4_discount"]);
+
+    let Reward1Error = false;
+    let Reward2Error = false;
+    let Reward3Error = false;
+
+    if (reward1Discount >= reward2Discount) {
+      Reward1Error = true;
+    }
+    if (reward2Discount >= reward3Discount) {
+      Reward2Error = true;
+    }
+    if (reward3Discount >= reward4Discount) {
+      Reward3Error = true;
+    }
+
+    return {
+      Reward1Error,
+      Reward2Error,
+      Reward3Error,
+    };
+  };
+
+  // Handle Input Chane event in new Campaign and Update Campaign Form
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (isEdit) {
       setEditCampaignData((prevState) => ({
         ...prevState,
         [name]: value,
       }));
     } else {
-      let isValid = true;
-
       // Update the campaign data
       setNewCampaignData((prevState) => ({
         ...prevState,
         [name]: value,
       }));
 
-      // Check if Tier 1 and Tier 2 are filled
-      const isTier1Filled = !!newCampaignData["reward_1_discount"];
-      const isTier2Filled = !!newCampaignData["reward_2_discount"];
+      // Validate Discount values and Discount codes in New campaign data onChange event
 
-      // Validate Tier 1 and Tier 2
-      if (!isTier1Filled || !isTier2Filled) {
-        return;
-      }
+      let ValidateDiscountValue = isValidDiscount();
+      setIsReward2Error(ValidateDiscountValue?.Reward1Error);
+      setIsReward3Error(ValidateDiscountValue?.Reward2Error);
+      setIsReward4Error(ValidateDiscountValue?.Reward3Error);
 
-      const reward1Discount = newCampaignData["reward_1_discount"];
-      const reward2Discount = newCampaignData["reward_2_discount"];
-      const reward3Discount = newCampaignData["reward_3_discount"];
-      const reward4Discount = newCampaignData["reward_4_discount"];
-
-      let isTierValid1, isTierValid2, isTierValid3;
-      // Validate discount values
-      if (reward1Discount && reward2Discount) {
-        isTierValid1 =
-          Number(reward2Discount) > Number(reward1Discount) ||
-          Number(reward1Discount) < Number(reward2Discount);
-      }
-      if (reward2Discount && reward3Discount) {
-        isTierValid2 =
-          Number(reward2Discount) < Number(reward3Discount) ||
-          Number(reward3Discount) > Number(reward2Discount);
-      }
-      if (reward3Discount && reward4Discount) {
-        isTierValid3 =
-          Number(reward3Discount) < Number(reward4Discount) ||
-          Number(reward4Discount) > Number(reward3Discount);
-      }
-
-      // Update the validation status
-      if (!isTierValid1) {
-        setIsReward2Error(true);
-      } else {
-        setIsReward2Error(!isTierValid1);
-      }
-
-      if (reward3Discount) {
-        if (!isTierValid2) {
-          setIsReward3Error(true);
-        } else {
-          setIsReward3Error(false);
-        }
-      }
-
-      if (reward4Discount) {
-        if (!isTierValid3) {
-          setIsReward4Error(true);
-        } else {
-          setIsReward4Error(false);
-        }
-      }
-
-      setNewCampaignData((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
+      let validateDicountCodes = isValidDiscountCode();
+      setDiscountCode1(validateDicountCodes?.Reward1CodeError);
+      setDiscountCode2(validateDicountCodes?.Reward2CodeError);
+      setDiscountCode3(validateDicountCodes?.Reward3CodeError);
+      setDiscountCode4(validateDicountCodes?.Reward4CodeError);
 
       // value is asynchronic, so it's updated in the next render
       if (e.target.value !== "" && !isLoading) setDraftModal(true);
@@ -724,10 +846,12 @@ function NewCampaignForm() {
     }
   }
 
+
   // Handle Radio button Change events
 
   function handleRadioChange(event) {
     const { name, value } = event.target;
+
     // Update the state with the new value
     if (isEdit) {
       setEditCampaignData((prevcampaignData) => ({
@@ -798,6 +922,7 @@ function NewCampaignForm() {
 
   // Discounts API Call
   async function generateDiscounts(newCampaignData) {
+    toastId.current = toast.loading("Generating discount codes...");
     try {
       const response = await fetch("/api/generate_discount", {
         method: "POST",
@@ -806,15 +931,53 @@ function NewCampaignForm() {
         },
         body: JSON.stringify({ campaignData: newCampaignData }),
       });
-      const responseData = await response.json();
-      return responseData?.data;
+
+      if (response?.ok) {
+        toast.update(toastId.current, {
+          render: "Discount Codes Generated for Campaign",
+          type: "success",
+          isLoading: true,
+          position: "top-right",
+          autoClose: 1000,
+        });
+        const responseData = await response.json();
+        setTimeout(() => {
+          toast.dismiss(toastId.current);
+        }, 1000);
+        return responseData;
+      } else {
+        let error = await response.json();
+        toast.update(toastId.current, {
+          render: "Failed to Generate Discount Codes for Campaign",
+          type: "error",
+          isLoading: "false",
+          autoClose: 3000,
+        });
+        setTimeout(() => {
+          toast.dismiss(toastId.current);
+        }, 3000);
+        return error;
+      }
     } catch (error) {
-      console.log(error);
+      toast.update(toastId.current, {
+        render: "Error Generating Discount Codes for Campaign",
+        type: "error",
+        isLoading: "false",
+        autoClose: 5000,
+      });
+      setTimeout(() => {
+        toast.dismiss(toastId.current);
+      }, 3000);
+      return error;
     }
   }
 
   // Template Create API Call
+
   async function createTemplates(selectedTemplateData, newCampaignData) {
+    // toastId.current
+    const id = toast.loading("Creating Templates for Campaigns...");
+
     try {
       const response = await fetch("/api/create_template", {
         method: "POST",
@@ -826,16 +989,55 @@ function NewCampaignForm() {
           campaignData: newCampaignData,
         }),
       });
-      const responseData = await response.json();
-      return responseData?.data;
+      if (response.ok) {
+        setTimeout(() => {
+          toast.update(id, {
+            render: "Template Pages Created for Campaign",
+            type: "success",
+            isLoading: true,
+            position: "top-right",
+            autoClose: 3000,
+          });
+        }, 1000);
+
+        const responseData = await response.json();
+        setTimeout(() => {
+          toast.dismiss(id);
+        }, 2000);
+        return responseData?.data;
+      } else {
+        setTimeout(() => {
+          toast.update(id, {
+            render: "Failed to Create Template Pages for Campaigns",
+            type: "error",
+            isLoading: "false",
+            autoClose: 2000,
+          });
+        }, 1000);
+
+        setTimeout(() => {
+          toast.dismiss(id);
+        }, 3000);
+        return "Failed to Create Template Pages for Campaign";
+      }
     } catch (error) {
-      console.log(error);
+      toast.update(id, {
+        render: "Error Creating Template Pages for Campaign",
+        type: "error",
+        isLoading: "false",
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        toast.dismiss(id);
+      }, 3000);
     }
   }
 
   // Save Campaign Details in database
   const saveCampaignDetails = async (campaign_details) => {
     // Send POST Request to save Details From database
+
+    let campaignDetailsId = toast.loading("Saving Discount Codes and Pages");
     const detailsResponse = await fetch("/api/campaigndetails", {
       method: "POST",
       headers: {
@@ -844,14 +1046,40 @@ function NewCampaignForm() {
       body: JSON.stringify({
         ...campaign_details,
         is_draft: false,
-        is_active: true,
+        is_active: false,
       }),
     });
 
     if (detailsResponse.ok) {
+      setTimeout(() => {
+        toast.update(campaignDetailsId, {
+          render: "Saved discount codes and templates for campaign",
+          type: "success",
+          isLoading: true,
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }, 1000);
+
+      setTimeout(() => {
+        toast.dismiss(campaignDetailsId);
+      }, 2000);
       const detailsData = await detailsResponse.json();
       return detailsData;
     } else {
+      setTimeout(() => {
+        toast.update(campaignDetailsId, {
+          render: "Error Saving Template Pages and Discount Codes for Campaign",
+          type: "error",
+          isLoading: true,
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }, 1000);
+
+      setTimeout(() => {
+        toast.dismiss(campaignDetailsId);
+      }, 2000);
       console.log("Failed to insert campaign details:", detailsResponse);
     }
   };
@@ -859,30 +1087,80 @@ function NewCampaignForm() {
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
+
     let idExists;
     let campaignDetails;
     // Editing Camapign Data Form
     if (isEdit) {
+      e.preventDefault();
       setDraftModal(false);
+      let updateCampaignSettingsId = toast.loading(
+        "Updating campaign settings..."
+      );
+      try {
+        const updateCampaignSettings = await fetch(
+          `/api/campaignsettings/${campaignsid}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(editCampaignData),
+          }
+        );
 
-      await fetch(`/api/campaignsettings/${campaignsid}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editCampaignData),
-      })
-        .then((res) => res.json())
-        .then((data) => dispatch(updateCampaign(data)))
-        .catch((err) => console.log(err));
-      setIsLoading(false);
-      setIsEdit(false);
-      navigate("/campaigns");
+        if (updateCampaignSettings.ok) {
+          setTimeout(() => {
+            toast.update(updateCampaignSettingsId, {
+              render: "Updated Campaign Settings",
+              type: "success",
+              isLoading: true,
+              position: "top-right",
+              autoClose: 5000,
+            });
+          }, 3000);
+
+          let updatedCamapignData = await updateCampaignSettings.json();
+
+          // dispatch(updateCampaign(updatedCamapignData));
+        } else {
+          setTimeout(() => {
+            toast.update(updateCampaignSettingsId, {
+              render: "Failed to Update Campaign Settings",
+              type: "error",
+              isLoading: "false",
+              autoClose: 2000,
+            });
+          }, 1000);
+
+          setTimeout(() => {
+            toast.dismiss(updateCampaignSettingsId);
+          }, 3000);
+        }
+        setIsLoading(false);
+        setTimeout(() => {
+          toast.dismiss(updateCampaignSettingsId);
+        }, 3000);
+        setIsEdit(false);
+        navigate("/campaigns");
+      } catch (err) {
+        console.log(err);
+        toast.update(updateCampaignSettingsId, {
+          render: "Error Updating Campaign...",
+          type: "error",
+          isLoading: "false",
+          autoClose: 2000,
+        });
+        setTimeout(() => {
+          toast.dismiss(updateCampaignSettingsId);
+        }, 3000);
+      }
     }
     // Adding A New Campaign and Save in Database
     else {
-      setDraftModal(false);
+      e.preventDefault();
 
+      setDraftModal(false);
       if (
         newCampaignData?.template_id !== null &&
         selectedTemplateData !== undefined
@@ -890,45 +1168,102 @@ function NewCampaignForm() {
         setIsLoading(true);
 
         const discount_details = await generateDiscounts(newCampaignData);
-        const template_details = await createTemplates(
-          selectedTemplateData,
-          newCampaignData
-        );
+        if (discount_details?.success) {
+          const template_details = await createTemplates(
+            selectedTemplateData,
+            newCampaignData
+          );
 
-        campaignDetails = {
-          ...discount_details,
-          ...template_details,
-        };
+          campaignDetails = {
+            ...discount_details?.data,
+            ...template_details,
+          };
 
-        await fetch("/api/campaignsettings", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newCampaignData),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            dispatch(addNewCampaign(data));
-            idExists = data[0]?.campaign_id;
-          })
-          .catch((err) => console.log(err));
+          let campaignSettingsId = toast.loading("Saving campaign settings...");
+          try {
+            const campaignSetting = await fetch("/api/campaignsettings", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(newCampaignData),
+            });
+            if (campaignSetting.ok) {
+              setTimeout(() => {
+                toast.update(campaignSettingsId, {
+                  render: "Saved Campaign Settings",
+                  type: "success",
+                  isLoading: true,
+                  position: "top-right",
+                  autoClose: 3000,
+                });
+              }, 1000);
+              const campaignData = await campaignSetting.json();
+              setTimeout(() => {
+                toast.dismiss(campaignSettingsId);
+              }, 3000);
+              dispatch(addNewCampaign(campaignData));
+              idExists = campaignData?.campaign_id;
+            } else {
+              setTimeout(() => {
+                toast.update(campaignSettingsId, {
+                  render: "Failed to Create Campaigns",
+                  type: "error",
+                  isLoading: "false",
+                  autoClose: 2000,
+                });
+              }, 1000);
+              setTimeout(() => {
+                toast.dismiss(campaignSettingsId);
+              }, 3000);
+              return "Failed to Create Campaign";
+            }
+          } catch (err) {
+            toast.update(campaignSettingsId, {
+              render: "Error Creating Campaign",
+              type: "error",
+              isLoading: "false",
+              autoClose: 2000,
+            });
+            setTimeout(() => {
+              toast.dismiss(campaignSettingsId);
+            }, 3000);
+            throw err;
+          }
+        } else {
+          setIsLoading(false);
+          handleExpand(2);
+          setNewCampaignData((prev) => ({ ...prev, template_id: null }));
+        }
+
+        // If CampaignID Exists the call the saveCampaign details function to store value in db
+        if (typeof idExists == "number" && campaignDetails) {
+          let result = await saveCampaignDetails(campaignDetails);
+          if (result) {
+            dispatch(fetchCampaignDetails(result));
+            setIsLoading(false);
+            handleExpand(0);
+
+            navigate("/campaigns");
+          }
+        } else {
+          setIsLoading(false);
+          handleExpand(2);
+          setNewCampaignData((prev) => ({ ...prev, template_id: null }));
+          setDiscountInvalidError(true);
+          // throw error;
+        }
       } else {
+        setIsLoading(false);
+
         return;
       }
 
-      console.log(idExists, "Campign Exists");
-      console.log(campaignDetails, "Campaign Details");
-      // IF CampaignID Exists the call the saveCampaign details function to store value in db
-      if (typeof(idExists) == "number" && campaignDetails) {
-        let result = await saveCampaignDetails(campaignDetails);
-        if (result) dispatch(fetchCampaignDetails(result));
-      } else {
-        console.log("Not saved data");
-      }
-
       setIsLoading(false);
-      navigate("/campaigns");
+      setNewCampaignData((prev) => ({ ...prev, template_id: null }));
+
+      handleExpand(2);
+      setDiscountInvalidError(true);
     }
   };
 
@@ -949,11 +1284,11 @@ function NewCampaignForm() {
       return;
     }
   };
-
   return (
     <>
-      {(myPlan === "Free" && TotalCampaign >= 1 && !isEdit) ||
-      (myPlan === "Tier 1" && TotalCampaign >= 2 && !isEdit) ? (
+      {((myPlan == "Free" && TotalCampaign >= 1) ||
+        (myPlan == "Tier 1" && TotalCampaign >= 2)) &&
+      !isEdit ? (
         <div className="upgrade-container">
           <p>Upgrade Your Account </p>
           <button className="upgrade-btn" onClick={() => navigate("/price")}>
@@ -974,6 +1309,15 @@ function NewCampaignForm() {
               handleSaveDraft={handleSaveDraft}
             />
           </Suspense>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick={true}
+            draggable
+            // theme="colored"
+          />
           <form onSubmit={handleSaveClick}>
             {/* Basic Settings Input Form Section  */}
             <section className="newcampaign-settings">
@@ -1249,9 +1593,7 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="phone"
-                              checked={
-                                editCampaignData?.collect_phone === false
-                              }
+                              checked={editCampaignData?.collect_phone === true}
                               disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
@@ -1261,7 +1603,7 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="phone"
-                              checked={newCampaignData?.collect_phone === false}
+                              checked={newCampaignData?.collect_phone == true}
                               disabled={!current_plan?.collecting_phones}
                               onChange={handleRadioChange}
                             />
@@ -1278,11 +1620,15 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
+                              // checked={
+                              //   !current_plan?.collect_phone
+                              //     ? true
+                              //     : editCampaignData?.collect_phone === true
+                              // }
                               checked={
-                                !current_plan?.collect_phone
-                                  ? true
-                                  : editCampaignData?.collect_phone === true
+                                editCampaignData?.collect_phone === false
                               }
+                              // disabled={!current_plan?.collecting_phone}
                               onChange={handleRadioChange}
                             />
                           ) : (
@@ -1291,11 +1637,14 @@ function NewCampaignForm() {
                               type="radio"
                               name="collect_phone"
                               value="email"
-                              checked={
-                                !current_plan?.collect_phone
-                                  ? true
-                                  : newCampaignData?.collect_phone === true
-                              }
+                              // disabled={!current_plan?.collecting_phone}
+                              // checked={
+                              //   !current_plan?.collect_phone
+                              //     ? true
+                              //     : newCampaignData?.collect_phone == false
+                              // }
+
+                              checked={newCampaignData?.collect_phone === false}
                               onChange={handleRadioChange}
                             />
                           )}
@@ -1538,13 +1887,24 @@ function NewCampaignForm() {
                       </div>
                     </div>
 
-                    {/* Reward Tier  */}
+                    {/* Reward Tier 1 and 2 must be filled validation error */}
                     {rewardTierValidate && (
                       <h6 className="validation">
                         <MdError
                           style={{ height: 18, width: 18, marginRight: 5 }}
                         />
                         Reward Tier 1 and Tier 2 must be Filled
+                      </h6>
+                    )}
+
+                    {/* Reward Tiers contains duplicates discount codes  when submitting form */}
+                    {discountInvalidError && (
+                      <h6 className="validation">
+                        <MdError
+                          style={{ height: 18, width: 18, marginRight: 5 }}
+                        />
+                        Discount Codes already Exists On Store, Please enter
+                        another codes
                       </h6>
                     )}
                     <div className="rewards-container">
@@ -1758,6 +2118,7 @@ function NewCampaignForm() {
                                   )}
                                 </div>
                               </div>
+
                               {/* Duplicates Discount Codes Error */}
                               <div>
                                 {discountCode1 === true && reward?.id === 1 && (
@@ -1787,6 +2148,22 @@ function NewCampaignForm() {
                                 {discountCode3 === true && reward?.id === 3 && (
                                   <h6 className="discount_error_text">{`Discount Code for Tier ${reward?.id} Already Exists`}</h6>
                                 )}
+                                {(newCampaignData?.reward_3_tier ||
+                                  newCampaignData?.reward_3_discount) &&
+                                  !isReward3Filled &&
+                                  reward?.id === 3 && (
+                                    <h6 className="discount_error_text">
+                                      <MdError
+                                        style={{
+                                          height: 16,
+                                          width: 16,
+                                          marginRight: 5,
+                                        }}
+                                      />
+                                      {`Please Fill out all Fields for Tier ${reward?.id} `}
+                                    </h6>
+                                  )}
+
                                 {discountCode4 === true && reward?.id === 4 && (
                                   <h6 className="discount_error_text">
                                     <MdError
@@ -1799,6 +2176,22 @@ function NewCampaignForm() {
                                     {`Discount Code for Tier ${reward?.id} Already Exists`}
                                   </h6>
                                 )}
+
+                                {(newCampaignData?.reward_4_tier ||
+                                  newCampaignData?.reward_4_discount) &&
+                                  !isReward4Filled &&
+                                  reward?.id === 4 && (
+                                    <h6 className="discount_error_text">
+                                      <MdError
+                                        style={{
+                                          height: 16,
+                                          width: 16,
+                                          marginRight: 5,
+                                        }}
+                                      />
+                                      {`Please Fill out all Fields for Tier ${reward?.id} `}
+                                    </h6>
+                                  )}
                               </div>
                             </div>
                           </div>
@@ -1818,6 +2211,11 @@ function NewCampaignForm() {
                       <button
                         className="nextBtn"
                         onClick={() => handleDiscountValidation(3)}
+                        disabled={
+                          (newCampaignData?.reward_3_tier &&
+                            !isReward3Filled) ||
+                          (newCampaignData?.reward_4_tier && !isReward4Filled)
+                        }
                       >
                         Next
                       </button>
@@ -2281,13 +2679,9 @@ function NewCampaignForm() {
                         disabled={isLoading}
                       >
                         {isEdit ? (
-                          <>
-                            {isLoading ? <ButtonLoader /> : "Update Campaign"}
-                          </>
+                          <>{isLoading ? "Updating..." : "Update Campaign"}</>
                         ) : (
-                          <>
-                            {isLoading ? <ButtonLoader /> : "Create Campaign"}
-                          </>
+                          <>{isLoading ? "Saving..." : "Create Campaign"}</>
                         )}
                       </button>
                     </>
@@ -2296,6 +2690,7 @@ function NewCampaignForm() {
               )}
             </section>
           </form>
+          {/* <ToastContainer /> */}
 
           {/* Loading Animation  */}
           <div id="loading-overlay">

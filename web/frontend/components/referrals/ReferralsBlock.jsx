@@ -2,26 +2,67 @@ import "./ReferralsBlock.css";
 import * as React from "react";
 import { referralRows, referralColumns } from "./dummyData";
 import { BiShow } from "react-icons/bi";
+
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ShowModal, DeleteModal } from "../modal/index";
 import DataTable from "react-data-table-component";
 import { customStyles } from "./customStyles";
 import { useDispatch, useSelector } from "react-redux";
-
 import { fetchReferralById } from "../../app/features/referrals/referralSlice";
+import { fetchDeactivatedCampaignsByName } from "../../app/features/campaign_details/campaign_details";
 
 const ReferralsBlock = (props) => {
   const [openModal, setOpenModal] = React.useState(false);
   const [modalData, setModalData] = React.useState();
   const [deleteModal, setDeleteModal] = React.useState(false);
-  const [data, setData] = React.useState(referralRows);
+  const [campaignName, setCampaignName] = React.useState([]);
+  const [TableData, setTableData] = React.useState([]);
+
+  let getDeactivatedCampaignsName = useSelector(
+    fetchDeactivatedCampaignsByName
+  );
+
+  React.useEffect(() => {
+    if (getDeactivatedCampaignsName.length > 0) {
+      setCampaignName(getDeactivatedCampaignsName);
+    }
+  }, [getDeactivatedCampaignsName]);
+
+  const conditionalRowStyles = [
+    {
+      when: (row) => campaignName?.includes(row?.campaign_name),
+      style: {
+        color: "gray",
+        "&:hover": {
+          cursor: "pointer",
+          color: "black",
+        },
+      },
+    },
+  ];
+
+  const customRowStyles = (row) => {
+    if (!campaignName?.includes(row?.campaign_name)) {
+      return {
+        style: {
+          backgroundColor: "blue",
+          color: "#red",
+          fill: "red",
+          textAlign: "center",
+          cursor: "not-allowed",
+        },
+      };
+    } else {
+      return {}; // Return an empty object for active campaign rows
+    }
+  };
 
   // Delete Action Function for Delete a row from the table
-  const handleDelete = (id) => {
+  /* const handleDelete = (id) => {
     let delVal = data.filter((item) => item.id !== id);
     setData(delVal);
   };
-
+ */
   React.useEffect(() => {
     if (openModal || deleteModal) {
       document.body.style.opacity = "0.5 !important";
@@ -45,7 +86,6 @@ const ReferralsBlock = (props) => {
       setOpenModal(false);
     }
   });
-
   // Actions column on table to view and delete data
   const actionColumns = [
     {
@@ -83,16 +123,20 @@ const ReferralsBlock = (props) => {
       },
     },
   ];
+
   return (
     <>
-      {props?.tableData.length > 0 ? (
+      {props?.tableData?.length > 0 ? (
         <div className="datatable">
           <DataTable
-            customStyles={customStyles}
             columns={referralColumns.concat(actionColumns)}
-            data={props?.tableData}
+            data={props.tableData}
             pagination
+            pointerOnHover
             highlightOnHover
+            customStyles={customStyles}
+            conditionalRowStyles={conditionalRowStyles}
+            customRowStyles={customRowStyles} // Apply the customRowStyles
           />
         </div>
       ) : null}
@@ -101,18 +145,19 @@ const ReferralsBlock = (props) => {
           openModal={openModal}
           setOpenModal={setOpenModal}
           values={modalData}
-          fulldata={props.tableData}
+          fulldata={props?.tableData}
+          campaignName={campaignName}
         />
       </div>
 
-      <div>
+      {/* <div>
         <DeleteModal
           values={modalData}
           openModal={deleteModal}
           setDeleteModal={setDeleteModal}
           handleDelete={handleDelete}
         />
-      </div>
+      </div> */}
     </>
   );
 };

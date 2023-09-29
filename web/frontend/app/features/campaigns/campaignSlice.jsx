@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
   campaigns: [],
@@ -8,7 +8,6 @@ export const campaignSlice = createSlice({
   name: "campaign",
   initialState: initialState,
   reducers: {
-
     fetchCampaign: (state, action) => {
       state.campaigns = action.payload;
     },
@@ -17,13 +16,14 @@ export const campaignSlice = createSlice({
       const allCampaigns = state.campaigns.filter(
         (campaign) => campaign?.campaign_id === action.payload.campaign_id
       );
+
+      console.log(allCampaigns, action.payload);
       state.campaigns = [...allCampaigns, action.payload];
     },
 
     addNewCampaign: (state, action) => {
       state.campaigns.push(action.payload);
     },
-
   },
 });
 
@@ -58,16 +58,21 @@ function monthDiffBetweenDates(date1, date2) {
   return yearDiff * 12 + monthDiff;
 }
 
+
+
 //  Get Camapign By ID
 export const fetchCampaignById = (state, campaignId) =>
   state?.campaign?.campaigns?.find(
     (campaign) => campaign?.campaign_id === campaignId
   );
   
+  
 //  Get Campaigns By Names
 export const fetchCampaignByName = (state) => {
   let result = [];
-  state?.campaign?.campaigns.forEach((campaign) => result?.push(campaign?.name));
+  state?.campaign?.campaigns.forEach((campaign) =>
+    result?.push(campaign?.name)
+  );
   return result;
 };
 
@@ -82,20 +87,19 @@ export const fetchCampaignsDiscount = (state) => {
     discountList.push(campaign?.reward_4_code);
   });
 
-  let uniqueList = discountList?.filter((code) => code!== null)
+  let uniqueList = discountList?.filter((code) => code !== null);
 
   return uniqueList;
-}
+};
 
-
-export const getTotalCampaigns = (state) => state?.campaign?.campaigns?.filter((campaign) => campaign?.is_deleted === false)?.length || [];
+export const getTotalCampaigns = (state) =>
+  state?.campaign?.campaigns?.filter(
+    (campaign) => campaign?.is_deleted === false
+  )?.length || [];
 
 // All Action of the campaign
 
-export const {
-  fetchCampaign,
-  updateCampaign,
-  addNewCampaign
-} = campaignSlice.actions;
+export const { fetchCampaign, updateCampaign, addNewCampaign } =
+  campaignSlice.actions;
 
 export default campaignSlice.reducer;
