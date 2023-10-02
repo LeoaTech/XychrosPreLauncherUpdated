@@ -466,7 +466,7 @@ const HomeComponent = () => {
 
   return (
     <div>
-      {campaignsList === '' ? (
+      {campaignsList.length === 0 ? (
         <div className='home-container'>
           <h2>Welcome to Viral Launch!</h2>
           <div className='intro-section'>
