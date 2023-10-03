@@ -270,8 +270,8 @@ const HomeComponent = () => {
       {
         label: 'Revenue',
         data: finalRevenue,
-        borderColor: '#165BAA',
-        backgroundColor: '#165BAA',
+        borderColor: '#FDDA0D',
+        backgroundColor: '#FDDA0D',
         borderDash: [5, 5],
         fill: '',
       },
