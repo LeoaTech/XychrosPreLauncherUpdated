@@ -1,6 +1,6 @@
-import { Shopify } from '@shopify/shopify-api';
+import { Shopify } from "@shopify/shopify-api";
 
-import NewPool from 'pg';
+import NewPool from "pg";
 const { Pool } = NewPool;
 const pool = new Pool({
   connectionString: `${process.env.DATABASE_URL}`,
@@ -8,40 +8,40 @@ const pool = new Pool({
 
 pool.connect((err, result) => {
   if (err) throw err;
-  console.log('Connected');
+  console.log("Connected");
 });
 
 export default function globalSettingsApiEndPoint(app) {
   //read Global setting for the shop id
 
-  app.get('/api/updatesettings', async (req, res) => {
+  app.get("/api/updatesettings", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
 
       const findSettings = await pool.query(
         `select * from global_settings where shop_id = $1`,
         [session?.shop]
       );
-      return res.json(findSettings.rows);
+      return res.json(findSettings.rows[0]);
     } catch (err) {
       return res.status(500).json(err.message);
     }
   });
 
   // Insert new settings
-  app.post('/api/updatesettings', async (req, res) => {
+  app.post("/api/updatesettings", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
 
-      console.log('Form received', req.body);
+      console.log("Form received", req.body);
 
       const {
         facebook_link,
@@ -97,14 +97,14 @@ export default function globalSettingsApiEndPoint(app) {
       } = req.body;
 
       if (
-        !req.body.hasOwnProperty('reward_1_code') ||
-        !req.body.hasOwnProperty('reward_2_code')
+        !req.body.hasOwnProperty("reward_1_code") ||
+        !req.body.hasOwnProperty("reward_2_code")
       ) {
-        return res.status(400).send('Missing required fields');
+        return res.status(400).send("Missing required fields");
       }
 
       if (!req.body.reward_1_code || !req.body.reward_2_code) {
-        return res.status(400).send('Required fields cannot be empty');
+        return res.status(400).send("Required fields cannot be empty");
       }
       const settings = await pool.query(
         `INSERT INTO global_settings (
@@ -219,7 +219,7 @@ export default function globalSettingsApiEndPoint(app) {
           templates,
         ]
       );
-      console.log('data', settings);
+      console.log("data", settings);
       res.json(settings.rows);
     } catch (err) {
       console.error(err.message);
@@ -227,12 +227,12 @@ export default function globalSettingsApiEndPoint(app) {
   });
 
   //update Settings at shop_id
-  app.put('/api/updatesettings', async (req, res) => {
+  app.put("/api/updatesettings", async (req, res) => {
     try {
       const session = await Shopify.Utils.loadCurrentSession(
         req,
         res,
-        app.get('use-online-tokens')
+        app.get("use-online-tokens")
       );
 
       const {
