@@ -12,6 +12,8 @@ import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
 import useFetchTotalClicks from "../../constant/fetchTotalUserClicks";
 import { fetchTotalClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import SkeletonLoader from "../../components/loading_skeletons/SkeletonTable";
+import useFetchTotalRevenue from "../../constant/fetchTotalRevenue";
+import { fetchTotalRevenue } from "../../app/features/revenue/totalRevenueSlice";
 
 const Campaign = lazy(() => import("../../components/campaigns/Campaign"));
 
@@ -57,6 +59,7 @@ const Campaigns = () => {
   //   headers: { "Content-Type": "application/json" },
   // });
 
+  // Get Referral Details
   const referrals = useFetchReferralsData("/api/getallreferralcount", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -68,6 +71,12 @@ const Campaigns = () => {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     signal: abortController.signal,
+  });
+
+  // Get Total Revenue
+  const total_revenue = useFetchTotalRevenue("/api/generate_revenue", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
   });
 
   useEffect(() => {
@@ -201,6 +210,12 @@ const Campaigns = () => {
       abortController.abort();
     };
   }, [total_clicks, dispatch]);
+
+  useEffect(() => {
+    if (total_revenue.length > 0) {
+      dispatch(fetchTotalRevenue(total_revenue));
+    }
+  }, [total_revenue, dispatch]);
 
   // Page render Scroll to Top
   useEffect(() => {

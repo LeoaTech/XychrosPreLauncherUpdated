@@ -1,8 +1,8 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-name = "test-2-app"
-client_id = "5c477447c78bc3bbdecf326daf0aaab6"
-application_url = "https://americas-dns-handhelds-group.trycloudflare.com"
+name = "Viral Launch"
+client_id = "727cd09b9cbefbb4a3dd7edc977070cd"
+application_url = "https://xychrosapp.herokuapp.com/"
 embedded = true
 
 [access_scopes]
@@ -11,22 +11,16 @@ scopes = "read_orders,read_products,read_content,write_content,read_themes,write
 
 [auth]
 redirect_urls = [
-  "https://americas-dns-handhelds-group.trycloudflare.com/auth/callback",
-  "https://americas-dns-handhelds-group.trycloudflare.com/auth/shopify/callback",
-  "https://americas-dns-handhelds-group.trycloudflare.com/api/auth/callback"
+  "https://xychrosapp.herokuapp.com/auth/callback",
+  "https://xychrosapp.herokuapp.com/auth/shopify/callback",
+  "https://xychrosapp.herokuapp.com/api/auth/callback"
 ]
 
 [webhooks]
 api_version = "2023-07"
-
-  [webhooks.privacy_compliance]
-  customer_deletion_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
-  customer_data_request_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
-  shop_deletion_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
-
 [app_proxy]
-url = "https://americas-dns-handhelds-group.trycloudflare.com"
-subpath = "test-2-app"
+url = "https://xychrosapp.herokuapp.com/"
+subpath = "product-prelauncher"
 prefix = "apps"
 
 [pos]
@@ -34,4 +28,4 @@ embedded = false
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "app-running.myshopify.com"
+dev_store_url = "xychros-product-prelauncher.myshopify.com"

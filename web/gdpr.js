@@ -193,6 +193,152 @@ export function setupGDPRWebHooks(path) {
     },
   });
 
+  // Every Time User Places an Order, this Webhook will Trigger
+  Shopify.Webhooks.Registry.addHandler("ORDERS_CREATE", {
+    path: "/api/webhooks",
+    webhookHandler: async (topic, shop, body) => {
+      // Parse the incoming create/orders payload as JSON
+      const payload = JSON.parse(body);
+      console.log("Orders/Create Payload");
+
+      const appNameTag = "viral-launch";
+
+      // Check if customer has signed up using our app
+      if (payload?.customer?.tags) {
+        const customerTagsArray = payload.customer.tags.split(',').map(tag => tag.trim());
+        if (customerTagsArray.includes(appNameTag)) {
+          console.log(`Customer Has Signed Up via Viral-Launch App, Storing Data...`);
+          // store required fields in database
+          try {
+            const query = `
+              INSERT INTO order_details(
+                order_id,
+                order_name,
+                created_at,
+                subtotal_price,
+                total_discounts,
+                total_tax,
+                total_price,
+                discount_codes,
+                currency,
+                customer_email,
+                customer_tags,
+                shop_id
+              )
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+            `;
+    
+            const orders = await pool.query(query, [
+              parseInt(payload?.id),
+              payload?.name,
+              payload?.created_at,
+              parseFloat(payload?.subtotal_price),
+              parseFloat(payload?.total_discounts),
+              parseFloat(payload?.total_tax),
+              parseFloat(payload?.total_price),
+              payload?.discount_codes[0]?.code,
+              payload?.currency,
+              payload?.customer?.email,
+              payload?.customer?.tags,
+              shop,
+            ]);
+    
+            if (orders) {
+              // console.log(orders);
+              console.log('Query is successful. Orders data is stored');
+            } else {
+              console.log('Query failed. Could not store orders data');
+            }
+    
+            return { status: 200, message: "Orders Data Processed Successfully" };
+          } catch (error) {
+            // Handle any errors that occur during payload parsing or processing
+            console.error("Error Processing Webhook Data:", error);
+            // Send an error response to Shopify, indicating the issue
+            return { status: 500, message: "Internal Server Error", error: error.message };
+          }
+        } else {
+          console.log(`Customer Has Not Signed Up via Viral-Launch App, Ignoring Data...`);
+        }
+      } else {
+        console.log("Customer Has No Tags, Ignoring Data...");
+      }
+    },
+  });
+  
+
+  // Every Time User Updates an Order, this Webhook will Trigger
+  Shopify.Webhooks.Registry.addHandler("ORDERS_UPDATED", {
+    path: "/api/webhooks",
+    webhookHandler: async (topic, shop, body) => {
+      // Parse the incoming updated/orders payload as JSON
+      const payload = JSON.parse(body);
+      console.log("Orders/Updated Payload");
+
+      try {
+        // Find if order exists in my database
+        const orderExists = await pool.query(
+          `select * from order_details where order_id = $1`,
+          [payload?.id]
+        );
+
+        // If order found
+        if (orderExists?.rowCount > 0) {
+          //  Update order data
+          await pool.query(
+            `UPDATE order_details SET 
+            subtotal_price = $1,
+            total_discounts = $2,
+            total_tax = $3,
+            total_price = $4,
+            discount_codes =$5,
+            currency = $6,
+            customer_email = $7,
+            customer_tags = $8
+            WHERE order_id = $9`, 
+            [payload?.subtotal_price, payload?.total_discounts, payload?.total_tax, payload?.total_price, payload?.discount_codes[0]?.code, payload?.currency, payload?.customer?.email, payload?.customer?.tags, orderExists?.rows[0]?.order_id]
+          );
+          console.log("Order Exists, Data Updated Successfully");
+        } else {
+          console.log("Order Not Found. Cannot Update");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
+  // Every Time User Deleted an Order, this Webhook will Trigger
+  Shopify.Webhooks.Registry.addHandler("ORDERS_CANCELLED", {
+    path: "/api/webhooks",
+    webhookHandler: async (topic, shop, body) => {
+      // Parse the incoming cancelled/orders payload as JSON
+      const payload = JSON.parse(body);
+      console.log("Orders/Cancelled Payload");
+
+      try {
+        // Find if order exists in my database
+        const orderExists = await pool.query(
+          `select * from order_details where order_id = $1`,
+          [payload?.id]
+        );
+
+        // If order found
+        if (orderExists?.rowCount > 0) {
+          //  Update order data
+          await pool.query(`DELETE from order_details where order_id = $1`, [
+            orderExists?.rows[0]?.order_id,
+          ]);
+          console.log("Order Exists, Data Deleted Successfully");
+        } else {
+          console.log("Order Not Found. Cannot Delete");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
   /**
    * 48 hours after a store owner uninstalls your app, Shopify invokes this
    * webhook.

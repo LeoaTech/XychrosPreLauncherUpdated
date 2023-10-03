@@ -22,6 +22,10 @@ import useFetchLastSixMonthsClicks from "../constant/fetchLastSixMonthsClicks";
 import { fetchLastSixMonthsClicks } from "../app/features/user_clicks/lastSixMonthsClicksSlice";
 import useFetchLastFourCampaignsClicks from "../constant/fetcLastFourCampaignsClicks";
 import { fetchLastFourCampaignsClicks } from "../app/features/user_clicks/lastFourCampaignsClicksSlice";
+import useFetchTotalRevenue from "../constant/fetchTotalRevenue";
+import { fetchTotalRevenue } from "../app/features/revenue/totalRevenueSlice";
+import useFetchLastSixMonthsRevenue from "../constant/fetchLastSixMonthsRevenue";
+import { fetchLastSixMonthsRevenue } from "../app/features/revenue/lastSixMonthsRevenueSlice";
 
 export default function HomePage() {
   const { activeMenu } = useStateContext();
@@ -76,6 +80,7 @@ export default function HomePage() {
       signal: abortController.signal,
     });
 
+  // Get All Referral Details
   const referrals = useFetchReferralsData("/api/getallreferralcount", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -275,6 +280,18 @@ export default function HomePage() {
       abortController.abort();
     };
   }, [lastfourcampaigns_clicks, dispatch]);
+
+  useEffect(() => {
+    if (total_revenue.length > 0) {
+      dispatch(fetchTotalRevenue(total_revenue));
+    }
+  }, [total_revenue, dispatch]);
+
+  useEffect(() => {
+    if (six_months_revenue.length > 0) {
+      dispatch(fetchLastSixMonthsRevenue(six_months_revenue));
+    }
+  }, [six_months_revenue, dispatch]);
 
   return (
     <div className="app">
