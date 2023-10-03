@@ -26,6 +26,10 @@ import { fetchLastFourCampaignsClicks } from "../app/features/user_clicks/lastFo
 export default function HomePage() {
   const { activeMenu } = useStateContext();
   const { darkTheme } = useThemeContext();
+  const abortController = new AbortController();
+
+  const [currentTier, setCurrentTier] = useState("");
+
   const dispatch = useDispatch();
   // Page render Scroll to Top
   useEffect(() => {
@@ -33,40 +37,56 @@ export default function HomePage() {
   }, []);
 
   // Get All Products of App Store
-  const product = useFetchAllProducts("/api/2022-10/products.json", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  const { data: product, error: productError } = useFetchAllProducts(
+    "/api/2022-10/products.json",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    }
+  );
 
   // Get Global Settings
-  const settings = useFetchSettings("/api/updatesettings", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  const { data: settings, error: settingsError } = useFetchSettings(
+    "/api/updatesettings",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    }
+  );
 
   // Get Current Billing Details of App
-  const billing = useFetchBillingModel("/api/subscribe-plan", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const { data: billing, error: billingError } = useFetchBillingModel(
+    "/api/subscribe-plan",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      signal: abortController.signal,
+    }
+  );
 
   // Get Campaign Settings List
-  const campaignsDetails = useFetchCampaignsDetails("/api/campaigndetails", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  const { data: campaignsDetails, error: campaignsDetailsError } =
+    useFetchCampaignsDetails("/api/campaigndetails", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    });
 
   const referrals = useFetchReferralsData("/api/getallreferralcount", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    signal: abortController.signal,
   });
 
   // Get All Campaign Clicks
   const total_clicks = useFetchTotalClicks("/api/fetchtotalclicks", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    signal: abortController.signal,
   });
 
   // Get Last Six Months Campaign Clicks Data
@@ -75,6 +95,7 @@ export default function HomePage() {
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
     }
   );
 
@@ -84,56 +105,175 @@ export default function HomePage() {
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
     }
   );
 
- useEffect(() => {
-    if (campaignsDetails?.length > 0) {
-      dispatch(fetchCampaignDetails(campaignsDetails));
+  // Dispatch API result in Redux store to get access data in the App
+  useEffect(() => {
+    if (billing) {
+      setCurrentTier(billing?.plan_name);
+      dispatch(fetchSavePlan(billing)); //Save Current Billing Details in App Store
     }
-  }, [campaignsDetails, dispatch]);
+    return () => {
+      abortController.abort();
+    };
+  }, [dispatch, billing, currentTier]);
+
+  // Active Campaigns Based on Subscription
+
+  // USE CASE 1 : Current Billing Plan == "Free" Only 1 Campaign (Latest) will be Active on Free Tier (if Any campaign exists in table)
+
+  // USE CASE 2 : Current Billing Plan == "Tier1" Only 2 Campaign (Latest) will be Active on TierI ONE (if Any campaign exists in table)
+
+  // USE CASE 3 : Current Billing Plan > Tier I All Campaigns will be Active if NOT In Draft  (if Any campaign exists in table)
+
+  let mostLatestCampaign,
+    latestCampaign,
+    sortedCampaigns,
+    mostTwoLatestCampaign;
+
+  useEffect(() => {
+    if (currentTier && campaignsDetails?.length > 0) {
+      // Then Sort by Date Difference
+      sortedCampaigns = campaignsDetails
+        ?.slice()
+        .sort((a, b) => new Date(b.end_date) - new Date(a.end_date));
+
+      // For Free Tier Get max 1 Latest Campaign which has ending date not expired yet
+      latestCampaign = sortedCampaigns?.find(
+        (camp) =>
+          new Date(camp?.start_date) <= new Date() &&
+          new Date(camp?.end_date) > new Date()
+      );
+
+      // Filtered Campaigns with are  not expired yet
+      mostLatestCampaign = sortedCampaigns?.filter(
+        (camp) =>
+          new Date(camp?.start_date) <= new Date() &&
+          new Date(camp?.end_date) > new Date()
+        // && camp.is_active === true
+      );
+
+      // For Tier1 Get 2 Latest Campaigns which has ending date not expired yet
+      mostTwoLatestCampaign = mostLatestCampaign?.splice(0, 2);
+
+      // CASE 1   "Free" Active only Lates Campaign ( created or updated recently)
+
+      if (currentTier === "Free" || currentTier === "Free + Add-ons") {
+        // Update App Component with all other campaigns remaining INACTIVE except the Latest campaign
+        const updateCampaigns = sortedCampaigns?.map((camp) =>
+          camp.campaign_id === latestCampaign?.campaign_id
+            ? { ...camp, is_active: true }
+            : { ...camp, is_active: false }
+        );
+
+        dispatch(fetchCampaignDetails(updateCampaigns));
+      }
+      // CASE 2   "TIER 1"
+
+      if (currentTier === "Tier 1" || currentTier === "Tier 1 + Add-ons") {
+        const updateCampaigns = sortedCampaigns?.map((camp) => {
+          let isActive = false;
+          if (
+            new Date(camp?.start_date) <= new Date() &&
+            new Date(camp?.end_date) > new Date()
+          ) {
+            isActive = mostTwoLatestCampaign?.some(
+              (mc) => mc.campaign_id === camp.campaign_id
+            );
+          }
+          return { ...camp, is_active: isActive };
+        });
+
+        dispatch(fetchCampaignDetails(updateCampaigns));
+      }
+      // CASE 3  "TIER 2 to Tier 8"
+      if (
+        currentTier !== "Free" &&
+        currentTier !== "Tier 1" &&
+        currentTier !== "Free + Add-ons" &&
+        currentTier !== "Tier 1 + Add-ons"
+      ) {
+        const updateCampaigns = campaignsDetails?.map((camp) => {
+          const startDate = new Date(camp?.start_date);
+          const endDate = new Date(camp?.end_date);
+          const currentDate = new Date();
+
+          if (currentDate >= startDate && currentDate <= endDate) {
+            return { ...camp, is_active: true };
+          } else {
+            return { ...camp, is_active: false };
+          }
+        });
+
+        dispatch(fetchCampaignDetails(updateCampaigns));
+      }
+    }
+    return () => {
+      abortController.abort();
+    };
+  }, [
+    campaignsDetails,
+    dispatch,
+    mostLatestCampaign,
+    mostTwoLatestCampaign,
+    latestCampaign,
+    currentTier,
+  ]);
 
   useEffect(() => {
     if (referrals?.length > 0) {
       dispatch(fetchReferrals(referrals));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [referrals, dispatch]);
-
-  // Dispatch API result in Redux store to get access data in the App
-  useEffect(() => {
-    if (billing) {
-      dispatch(fetchSavePlan(billing)); //Save Current Billing Details in App Store
-    }
-  }, [dispatch, billing]);
 
   useEffect(() => {
     if (settings) {
       dispatch(fetchSettings(settings[0]));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch, settings]);
 
   useEffect(() => {
     if (product) {
       dispatch(fetchProducts(product));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch, product]);
 
   useEffect(() => {
     if (total_clicks.length > 0) {
       dispatch(fetchTotalClicks(total_clicks));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [total_clicks, dispatch]);
 
   useEffect(() => {
     if (lastsixmonths_clicks.length > 0) {
       dispatch(fetchLastSixMonthsClicks(lastsixmonths_clicks));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [lastsixmonths_clicks, dispatch]);
 
   useEffect(() => {
     if (lastfourcampaigns_clicks.length > 0) {
       dispatch(fetchLastFourCampaignsClicks(lastfourcampaigns_clicks));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [lastfourcampaigns_clicks, dispatch]);
 
   return (
