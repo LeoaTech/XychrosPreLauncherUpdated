@@ -551,7 +551,7 @@ const HomeComponent = () => {
             />
           </div>
           <div className='dual-charts'>
-            {Array.isArray(getLastFourCampaignsClicks) && getLastFourCampaignsClicks.length > 0 ? (
+            {getTotalClicks.length > 0 ? (
               <Charts
                 type='donut'
                 header='Total Clicks'
@@ -562,10 +562,10 @@ const HomeComponent = () => {
               />
             ) : (
               <div className='intro-section'>
-                <div className='intro-card'><p>No Last Four Campaigns Clicks Data Available Yet</p></div>
+                <div className='intro-card'><p>Last Four Campaigns Clicks Not Available Yet</p></div>
               </div>
             )}
-            {Array.isArray(getLastFourCampaignsReferrals) && getLastFourCampaignsReferrals.length > 0 ? (
+            {getReferrals.length > 0 ? (
               <Charts
                 type='donut'
                 header='Total Referrals'
@@ -576,7 +576,7 @@ const HomeComponent = () => {
               />
             ) : (
               <div className='intro-section'>
-                <div className='intro-card'><p>Not Last Four Campaigns Referrals Data Available Yet</p></div>
+                <div className='intro-card'><p>Last Four Campaigns Referrals Not Available Yet</p></div>
               </div>
             )}
           </div>
