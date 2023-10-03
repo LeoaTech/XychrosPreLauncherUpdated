@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect } from "react";
-import { SideBar, Header} from "../components/index";
+import { SideBar, Header } from "../components/index";
 import { useStateContext } from "../contexts/ContextProvider";
 import "../index.css";
 import useFetchUserDetails from "../constant/fetchUserDetails";
@@ -15,17 +15,37 @@ const UserProfile = lazy(() => import("../components/user/UserProfile"));
 
 const UserProfilePage = () => {
   const { activeMenu } = useStateContext();
-  const dispatch = useDispatch();
-  const userDetails = useFetchUserDetails("/api/userprofile", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  const abortController = new AbortController();
 
-  const response = useFetchPricingPlans("/api/pricing-plans", {
+  const dispatch = useDispatch();
+
+  const { data: userDetails, error: userDetailsError } = useFetchUserDetails(
+    "/api/userprofile",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    }
+  );
+
+  const { data: pricingData, error: pricingError } = useFetchPricingPlans(
+    "/api/pricing-plans",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      signal: abortController.signal,
+    }
+  );
+  // Get Current Active Plan Billing Details
+
+  const {data:billing,error:billingError} = useFetchBillingModel("/api/subscribe-plan", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
+    signal: abortController.signal,
   });
 
   // Page render Scroll to Top
@@ -37,29 +57,31 @@ const UserProfilePage = () => {
     if (userDetails?.length > 0) {
       dispatch(SaveUser(userDetails));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [userDetails]);
-
-  // Get Current Active Plan Billing Details
-
-  const billing = useFetchBillingModel("/api/subscribe-plan", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 
   // Dispatch Active plan data to App Store
   useEffect(() => {
     if (billing) {
       dispatch(fetchSavePlan(billing)); //Save Current Billing Details in App Store
     }
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch, billing]);
+
+  console.log(billing);
   // Get All Pricing Details with Features
   useEffect(() => {
-    if (response.length > 0) {
-      dispatch(fetchpricing(response));
+    if (pricingData?.length > 0) {
+      dispatch(fetchpricing(pricingData));
     }
-  }, [dispatch, response]);
+    return () => {
+      abortController.abort();
+    };
+  }, [dispatch, pricingData]);
 
   return (
     <div className="app">
