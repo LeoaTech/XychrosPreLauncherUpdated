@@ -12,16 +12,16 @@ const useFetchCurrentPlan = (url) => {
     return response.json();
   };
 
-  const { data, error } = useQuery('current-plan', fetchCurrent);
+  return useQuery('current-plan', fetchCurrent);
 
-  if (error) {
-    console.log(error);
-    // Handle the error case if needed
+  // if (error) {
+  //   console.log(error);
+  //   // Handle the error case if needed
 
-    return;
-  }
+  //   return;
+  // }
 
-  return data || null; // Return empty array as default if data is not available yet
+  // return data || null; // Return empty array as default if data is not available yet
 };
 
 export default useFetchCurrentPlan;
