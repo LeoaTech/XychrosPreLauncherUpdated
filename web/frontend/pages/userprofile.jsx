@@ -72,7 +72,6 @@ const UserProfilePage = () => {
     };
   }, [dispatch, billing]);
 
-  console.log(billing);
   // Get All Pricing Details with Features
   useEffect(() => {
     if (pricingData?.length > 0) {
