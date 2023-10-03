@@ -15,23 +15,34 @@ const Settings = lazy(() => import("../components/settings/SettingComponent"));
 
 const SettingsPage = () => {
   const { activeMenu } = useStateContext();
-  const { darkTheme } = useThemeContext();
+  const abortController = new AbortController();
   const dispatch = useDispatch();
+
+  // Get Global Settings
+  const { data: settings, error: settingsError } = useFetchSettings(
+    "/api/updatesettings",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    }
+  );
+
   // Page render Scroll to Top
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const data = useFetchSettings("/api/updatesettings", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-
+  // Get Default Settings Data
   useEffect(() => {
-    if (data?.length > 0) {
-      dispatch(fetchSettings(data[0]));
+    if (settings !== undefined) {
+      dispatch(fetchSettings({ ...settings }));
     }
-  }, [dispatch, data]);
+    return () => {
+      abortController.abort();
+    };
+  }, [dispatch, settings]);
+
   return (
     <div className="app">
       {activeMenu ? (
