@@ -12,16 +12,16 @@ const useFetchPricingPlans = (url) => {
     return response.json();
   };
 
-  const { data, error } = useQuery('pricing', fetchPricing);
+  return useQuery('pricing', fetchPricing);
 
-  if (error) {
-    console.log(error);
-    // Handle the error case if needed
+  // if (error) {
+  //   console.log(error);
+  //   // Handle the error case if needed
 
-    return error;
-  }
+  //   return error;
+  // }
 
-  return data || []; // Return empty array as default if data is not available yet
+  // return data || []; // Return empty array as default if data is not available yet
 };
 
 export default useFetchPricingPlans;
