@@ -17,6 +17,8 @@ const Campaign = lazy(() => import("../../components/campaigns/Campaign"));
 
 const Campaigns = () => {
   const { activeMenu } = useStateContext();
+  const abortController = new AbortController();
+
   const dispatch = useDispatch();
   const currentBilling = useSelector(fetchCurrentTier);
   const [currentTier, setCurrentTier] = useState("");
@@ -28,33 +30,53 @@ const Campaigns = () => {
     }
   }, [currentBilling]);
 
-  // Get Campaign Settings List
-  const campaigns = useFetchCampaignsData("/api/getcampaigns", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  const { data: campaigns, error: campaignsError } = useFetchCampaignsData(
+    "/api/getcampaigns",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    }
+  );
+  const { data: campaignsDetails, error: campaignsDetailsError } =
+    useFetchCampaignsDetails("/api/campaigndetails", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    });
 
-  // Get Campaign Details
-  const campaignsDetails = useFetchCampaignsDetails("/api/campaigndetails", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  // Get Campaign Settings List
+  // const campaigns = useFetchCampaignsData("/api/getcampaigns", {
+  //   method: "GET",
+  //   headers: { "Content-Type": "application/json" },
+  // });
+
+  // // Get Campaign Details
+  // const campaignsDetails = useFetchCampaignsDetails("/api/campaigndetails", {
+  //   method: "GET",
+  //   headers: { "Content-Type": "application/json" },
+  // });
 
   const referrals = useFetchReferralsData("/api/getallreferralcount", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    signal: abortController.signal,
   });
 
   // Get All Campaign Clicks
   const total_clicks = useFetchTotalClicks("/api/fetchtotalclicks", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    signal: abortController.signal,
   });
 
   useEffect(() => {
     if (campaigns?.length > 0) {
       dispatch(fetchCampaign(campaigns));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [campaigns, dispatch]);
 
   // Active Campaigns Based on Subscription
@@ -68,7 +90,7 @@ const Campaigns = () => {
   let mostLatestCampaign, latestCampaign, sortedCampaigns, deactivatedCampaigns;
 
   useEffect(() => {
-    if (campaignsDetails?.length > 0) {
+    if (currentTier && campaignsDetails?.length > 0) {
       // Then Sort by Date Difference
       sortedCampaigns = campaignsDetails
         ?.slice()
@@ -85,8 +107,8 @@ const Campaigns = () => {
       mostLatestCampaign = sortedCampaigns?.filter(
         (camp) =>
           new Date(camp?.start_date) <= new Date() &&
-          new Date(camp?.end_date) > new Date() &&
-          camp.is_active === true
+          new Date(camp?.end_date) > new Date()
+        // &camp.is_active === true
       );
 
       // For Tier1 Get 2 Latest Campaigns which has ending date not expired yet
@@ -147,9 +169,13 @@ const Campaigns = () => {
             return { ...camp, is_active: false };
           }
         });
+
         dispatch(fetchCampaignDetails(updateCampaigns));
       }
     }
+    return () => {
+      abortController.abort();
+    };
   }, [
     campaignsDetails,
     dispatch,
@@ -162,12 +188,18 @@ const Campaigns = () => {
     if (referrals?.length > 0) {
       dispatch(fetchReferrals(referrals));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [referrals, dispatch]);
 
   useEffect(() => {
     if (total_clicks?.length > 0) {
       dispatch(fetchTotalClicks(total_clicks));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [total_clicks, dispatch]);
 
   // Page render Scroll to Top
