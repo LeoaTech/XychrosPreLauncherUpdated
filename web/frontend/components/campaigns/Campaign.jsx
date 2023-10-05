@@ -47,22 +47,6 @@ const CampaignsComponent = () => {
   const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
   const [getTotalRevenue, setTotalRevenue] = useState([]);
 
-  // Format Largest Number Value(Clicks,Revenue,TotalRevenue, Referrals and Total Campaigns)
-  function formatNumber(num) {
-    if (num >= 1000000000000) {
-      return (num / 1000000000).toFixed(1) + "T";
-    } else if (num >= 1000000000) {
-      return (num / 1000000000).toFixed(1) + "B";
-    } else if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + "M";
-    } else if (num >= 1000) {
-      return (num / 1000).toFixed(1) + "k";
-    } else {
-      return num.toString();
-    }
-  }
-
-
   useEffect(() => {
     if (List?.length > 0) {
       setCampaigns(List);
@@ -247,7 +231,7 @@ const CampaignsComponent = () => {
       <div className="summary-blocks">
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={formatNumber(getDetails?.length)}
+            value={getDetails?.length}
             title="Campaigns"
             icon={Marketing}
             class="campaign-icon"
@@ -255,7 +239,7 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={formatNumber(ReferralList?.length)}   //ReferralList?.length
+            value={ReferralList?.length}
             title="Referrals"
             icon={subscriber}
             class="referral-icon"
@@ -266,7 +250,7 @@ const CampaignsComponent = () => {
             value={
               getTotalClicks.length === 0
                 ? 345079491
-                : formatNumber(getTotalClicks[0].total_clicks)
+                : getTotalClicks[0].total_clicks
             }
             title="Clicks"
             icon={arrow}
@@ -275,11 +259,7 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={
-              getTotalRevenue.length === 0
-                ? formatNumber(23094)
-                : formattedNumber(getTotalRevenue)
-            }
+            value={getTotalRevenue.length === 0 ? 23094 : getTotalRevenue}
             title="Revenue"
             icon={Sale}
             class="revenue-icon"
@@ -306,7 +286,6 @@ const CampaignsComponent = () => {
                     handleDeleteCampaign={handleDeleteCampaign}
                     handleEdit={handleEdit}
                     TotalRevenueList={TotalRevenueList}
-                    formatNumber={formatNumber}  //Format number function to format largest value in each campaign
                   />
                 </Suspense>
               ))}
