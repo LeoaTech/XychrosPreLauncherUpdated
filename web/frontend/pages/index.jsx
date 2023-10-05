@@ -94,6 +94,22 @@ export default function HomePage() {
     signal: abortController.signal,
   });
 
+  const total_revenue = useFetchTotalRevenue("/api/generate_revenue", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    signal: abortController.signal,
+  });
+
+  // Get Last Six Months Revenue
+  const six_months_revenue = useFetchLastSixMonthsRevenue(
+    "/api/fetch_revenue",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    }
+  );
+
   // Get Last Six Months Campaign Clicks Data
   const lastsixmonths_clicks = useFetchLastSixMonthsClicks(
     "/api/fetch_lastsixmonths_clicks",
@@ -285,12 +301,18 @@ export default function HomePage() {
     if (total_revenue.length > 0) {
       dispatch(fetchTotalRevenue(total_revenue));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [total_revenue, dispatch]);
 
   useEffect(() => {
     if (six_months_revenue.length > 0) {
       dispatch(fetchLastSixMonthsRevenue(six_months_revenue));
     }
+    return () => {
+      abortController.abort();
+    };
   }, [six_months_revenue, dispatch]);
 
   return (
