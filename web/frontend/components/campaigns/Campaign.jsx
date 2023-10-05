@@ -47,6 +47,21 @@ const CampaignsComponent = () => {
   const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
   const [getTotalRevenue, setTotalRevenue] = useState([]);
 
+  // Format Largest Number Value(Clicks,Revenue,TotalRevenue, Referrals and Total Campaigns)
+  function formatNumber(num) {
+    if (num >= 1000000000000) {
+      return (num / 1000000000).toFixed(1) + "T";
+    } else if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(1) + "B";
+    } else if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + "M";
+    } else if (num >= 1000) {
+      return (num / 1000).toFixed(1) + "k";
+    } else {
+      return num.toString();
+    }
+  }
+
 
   useEffect(() => {
     if (List?.length > 0) {
@@ -78,18 +93,20 @@ const CampaignsComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue.toFixed(2));
+      setTotalRevenue(
+        TotalRevenueList[0].currency +
+          TotalRevenueList[0].total_revenue.toFixed(2)
+      );
     }
   }, [TotalRevenueList]);
 
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 6;
   const totalPages = Math.ceil(getDetails?.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = getDetails?.slice(startIndex, endIndex);
-
 
   // Handle Previous Page Click events
   const handlePrevClick = () => {
@@ -169,7 +186,6 @@ const CampaignsComponent = () => {
     }
   };
 
-
   // Campaign is removed from both frontend and backend campaign Table List
 
   const handleDeleteCampaign = async (camp_id) => {
@@ -231,7 +247,7 @@ const CampaignsComponent = () => {
       <div className="summary-blocks">
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getDetails?.length}
+            value={formatNumber(getDetails?.length)}
             title="Campaigns"
             icon={Marketing}
             class="campaign-icon"
@@ -239,7 +255,7 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getReferrals?.length}
+            value={formatNumber(ReferralList?.length)}   //ReferralList?.length
             title="Referrals"
             icon={subscriber}
             class="referral-icon"
@@ -247,7 +263,11 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks}
+            value={
+              getTotalClicks.length === 0
+                ? 345079491
+                : formatNumber(getTotalClicks[0].total_clicks)
+            }
             title="Clicks"
             icon={arrow}
             class="clicks-icon"
@@ -255,13 +275,16 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
-            title='Revenue'
+            value={
+              getTotalRevenue.length === 0
+                ? formatNumber(23094)
+                : formattedNumber(getTotalRevenue)
+            }
+            title="Revenue"
             icon={Sale}
-            class='revenue-icon'
+            class="revenue-icon"
           />
         </Suspense>
-
       </div>
       <div className="campaigns">
         {getDetails?.length > 0 ? (
@@ -283,6 +306,7 @@ const CampaignsComponent = () => {
                     handleDeleteCampaign={handleDeleteCampaign}
                     handleEdit={handleEdit}
                     TotalRevenueList={TotalRevenueList}
+                    formatNumber={formatNumber}  //Format number function to format largest value in each campaign
                   />
                 </Suspense>
               ))}
