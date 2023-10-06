@@ -40,21 +40,25 @@ const UserProfilePage = () => {
   );
   // Get Current Active Plan Billing Details
 
-  const {data:billing,error:billingError} = useFetchBillingModel("/api/subscribe-plan", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    signal: abortController.signal,
-  });
+  const { data: billing, error: billingError } = useFetchBillingModel(
+    "/api/subscribe-plan",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      signal: abortController.signal,
+    }
+  );
 
   // Page render Scroll to Top
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+
   useEffect(() => {
-    if (userDetails?.length > 0) {
+    if (userDetails !== undefined) {
       dispatch(SaveUser(userDetails));
     }
     return () => {
