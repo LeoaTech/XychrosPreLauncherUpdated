@@ -84,7 +84,14 @@
   flex-wrap: wrap;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* display: grid; */
+  /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+  /* grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr)); */
+  /* grid: min-content 1fr / 200px 1fr 200px 1fr; */
+
+
+  /* gap: 3rem; */
+
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
@@ -170,6 +177,8 @@
 
 .campaign-actions {
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   gap: 6px;
   font-size: 12px;
@@ -178,7 +187,7 @@
 }
 
 .deactivated {
-  margin-top: 20px;
+  margin-top: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -289,7 +298,7 @@
 @media only screen and (max-width: 786px) {
   .campaign-block {
     width: 96%;
-    margin: 28px 10px;
+    margin: 28px -2px;
     padding: 11px 29px;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -318,7 +327,7 @@
     font-size: 15px;
   }
   .campaign_details_links a {
-    margin: 10px;
+    margin: 4px;
     display: flex;
   }
 
@@ -338,7 +347,8 @@
   .campaign-actions {
     display: flex;
     flex-direction: row;
-    gap: 16rem;
+    margin-top: 1rem;
+    gap: 12rem;
   }
 
   .campaign-actions div {
@@ -366,10 +376,10 @@
 
 @media screen and (max-width: 500px) {
   .campaign-block {
-    width: 94%;
+    width: 91%;
     display: flex;
-    margin: 20px 11px;
-    padding: 11px 15px;
+    margin: 20px 20px;
+    padding: 11px 10px;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;

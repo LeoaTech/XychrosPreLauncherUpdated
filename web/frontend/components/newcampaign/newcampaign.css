@@ -253,16 +253,17 @@ label {
   background-color: #25242d;
   border: none;
   padding: 25px 10px;
-  border-radius: 18px;
+  border-radius: 25px;
   height: 45px;
   color: white;
   width: 470px;
   font-size: 20px;
   font-weight: 500;
-  -webkit-border-radius: 18px;
-  -moz-border-radius: 18px;
-  -ms-border-radius: 18px;
-  -o-border-radius: 18px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+  padding-left: 20px;
 }
 
 /*    Products Select field */
@@ -271,6 +272,11 @@ label {
   position: relative;
   display: inline-block;
   width: 100%;
+  border-radius: 25px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
 }
 
 .select-products select,
@@ -279,7 +285,7 @@ label {
   padding: 12px 16px;
   background-color: #25242d;
   border: none;
-  border-radius: 18px;
+  border-radius: 25px;
   height: 45px;
   color: white;
   width: 470px;
@@ -289,10 +295,11 @@ label {
   -webkit-appearance: none;
   -moz-appearance: none;
   cursor: pointer;
-  -webkit-border-radius: 18px;
-  -moz-border-radius: 18px;
-  -ms-border-radius: 18px;
-  -o-border-radius: 18px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+  padding-left: 20px;
 }
 
 .select-products:after,
@@ -304,10 +311,15 @@ label {
   transform: translateY(-50%);
   pointer-events: none;
   color: #f1ecec;
+  border-radius: 25px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
 }
 
 .datepicker-input {
-  padding-left: 10px;
+  padding-left: 20px;
 }
 
 /*     Date Selector Input field  */
@@ -373,18 +385,19 @@ label {
 }
 
 .campaign-form .store-links .social-inputfield {
-  height: 30px;
+  height: 33px;
   width: 100%;
   background-color: #25242d;
   border: none;
   color: #fff;
   padding: 10px;
   line-height: 1.4;
-  border-radius: 12px;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
-  -ms-border-radius: 12px;
-  -o-border-radius: 12px;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  padding-left: 15px;
 }
 
 .sub-heading {
@@ -420,6 +433,8 @@ label {
   font-size: 17px;
 }
 
+
+/* Radion Button */
 .collect-settings .checkbox-input {
   height: 20px;
   width: 30px;
@@ -648,7 +663,7 @@ input[type="checkbox"]:checked {
 }
 
 .check-input input {
-  height: 28px;
+  height: 22px;
   margin: 10px;
   width: 25px;
   border-radius: 10px;
@@ -662,16 +677,17 @@ input[type="checkbox"]:checked {
   background-color: #25242d;
   border: none;
   padding: 25px 15px;
-  border-radius: 18px;
+  padding-left: 20px;
+  border-radius: 25px;
   height: 45px;
   color: white;
   width: 500px;
   font-size: 20px;
   font-weight: 500;
-  -webkit-border-radius: 18px;
-  -moz-border-radius: 18px;
-  -ms-border-radius: 18px;
-  -o-border-radius: 18px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
 }
 
 .integrate-setting-btn {
@@ -854,6 +870,16 @@ input[type="checkbox"]:checked {
     width: 370px;
     font-size: 18px;
   }
+
+  .select-products select,
+  .select-user-input select {
+   border-radius: 25px !important;
+   -webkit-border-radius: 25px;
+   -moz-border-radius: 25px;
+   -ms-border-radius: 25px;
+   -o-border-radius: 25px;
+}
+
 
   .campaign-form .store-links .store-social-links {
     grid-template-columns: repeat(2, 1fr);

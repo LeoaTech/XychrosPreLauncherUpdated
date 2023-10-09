@@ -1,6 +1,8 @@
 .short-summary-card {
-  width: 140px;
-  height: 50px;
+  /* width: 140px; */
+  /* max-width: 200px; */
+  /* height: auto; */
+  /* place-content:inherit; */
   background: var(--sidebar-bg-color);
   border: 1px solid var(--main-text-color);
   border: 1px solid #fcfcfc;
@@ -8,10 +10,13 @@
   border-radius: 10px;
   margin: 10px 14px;
   display: flex;
-  padding: 4px 15px;
-  justify-content: space-between;
+  /* flex-grow: 4; */
+  /* padding: 4px 15px; */
+  padding: 10px;
+  /* justify-content: space-around; */
   align-items: center;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
+  /* gap: 1rem; */
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
@@ -19,28 +24,36 @@
 }
 
 .short-summary-card.deactive {
-  border: 1px solid #585757;
+  border: 1px solid #fcfcfc;
 }
 
 .short-summary-card-value {
+  /* display: flex; */
+  flex: 1;
   font-weight: 700;
   font-size: 24px;
   line-height: 42px;
   color: var(--primary-color);
 }
 
-.short-summary-card-value.deactive{
-  color:gray;
+.short-summary-card-value span {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.short-summary-card-value.deactive {
+  color: var(--primary-color);
 }
 
 .short-summary-card-icon {
-  height: 22px;
-  width: 21px;
+  height: 21px;
+  width: 23px;
+  margin-left: 10px;
 }
 
 @media only screen and (max-width: 1050px) {
   .short-summary-card {
-    width: 110px;
+    /* width: 110px; */
     margin: 10px 5px;
     display: flex;
     padding: 4px 13px;
@@ -77,25 +90,31 @@
 
 @media only screen and (max-width: 786px) {
   .short-summary-card {
-    width: 140px;
-    gap: 10px;
+    /* width: 140px; */
+    /* gap: 10px; */
     padding: 10px 10px;
-    flex-direction: column;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: center;
-    margin: 10px 4px;
+    flex-direction: column-reverse;
+    /* justify-content: center; */
+    /* flex-wrap: wrap; */
+    /* align-items: flex-start; */
+    margin: 10px 10px;
   }
 
   .short-summary-card-value {
+    margin-top: 20px;
     font-size: 29px;
+  }
+  .short-summary-card-icon {
+    height: 25px;
+    width: 29px;
+    margin-left: 10px;
   }
 }
 
 @media only screen and (max-width: 500px) {
   .short-summary-card {
-    width: 70px;
-    height: 105px;
+    /* width: 70px; */
+    /* height: 105px; */
     margin: 10px 18px;
     display: flex;
     padding: 13px 8px;
@@ -111,8 +130,8 @@
 
 @media only screen and (max-width: 380px) {
   .short-summary-card {
-    width: 200px;
-    height: 70px;
+    /* width: 200px;
+    height: 70px; */
     margin: 10px;
     padding: 10px;
     flex-direction: row;

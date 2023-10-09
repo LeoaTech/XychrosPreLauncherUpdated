@@ -43,7 +43,9 @@ import { skeletonPageLoad } from "@shopify/app-bridge/actions/Performance";
 import ButtonLoader from "../loading_skeletons/ButtonLoader";
 import {
   fetchCampaignDetails,
+  fetchCampaignsDetailsList,
   fetchCampaignsDiscountCodes,
+  getActiveCampaigns,
 } from "../../app/features/campaign_details/campaign_details";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -53,6 +55,7 @@ const SaveDraft = lazy(() => import("../modal/SaveDraft"));
 
 function NewCampaignForm() {
   const toastId = useRef(null);
+  const abortController = new AbortController();
 
   const { isEdit, setIsEdit } = useStateContext();
   const fetch = useAuthenticatedFetch();
@@ -60,15 +63,14 @@ function NewCampaignForm() {
   const dispatch = useDispatch();
   const { campaignsid } = useParams();
 
-  const fetchCampaign = useSelector(fetchAllCampaigns); // To Get Campaigns Reward Codes List
-
+  const fetchCampaign = useSelector(fetchCampaignsDetailsList); // To Get Campaigns Reward Codes List
   // Get Values from Redux-Store
   const campaignName = useSelector(fetchCampaignByName); //Get the Campaign Name to verify unique campaign name
   const campaignsDiscountCode = useSelector(fetchCampaignsDiscountCodes);
 
   const settings = useSelector(fetchAllSettings); //Settings Data
   const products = useSelector(fetchAllProducts); //Get all products of Shop
-  const totalCampaigns = useSelector(getTotalCampaigns);
+  const totalCampaigns = useSelector(getActiveCampaigns);
   const currentTier = useSelector(fetchCurrentTier);
 
   const current_plan = useSelector(fetchCurrentPlan);
@@ -126,7 +128,6 @@ function NewCampaignForm() {
   const [discountCode4, setDiscountCode4] = useState(false);
   const [rewardTierValidate, setRewardTierValidate] = useState(false);
   const [discountInvalidError, setDiscountInvalidError] = useState(false); // To Get Validation error for Duplicate codes on Store
-  const [fillInputs, setFillInputs] = useState(false); // Is Rward tiers filled or not
 
   //? New Campaign Form Data Fields
   const [newCampaignData, setNewCampaignData] = useState({
@@ -201,12 +202,16 @@ function NewCampaignForm() {
   const fetchCodes = useFetchDiscountCodes("/api/fetch_discount_codes", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    signal: abortController.signal,
   });
 
   useEffect(() => {
-    if (fetchCodes.length > 0) {
+    if (fetchCodes?.length > 0) {
       setDiscountList([...discountList, ...fetchCodes]);
     }
+    return () => {
+      abortController.abort();
+    };
   }, [fetchCodes]);
 
   // Get All Campaigns Discount Code List
@@ -290,12 +295,16 @@ function NewCampaignForm() {
     headers: {
       "Content-Type": "application/json",
     },
+    signal: abortController.signal,
   });
   // if Fetch result is successful store the result in templateList
   useEffect(() => {
     if (templateData?.length > 0) {
       setTemplateList(templateData);
     }
+    return () => {
+      abortController.abort();
+    };
   }, [templateData]);
 
   // Generate Random Templates Array with Template Ids
@@ -432,6 +441,7 @@ function NewCampaignForm() {
           headers: {
             "Content-Type": "application/json",
           },
+          signal: abortController.signal,
         });
 
         if (response.ok) {
@@ -455,6 +465,9 @@ function NewCampaignForm() {
       let findList = await getKlaviyoList();
       setKlaviyoList(findList);
     }
+    return () => {
+      abortController.abort();
+    };
   }, [globalSettings?.klaviyo_api_key, editCampaignData?.klaviyo_api_key]);
 
   //? When user try to reload or change the route to other page
@@ -846,7 +859,6 @@ function NewCampaignForm() {
     }
   }
 
-
   // Handle Radio button Change events
 
   function handleRadioChange(event) {
@@ -1046,7 +1058,7 @@ function NewCampaignForm() {
       body: JSON.stringify({
         ...campaign_details,
         is_draft: false,
-        is_active: false,
+        is_active: true,
       }),
     });
 
@@ -1083,6 +1095,7 @@ function NewCampaignForm() {
       console.log("Failed to insert campaign details:", detailsResponse);
     }
   };
+
 
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
@@ -1284,13 +1297,18 @@ function NewCampaignForm() {
       return;
     }
   };
+
   return (
     <>
-      {((myPlan == "Free" && TotalCampaign >= 1) ||
-        (myPlan == "Tier 1" && TotalCampaign >= 2)) &&
+      {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
+        (myPlan == "Tier 1" && TotalCampaign?.length >= 2)) &&
       !isEdit ? (
         <div className="upgrade-container">
-          <p>Upgrade Your Account </p>
+          <p>
+            You already have {TotalCampaign?.length} Active Campaign
+            {TotalCampaign?.length > 1 && "s"}
+          </p>
+          <p>Upgrade Your Account to create unlimited campaigns </p>
           <button className="upgrade-btn" onClick={() => navigate("/price")}>
             Upgrade Plan
           </button>

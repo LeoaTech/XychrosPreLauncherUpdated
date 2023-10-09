@@ -12,16 +12,16 @@ const useFetchDiscountCodes = (url) => {
     return response.json();
   };
 
-  const { data, error } = useQuery('discount-codes', fetchDiscountCodes);
+  return useQuery('discount-codes', fetchDiscountCodes);
 
-  if (error) {
-    console.log(error);
-    // Handle the error case if needed
+  // if (error) {
+  //   console.log(error);
+  //   // Handle the error case if needed
 
-    return;
-  }
+  //   return;
+  // }
 
-  return data || []; // Return empty array as default if data is not available yet
+  // return data || []; // Return empty array as default if data is not available yet
 };
 
 export default useFetchDiscountCodes;
