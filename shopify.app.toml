@@ -2,7 +2,7 @@
 
 name = "test-2-app"
 client_id = "5c477447c78bc3bbdecf326daf0aaab6"
-application_url = "https://learned-such-pgp-vi.trycloudflare.com"
+application_url = "https://dominant-understanding-commons-appointed.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ scopes = "read_orders,read_products,read_content,write_content,read_themes,write
 
 [auth]
 redirect_urls = [
-  "https://learned-such-pgp-vi.trycloudflare.com/auth/callback",
-  "https://learned-such-pgp-vi.trycloudflare.com/auth/shopify/callback",
-  "https://learned-such-pgp-vi.trycloudflare.com/api/auth/callback"
+  "https://dominant-understanding-commons-appointed.trycloudflare.com/auth/callback",
+  "https://dominant-understanding-commons-appointed.trycloudflare.com/auth/shopify/callback",
+  "https://dominant-understanding-commons-appointed.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -25,7 +25,7 @@ api_version = "2022-10"
   shop_deletion_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
 
 [app_proxy]
-url = "https://learned-such-pgp-vi.trycloudflare.com"
+url = "https://dominant-understanding-commons-appointed.trycloudflare.com"
 subpath = "test-2-app"
 prefix = "apps"
 
