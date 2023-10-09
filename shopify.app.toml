@@ -12,11 +12,9 @@ scopes = "read_orders,read_products,read_content,write_content,read_themes,write
 
 [auth]
 redirect_urls = [
-
-
-  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/auth/callback",
-  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/auth/shopify/callback",
-  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/auth/callback"
+  "https://xychrosapp.herokuapp.com/auth/callback",
+  "https://xychrosapp.herokuapp.com/auth/shopify/callback",
+  "https://xychrosapp.herokuapp.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -24,12 +22,12 @@ api_version = "2023-07"
 
 
   [webhooks.privacy_compliance]
-  customer_deletion_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
-  customer_data_request_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
-  shop_deletion_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
+  customer_deletion_url = "https://xychrosapp.herokuapp.com/api/webhooks"
+  customer_data_request_url = "https://xychrosapp.herokuapp.com/api/webhooks"
+  shop_deletion_url = "https://xychrosapp.herokuapp.com/api/webhooks"
 
 [app_proxy]
-url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com"
+url = "https://xychrosapp.herokuapp.com"
 subpath = "product-prelauncher"
 prefix = "apps"
 
@@ -38,4 +36,4 @@ embedded = false
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "billing-test-xychros.myshopify.com"
+dev_store_url = "xychros-product-prelauncher.myshopify.com"
