@@ -40,7 +40,7 @@ export default function getUrlApi(app, secret) {
       const campaign = req.body.campaign_name;
       if (isvalid === true) {
         const imageURL = await pool.query(
-          `select t.welcome_image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
+          `select t.image_url from templates t inner join campaign_settings c on t.id = c.template_id where c.name = '${campaign}' and c.shop_id = '${shop}'`
         );
 
         const campaign_details = await pool.query(
@@ -262,7 +262,9 @@ export default function getUrlApi(app, secret) {
               // if the Customer has existing tags, update tags
               if (findEmail?.tags) {
                 // Extract the current tags from the customer's data
-                const tags = findEmail?.tags.split(',').map((tag) => tag.trim());
+                const tags = findEmail?.tags
+                  .split(',')
+                  .map((tag) => tag.trim());
 
                 // Check if the new tag is already present in the current tags
 
@@ -411,7 +413,9 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail?.tags?.split(',')?.map((tag) => tag?.trim());
+              const tags = findEmail?.tags
+                ?.split(',')
+                ?.map((tag) => tag?.trim());
 
               // Check if the new tag is already present in the current tags
 
@@ -640,7 +644,9 @@ export default function getUrlApi(app, secret) {
             // if the Customer has existing tags, update tags
             if (findEmail?.tags) {
               // Extract the current tags from the customer's data
-              const tags = findEmail?.tags?.split(',')?.map((tag) => tag.trim());
+              const tags = findEmail?.tags
+                ?.split(',')
+                ?.map((tag) => tag.trim());
 
               // Check if the new tag is already present in the current tags
 
