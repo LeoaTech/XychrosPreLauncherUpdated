@@ -63,7 +63,9 @@ const ReferralsBlock = (props) => {
   };
 
   // Define the number of rows accessible for each plan
-  const planRowLimits = {
+
+  // Uncomment the following for Testing purposes
+ /*  const planRowLimits = {
     Free: 5,
     "Tier 1": 8,
     "Tier 2": 10,
@@ -73,11 +75,38 @@ const ReferralsBlock = (props) => {
     "Tier 6": 19,
     "Tier 7": 22,
     "Tier 8": 24,
-  };
+  }; */
 
+  // For Real Time Data Allocation related to plan
+  const planRowLimits = {
+    Free: 50,
+    "Tier 1": 150,
+    "Tier 2": 450,
+    "Tier 3": 975,
+    "Tier 4": 1500,
+    "Tier 5": 2000,
+    "Tier 6": 3500,
+    "Tier 7": 5000,
+    "Tier 8": 6500,
+  };
   // Determine the number of visible rows based on the Current users plan
   const visibleRows = props?.tableData?.slice(0, planRowLimits[currentPlan]);
 
+  // const paginationPerPage = Math.min(10, planRowLimits[currentPlan]); // Set a minimum value of 10
+
+  // const paginationRowsPerPageOptions =
+  //   props?.tableData?.length > paginationPerPage
+  //     ? [10, planRowLimits[currentPlan]]
+  //     : [planRowLimits[currentPlan]];
+
+  const maxRowsPerPage = Math.max(
+    props?.tableData?.length,
+    planRowLimits[currentPlan]
+  );
+  const paginationRowsPerPageOptions = Array.from(
+    { length: Math.min(maxRowsPerPage, 50) },
+    (_, i) => i + 1
+  );
   // Delete Action Function for Delete a row from the table
   /* const handleDelete = (id) => {
     let delVal = data.filter((item) => item.id !== id);
@@ -147,13 +176,15 @@ const ReferralsBlock = (props) => {
 
   return (
     <>
-      <h1 className="upgrade-message">
-        To View All {props?.tableData?.length} Referrals Details Data Upgrade
-        your Plan{" "}
-        <button onClick={() => navigate("/price")} className="upgrade-plan">
-          Upgrade Plan <IoDiamondOutline style={{ height: 16 }} />
-        </button>
-      </h1>
+      {props?.tableData.length > visibleRows?.length && (
+        <h1 className="upgrade-message">
+          To View All {props?.tableData?.length} Referrals Details Data Upgrade
+          your Plan{" "}
+          <button onClick={() => navigate("/price")} className="upgrade-plan">
+            Upgrade Plan <IoDiamondOutline style={{ height: 16 }} />
+          </button>
+        </h1>
+      )}
 
       {props?.tableData?.length > 0 ? (
         <div className="datatable">
@@ -161,9 +192,14 @@ const ReferralsBlock = (props) => {
             columns={referralColumns.concat(actionColumns)}
             // data={props.tableData}
             data={visibleRows}
+            // pagination
+            // paginationPerPage={10 || planRowLimits[currentPlan]}
+            // paginationRowsPerPageOptions={[planRowLimits[currentPlan]]}
             pagination
-            paginationPerPage={planRowLimits[currentPlan]}
-            paginationRowsPerPageOptions={[planRowLimits[currentPlan]]}
+            // paginationPerPage={paginationPerPage}
+            // paginationRowsPerPageOptions={paginationRowsPerPageOptions}
+            paginationPerPage={10} // Set a default value, it will be overridden by options
+            paginationRowsPerPageOptions={paginationRowsPerPageOptions}
             pointerOnHover
             highlightOnHover
             customStyles={customStyles}
