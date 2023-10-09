@@ -55,7 +55,7 @@ const NewCampaign = () => {
   );
 
   useEffect(() => {
-    if (settingsData?.length > 0) {
+    if (settingsData) {
       dispatch(fetchSettings(settingsData));
     }
     return () => {
