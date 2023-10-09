@@ -6,6 +6,7 @@ const useFetchBillingModel = (url) => {
     const fetchData = useAuthenticatedFetch();
 
     const fetchBillingDetails = async () => {
+        
         const response = await fetchData(url);
         if (!response.ok) {
             console.log("Response ",response.json())
@@ -13,17 +14,20 @@ const useFetchBillingModel = (url) => {
         }
         return response.json();
     };
+    // const {data} = useQuery('billing', fetchBillingDetails);
+    // console.log(data, "Data")
 
-    const { data, error } = useQuery('billing', fetchBillingDetails);
+    return useQuery('billing', fetchBillingDetails);
 
-    if (error) {
-        console.log(error);
-        // Handle the error case if needed
 
-        return error;
-    }
+    // if (error) {
+    //     console.log(error);
+    //     // Handle the error case if needed
 
-    return data || []; // Return empty array as default if data is not available yet
+    //     return error;
+    // }
+
+    // return data || []; // Return empty array as default if data is not available yet
 };
 
 export default useFetchBillingModel;

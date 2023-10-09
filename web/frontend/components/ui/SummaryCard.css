@@ -1,23 +1,26 @@
 .summary-card {
-  width: 250px;
-  height: 117px;
+  width: 100%;
+  /* height: 117px; */
   background: var(--secondary-text-color);
   border: 1px solid #dcd9d9;
   box-shadow: 0px 4px 4px #313131;
   border-radius: 10px;
   margin: 10px 14px;
   display: flex;
-  padding: 15px;
+  padding: 20px;
   align-items: center;
-  justify-content: space-between;
-  gap: 5px;
-  flex-wrap: wrap;
+  /* justify-content: space-between; */
+  /* gap: 5px; */
+  /* flex-wrap: wrap; */
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
 }
 
+.summary-details {
+  flex: 1;
+}
 .summary-card-value {
   font-weight: 800;
   font-size: 32px;
@@ -33,8 +36,8 @@
 }
 
 .revenue-icon {
-  width: 37px;
-  height: 46px;
+  width: 35px;
+  height: 45px;
 }
 
 .referral-icon {
@@ -43,13 +46,13 @@
 }
 
 .campaign-icon {
-  width: 55px;
-  height: 62px;
+  width: 45px;
+  height: 55px;
 }
 
 .clicks-icon {
-  height: 33px;
-  width: 31px;
+  height: 26px;
+  width: 30px;
 }
 
 @media only screen and (max-width: 1480px) {
@@ -85,8 +88,8 @@
   }
 
   .campaign-icon {
-    width: 55px;
-    height: 62px;
+    width: 45px;
+    height: 50px;
   }
 }
 
@@ -157,16 +160,16 @@
 
   .referral-icon {
     width: 32px;
-    height: 40px;
+    height: 36px;
   }
 
   .campaign-icon {
-    width: 55px;
-    height: 62px;
+    width: 42px;
+    height: 42px;
   }
 }
 
-@media only screen and (max-width: 686px) {
+@media only screen and (max-width: 786px) {
   .summary-card {
     width: 200px;
     height: 100px;
@@ -194,23 +197,27 @@
   }
 
   .clicks-icon {
-    width: 43px;
-    height: 48px;
+    width: 23px;
+    height: 23px;
   }
 
   .revenue-icon {
     width: 32px;
-    height: 40px;
+    height: 30px;
   }
 
   .referral-icon {
-    width: 32px;
-    height: 40px;
+    width: 27px;
+    height: 30px;
   }
 
   .campaign-icon {
-    width: 55px;
-    height: 42px;
+    width: 28px;
+    height: 32px;
+  }
+  .summary-card-icon {
+    margin-top: 10px; /* Add spacing between value/title and icon on smaller screens */
+    margin-left: 0; /* Reset left margin for the icon */
   }
 }
 
@@ -251,8 +258,8 @@
   }
 
   .revenue-icon {
-    width: 32px;
-    height: 30px;
+    width: 22px;
+    height: 20px;
   }
 
   .referral-icon {
@@ -261,8 +268,8 @@
   }
 
   .campaign-icon {
-    width: 55px;
-    height: 62px;
+    width: 35px;
+    height: 32px;
   }
 }
 
@@ -275,10 +282,31 @@
   }
 
   .summary-card-title {
-    font-size: 17px;
+    font-size: 16px;
+    font-weight: 700;
   }
 
   .summary-card-value {
     font-size: 21px;
+    font-weight: 700;
+  }
+  .clicks-icon {
+    width: 33px;
+    height: 38px;
+  }
+
+  .revenue-icon {
+    width: 26px;
+    height: 20px;
+  }
+
+  .referral-icon {
+    width: 32px;
+    height: 30px;
+  }
+
+  .campaign-icon {
+    width: 32px;
+    height: 32px;
   }
 }

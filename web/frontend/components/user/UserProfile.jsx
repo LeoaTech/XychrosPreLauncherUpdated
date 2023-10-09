@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import BillingCard from "./BillingCard";
 import "./user.css";
-import { BsCheck2 } from "react-icons/bs";
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
 import { useAuthenticatedFetch } from "../../hooks";
 import { fetchUserDetails, SaveUser } from "../../app/features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCurrentPlan } from "../../app/features/current_plan/current_plan";
 import { fetchAllpricing } from "../../app/features/pricing/pricing";
 import DataTable from "react-data-table-component";
-import ButtonLoader from "../loading_skeletons/ButtonLoader";
 
 // Billing Details Table Custom Styles
 const billingStyles = {
@@ -91,25 +88,13 @@ const UserProfile = () => {
   const data = useSelector(fetchUserDetails);
   const priceData = useSelector(fetchAllpricing);
   const billingPlan = useSelector(fetchCurrentPlan);
-  const dispatch = useDispatch();
 
   const [subscribeMessage, setSubscribeMessage] = useState("");
-  const fetch = useAuthenticatedFetch();
-  // Initial User Form Data
-  const formData = {
-    firstname: "",
-    lastname: "",
-    email: "",
-    store_url: window.location?.ancestorOrigins[0] || "",
-    billing_id: null,
-  };
 
-  const [userDetails, setUserDetails] = useState(formData);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [userDetails, setUserDetails] = useState();
   const [subscribedCardId, setSubscribedCardId] = useState(null);
   const [priceCard, setPriceCard] = useState([]);
   const [tableData, setTableData] = useState([]);
-  const [isLoading, setIsloading] = useState(false);
 
   // Billing Table Columns
   const billingColumns = [
@@ -145,15 +130,15 @@ const UserProfile = () => {
 
   // Get user Details From DB(if any) and Set Values in States
   useEffect(() => {
-    if (data?.length > 0) {
-      const mydata = data[0];
-      let name = mydata?.username?.split(" ");
+    if (data) {
+      let name = data?.name?.split(" ");
       if (name?.length > 0) {
         setUserDetails({
-          ...mydata,
+          billing_id: 1,
           firstname: name[0],
           lastname: name[1],
-          store_url: mydata?.store_url,
+          store_url: data?.store_url,
+          email: data?.email,
         });
       }
     } else {
@@ -211,44 +196,6 @@ const UserProfile = () => {
     setUserDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Save User Account Details
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsloading(true);
-    if (data?.length > 0) {
-      const response = await fetch("/api/userprofile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userDetails),
-      });
-
-      if (response.ok) {
-        const newUserData = await response.json();
-        await dispatch(SaveUser(newUserData));
-        setIsloading(false);
-      } else {
-        return;
-      }
-    } else {
-      await fetch("/api/userprofile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userDetails),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          dispatch(SaveUser(data));
-        })
-        .catch((err) => err);
-      setIsloading(false);
-    }
-  };
-
   return (
     <div className="user-container">
       <div className="account-section">
@@ -271,6 +218,7 @@ const UserProfile = () => {
                   placeholder="e.g Joseph"
                   value={userDetails?.firstname}
                   onChange={handleChange}
+                  disabled
                 />
               </div>
               <div className="inputfield">
@@ -282,6 +230,7 @@ const UserProfile = () => {
                   placeholder="e.g Henry"
                   value={userDetails?.lastname}
                   onChange={handleChange}
+                  disabled
                 />
               </div>
             </div>
@@ -295,6 +244,7 @@ const UserProfile = () => {
                   placeholder="joseph@gmail.com"
                   value={userDetails?.email}
                   onChange={handleChange}
+                  disabled
                 />
               </div>
 
@@ -353,18 +303,6 @@ const UserProfile = () => {
 
           {/* <div className="billing-details-block">
           </div> */}
-        </div>
-
-        {/* Save the Data  */}
-        <div className="account-save">
-          <button
-            type="submit"
-            onClick={handleSubmit}
-            className="btnSave"
-            disabled={userDetails?.billing_id === null}
-          >
-            {isLoading ? <ButtonLoader /> : " Save"}
-          </button>
         </div>
       </div>
     </div>

@@ -1,4 +1,23 @@
-import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { useAuthenticatedFetch } from "../hooks";
+
+const useFetchAllProducts = (url) => {
+  const fetchData = useAuthenticatedFetch();
+
+  const fetchProducts = async () => {
+    const response = await fetchData(url);
+    if (!response.ok) {
+      throw new Error(`Something went wrong while requesting Store's products`);
+    }
+    return response.json();
+  };
+
+  return useQuery("products", fetchProducts);
+};
+
+export default useFetchAllProducts;
+
+/* import React, { useEffect, useState } from "react";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 
 const useFetchAllProducts = (url) => {
@@ -28,3 +47,4 @@ const useFetchAllProducts = (url) => {
 };
 
 export default useFetchAllProducts;
+ */
