@@ -65,7 +65,7 @@ const ReferralsBlock = (props) => {
   // Define the number of rows accessible for each plan
 
   // Uncomment the following for Testing purposes
- /*  const planRowLimits = {
+  /*  const planRowLimits = {
     Free: 5,
     "Tier 1": 8,
     "Tier 2": 10,
@@ -91,13 +91,6 @@ const ReferralsBlock = (props) => {
   };
   // Determine the number of visible rows based on the Current users plan
   const visibleRows = props?.tableData?.slice(0, planRowLimits[currentPlan]);
-
-  // const paginationPerPage = Math.min(10, planRowLimits[currentPlan]); // Set a minimum value of 10
-
-  // const paginationRowsPerPageOptions =
-  //   props?.tableData?.length > paginationPerPage
-  //     ? [10, planRowLimits[currentPlan]]
-  //     : [planRowLimits[currentPlan]];
 
   const maxRowsPerPage = Math.max(
     props?.tableData?.length,
@@ -192,13 +185,8 @@ const ReferralsBlock = (props) => {
             columns={referralColumns.concat(actionColumns)}
             // data={props.tableData}
             data={visibleRows}
-            // pagination
-            // paginationPerPage={10 || planRowLimits[currentPlan]}
-            // paginationRowsPerPageOptions={[planRowLimits[currentPlan]]}
             pagination
-            // paginationPerPage={paginationPerPage}
-            // paginationRowsPerPageOptions={paginationRowsPerPageOptions}
-            paginationPerPage={10} // Set a default value, it will be overridden by options
+            paginationPerPage={10} // Set a default value, it will be Changed by options
             paginationRowsPerPageOptions={paginationRowsPerPageOptions}
             pointerOnHover
             highlightOnHover
