@@ -17,12 +17,13 @@ redirect_urls = [
 ]
 
 [webhooks]
-api_version = "2022-10"
+api_version = "2023-07"
+
 
   [webhooks.privacy_compliance]
-  customer_deletion_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
-  customer_data_request_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
-  shop_deletion_url = "https://teen-wings-fees-hill.trycloudflare.com/api/webhooks"
+  customer_deletion_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
+  customer_data_request_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
+  shop_deletion_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
 
 [app_proxy]
 url = "https://dominant-understanding-commons-appointed.trycloudflare.com"
@@ -34,4 +35,4 @@ embedded = false
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "app-running.myshopify.com"
+dev_store_url = "billing-test-xychros.myshopify.com"
