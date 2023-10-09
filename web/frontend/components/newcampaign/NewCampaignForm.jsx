@@ -74,7 +74,6 @@ function NewCampaignForm() {
   const currentTier = useSelector(fetchCurrentTier);
 
   const current_plan = useSelector(fetchCurrentPlan);
-
   const campaignById = useSelector(
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
@@ -91,11 +90,11 @@ function NewCampaignForm() {
   // Local States of Components
 
   const [errorMessage, setErrorMessage] = useState(false);
-  const [error, setError] = useState(false);
+  const [apiError, setApiError] = useState(false);
   const [errorName, setErrorName] = useState(false);
   const [editCampaignData, setEditCampaignData] = useState({});
   const [discountList, setDiscountList] = useState([]);
-  const [globalSettings, setGlobalSettings] = useState();
+  const [globalSettings, setGlobalSettings] = useState({});
   const [productsData, setProductsData] = useState([]);
   const [startDate, setStartDate] = useState(getStartDate);
   const [endDate, setEndDate] = useState(getNextDate);
@@ -250,8 +249,8 @@ function NewCampaignForm() {
 
   //! Re-render all the global settings fields into the Form
   useEffect(() => {
-    if (settings?.length > 0) {
-      setGlobalSettings(settings[0]);
+    if (settings !== undefined) {
+      setGlobalSettings({ ...settings });
     }
   }, [settings]);
 
@@ -457,13 +456,27 @@ function NewCampaignForm() {
   }
 
   // Update Klaviyo API Lists in the Form
-  useEffect(async () => {
+  useEffect(() => {
     if (isEdit && editCampaignData?.klaviyo_api_key != "") {
-      let apiList = await getKlaviyoList();
-      setKlaviyoList(apiList);
+      (async () => {
+        try {
+          setApiError(false);
+          let apiList = await getKlaviyoList();
+          setKlaviyoList(apiList);
+        } catch (error) {
+          setApiError(true);
+        }
+      })();
     } else if (!isEdit && globalSettings?.klaviyo_api_key != null) {
-      let findList = await getKlaviyoList();
-      setKlaviyoList(findList);
+      (async () => {
+        try {
+          setApiError(false);
+          let findList = await getKlaviyoList();
+          setKlaviyoList(findList);
+        } catch (error) {
+          setApiError(true);
+        }
+      })();
     }
     return () => {
       abortController.abort();
@@ -1095,7 +1108,6 @@ function NewCampaignForm() {
       console.log("Failed to insert campaign details:", detailsResponse);
     }
   };
-
 
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
@@ -2481,7 +2493,7 @@ function NewCampaignForm() {
               {expanded[4] && (
                 <>
                   <div className="integration-container">
-                    <div className="integration-block-content">
+                    {myPlan ==="Free" ? <h2 style={{fontSize:21, textDecoration:"underline", margin:20, padding:20}}>Klaviyo Integration is not available for Free Plan </h2> :(<div className="integration-block-content">
                       <div className="check-input">
                         {isEdit ? (
                           <input
@@ -2591,7 +2603,7 @@ function NewCampaignForm() {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div>)}
                   </div>
                   <div className="integrate-setting-btn">
                     <>
