@@ -1,9 +1,9 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 
-name = "XychrosUpdatedTestServer"
-client_id = "038304675f7b4a7b2b16705368a68a45"
-application_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com"
+name = "Viral Launch"
+client_id = "727cd09b9cbefbb4a3dd7edc977070cd"
+application_url = "https://xychrosapp.herokuapp.com"
 embedded = true
 
 [access_scopes]
