@@ -3,13 +3,15 @@ import * as React from "react";
 import { referralRows, referralColumns } from "./dummyData";
 import { BiShow } from "react-icons/bi";
 
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoDiamondOutline } from "react-icons/io5";
 import { ShowModal, DeleteModal } from "../modal/index";
 import DataTable from "react-data-table-component";
 import { customStyles } from "./customStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReferralById } from "../../app/features/referrals/referralSlice";
 import { fetchDeactivatedCampaignsByName } from "../../app/features/campaign_details/campaign_details";
+import { fetchCurrentTier } from "../../app/features/current_plan/current_plan";
+import { useNavigate } from "react-router-dom";
 
 const ReferralsBlock = (props) => {
   const [openModal, setOpenModal] = React.useState(false);
@@ -17,6 +19,8 @@ const ReferralsBlock = (props) => {
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [campaignName, setCampaignName] = React.useState([]);
   const [TableData, setTableData] = React.useState([]);
+  const currentPlan = useSelector(fetchCurrentTier);
+  const navigate = useNavigate();
 
   let getDeactivatedCampaignsName = useSelector(
     fetchDeactivatedCampaignsByName
@@ -28,6 +32,7 @@ const ReferralsBlock = (props) => {
     }
   }, [getDeactivatedCampaignsName]);
 
+  // Chnage the Color of Rows in Table with deactivated Campaigns ID's/Names
   const conditionalRowStyles = [
     {
       when: (row) => campaignName?.includes(row?.campaign_name),
@@ -56,6 +61,22 @@ const ReferralsBlock = (props) => {
       return {}; // Return an empty object for active campaign rows
     }
   };
+
+  // Define the number of rows accessible for each plan
+  const planRowLimits = {
+    Free: 5,
+    "Tier 1": 8,
+    "Tier 2": 10,
+    "Tier 3": 12,
+    "Tier 4": 15,
+    "Tier 5": 17,
+    "Tier 6": 19,
+    "Tier 7": 22,
+    "Tier 8": 24,
+  };
+
+  // Determine the number of visible rows based on the Current users plan
+  const visibleRows = props?.tableData?.slice(0, planRowLimits[currentPlan]);
 
   // Delete Action Function for Delete a row from the table
   /* const handleDelete = (id) => {
@@ -126,12 +147,23 @@ const ReferralsBlock = (props) => {
 
   return (
     <>
+      <h1 className="upgrade-message">
+        To View All {props?.tableData?.length} Referrals Details Data Upgrade
+        your Plan{" "}
+        <button onClick={() => navigate("/price")} className="upgrade-plan">
+          Upgrade Plan <IoDiamondOutline style={{ height: 16 }} />
+        </button>
+      </h1>
+
       {props?.tableData?.length > 0 ? (
         <div className="datatable">
           <DataTable
             columns={referralColumns.concat(actionColumns)}
-            data={props.tableData}
+            // data={props.tableData}
+            data={visibleRows}
             pagination
+            paginationPerPage={planRowLimits[currentPlan]}
+            paginationRowsPerPageOptions={[planRowLimits[currentPlan]]}
             pointerOnHover
             highlightOnHover
             customStyles={customStyles}
