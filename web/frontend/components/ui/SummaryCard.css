@@ -27,6 +27,10 @@
   line-height: 48px;
   color: var(--primary-color);
 }
+.summary-card-value span{
+  font-size: 16px;
+  font-weight: 700;
+}
 
 .summary-card-title {
   font-weight: 400;
