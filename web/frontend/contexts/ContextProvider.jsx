@@ -9,7 +9,23 @@ export const ContextProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState(undefined);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [formErrors, SetFormErrors] = useState({
+    requiredInputName:false,
+    campaignNameError:false,
+    LaunchProductError:false,
+    isReward2Error:false,
+    isReward3Error:false,
+    isReward4Error:false,
+    discountCode1:false,
+    discountCode2:false,
+    discountCode3:false,
+    discountCode4:false,
+    rewardTierValidate:false,
+    discountInvalidError:false,
+    
 
+  });
+ 
   return (
     <StateContext.Provider
       value={{
@@ -21,6 +37,7 @@ export const ContextProvider = ({ children }) => {
         setMobileMenu,
         isEdit,
         setIsEdit,
+        formErrors, SetFormErrors
       }}
     >
       {children}
