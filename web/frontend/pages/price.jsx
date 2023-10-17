@@ -13,6 +13,8 @@ const Pricing = lazy(() => import("../components/pricing/PriceComponent"));
 
 const PricePage = () => {
   const { activeMenu } = useStateContext();
+  const abortController = new AbortController();
+
   const dispatch = useDispatch();
 
   // Page render Scroll to Top
@@ -20,35 +22,49 @@ const PricePage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const response = useFetchPricingPlans("/api/pricing-plans", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const { data: pricingData, error: pricingError } = useFetchPricingPlans(
+    "/api/pricing-plans",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      signal: abortController.signal,
+    }
+  );
 
   // Get Current Active Plan Billing Details
 
-  const billing = useFetchBillingModel("/api/subscribe-plan", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const { data: billingData, error: billingError } = useFetchBillingModel(
+    "/api/subscribe-plan",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      signal: abortController.signal,
+    }
+  );
 
   // Get All Pricing Details with Features
   useEffect(() => {
-    if (response.length > 0) {
-      dispatch(fetchpricing(response));
+    if (pricingData?.length > 0) {
+      dispatch(fetchpricing(pricingData));
     }
-  }, [dispatch, response]);
+    return () => {
+      abortController.abort();
+    };
+  }, [dispatch, pricingData]);
 
   // Dispatch Active plan data to App Store
   useEffect(() => {
-    if (billing) {
-      dispatch(fetchSavePlan(billing)); //Save Current Billing Details in App Store
+    if (billingData) {
+      dispatch(fetchSavePlan(billingData)); //Save Current Billing Details in App Store
     }
-  }, [dispatch, billing]);
+    return () => {
+      abortController.abort();
+    };
+  }, [dispatch, billingData]);
 
   return (
     <div className="app">
