@@ -185,7 +185,7 @@
   margin-top: 10px;
 }
 
-.discount_code-error{
+.discount_code-error {
   /* font-size: 15.6px;
   margin: 0 5px;
   margin-bottom: 15px;
@@ -203,8 +203,6 @@
   padding: 0 3px;
   display: block;
 }
-
-
 
 .discount_error_text {
   color: #b70404;
@@ -229,6 +227,29 @@
   justify-content: flex-start;
   align-items: center;
 }
+.product-validation {
+  color: rgb(197, 46, 71);
+  font-weight: 400;
+  font-size: 15px;
+  margin: 0 5px;
+  padding: 0 10px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.product-validation h5 {
+ margin-left: 20px;
+ color:#cfcfcf;
+ cursor: pointer;
+}
+.product-validation h5:hover {
+  color:rgb(62, 50, 154);
+  font-size: 17px;
+}
+
+
 .form-group {
   display: flex;
   justify-content: space-between;
@@ -268,6 +289,7 @@ label {
 
 /*    Products Select field */
 .select-products,
+.product-tier,
 .select-user-input {
   position: relative;
   display: inline-block;
@@ -278,7 +300,14 @@ label {
   -ms-border-radius: 25px;
   -o-border-radius: 25px;
 }
-
+.product-tier {
+  border-radius: 10px;
+  width: 100%;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
 .select-products select,
 .select-user-input select {
   display: block;
@@ -302,6 +331,28 @@ label {
   padding-left: 20px;
 }
 
+.product-tier select {
+  display: block;
+  padding: 12px 16px;
+  background-color: #ebebeb;
+  border: none;
+  border-radius: 10px;
+  height: 60px;
+  width:300px;
+  color: rgb(5, 5, 5);
+  font-size: 20px;
+  font-weight: 700;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  padding-left: 10px;
+}
+
 .select-products:after,
 .select-user-input:after {
   content: "\25BC";
@@ -316,6 +367,29 @@ label {
   -moz-border-radius: 25px;
   -ms-border-radius: 25px;
   -o-border-radius: 25px;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+
+.product-tier::after {
+  content: "\25BC";
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #0f0f0f;
+  border-radius: 25px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
 }
 
 .datepicker-input {
@@ -432,7 +506,6 @@ label {
 .collect-settings label {
   font-size: 17px;
 }
-
 
 /* Radion Button */
 .collect-settings .checkbox-input {
@@ -873,13 +946,12 @@ input[type="checkbox"]:checked {
 
   .select-products select,
   .select-user-input select {
-   border-radius: 25px !important;
-   -webkit-border-radius: 25px;
-   -moz-border-radius: 25px;
-   -ms-border-radius: 25px;
-   -o-border-radius: 25px;
-}
-
+    border-radius: 25px !important;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    -ms-border-radius: 25px;
+    -o-border-radius: 25px;
+  }
 
   .campaign-form .store-links .store-social-links {
     grid-template-columns: repeat(2, 1fr);

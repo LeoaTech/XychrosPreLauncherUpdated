@@ -426,7 +426,6 @@ function NewCampaignForm() {
     }
   }, [templateList, getCampaignName]);
 
-
   //  Get Current Subscription Plan Name
   useEffect(() => {
     if (currentTier !== "") {
@@ -871,7 +870,6 @@ function NewCampaignForm() {
       }
       // when discount type is product
       else {
-
         if (formErrors?.LaunchProductError) {
           setExpanded((prevExpand) =>
             prevExpand.map((state, i) => i === index - 1 && true)
@@ -879,7 +877,6 @@ function NewCampaignForm() {
         }
 
         if (!formErrors?.LaunchProductError) {
-
           if (isReward1ProductFilled && isReward2ProductFilled) {
             setRewardTierValidate(false);
             setExpanded((prevExpand) =>
@@ -1011,7 +1008,6 @@ function NewCampaignForm() {
   };
 
   const handleSelectedProduct = (value, tierId) => {
-
     const productId = findProductId(value);
 
     setSelectProducts((prevState) => ({
@@ -1063,7 +1059,6 @@ function NewCampaignForm() {
         [name]: value,
       }));
 
-
       const tierId = name?.split("_")[1];
 
       if (name === "product" && value == "") {
@@ -1111,7 +1106,6 @@ function NewCampaignForm() {
         setDiscountCode4(validateDicountCodes?.Reward4CodeError);
       } else {
         if (newCampaignData.product !== "") {
-          
           const productId = findProductId(value);
           setSelectProducts((prevData) => ({
             ...prevData,
@@ -1512,11 +1506,11 @@ function NewCampaignForm() {
       ) {
         setIsLoading(true);
 
-        const discount_details = await generateDiscounts(updateCampaignData);  // Pass update campaign data as an argument to function
+        const discount_details = await generateDiscounts(updateCampaignData); // Pass update campaign data as an argument to function
         if (discount_details?.success) {
           const template_details = await createTemplates(
             selectedTemplateData,
-            updateCampaignData      //newCampaignData => replace with updated campaign data
+            updateCampaignData //newCampaignData => replace with updated campaign data
           );
 
           campaignDetails = {
@@ -1629,7 +1623,6 @@ function NewCampaignForm() {
       return;
     }
   };
-
 
   return (
     <>
@@ -2284,7 +2277,24 @@ function NewCampaignForm() {
                       </h6>
                     )}
 
-             
+                    {/* Validate Launch Product is Selected or not when Selecting discount type is Free Product */}
+                    {formErrors?.LaunchProductError && (
+                      <>
+                        <span className="product-validation">
+                          <MdError
+                            style={{ height: 18, width: 18, marginRight: 5 }}
+                          />
+                          Select the Launch Product first in Basic
+                          Settings form{" "}
+                          <h5
+                            
+                            onClick={() => handleNext(0)}
+                          >
+                            Select Product
+                          </h5>
+                        </span>
+                      </>
+                    )}
 
                     {/* Rewards Section Form */}
                     <div className="rewards-container">
