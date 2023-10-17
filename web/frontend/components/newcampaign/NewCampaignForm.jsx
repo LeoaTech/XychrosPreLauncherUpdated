@@ -982,51 +982,173 @@ function NewCampaignForm() {
     };
   };
 
+  const handleProductChange = (value, tierId) => {
+    if (value === "") {
+      // Handle product empty case
+      handleEmptyProduct();
+    } else {
+      // Handle product selected case
+      handleSelectedProduct(value, tierId);
+    }
+  };
 
-     // Handle Input Chane event in new Campaign and Update Campaign Form
-     const handleChange = (e) => {
-      const { name, value } = e.target;
-  
-      if (isEdit) {
-        setEditCampaignData((prevState) => ({
-          ...prevState,
-          [name]: value,
+  const handleEmptyProduct = () => {
+    setSelectProducts((prevState) => ({
+      ...prevState,
+      launchProductTitle: "",
+      launchProductId: null,
+    }));
+    SetFormErrors((prevState) => ({
+      ...prevState,
+      LaunchProductError: true,
+    }));
+    setNewCampaignData((prevCamp) => ({ ...prevCamp, product: "" }));
+    setUpdateCampaignData((prevChanges) => ({
+      ...prevChanges,
+      ...selectProducts,
+      ...newCampaignData,
+    }));
+  };
+
+  const handleSelectedProduct = (value, tierId) => {
+
+    const productId = findProductId(value);
+
+    setSelectProducts((prevState) => ({
+      ...prevState,
+      launchProductTitle: value,
+      launchProductId: productId,
+    }));
+
+    setNewCampaignData((prevCamp) => ({ ...prevCamp, product: value }));
+    // ... handle other cases based on selected product
+    setUpdateCampaignData((prevChanges) => ({
+      ...prevChanges,
+      ...selectProducts,
+      ...newCampaignData,
+    }));
+  };
+
+  const handleRewardProductChange = (name, value, tierId) => {
+    // Handle reward product change
+    if (value !== "") {
+      let getProductId = findProductId(value);
+      setNewCampaignData((prevCamp) => ({ ...prevCamp, [name]: value }));
+      setSelectProducts((prevState) => ({
+        ...prevState,
+        [`tier${tierId}ProductName`]: value,
+        [`tier${tierId}ProductId`]: getProductId,
+      }));
+    }
+    // ... handle other cases based on reward product change
+  };
+  // Handle Input Chane event in new Campaign and Update Campaign Form
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (isEdit) {
+      setEditCampaignData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    } else {
+      setUpdateCampaignData((prev) => ({
+        ...prev,
+        ...selectProducts,
+        ...newCampaignData,
+      }));
+
+      setNewCampaignData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+
+
+      const tierId = name?.split("_")[1];
+
+      if (name === "product" && value == "") {
+        handleEmptyProduct(value, tierId);
+      }
+
+      if (name === "product" && value != "") {
+        handleSelectedProduct(value, tierId);
+        SetFormErrors((prevErrors) => ({
+          ...prevErrors,
+          LaunchProductError: false,
         }));
-      } else {
-        // Update the campaign data
-        setNewCampaignData((prevState) => ({
-          ...prevState,
-          [name]: value,
+      }
+
+      if (
+        selectProducts?.launchProductTitle == "" ||
+        newCampaignData?.product == ""
+      ) {
+        SetFormErrors((formError) => ({
+          ...formError,
+          LaunchProductError: false,
         }));
-  
-        // Find the Product ID of user Selected Product Title
-        const { id: productId } =
-          productsData?.find(
-            (product) => product?.title === newCampaignData?.product
-          ) || {};
-  
-        setSelectProduct(productId); // update the selected product ID
-  
-        // Validate Discount values and Discount codes in New campaign data onChange event
-  
+      }
+
+      if (name === `reward_${tierId}_product`) {
+        handleRewardProductChange(name, value, tierId);
+      }
+
+      // Validate Discount values and Discount codes in New campaign data onChange event
+
+      if (newCampaignData?.discount_type != "product") {
+        SetFormErrors((prevErrors) => ({
+          ...prevErrors,
+          LaunchProductError: false,
+        }));
         let ValidateDiscountValue = isValidDiscount();
         setIsReward2Error(ValidateDiscountValue?.Reward1Error);
         setIsReward3Error(ValidateDiscountValue?.Reward2Error);
         setIsReward4Error(ValidateDiscountValue?.Reward3Error);
-  
+
         let validateDicountCodes = isValidDiscountCode();
         setDiscountCode1(validateDicountCodes?.Reward1CodeError);
         setDiscountCode2(validateDicountCodes?.Reward2CodeError);
         setDiscountCode3(validateDicountCodes?.Reward3CodeError);
         setDiscountCode4(validateDicountCodes?.Reward4CodeError);
-  
-        // value is asynchronic, so it's updated in the next render
-        if (e.target.value !== "" && !isLoading) setDraftModal(true);
-        else setDraftModal(false);
-        if (newCampaignData?.name !== "") setCampaignName(newCampaignData?.name);
+      } else {
+        if (newCampaignData.product !== "") {
+          
+          const productId = findProductId(value);
+          setSelectProducts((prevData) => ({
+            ...prevData,
+            launchProductTitle: newCampaignData.product,
+            launchProductId: productId,
+          }));
+          SetFormErrors((prevErrors) => ({
+            ...prevErrors,
+            LaunchProductError: false,
+          }));
+        } else {
+          SetFormErrors((prevErrors) => ({
+            ...prevErrors,
+            LaunchProductError: true,
+          }));
+        }
+        setUpdateCampaignData((prev) => ({
+          ...prev,
+          ...selectProducts,
+          ...newCampaignData,
+        }));
       }
-    };
-  
+
+      // value is asynchronic, so it's updated in the next render
+      if (e.target.value !== "" && !isLoading) setDraftModal(true);
+      else setDraftModal(false);
+
+      if (newCampaignData?.name !== "") {
+        setCampaignName(newCampaignData?.name);
+      }
+      setUpdateCampaignData((prev) => ({
+        ...prev,
+        ...selectProducts,
+        ...newCampaignData,
+      }));
+    }
+  };
 
   // HandleCheckbox events in the basic form settings
 
