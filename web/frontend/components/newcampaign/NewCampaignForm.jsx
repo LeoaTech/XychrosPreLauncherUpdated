@@ -39,6 +39,7 @@ import {
   fetchCampaignDetails,
   fetchCampaignsDetailsList,
   fetchCampaignsDiscountCodes,
+  fetchCampaignsProuctsList,
   getActiveCampaigns,
 } from "../../app/features/campaign_details/campaign_details";
 import { ToastContainer, toast } from "react-toastify";
@@ -63,12 +64,15 @@ function NewCampaignForm() {
   const settings = useSelector(fetchAllSettings); //Settings Data
   const products = useSelector(fetchAllProducts); //Get all products of Shop
   const totalCampaigns = useSelector(getActiveCampaigns);
+  const campaignsProductlist = useSelector(fetchCampaignsProuctsList)
   const currentTier = useSelector(fetchCurrentTier);
   const current_plan = useSelector(fetchCurrentPlan);
   const campaignById = useSelector(
     (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
 
+
+  console.log(campaignsProductlist, "productList")
   // Get Tomorrow Date and  Date for next 6 days for the Campaign End Date
   let today = new Date();
   let getStartDate = new Date();
@@ -273,9 +277,11 @@ function NewCampaignForm() {
   // get the Products in select box
   useEffect(() => {
     if (products?.length > 0) {
-      setProducts((prevList) => ({ ...prevList, productsList: [...products] }));
+      let NewProducts = products?.filter((product)=> !campaignsProductlist.includes(product?.title));
+      setProducts((prevList) => ({ ...prevList, productsList: [...NewProducts] }));
     }
-  }, [products]);
+  }, [products,campaignsProductlist]);
+
 
   // Get New Campaign Form pre-filled fields From Global Settings
   useEffect(() => {
