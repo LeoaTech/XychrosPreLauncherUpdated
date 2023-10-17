@@ -29,6 +29,14 @@ export const fetchCampaignsDetailsList = (state) =>
     (camp) => camp?.is_draft === false
   );
 
+export const fetchCampaignsProuctsList = (state) => {
+  let products = [];
+  state?.campaign_details?.campaigns_details?.filter(
+    (camp) => {camp?.product != "" && products?.push(camp?.product)}
+  );
+  return products;
+};
+
 export const fetchCampaignsDiscountCodes = (state) => {
   let discountList = [];
 
