@@ -235,7 +235,7 @@ export default function CampaignBlock({
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
                 is_deactivated={is_deactivated}
-                value={234567 || referralsById}
+                value={referralsById}
                 icon={subscriber}
                 className="referral-icon"
               />
@@ -244,7 +244,7 @@ export default function CampaignBlock({
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
                 is_deactivated={is_deactivated}
-                value={234567 || campaign_clicks}
+                value={campaign_clicks}
                 icon={arrow}
                 className="clicks-icon"
               />
@@ -253,7 +253,7 @@ export default function CampaignBlock({
               <ShortSummaryCard
                 value={
                   campaign_revenue === 0
-                    ? 234569
+                    ? 0
                     : TotalRevenueList[0]?.currency + campaign_revenue
                 }
                 icon={Sale}
