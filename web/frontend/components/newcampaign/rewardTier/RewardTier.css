@@ -9,8 +9,8 @@
   margin-bottom: 30px;
 }
 
-.reward-title span{
-  color:rgb(214, 216, 216);
+.reward-title span {
+  color: rgb(214, 216, 216);
 }
 
 .reward-form {
@@ -33,7 +33,7 @@
   width: 75px;
   padding: 10px;
   border-radius: 10px;
-  border:none;
+  border: none;
   font-size: 28px;
   font-weight: 700;
   background-color: #ebf0f2;
@@ -48,7 +48,7 @@
   padding: 10px;
   font-size: 28px;
   border-radius: 10px;
-  border:none;
+  border: none;
   font-weight: 700;
   width: 150px !important;
   background-color: #ebf0f2;
@@ -57,12 +57,12 @@
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
 }
-.product-large-field{
-    height: 60px;
+.product-large-field {
+  height: 60px;
   padding: 10px;
   font-size: 28px;
   border-radius: 10px;
-  border:none;
+  border: none;
   font-weight: 700;
   background-color: #ebf0f2;
   -webkit-border-radius: 10px;
