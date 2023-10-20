@@ -20,7 +20,7 @@ const SummaryCard = (props) => {
     <div className="summary-card">
       <div className="summary-details">
         <div className="summary-card-value">
-          <span>{props?.title === "Revenue" && `PKR`}</span>
+          <span>{props?.title === "Revenue" && props?.value >0 ? props?.currency: ''}</span>
           {formatNumber(props.value)}
         </div>
         <div className="summary-card-title">{props.title}</div>
