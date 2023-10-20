@@ -182,7 +182,7 @@ const HomeComponent = () => {
   let six_months_total_revenue;
   if(getLastSixMonthsRevenue.length > 0) {
     const lastSixMonthsTotalRevenue = finalRevenue?.slice(0, 6).reduce((acc, currentValue) => acc + currentValue, 0);
-    six_months_total_revenue = TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue.toFixed(2);
+    six_months_total_revenue = lastSixMonthsTotalRevenue.toFixed(2);
   }
 
   // --------------------- Constructing Line Chart -----------------
@@ -553,6 +553,7 @@ const HomeComponent = () => {
               subheader='Last 6 Months Data'
               LineChartOptions={LineChartOptions}
               LineChartData={LineChartData}
+              currency={TotalRevenueList[0]?.currency}
             />
           </div>
           <div className='dual-charts'>
