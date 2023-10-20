@@ -1624,7 +1624,7 @@ function NewCampaignForm() {
       ) {
         setIsLoading(true);
 
-        if (newCampaignData?.discount_type != "product") {
+        if (newCampaignData?.discount_type) {
           const discount_details = await generateDiscounts(updateCampaignData);
           // Discount Codes Generated
           if (discount_details?.success) {
@@ -1634,17 +1634,14 @@ function NewCampaignForm() {
             handleExpand(2);
             setNewCampaignData((prev) => ({ ...prev, template_id: null }));
           }
-        } else {
-          // Genrate discount codes for Free Product Giveaway
         }
-
         const template_details = await createTemplates(
           selectedTemplateData,
           updateCampaignData
         );
 
         campaignDetails = {
-          // ...discount_details?.data,  //Um-comment when discount codes data available
+          ...discount_details,
           ...template_details,
         };
 
