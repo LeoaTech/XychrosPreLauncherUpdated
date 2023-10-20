@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from "react-redux";
 import "./socialsBlocks/social.css";
 import "./rewardTier/RewardTier.css";
 import {
-  fetchCampaignById,
   fetchCampaignByName,
   addNewCampaign,
 } from "../../app/features/campaigns/campaignSlice";
@@ -37,6 +36,7 @@ import {
 } from "../../app/features/current_plan/current_plan";
 import {
   fetchCampaignDetails,
+  fetchCampaignDetailsById,
   fetchCampaignsDetailsList,
   fetchCampaignsDiscountCodes,
   fetchCampaignsProuctsList,
@@ -68,9 +68,10 @@ function NewCampaignForm() {
   const currentTier = useSelector(fetchCurrentTier);
   const current_plan = useSelector(fetchCurrentPlan);
   const campaignById = useSelector(
-    (state) => fetchCampaignById(state, Number(campaignsid)) // Get A Single Campaign with ID
+    (state) => fetchCampaignDetailsById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
 
+  console.log(campaignById);
   // Get Tomorrow Date and  Date for next 6 days for the Campaign End Date
   let today = new Date();
   let getStartDate = new Date();
@@ -260,8 +261,14 @@ function NewCampaignForm() {
 
   // Get the Data with Campaigns ID for Edit campaign
   useEffect(() => {
-    if (campaignById !== undefined) {
-      setEditCampaignData({ ...campaignById });
+    if (campaignById != {}) {
+      setEditCampaignData({
+        ...campaignById,
+        reward_1_product: campaignById?.tier1_product_name,
+        reward_2_product: campaignById?.tier2_product_name,
+        reward_3_product: campaignById?.tier3_product_name,
+        reward_4_product: campaignById?.tier4_product_name,
+      });
     }
   }, [campaignById]);
 
@@ -1778,7 +1785,7 @@ function NewCampaignForm() {
       return;
     }
   };
-
+  console.log(editCampaignData?.discount_type);
   return (
     <>
       {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
@@ -1895,7 +1902,7 @@ function NewCampaignForm() {
                         </div>
 
                         <div className="inputfield">
-                          <label htmlFor="product_link">Product Link</label>
+                          <label htmlFor="product">Product Link</label>
                           {isEdit ? (
                             <div className="select-products">
                               <select
@@ -1905,7 +1912,9 @@ function NewCampaignForm() {
                                 onChange={handleChange}
                               >
                                 {" "}
-                                <option></option>{" "}
+                                <option value={editCampaignData?.product}>
+                                  {editCampaignData?.product}
+                                </option>{" "}
                                 {getProducts?.productsList?.map((item) => {
                                   return (
                                     <option value={item.title} key={item.id}>
@@ -2507,7 +2516,7 @@ function NewCampaignForm() {
                                   </h6>
                                 )}
                               </div>
-                              {newCampaignData?.discount_type !== "product" ? (
+                              {newCampaignData?.discount_type != "product"  &&  editCampaignData?.discount_type != 'product' ? (
                                 <div className="reward-form">
                                   <div className="inputfield">
                                     <label
@@ -2744,7 +2753,14 @@ function NewCampaignForm() {
                                           disabled={isEdit}
                                         >
                                           {" "}
-                                          <option>Select</option>;
+                                          <option>
+                                            {
+                                              editCampaignData[
+                                                `reward_${reward?.id}_product`
+                                              ]
+                                            }
+                                          </option>
+                                          ;
                                           {getProducts?.filteredTierProducts?.map(
                                             (item) => {
                                               return (
