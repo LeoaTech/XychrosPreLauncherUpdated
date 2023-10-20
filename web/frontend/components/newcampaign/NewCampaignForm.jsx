@@ -1785,7 +1785,7 @@ function NewCampaignForm() {
       return;
     }
   };
-  console.log(editCampaignData?.discount_type);
+  console.log(editCampaignData);
   return (
     <>
       {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
@@ -1872,13 +1872,8 @@ function NewCampaignForm() {
                                 name="name"
                                 id="name"
                                 value={editCampaignData?.name}
-                                onChange={handleChange}
+                                readOnly
                               />{" "}
-                              {formErrors?.campaignNameError && (
-                                <p className="error-message">
-                                  Campaign Name already Exists
-                                </p>
-                              )}
                             </>
                           ) : (
                             <>
@@ -1909,19 +1904,21 @@ function NewCampaignForm() {
                                 name="product"
                                 id="product"
                                 value={editCampaignData?.product}
+                                readOnly
+                                disabled={isEdit}
                                 onChange={handleChange}
                               >
                                 {" "}
                                 <option value={editCampaignData?.product}>
                                   {editCampaignData?.product}
                                 </option>{" "}
-                                {getProducts?.productsList?.map((item) => {
+                                {/* {getProducts?.productsList?.map((item) => {
                                   return (
                                     <option value={item.title} key={item.id}>
                                       {item.title}
                                     </option>
                                   );
-                                })}
+                                })} */}
                               </select>
                             </div>
                           ) : (
@@ -2349,7 +2346,8 @@ function NewCampaignForm() {
                               checked={
                                 editCampaignData?.discount_type === "percent"
                               }
-                              onChange={handleDiscountRadioChange}
+                              readOnly
+                              // onChange={handleDiscountRadioChange}
                             />
                           ) : (
                             <input
@@ -2375,7 +2373,8 @@ function NewCampaignForm() {
                               checked={
                                 editCampaignData?.discount_type === "amount"
                               }
-                              onChange={handleDiscountRadioChange}
+                              // onChange={handleDiscountRadioChange}
+                              readOnly
                             />
                           ) : (
                             <input
@@ -2401,7 +2400,8 @@ function NewCampaignForm() {
                               checked={
                                 editCampaignData?.discount_type === "product"
                               }
-                              onChange={handleDiscountRadioChange}
+                              // onChange={handleDiscountRadioChange}
+                              readOnly
                             />
                           ) : (
                             <input
@@ -2516,7 +2516,8 @@ function NewCampaignForm() {
                                   </h6>
                                 )}
                               </div>
-                              {newCampaignData?.discount_type != "product"  &&  editCampaignData?.discount_type != 'product' ? (
+                              {newCampaignData?.discount_type != "product" &&
+                              editCampaignData?.discount_type != "product" ? (
                                 <div className="reward-form">
                                   <div className="inputfield">
                                     <label
@@ -3298,13 +3299,15 @@ function NewCampaignForm() {
                               type="checkbox"
                               name="klaviyo_integration"
                               checked={editCampaignData?.klaviyo_integration}
-                              onChange={handleCheckboxChange}
+                              // onChange={handleCheckboxChange}
+                              readOnly
                             />
                           ) : (
                             <input
                               type="checkbox"
                               name="klaviyo_integration"
                               checked={newCampaignData?.klaviyo_integration}
+                              readOnly
                               disabled={
                                 globalSettings?.klaviyo_integration || true
                               }
@@ -3331,7 +3334,7 @@ function NewCampaignForm() {
                                   placeholder="Enter API Key"
                                   value={globalSettings?.klaviyo_api_key}
                                   onChange={handleChange}
-                                  disabled
+                                  readOnly
                                 />
                               ) : (
                                 <input
@@ -3342,7 +3345,7 @@ function NewCampaignForm() {
                                   placeholder="Enter API Key"
                                   value={newCampaignData?.klaviyo_api_key}
                                   onChange={handleChange}
-                                  disabled
+                                  readOnly
                                 />
                               )}
                             </div>
@@ -3393,9 +3396,11 @@ function NewCampaignForm() {
                                 </div>
                               ) : (
                                 <Link to="/settings">
-                                  <p className="klaviyo-message">
-                                    Please Enable API Key in Global Settings
-                                  </p>
+                                  {!isEdit && (
+                                    <p className="klaviyo-message">
+                                      Please Enable API Key in Global Settings
+                                    </p>
+                                  )}
                                 </Link>
                               )}
                             </div>
@@ -3457,40 +3462,70 @@ function NewCampaignForm() {
                     <div className="templates-block-container">
                       <div className="template-cards">
                         {randomTemplate?.map((template, index) => (
-                          <div
-                            key={template?.id}
-                            className={
-                              selectedTemplateData?.id === template?.id
-                                ? "template-card-block selected"
-                                : "template-card-block"
-                            }
-                            onClick={() => handleTemplateSelect(template)}
-                            disabled={isEdit}
-                          >
-                            {template?.id === 1 ? (
-                              <h3>
-                                Build a custom template in the Shopify Theme
-                                Editor{" "}
-                              </h3>
+                          <>
+                            {isEdit ? (
+                              <div
+                                key={template?.id}
+                                className={
+                                  selectedTemplateData?.id === template?.id
+                                    ? "template-card-block selected"
+                                    : "template-card-block"
+                                }
+                                // onClick={() => handleTemplateSelect(template)}
+                                disabled={isEdit}
+                                
+                              >
+                                {template?.id === 1 ? (
+                                  <h3>
+                                    Build a custom template in the Shopify Theme
+                                    Editor{" "}
+                                  </h3>
+                                ) : (
+                                  template?.id > 1 && (
+                                    <img
+                                      key={template?.id}
+                                      src={template?.landing_welcome_image_url}
+                                      alt={template?.campaign_name}
+                                    />
+                                  )
+                                )}
+                              </div>
                             ) : (
-                              template?.id > 1 && (
-                                <img
-                                  key={template?.id}
-                                  src={template?.landing_welcome_image_url}
-                                  alt={template?.campaign_name}
-                                />
-                              )
+                              <div
+                                key={template?.id}
+                                className={
+                                  selectedTemplateData?.id === template?.id
+                                    ? "template-card-block selected"
+                                    : "template-card-block"
+                                }
+                                onClick={() => handleTemplateSelect(template)}
+                              >
+                                {template?.id === 1 ? (
+                                  <h3>
+                                    Build a custom template in the Shopify Theme
+                                    Editor{" "}
+                                  </h3>
+                                ) : (
+                                  template?.id > 1 && (
+                                    <img
+                                      key={template?.id}
+                                      src={template?.landing_welcome_image_url}
+                                      alt={template?.campaign_name}
+                                    />
+                                  )
+                                )}
+                              </div>
                             )}
-                          </div>
+                          </>
                         ))}
                       </div>
                     </div>
 
                     <div className="laststep">
                       <p>
-                        After the Campaign is created, you will be navigated to
-                        Campaigns Table Where You can Edit or Finalize Your
-                        Campaigns Settings.
+                        After the Campaign is created Successfully, you will be
+                        navigated to Campaigns Table Where You can Edit or
+                        Finalize Your Campaigns Settings.
                       </p>
                     </div>
                   </div>
