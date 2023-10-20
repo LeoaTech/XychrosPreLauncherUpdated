@@ -37,6 +37,11 @@ export const fetchCampaignsProuctsList = (state) => {
   return products;
 };
 
+export const fetchCampaignDetailsById = (state, campaignId) =>
+state?.campaign_details?.campaigns_details?.find(
+    (campaign) => campaign?.campaign_id === campaignId
+  );
+
 export const fetchCampaignsDiscountCodes = (state) => {
   let discountList = [];
 
