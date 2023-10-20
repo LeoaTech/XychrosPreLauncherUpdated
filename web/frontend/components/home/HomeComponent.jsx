@@ -121,7 +121,7 @@ const HomeComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue.toFixed(2));
+      setTotalRevenue(TotalRevenueList[0]?.total_revenue.toFixed(2));
     }
   }, [TotalRevenueList, dispatch]);
 
@@ -464,6 +464,8 @@ const HomeComponent = () => {
     ],
   };
 
+
+  console.log(getTotalRevenue,"Revenues")
   return (
     <div>
       {campaignsList.length === 0 ? (
@@ -531,13 +533,16 @@ const HomeComponent = () => {
                 class='clicks-icon'
               />
             </Suspense>
+
+
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
                   value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
                   title='Revenue'
                   icon={Sale}
                   class='revenue-icon'
-                />
+                  currency={TotalRevenueList[0]?.currency}
+                  />
             </Suspense>
           </div>
           <div className='single-chart'>
