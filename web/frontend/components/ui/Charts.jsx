@@ -9,7 +9,7 @@ export default function Charts(props) {
     <div id={props.type} className='chart'>
       <div className='chart-header'>
         <div className='chart-heading'>{props.header}</div>
-        <div className='chart-value'>{props.value}</div>
+        <div className='chart-value'><span>{props?.value == 0?props?.currency:""}</span>{props.value}</div>
         <div className='chart-subheading'>{props.subheader}</div>
       </div>
       {chartType == 'line' && (

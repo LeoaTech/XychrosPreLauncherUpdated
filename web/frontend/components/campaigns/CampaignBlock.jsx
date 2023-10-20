@@ -258,6 +258,7 @@ export default function CampaignBlock({
                 }
                 icon={Sale}
                 className="revenue-icon"
+                currency={TotalRevenueList[0]?.currency}
               />
             </Suspense>
           </div>
