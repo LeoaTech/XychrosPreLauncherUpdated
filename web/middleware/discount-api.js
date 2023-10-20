@@ -386,10 +386,18 @@ export default function discountApiEndpoint(app) {
 
             // discount and price rule function call
             let discount_details;
-            try {
-                discount_details = await discountApiCalls(accessToken, shop, campaignData, customer_segment_ids);
-            } catch (discountError) {
-                return res.status(500).json({ success: false, message: "Failed to Generate Discounts", error: discountError.message });
+            if(campaignData.discount_type === 'product') {
+                try {
+                    discount_details = await freeProductApiCalls(accessToken, shop, campaignData, customer_segment_ids);
+                } catch (discountError) {
+                    return res.status(500).json({ success: false, message: "Failed to Generate Free Product Rewards", error: discountError.message });
+                }
+            } else {
+                try {
+                    discount_details = await discountApiCalls(accessToken, shop, campaignData, customer_segment_ids);
+                } catch (discountError) {
+                    return res.status(500).json({ success: false, message: "Failed to Generate Discounts", error: discountError.message });
+                }
             }
 
             const campaignDetails = {
