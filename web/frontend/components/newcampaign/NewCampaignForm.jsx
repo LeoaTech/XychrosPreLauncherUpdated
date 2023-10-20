@@ -1623,9 +1623,10 @@ function NewCampaignForm() {
         selectedTemplateData !== undefined
       ) {
         setIsLoading(true);
-
+        
+        let discount_details;
         if (newCampaignData?.discount_type) {
-          const discount_details = await generateDiscounts(updateCampaignData);
+          discount_details = await generateDiscounts(updateCampaignData);
           // Discount Codes Generated
           if (discount_details?.success) {
             // Continue next task
@@ -1641,7 +1642,7 @@ function NewCampaignForm() {
         );
 
         campaignDetails = {
-          ...discount_details,
+          ...discount_details?.data,
           ...template_details,
         };
 
