@@ -71,15 +71,14 @@ function NewCampaignForm() {
     (state) => fetchCampaignDetailsById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
 
-  console.log(campaignById);
   // Get Tomorrow Date and  Date for next 6 days for the Campaign End Date
   let today = new Date();
   let getStartDate = new Date();
   let getNextDate = new Date();
   getStartDate.setDate(today.getDate() + 1); // Get Start Date
   getNextDate.setDate(today.getDate() + 6); //Get End Date
-  getStartDate.setHours(0, 0, 0, 0); //Start Camapign with Midnight Time
-  getNextDate.setHours(0, 0, 0, 0); //End Camapign with Midnight Time
+  getStartDate.setHours(0, 1, 0, 0); // Set to 00:01 AM
+  getNextDate.setHours(23, 59, 59, 999); // Set to 11:59 PM
 
   // Local States of Components
 
@@ -592,7 +591,7 @@ function NewCampaignForm() {
   // Handle Previous Step event for each Form
   const handlePrevious = (index) => {
     setNewCampaignData((prev) => ({ ...prev, template_id: null }));
-    setSelectedTemplateData(undefined)
+    setSelectedTemplateData(undefined);
 
     setExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
@@ -1781,7 +1780,6 @@ function NewCampaignForm() {
       return;
     }
   };
-  console.log(editCampaignData);
   return (
     <>
       {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
@@ -1948,6 +1946,7 @@ function NewCampaignForm() {
                           {isEdit ? (
                             <DatePicker
                               minDate={new Date()}
+                              maxDate={editCampaignData?.end_date}
                               showDisabledMonthNavigation
                               customInput={<ExampleCustomInput />}
                               shouldCloseOnSelect={true}
@@ -1972,6 +1971,7 @@ function NewCampaignForm() {
                             <DatePicker
                               name="start_date"
                               minDate={new Date()}
+                              maxDate={newCampaignData?.end_date}
                               showDisabledMonthNavigation
                               customInput={<ExampleCustomInput />}
                               shouldCloseOnSelect={true}
@@ -1991,7 +1991,9 @@ function NewCampaignForm() {
                           <label htmlFor="end_date">End Date</label>
                           {isEdit ? (
                             <DatePicker
-                              minDate={new Date()}
+                              minDate={
+                                editCampaignData?.start_date || new Date()
+                              }
                               customInput={<ExampleCustomInput />}
                               showDisabledMonthNavigation
                               shouldCloseOnSelect={true}
@@ -2011,11 +2013,14 @@ function NewCampaignForm() {
                                   ["end_date"]: date,
                                 }))
                               }
+                            
                             />
                           ) : (
                             <DatePicker
                               name="end_date"
-                              minDate={new Date()}
+                              minDate={
+                                newCampaignData?.start_date || new Date()
+                              }
                               customInput={<ExampleCustomInput />}
                               showDisabledMonthNavigation
                               shouldCloseOnSelect={true}
@@ -2027,6 +2032,7 @@ function NewCampaignForm() {
                                   ["end_date"]: date,
                                 }))
                               }
+                            
                             />
                           )}
                         </div>
