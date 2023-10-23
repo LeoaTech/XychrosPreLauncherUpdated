@@ -1640,10 +1640,10 @@ function NewCampaignForm() {
             updateCampaignData
           );
 
-          campaignDetails = {
-            // ...discount_details?.data,  //Um-comment when discount codes data available
-            ...template_details,
-          };
+        campaignDetails = {
+          ...discount_details?.data,
+          ...template_details,
+        };
 
           let campaignSettingsId = toast.loading("Saving campaign settings...");
           try {
