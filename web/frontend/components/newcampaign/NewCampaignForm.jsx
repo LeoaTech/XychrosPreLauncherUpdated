@@ -1631,134 +1631,133 @@ function NewCampaignForm() {
       ) {
         setIsLoading(true);
 
-        if (newCampaignData?.discount_type != "product") {
-          const discount_details = await generateDiscounts(updateCampaignData);
-          // Discount Codes Generated
-          if (discount_details?.success) {
-            // Continue next task
-          } else {
-            setIsLoading(false);
-            handleExpand(2);
-            setNewCampaignData((prev) => ({ ...prev, template_id: null }));
-          }
-        } else {
-          // Genrate discount codes for Free Product Giveaway
-        }
+        const discount_details = await generateDiscounts(updateCampaignData);
+        // Discount Codes Generated
+        if (discount_details?.success) {
+          // Continue next task
+          const template_details = await createTemplates(
+            selectedTemplateData,
+            updateCampaignData
+          );
 
-        const template_details = await createTemplates(
-          selectedTemplateData,
-          updateCampaignData
-        );
+          campaignDetails = {
+            // ...discount_details?.data,  //Um-comment when discount codes data available
+            ...template_details,
+          };
 
-        campaignDetails = {
-          // ...discount_details?.data,  //Um-comment when discount codes data available
-          ...template_details,
-        };
-
-        let campaignSettingsId = toast.loading("Saving campaign settings...");
-        try {
-          const campaignSetting = await fetch("/api/campaignsettings", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newCampaignData),
-          });
-          if (campaignSetting.ok) {
-            setTimeout(() => {
-              toast.update(campaignSettingsId, {
-                render: "Saved Campaign Settings",
-                type: "success",
-                isLoading: true,
-                position: "top-right",
-                autoClose: 3000,
-              });
-            }, 1000);
-            const campaignData = await campaignSetting.json();
-            setTimeout(() => {
-              toast.dismiss(campaignSettingsId);
-            }, 3000);
-            dispatch(addNewCampaign(campaignData));
-            idExists = campaignData?.campaign_id;
-          } else {
-            setTimeout(() => {
-              toast.update(campaignSettingsId, {
-                render: "Failed to Create Campaigns",
-                type: "error",
-                isLoading: "false",
-                autoClose: 2000,
-              });
-            }, 1000);
-            setTimeout(() => {
-              toast.dismiss(campaignSettingsId);
-            }, 3000);
-            return "Failed to Create Campaign";
-          }
-        } catch (err) {
-          toast.update(campaignSettingsId, {
-            render: "Error Creating Campaign",
-            type: "error",
-            isLoading: "false",
-            autoClose: 2000,
-          });
-          setTimeout(() => {
-            toast.dismiss(campaignSettingsId);
-          }, 3000);
-          throw err;
-        }
-
-        // If CampaignID Exists the call the saveCampaign details function to store value in db
-        if (typeof idExists == "number") {
-          // If discount Codes and Template Pages created successfully
-          if (campaignDetails) {
-            let result = await saveCampaignDetails(campaignDetails);
-
-            if (result) {
-              dispatch(fetchCampaignDetails(result));
-            }
-          } else {
-            setIsLoading(false);
-            handleExpand(2);
-            setNewCampaignData((prev) => ({ ...prev, template_id: null }));
-            setDiscountInvalidError(true);
-          }
-
-          // Save the Reward Products Details for Product Discount type
-
-          if (newCampaignData?.discount_type == "product") {
-            let reward_product_details = await saveCampaignProductsDetails(
-              {
-                ...selectProducts,
-                discount_type: newCampaignData?.discount_type,
-                reward_tier1_referrals: newCampaignData?.reward_1_tier,
-                reward_tier2_referrals: newCampaignData?.reward_2_tier,
-                reward_tier3_referrals: newCampaignData?.reward_3_tier,
-                reward_tier4_referrals: newCampaignData?.reward_4_tier,
+          let campaignSettingsId = toast.loading("Saving campaign settings...");
+          try {
+            const campaignSetting = await fetch("/api/campaignsettings", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
               },
-              idExists
-            );
-            if (reward_product_details) {
-              console.log("Data Saved Successfully");
+              body: JSON.stringify(newCampaignData),
+            });
+            if (campaignSetting.ok) {
+              setTimeout(() => {
+                toast.update(campaignSettingsId, {
+                  render: "Saved Campaign Settings",
+                  type: "success",
+                  isLoading: true,
+                  position: "top-right",
+                  autoClose: 3000,
+                });
+              }, 1000);
+              const campaignData = await campaignSetting.json();
+              setTimeout(() => {
+                toast.dismiss(campaignSettingsId);
+              }, 3000);
+              dispatch(addNewCampaign(campaignData));
+              idExists = campaignData?.campaign_id;
+            } else {
+              setTimeout(() => {
+                toast.update(campaignSettingsId, {
+                  render: "Failed to Create Campaigns",
+                  type: "error",
+                  isLoading: "false",
+                  autoClose: 2000,
+                });
+              }, 1000);
+              setTimeout(() => {
+                toast.dismiss(campaignSettingsId);
+              }, 3000);
+              return "Failed to Create Campaign";
             }
-          } else {
-            setIsLoading(false);
-            handleExpand(2);
+          } catch (err) {
+            toast.update(campaignSettingsId, {
+              render: "Error Creating Campaign",
+              type: "error",
+              isLoading: "false",
+              autoClose: 2000,
+            });
+            setTimeout(() => {
+              toast.dismiss(campaignSettingsId);
+            }, 3000);
+            throw err;
           }
 
-          setIsLoading(false);
-          handleExpand(0);
-          navigate("/campaigns");
+          // If CampaignID Exists the call the saveCampaign details function to store value in db
+          if (typeof idExists == "number") {
+            // If discount Codes and Template Pages created successfully
+            if (campaignDetails) {
+              let result = await saveCampaignDetails(campaignDetails);
+
+              if (result) {
+                dispatch(fetchCampaignDetails(result));
+              }
+            } else {
+              setIsLoading(false);
+              handleExpand(2);
+              setNewCampaignData((prev) => ({ ...prev, template_id: null }));
+              setDiscountInvalidError(true);
+            }
+
+            // Save the Reward Products Details for Product Discount type
+
+            if (newCampaignData?.discount_type == "product") {
+              let reward_product_details = await saveCampaignProductsDetails(
+                {
+                  ...selectProducts,
+                  discount_type: newCampaignData?.discount_type,
+                  reward_tier1_referrals: newCampaignData?.reward_1_tier,
+                  reward_tier2_referrals: newCampaignData?.reward_2_tier,
+                  reward_tier3_referrals: newCampaignData?.reward_3_tier,
+                  reward_tier4_referrals: newCampaignData?.reward_4_tier,
+                },
+                idExists
+              );
+              if (reward_product_details) {
+                console.log("Data Saved Successfully");
+              }
+            } else {
+              setIsLoading(false);
+              handleExpand(2);
+            }
+
+            setIsLoading(false);
+            handleExpand(0);
+            navigate("/campaigns");
+          } else {
+            setIsLoading(false);
+            handleExpand(0);
+
+            // throw error;
+          }
         } else {
           setIsLoading(false);
-          handleExpand(0);
-
-          // throw error;
+          handleExpand(2);
+          setNewCampaignData((prev) => ({ ...prev, template_id: null }));
         }
       } else {
-        setIsLoading(false);
-
-        return;
+        // Genrate discount codes for Free Product Giveaway
       }
+
+      // } else {
+      //   setIsLoading(false);
+
+      //   return;
+      // }
 
       setIsLoading(false);
       setNewCampaignData((prev) => ({ ...prev, template_id: null }));
@@ -3473,7 +3472,6 @@ function NewCampaignForm() {
                                 }
                                 // onClick={() => handleTemplateSelect(template)}
                                 disabled={isEdit}
-                                
                               >
                                 {template?.id === 1 ? (
                                   <h3>
