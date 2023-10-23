@@ -592,6 +592,7 @@ function NewCampaignForm() {
   // Handle Previous Step event for each Form
   const handlePrevious = (index) => {
     setNewCampaignData((prev) => ({ ...prev, template_id: null }));
+    setSelectedTemplateData(undefined)
 
     setExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
@@ -1640,10 +1641,10 @@ function NewCampaignForm() {
             updateCampaignData
           );
 
-        campaignDetails = {
-          ...discount_details?.data,
-          ...template_details,
-        };
+          campaignDetails = {
+            ...discount_details?.data,
+            ...template_details,
+          };
 
           let campaignSettingsId = toast.loading("Saving campaign settings...");
           try {
@@ -1750,14 +1751,10 @@ function NewCampaignForm() {
           setNewCampaignData((prev) => ({ ...prev, template_id: null }));
         }
       } else {
-        // Genrate discount codes for Free Product Giveaway
+        setIsLoading(false);
+
+        return;
       }
-
-      // } else {
-      //   setIsLoading(false);
-
-      //   return;
-      // }
 
       setIsLoading(false);
       setNewCampaignData((prev) => ({ ...prev, template_id: null }));
