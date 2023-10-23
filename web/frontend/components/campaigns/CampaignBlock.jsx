@@ -139,8 +139,7 @@ export default function CampaignBlock({
             )}
           </div>
 
-          <Link
-            to={product}
+          <p
             className={`campaign-block-product-name ${
               is_deactivated ? "deactive" : ""
             }`}
@@ -149,7 +148,7 @@ export default function CampaignBlock({
             }
           >
             {product ? product : "Product Name"}
-          </Link>
+          </p>
 
           <div className="campaign-block-duration">
             <IoCalendarSharp
@@ -251,14 +250,11 @@ export default function CampaignBlock({
             </Suspense>
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
-                value={
-                  campaign_revenue === 0
-                    ? 0
-                    : TotalRevenueList[0]?.currency + campaign_revenue
-                }
+                is_deactivated={is_deactivated}
+                value={campaign_revenue === 0 ? 0 : campaign_revenue}
                 icon={Sale}
                 className="revenue-icon"
-                currency={TotalRevenueList[0]?.currency}
+                currency={campaign_revenue > 0 && TotalRevenueList[0]?.currency}
               />
             </Suspense>
           </div>
