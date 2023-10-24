@@ -60,12 +60,14 @@ const Campaigns = () => {
   // });
 
   // Get Referral Details
-  const referrals = useFetchReferralsData("/api/getallreferralcount", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    signal: abortController.signal,
-  });
-
+  const { data: referrals, error: referralsError } = useFetchReferralsData(
+    "/api/getallreferralcount",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    }
+  );
   // Get All Campaign Clicks
   const total_clicks = useFetchTotalClicks("/api/fetchtotalclicks", {
     method: "GET",

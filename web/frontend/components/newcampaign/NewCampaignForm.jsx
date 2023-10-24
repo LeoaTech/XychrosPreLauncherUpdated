@@ -71,15 +71,14 @@ function NewCampaignForm() {
     (state) => fetchCampaignDetailsById(state, Number(campaignsid)) // Get A Single Campaign with ID
   );
 
-  console.log(campaignById);
   // Get Tomorrow Date and  Date for next 6 days for the Campaign End Date
   let today = new Date();
   let getStartDate = new Date();
   let getNextDate = new Date();
   getStartDate.setDate(today.getDate() + 1); // Get Start Date
   getNextDate.setDate(today.getDate() + 6); //Get End Date
-  getStartDate.setHours(0, 0, 0, 0); //Start Camapign with Midnight Time
-  getNextDate.setHours(0, 0, 0, 0); //End Camapign with Midnight Time
+  getStartDate.setHours(0, 1, 0, 0); // Set to 00:01 AM
+  getNextDate.setHours(23, 59, 59, 999); // Set to 11:59 PM
 
   // Local States of Components
 
@@ -592,6 +591,7 @@ function NewCampaignForm() {
   // Handle Previous Step event for each Form
   const handlePrevious = (index) => {
     setNewCampaignData((prev) => ({ ...prev, template_id: null }));
+    setSelectedTemplateData(undefined);
 
     setExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
@@ -1630,127 +1630,124 @@ function NewCampaignForm() {
         selectedTemplateData !== undefined
       ) {
         setIsLoading(true);
-        
-        let discount_details;
-        if (newCampaignData?.discount_type) {
-          discount_details = await generateDiscounts(updateCampaignData);
-          // Discount Codes Generated
-          if (discount_details?.success) {
-            // Continue next task
-          } else {
-            setIsLoading(false);
-            handleExpand(2);
-            setNewCampaignData((prev) => ({ ...prev, template_id: null }));
-          }
-        }
-        const template_details = await createTemplates(
-          selectedTemplateData,
-          updateCampaignData
-        );
 
-        campaignDetails = {
-          ...discount_details?.data,
-          ...template_details,
-        };
+        const discount_details = await generateDiscounts(updateCampaignData);
+        // Discount Codes Generated
+        if (discount_details?.success) {
+          // Continue next task
+          const template_details = await createTemplates(
+            selectedTemplateData,
+            updateCampaignData
+          );
 
-        let campaignSettingsId = toast.loading("Saving campaign settings...");
-        try {
-          const campaignSetting = await fetch("/api/campaignsettings", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newCampaignData),
-          });
-          if (campaignSetting.ok) {
-            setTimeout(() => {
-              toast.update(campaignSettingsId, {
-                render: "Saved Campaign Settings",
-                type: "success",
-                isLoading: true,
-                position: "top-right",
-                autoClose: 3000,
-              });
-            }, 1000);
-            const campaignData = await campaignSetting.json();
-            setTimeout(() => {
-              toast.dismiss(campaignSettingsId);
-            }, 3000);
-            dispatch(addNewCampaign(campaignData));
-            idExists = campaignData?.campaign_id;
-          } else {
-            setTimeout(() => {
-              toast.update(campaignSettingsId, {
-                render: "Failed to Create Campaigns",
-                type: "error",
-                isLoading: "false",
-                autoClose: 2000,
-              });
-            }, 1000);
-            setTimeout(() => {
-              toast.dismiss(campaignSettingsId);
-            }, 3000);
-            return "Failed to Create Campaign";
-          }
-        } catch (err) {
-          toast.update(campaignSettingsId, {
-            render: "Error Creating Campaign",
-            type: "error",
-            isLoading: "false",
-            autoClose: 2000,
-          });
-          setTimeout(() => {
-            toast.dismiss(campaignSettingsId);
-          }, 3000);
-          throw err;
-        }
+          campaignDetails = {
+            ...discount_details?.data,
+            ...template_details,
+          };
 
-        // If CampaignID Exists the call the saveCampaign details function to store value in db
-        if (typeof idExists == "number") {
-          // If discount Codes and Template Pages created successfully
-          if (campaignDetails) {
-            let result = await saveCampaignDetails(campaignDetails);
-
-            if (result) {
-              dispatch(fetchCampaignDetails(result));
-            }
-          } else {
-            setIsLoading(false);
-            handleExpand(2);
-            setNewCampaignData((prev) => ({ ...prev, template_id: null }));
-            setDiscountInvalidError(true);
-          }
-
-          // Save the Reward Products Details for Product Discount type
-
-          if (newCampaignData?.discount_type == "product") {
-            let reward_product_details = await saveCampaignProductsDetails(
-              {
-                ...selectProducts,
-                discount_type: newCampaignData?.discount_type,
-                reward_tier1_referrals: newCampaignData?.reward_1_tier,
-                reward_tier2_referrals: newCampaignData?.reward_2_tier,
-                reward_tier3_referrals: newCampaignData?.reward_3_tier,
-                reward_tier4_referrals: newCampaignData?.reward_4_tier,
+          let campaignSettingsId = toast.loading("Saving campaign settings...");
+          try {
+            const campaignSetting = await fetch("/api/campaignsettings", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
               },
-              idExists
-            );
-            if (reward_product_details) {
-              console.log("Data Saved Successfully");
+              body: JSON.stringify(newCampaignData),
+            });
+            if (campaignSetting.ok) {
+              setTimeout(() => {
+                toast.update(campaignSettingsId, {
+                  render: "Saved Campaign Settings",
+                  type: "success",
+                  isLoading: true,
+                  position: "top-right",
+                  autoClose: 3000,
+                });
+              }, 1000);
+              const campaignData = await campaignSetting.json();
+              setTimeout(() => {
+                toast.dismiss(campaignSettingsId);
+              }, 3000);
+              dispatch(addNewCampaign(campaignData));
+              idExists = campaignData?.campaign_id;
+            } else {
+              setTimeout(() => {
+                toast.update(campaignSettingsId, {
+                  render: "Failed to Create Campaigns",
+                  type: "error",
+                  isLoading: "false",
+                  autoClose: 2000,
+                });
+              }, 1000);
+              setTimeout(() => {
+                toast.dismiss(campaignSettingsId);
+              }, 3000);
+              return "Failed to Create Campaign";
             }
-          } else {
-            setIsLoading(false);
-            handleExpand(2);
+          } catch (err) {
+            toast.update(campaignSettingsId, {
+              render: "Error Creating Campaign",
+              type: "error",
+              isLoading: "false",
+              autoClose: 2000,
+            });
+            setTimeout(() => {
+              toast.dismiss(campaignSettingsId);
+            }, 3000);
+            throw err;
           }
 
-          setIsLoading(false);
-          handleExpand(0);
-          navigate("/campaigns");
+          // If CampaignID Exists the call the saveCampaign details function to store value in db
+          if (typeof idExists == "number") {
+            // If discount Codes and Template Pages created successfully
+            if (campaignDetails) {
+              let result = await saveCampaignDetails(campaignDetails);
+
+              if (result) {
+                dispatch(fetchCampaignDetails(result));
+              }
+            } else {
+              setIsLoading(false);
+              handleExpand(2);
+              setNewCampaignData((prev) => ({ ...prev, template_id: null }));
+              setDiscountInvalidError(true);
+            }
+
+            // Save the Reward Products Details for Product Discount type
+
+            if (newCampaignData?.discount_type == "product") {
+              let reward_product_details = await saveCampaignProductsDetails(
+                {
+                  ...selectProducts,
+                  discount_type: newCampaignData?.discount_type,
+                  reward_tier1_referrals: newCampaignData?.reward_1_tier,
+                  reward_tier2_referrals: newCampaignData?.reward_2_tier,
+                  reward_tier3_referrals: newCampaignData?.reward_3_tier,
+                  reward_tier4_referrals: newCampaignData?.reward_4_tier,
+                },
+                idExists
+              );
+              if (reward_product_details) {
+                console.log("Data Saved Successfully");
+              }
+            } else {
+              setIsLoading(false);
+              handleExpand(2);
+            }
+
+            setIsLoading(false);
+            handleExpand(0);
+            navigate("/campaigns");
+          } else {
+            setIsLoading(false);
+            handleExpand(0);
+
+            // throw error;
+          }
         } else {
           setIsLoading(false);
-          handleExpand(0);
-
-          // throw error;
+          handleExpand(2);
+          setNewCampaignData((prev) => ({ ...prev, template_id: null }));
         }
       } else {
         setIsLoading(false);
@@ -1783,7 +1780,6 @@ function NewCampaignForm() {
       return;
     }
   };
-  console.log(editCampaignData);
   return (
     <>
       {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
@@ -1820,7 +1816,7 @@ function NewCampaignForm() {
             newestOnTop={true}
             closeOnClick={true}
             draggable
-            // theme="colored"
+            theme="colored"
           />
           <form onSubmit={handleSaveClick}>
             {/* Basic Settings Input Form Section  */}
@@ -1950,6 +1946,7 @@ function NewCampaignForm() {
                           {isEdit ? (
                             <DatePicker
                               minDate={new Date()}
+                              maxDate={editCampaignData?.end_date}
                               showDisabledMonthNavigation
                               customInput={<ExampleCustomInput />}
                               shouldCloseOnSelect={true}
@@ -1974,6 +1971,7 @@ function NewCampaignForm() {
                             <DatePicker
                               name="start_date"
                               minDate={new Date()}
+                              maxDate={newCampaignData?.end_date}
                               showDisabledMonthNavigation
                               customInput={<ExampleCustomInput />}
                               shouldCloseOnSelect={true}
@@ -1993,7 +1991,9 @@ function NewCampaignForm() {
                           <label htmlFor="end_date">End Date</label>
                           {isEdit ? (
                             <DatePicker
-                              minDate={new Date()}
+                              minDate={
+                                editCampaignData?.start_date || new Date()
+                              }
                               customInput={<ExampleCustomInput />}
                               showDisabledMonthNavigation
                               shouldCloseOnSelect={true}
@@ -2013,11 +2013,14 @@ function NewCampaignForm() {
                                   ["end_date"]: date,
                                 }))
                               }
+                            
                             />
                           ) : (
                             <DatePicker
                               name="end_date"
-                              minDate={new Date()}
+                              minDate={
+                                newCampaignData?.start_date || new Date()
+                              }
                               customInput={<ExampleCustomInput />}
                               showDisabledMonthNavigation
                               shouldCloseOnSelect={true}
@@ -2029,6 +2032,7 @@ function NewCampaignForm() {
                                   ["end_date"]: date,
                                 }))
                               }
+                            
                             />
                           )}
                         </div>
@@ -3471,7 +3475,6 @@ function NewCampaignForm() {
                                 }
                                 // onClick={() => handleTemplateSelect(template)}
                                 disabled={isEdit}
-                                
                               >
                                 {template?.id === 1 ? (
                                   <h3>

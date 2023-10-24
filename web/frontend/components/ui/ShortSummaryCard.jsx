@@ -16,7 +16,6 @@ const ShortSummaryCard = (props) => {
         return num.toString();
       }
     }
-
   
   return (
     <div
