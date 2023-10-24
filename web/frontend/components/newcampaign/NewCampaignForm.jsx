@@ -1816,7 +1816,7 @@ function NewCampaignForm() {
             newestOnTop={true}
             closeOnClick={true}
             draggable
-            // theme="colored"
+            theme="colored"
           />
           <form onSubmit={handleSaveClick}>
             {/* Basic Settings Input Form Section  */}
