@@ -246,7 +246,6 @@ export default function HomePage() {
     latestCampaign,
     currentTier,
   ]);
-  console.log(referrals);
   useEffect(() => {
     if (referrals?.length > 0) {
       dispatch(fetchReferrals(referrals));
