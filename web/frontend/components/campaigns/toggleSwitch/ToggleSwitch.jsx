@@ -2,17 +2,30 @@ import React, { useState } from "react";
 import "./toggle.css";
 import cx from "classnames";
 
-const ToggleSwitch = ({ rounded, isToggled, onToggle, id, start_date, end_date }) => {
+const ToggleSwitch = ({ rounded, isToggled, draftCampaignToggle }) => {
   const sliderCX = cx("slider", {
     rounded: rounded,
   });
-  const todayDate = new Date()
+  const draftSlider = cx("draft-slider", {
+    rounded: rounded,
+  });
   return (
-    <label className="switch-label">
-      <input type="checkbox" checked={isToggled} defaultChecked
-      />
-      <span className={sliderCX} />
-    </label>
+    <>
+    {/* Active Or Inactive Campaign */}
+      {!draftCampaignToggle ? (
+        <label className="switch-label">
+          <input type="checkbox" checked={isToggled} defaultChecked readOnly />
+          <span className={sliderCX} />
+          
+        </label>
+      ) : (
+        // Draft Campaign
+        <label className="switch-label">
+          <input type="checkbox" checked={draftCampaignToggle} defaultChecked readOnly />
+          <span className={draftSlider} />
+        </label>
+      )}
+    </>
   );
 };
 
