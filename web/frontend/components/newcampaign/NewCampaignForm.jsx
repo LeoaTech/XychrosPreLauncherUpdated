@@ -35,6 +35,7 @@ import {
   fetchCurrentTier,
 } from "../../app/features/current_plan/current_plan";
 import {
+  addNewCampaignDetails,
   fetchCampaignDetails,
   fetchCampaignDetailsById,
   fetchCampaignsDetailsList,
@@ -1267,8 +1268,6 @@ function NewCampaignForm() {
           reward_email: selectProducts?.reward_email_template,
           reward_1_discount: 0,
           reward_2_discount: 0,
-          reward_3_discount: 0,
-          reward_4_discount: 0,
         }));
         if (
           newCampaignData?.product == "" ||
@@ -1288,6 +1287,8 @@ function NewCampaignForm() {
         setNewCampaignData((prevCamp) => ({
           ...prevCamp,
           reward_email: newCampaignData?.reward_email,
+          reward_1_discount: globalSettings?.reward_1_discount,
+          reward_2_discount: globalSettings?.reward_2_discount,
         }));
         SetFormErrors((prevErrors) => ({
           ...prevErrors,
@@ -1763,23 +1764,108 @@ function NewCampaignForm() {
     }
   };
 
-  // Save Draft Campaign data to database
-  const handleSaveDraft = async () => {
-    if (draftModal === true) {
-      await fetch("/api/campaignsettings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newCampaignData),
-      })
-        .then((res) => res.json())
-        .then((data) => dispatch(addNewCampaign(data)))
-        .catch((err) => console.log(err));
+  // save Draft Campaign details
+  const saveDraftCampaignDetails = async (campaign_details) => {
+    // Send POST Request to save Details From database
+
+    let campaignDetailsId = toast.loading("Saving Discount Codes and Pages");
+    const detailsResponse = await fetch("/api/campaigndetails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...campaign_details,
+        is_draft: true,
+        is_active: false,
+      }),
+    });
+
+    if (detailsResponse.ok) {
+      setTimeout(() => {
+        toast.update(campaignDetailsId, {
+          render: "Saved discount codes and templates for campaign",
+          type: "success",
+          isLoading: true,
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }, 1000);
+
+      setTimeout(() => {
+        toast.dismiss(campaignDetailsId);
+      }, 2000);
+      const detailsData = await detailsResponse.json();
+      return detailsData;
     } else {
-      return;
+      setTimeout(() => {
+        toast.update(campaignDetailsId, {
+          render: "Error Saving Template Pages and Discount Codes for Campaign",
+          type: "error",
+          isLoading: true,
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }, 1000);
+
+      setTimeout(() => {
+        toast.dismiss(campaignDetailsId);
+      }, 2000);
+      console.log("Failed to insert campaign details:", detailsResponse);
     }
   };
+  // Save Draft Campaign data to database
+  const handleSaveDraft = async () => {
+    let draftCampaignId, draftCampaign;
+    if (isEdit) {
+      // Update Campaign Details saved in Draft
+    } else {
+      if (draftModal === true) {
+        try {
+          const response = await fetch("/api/campaignsettings", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newCampaignData),
+          });
+
+          if (response.ok) {
+            draftCampaign = await response.json();
+            draftCampaignId = draftCampaign?.campaign_id;
+          } else {
+            console.log("Failed to save Campaign Drfat");
+          }
+
+          const campaignDetails = {
+            campaign_name: draftCampaign?.name,
+            theme_id: null,
+            landing_template_key: "",
+            landing_template_link: "",
+            landing_page_id: "",
+            landing_page_link: "",
+            rewards_template_key: "",
+            rewards_template_link: "",
+            rewards_page_id: "",
+            rewards_page_link: "",
+          };
+          if (typeof draftCampaignId == "number") {
+            let result = await saveDraftCampaignDetails(campaignDetails);
+            if (result) {
+              dispatch(addNewCampaignDetails(result[0]));
+            } else {
+              console.log("no result Found");
+            }
+          }
+        } catch (err) {
+          console.log(err, "Failed to save Campaign Drfat");
+        }
+      } else {
+        return;
+      }
+    }
+  };
+
   return (
     <>
       {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
@@ -2013,7 +2099,6 @@ function NewCampaignForm() {
                                   ["end_date"]: date,
                                 }))
                               }
-                            
                             />
                           ) : (
                             <DatePicker
@@ -2032,7 +2117,6 @@ function NewCampaignForm() {
                                   ["end_date"]: date,
                                 }))
                               }
-                            
                             />
                           )}
                         </div>
@@ -3544,7 +3628,15 @@ function NewCampaignForm() {
                         disabled={isLoading}
                       >
                         {isEdit ? (
-                          <>{isLoading ? "Updating..." : "Update Campaign"}</>
+                          editCampaignData?.is_draft ? (
+                            <>
+                              {isLoading
+                                ? "Completing..."
+                                : "Complete Campaign"}
+                            </>
+                          ) : (
+                            <>{isLoading ? "Updating..." : "Update Campaign"}</>
+                          )
                         ) : (
                           <>{isLoading ? "Saving..." : "Create Campaign"}</>
                         )}
