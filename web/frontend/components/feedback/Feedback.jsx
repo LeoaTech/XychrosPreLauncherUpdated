@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./feedback.css";
 import StarRating from "./starRating/StarRating";
+import { useThemeContext } from "../../contexts/ThemeContext";
 const FeedbackComponent = () => {
+  const { theme } = useThemeContext();
   const [feedback, setFeedback] = useState("");
-  const [submitted, setSubmitted] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const handleSubmit = () => {
     // Perform any additional processing or API calls here, if needed
     // This function will be triggered when the form is submitted
 
     // Update the state to indicate that the form has been submitted
-    setSubmitted(true)
+    setSubmitted(true);
   };
-
 
   useEffect(() => {
     // Simulating the form loading process
@@ -21,14 +22,19 @@ const FeedbackComponent = () => {
     }, 500); // Replace this with the actual form loading logic
   }, []);
   return (
-    <div className="feedback-container">
+    <div
+      className={
+        theme === "dark" ? "feedback-container" : "feedback-container-light"
+      }
+    >
       <div className="feedback-desc">
         <p>
           We are constantly improving our app and would love to get your
           feedback!{" "}
         </p>
       </div>
-      <div className="feedback-form">
+      <div
+        className={theme === "dark" ? "feedback-form" : "feedback-form-light"}>
         <div className="feedback-section-form">
           <h2>Feedback Form</h2>
           {/* <form>
@@ -55,12 +61,19 @@ const FeedbackComponent = () => {
 
             <div className="submit-btn">Submit</div>
           </form> */}
-          {isLoading ? <div class="spinner"></div> : <iframe className="feedback-google-form"
-            src="https://docs.google.com/forms/d/e/1FAIpQLSfN0AGTHf3fczml4OeKvl3RbwC1_rezaa9lH-8krf3MD9Czvw/viewform?embedded=true"
-            frameborder="0"
-            marginheight="0"
-            marginwidth="0"
-          >Loading....</iframe>}
+          {isLoading ? (
+            <div class="spinner"></div>
+          ) : (
+            <iframe
+              className="feedback-google-form"
+              src="https://docs.google.com/forms/d/e/1FAIpQLSfN0AGTHf3fczml4OeKvl3RbwC1_rezaa9lH-8krf3MD9Czvw/viewform?embedded=true"
+              frameborder="0"
+              marginheight="0"
+              marginwidth="0"
+            >
+              Loading....
+            </iframe>
+          )}
         </div>
       </div>
     </div>
