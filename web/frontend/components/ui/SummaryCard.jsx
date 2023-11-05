@@ -1,6 +1,8 @@
+import { useThemeContext } from "../../contexts/ThemeContext";
 import "./SummaryCard.css";
 
 const SummaryCard = (props) => {
+  const {theme} = useThemeContext()
   // Format Largest Number Value(Clicks,Revenue,TotalRevenue, Referrals and Total Campaigns)
   function formatNumber(num) {
     if (num >= 1000000000000) {
@@ -17,8 +19,8 @@ const SummaryCard = (props) => {
   }
 
   return (
-    <div className="summary-card">
-      <div className="summary-details">
+    <div className={theme=== "dark"?"summary-card":"summary-card-light"}>
+      <div className={theme === 'dark'?"summary-details":"summary-details-light"}>
         <div className="summary-card-value">{formatNumber(props.value)}</div>
         <div className="summary-card-title">{props.title}</div>
       </div>
