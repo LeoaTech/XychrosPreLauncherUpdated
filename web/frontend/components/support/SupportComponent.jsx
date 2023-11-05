@@ -2,17 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ImAttachment } from "react-icons/im";
 import "./support.css";
+import { useThemeContext } from "../../contexts/ThemeContext";
 const SupportComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [supportForm, setSupportForm] = useState({
-    store_url: "",
-    issue_msg: "",
-    file: ""
-  })
+  const { theme } = useThemeContext();
 
-  const handleChange = () => {
-
-  }
   useEffect(() => {
     // Simulating the form loading process
     setTimeout(() => {
@@ -20,12 +14,12 @@ const SupportComponent = () => {
     }, 400); // Replace this with the actual form loading logic
   }, []);
 
-
-  const handleSubmit = () => {
-
-  }
   return (
-    <div className="support-container">
+    <div
+      className={
+        theme === "dark" ? "support-container" : "support-container-light"
+      }
+    >
       <div className="top-description">
         <p>
           {/* Visit our <Link to="/help">Help Centre</Link> for troubleshooting and
@@ -38,21 +32,25 @@ const SupportComponent = () => {
         </p>
       </div>
 
-      <div className="support-form">
+      <div className={theme === "dark" ? "support-form" : "support-form-light"}>
         <div className="section-form">
           <h2>Support Form</h2>
 
-
-          {isLoading ? <div className="spinner"></div> : <iframe className="support-google-form"
-            src="https://docs.google.com/forms/d/e/1FAIpQLSfRkYidDN7u-hrv12dl_p5Qh_pyqLpU3J9geH9ggwIYku6Olw/viewform?embedded=true"
-            width="640"
-            height="670"
-            frameborder="0"
-            // marginheight="0"
-            // marginwidth="0"
-
-          >Loading…</iframe>
-          }
+          {isLoading ? (
+            <div className="spinner"></div>
+          ) : (
+            <iframe
+              className="support-google-form"
+              src="https://docs.google.com/forms/d/e/1FAIpQLSfRkYidDN7u-hrv12dl_p5Qh_pyqLpU3J9geH9ggwIYku6Olw/viewform?embedded=true"
+              width="640"
+              height="670"
+              frameborder="0"
+              // marginheight="0"
+              // marginwidth="0"
+            >
+              Loading…
+            </iframe>
+          )}
 
           {/* <div className="file-links">
             <div className="link-input">
@@ -78,7 +76,6 @@ const SupportComponent = () => {
 
           <div className="submit-btn" onClick={handleSubmit}>Submit</div>
           */}
-
         </div>
       </div>
     </div>
@@ -86,8 +83,6 @@ const SupportComponent = () => {
 };
 
 export default SupportComponent;
-
-
 
 /* {isLoading ? <div className="spinner"></div> : <iframe className="support-google-form"
             src="https://docs.google.com/forms/d/e/1FAIpQLSfRkYidDN7u-hrv12dl_p5Qh_pyqLpU3J9geH9ggwIYku6Olw/viewform?embedded=true"

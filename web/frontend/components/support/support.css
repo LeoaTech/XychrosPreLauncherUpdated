@@ -1,8 +1,12 @@
-.support-container {
+.support-container, .support-container-light {
   color: white;
   margin: 30px ;
   margin-left: 2%;
   padding: 35px;
+}
+
+.support-container-light{
+  color: black;
 }
 
 .top-description {
@@ -20,7 +24,7 @@
   text-decoration: underline;
 }
 
-.section-form h2 {
+.section-form h2, .section-form-light h2 {
   font-size: 30px;
   font-weight: 700px;
   margin-bottom: 20px;
