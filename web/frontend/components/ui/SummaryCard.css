@@ -1,4 +1,4 @@
-.summary-card {
+.summary-card, .summary-card-light {
   width: 100%;
   /* height: 117px; */
   background: var(--secondary-text-color);
@@ -18,21 +18,34 @@
   -o-border-radius: 10px;
 }
 
+
+.summary-card-light{
+  background: #EBF0F2;
+  border: 1px solid #141414;
+  box-shadow: 0px 4px 4px #4b4949;
+}
+
 .summary-details {
   flex: 1;
+  color: var(--primary-color);
+
+}
+
+
+.summary-details-light{
+  flex:1;
+  color:#141414;
 }
 .summary-card-value {
   font-weight: 800;
   font-size: 32px;
   line-height: 48px;
-  color: var(--primary-color);
 }
 
 .summary-card-title {
   font-weight: 400;
   font-size: 18px;
   line-height: 29px;
-  color: var(--primary-color);
 }
 
 .revenue-icon {
