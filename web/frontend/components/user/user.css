@@ -2,13 +2,18 @@
   margin: 1% 1.2%;
 }
 
-.account-section {
+.account-section,
+.account-section-light {
   padding: 10px 10px;
   margin: 5px 12px;
   display: flex;
   flex-direction: column;
   color: white;
   justify-content: space-between;
+}
+
+.account-section-light {
+  color: #1b1a21;
 }
 
 /* Title  */
@@ -24,7 +29,7 @@
 }
 
 /* Save Btn */
-.account-section button {
+.account-section button, .account-section-light button {
   float: right;
 }
 
@@ -35,7 +40,9 @@
 
 /* Contact And  Billing Details */
 .contact-details,
-.billing-details {
+.billing-details,
+.contact-details-light,
+.billing-details-light {
   background-color: #1b1a21;
   padding: 25px 35px;
   margin: 20px 5px;
@@ -46,7 +53,16 @@
   -o-border-radius: 10px;
 }
 
-.contact-details .contact-header {
+
+.contact-details-light,
+.billing-details-light{
+  background-color:#fcfcfc;
+  color:#1b1a21;
+  border:1px solid #dbdcef;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
+}
+.contact-details .contact-header , .contact-details-light .contact-header{
   display: flex;
   /* justify-content: space-between; */
   /* align-items: center; */
@@ -103,15 +119,29 @@
 .billing-card {
   border-radius: 10px;
   background-color: var(--secondary-text-color);
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.billing-card-light{
+  background-color: #f5f5f5;
+  /* box-shadow: 0 3px 10px rgb(0 0 0 / 0.2); */
+
 }
 
 .billing-card {
   flex: 0 0 200px;
   opacity: 1;
   transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  -ms-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
 }
 
-.contact-details h3,
+.contact-details h3, 
 .billing-details h3 {
   font-size: 22px;
   font-weight: 500;
@@ -120,7 +150,7 @@
 
 /* Contact Details Form */
 
-.account-section {
+.account-section, .account-section-light {
   line-height: 1.7;
 }
 
@@ -142,7 +172,12 @@
   color: rgb(200, 199, 199);
 }
 
-.account-section input {
+
+
+.contact-details-light .form-input-group label{
+  color:#1b1a21;
+}
+.account-section input, .account-section-light input {
   background-color: rgba(41, 40, 40, 0.921);
   border: none;
   padding: 25px 10px;
@@ -156,6 +191,20 @@
   -moz-border-radius: 12px;
   -ms-border-radius: 12px;
   -o-border-radius: 12px;
+}
+
+.account-section-light input{
+  color:#1b1a21;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.17);
+
+}
+
+.contact-details-light h3, 
+.billing-details-light h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 15px;
 }
 
 .btnSave {

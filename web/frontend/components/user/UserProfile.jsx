@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCurrentPlan } from "../../app/features/current_plan/current_plan";
 import { fetchAllpricing } from "../../app/features/pricing/pricing";
 import DataTable from "react-data-table-component";
-
+import { useThemeContext } from "../../contexts/ThemeContext";
 // Billing Details Table Custom Styles
 const billingStyles = {
   headCells: {
@@ -84,11 +84,91 @@ const billingStyles = {
     },
   },
 };
+
+
+const billingStylesLight={
+  headCells: {
+    style: {
+      fontSize: "15px",
+      fontWeight: "semi-bold",
+      paddingLeft: "0 6px",
+      justifyContent: "center",
+      color: "#030303",
+      backgroundColor: "#f3f5f6",
+      border: "1px solid black",
+    boxShadow: "0 2px 5px rgb(0 0 0 / 0.15)"
+
+      // width: "20px"
+    },
+  },
+  cells: {
+    style: {
+      textAlign: "center",
+      alignItems: "center",
+      justifyContent: "center",
+      border: "none",
+      borderLeft: "1px solid #000",
+      borderRight: "1px solid #000",
+      borderBottom: "1px solid #000",
+    },
+  },
+  rows: {
+    style: {
+      backgroundColor: "#f5f5f5",
+      color: "#000",
+      textAlign: "center",
+    },
+    highlightOnHoverStyle: {
+      color: "#000",
+      backgroundColor: "#cad2d5",
+      transitionDuration: "0.15s",
+      transitionProperty: "background-color",
+      borderBottomColor: "black",
+      outlineStyle: "solid",
+      outlineWidth: "1px",
+      outlineColor: "lightgray",
+    },
+  },
+  pagination: {
+    style: {
+      color: "#000",
+      fontSize: "13px",
+      minHeight: "56px",
+      backgroundColor: "#f5f5f5",
+      border: "1px solid #000",
+      borderTop: "none",
+    },
+    pageButtonsStyle: {
+      borderRadius: "50%",
+      height: "20px",
+      width: "30px",
+      padding: "4px",
+      margin: "px",
+      cursor: "pointer",
+      transition: "0.4s",
+      color: "#333",
+      fill: "f3f3f3",
+      backgroundColor: "transparent",
+      "&:disabled": {
+        cursor: "unset",
+        color: "#000",
+        fill: "#000",
+      },
+      "&:hover:not(:disabled)": {
+        backgroundColor: "#gray",
+      },
+      "&:focus": {
+        outline: "none",
+        backgroundColor: "#000",
+      },
+    },
+  },
+}
 const UserProfile = () => {
   const data = useSelector(fetchUserDetails);
   const priceData = useSelector(fetchAllpricing);
   const billingPlan = useSelector(fetchCurrentPlan);
-
+  const { theme } = useThemeContext();
   const [subscribeMessage, setSubscribeMessage] = useState("");
 
   const [userDetails, setUserDetails] = useState();
@@ -198,13 +278,21 @@ const UserProfile = () => {
 
   return (
     <div className="user-container">
-      <div className="account-section">
+      <div
+        className={
+          theme === "dark" ? "account-section" : "account-section-light"
+        }
+      >
         <div className="account-title">
           <h2>Account Details</h2>
         </div>
 
         {/* Contact Details Form */}
-        <div className="contact-details">
+        <div
+          className={
+            theme === "dark" ? "contact-details" : "contact-details-light"
+          }
+        >
           <h3>Contact Details </h3>
 
           <div className="form-section">
@@ -264,7 +352,11 @@ const UserProfile = () => {
         </div>
 
         {/* Billing Details with All Pricing Cards */}
-        <div className="billing-details">
+        <div
+          className={
+            theme === "dark" ? "billing-details" : "billing-details-light"
+          }
+        >
           <h3>Billing Details</h3>
           <p>{subscribeMessage}</p>
 
@@ -274,7 +366,7 @@ const UserProfile = () => {
                 {priceCard?.length > 0 ? (
                   priceCard?.map((card, index) => {
                     return (
-                      <div key={index} style={{}} className="billing-card">
+                      <div key={index} style={{}} className={theme === "dark"?"billing-card":"billing-card-light"}>
                         <BillingCard
                           className="card"
                           key={card.id}
@@ -291,7 +383,7 @@ const UserProfile = () => {
                 <DataTable
                   columns={billingColumns}
                   data={tableData}
-                  customStyles={billingStyles}
+                  customStyles={theme === "dark"?billingStyles: billingStylesLight}
                   pagination
                   highlightOnHover
                 />
