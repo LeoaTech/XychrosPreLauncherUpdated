@@ -17,7 +17,7 @@
   color: var(--secondary-text-color);
 }
 
-.datatable {
+.datatable, .datatable-light {
   padding: 20px 0;
   height: 100%;
   width: 93%;
@@ -38,6 +38,8 @@
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
 }
 
 /* .rdt_TableHeadRow,
@@ -45,19 +47,19 @@
 
  */
 
-.rdt_TableCol {
+.datatable.rdt_TableCol , .datatable-light.rdt_TableCol {
   background-color: #282727;
   border: 1px solid rgb(245, 242, 242);
 }
 
-.rdt_TableHeadRow {
+.datatable.rdt_TableHeadRow, .datatable-light.rdt_TableHeadRow {
   border: none;
   border-top-right-radius: 15px;
   border-top-left-radius: 15px;
   border-bottom: 1px solid rgb(239, 239, 239);
 }
 
-.rdt_TableCell {
+.datatable.rdt_TableCell, .datatable-light.rdt_TableCell {
   border: 1px solid rgb(214, 208, 208);
   border-right: 1px solid rgb(249, 246, 246);
 }
