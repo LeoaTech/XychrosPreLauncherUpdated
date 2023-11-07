@@ -7,7 +7,7 @@
 
 .actionbtn,
 .deletebtn {
-  color: var(--primary-color);
+  color: rgb(103, 102, 102);
   font-size: 25px;
   cursor: pointer;
 }

@@ -32,8 +32,8 @@ export const customStyles = {
       border: "none",
     },
     highlightOnHoverStyle: {
-      color: "#ccc",
-      backgroundColor: "#3D3938",
+      color: "#333",
+      backgroundColor: "lightgray",
       transitionDuration: "0.15s",
       transitionProperty: "background-color",
       borderBottomColor: "white",
