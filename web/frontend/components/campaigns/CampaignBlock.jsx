@@ -18,6 +18,7 @@ import ToggleSwitch from "./toggleSwitch/ToggleSwitch";
 import SkeletonShortSummaryCard from "../loading_skeletons/SkeletonShortSummaryCard";
 import { DeleteModal, AlertInfoModal } from "../modal/index";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { useThemeContext } from "../../contexts/ThemeContext";
 
 // const DeleteModal = lazy(() => import("../modal/DeleteModal"));
 // const ToggleSwitch = lazy(() => import("./toggleSwitch/ToggleSwitch"));
@@ -50,6 +51,7 @@ export default function CampaignBlock({
     rewards_template_link,
   } = data;
 
+  const { theme } = useThemeContext();
   const [alertModal, setAlertModal] = useState(false);
 
   const [hovered, setHovered] = useState(true);
@@ -58,7 +60,28 @@ export default function CampaignBlock({
     // backgroundColor: is_active ? "#e0e0e0" : "",
     cursor: is_active ? "default" : "pointer",
     pointerEvents: is_active ? "none" : "auto",
-    color: is_active ? "#C0C0C0	" : "#e0e0e0",
+    color:
+      theme === "dark"
+        ? is_active
+          ? "#C0C0C0	"
+          : "#e0e0e0"
+        : is_active
+        ? "#000"
+        : "gray",
+  };
+
+  const campaignActionDeleteButtonStyle = {
+    // backgroundColor: is_active ? "#e0e0e0" : "",
+    cursor: is_active ? "default" : "pointer",
+    pointerEvents: is_active ? "none" : "auto",
+    color:
+      theme === "dark"
+        ? is_active
+          ? "crimson	"
+          : "#CB624C"
+        : is_active
+        ? "#cb624c"
+        : "crimson",
   };
 
   const campaignActionMessage = is_active ? "This campaign is active" : "";
@@ -110,12 +133,22 @@ export default function CampaignBlock({
 
   return (
     <>
-      <div className={`campaign-block ${is_deactivated ? "deactive" : ""}`}>
+      <div
+        className={
+          theme === "dark"
+            ? `campaign-block ${is_deactivated ? "deactive" : ""}`
+            : `campaign-block-light ${is_deactivated ? "deactive" : ""}`
+        }
+      >
         <div className="campaign-details">
           <div
-            className={`camapign-block-name ${
-              is_deactivated ? "deactive" : ""
-            }`}
+            className={
+              theme === "dark"
+                ? `camapign-block-name ${is_deactivated ? "deactive" : ""}`
+                : `camapign-block-name-light ${
+                    is_deactivated ? "deactive" : ""
+                  }`
+            }
             data-tooltip-id={
               is_deactivated ? "deactivate-campaigns-tooltip" : ""
             }
@@ -141,9 +174,15 @@ export default function CampaignBlock({
 
           <Link
             to={product}
-            className={`campaign-block-product-name ${
-              is_deactivated ? "deactive" : ""
-            }`}
+            className={
+              theme === "dark"
+                ? `campaign-block-product-name ${
+                    is_deactivated ? "deactive" : ""
+                  }`
+                : `campaign-block-product-name-light ${
+                    is_deactivated ? "deactive" : ""
+                  }`
+            }
             data-tooltip-id={
               is_deactivated ? "deactivate-campaigns-tooltip" : ""
             }
@@ -159,7 +198,11 @@ export default function CampaignBlock({
           </div>
         </div>
         <div
-          className="campaign_center_links"
+          className={
+            theme === "dark"
+              ? "campaign_center_links"
+              : "campaign_center_links_light"
+          }
           data-tooltip-id={is_deactivated ? "deactivate-pages-tooltip" : ""}
         >
           <div
@@ -235,7 +278,7 @@ export default function CampaignBlock({
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
                 is_deactivated={is_deactivated}
-                value={234567 || referralsById}
+                value={referralsById}
                 icon={subscriber}
                 className="referral-icon"
               />
@@ -244,7 +287,7 @@ export default function CampaignBlock({
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
                 is_deactivated={is_deactivated}
-                value={234567 || campaign_clicks}
+                value={campaign_clicks}
                 icon={arrow}
                 className="clicks-icon"
               />
@@ -253,7 +296,7 @@ export default function CampaignBlock({
               <ShortSummaryCard
                 value={
                   campaign_revenue === 0
-                    ? 234569
+                    ? 0
                     : TotalRevenueList[0]?.currency + campaign_revenue
                 }
                 icon={Sale}
@@ -266,7 +309,6 @@ export default function CampaignBlock({
         <div className="campaign-actions">
           {is_deactivated ? (
             <MdOfflineBolt
-              // MdBlock
               data-tooltip-id="deactivate-campaigns-tooltip"
               className="deactivated"
               style={{ height: 24, width: 24, color: "crimson" }}
@@ -300,12 +342,15 @@ export default function CampaignBlock({
               </IconContext.Provider>
               <IconContext.Provider
                 value={{
-                  color: "red",
+                  color: "crimson",
                   size: 24,
                 }}
                 disabled={!is_active}
               >
-                <div className="icon-image" style={campaignActionButtonStyle}>
+                <div
+                  className="icon-image"
+                  style={campaignActionDeleteButtonStyle}
+                >
                   <RiDeleteBin6Line
                     onClick={() => {
                       setDeleteId(campaign_id);
@@ -319,10 +364,9 @@ export default function CampaignBlock({
                         ? {
                             height: 24,
                             width: 24,
-                            color: "#CB624C",
                             cursor: "default",
                           }
-                        : { height: 24, width: 24, color: "red" }
+                        : { height: 24, width: 24 }
                     }
                   />
                   <div>
