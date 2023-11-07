@@ -5,12 +5,27 @@
   background-color:var(--secondary-text-color);
 }
 
+
+.chart-light {
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  border-radius: 6px;
+  margin-top: 30px;
+  background-color:#fbfbfb;
+  color:#000;
+}
+
 .chart-header {
   padding: 25px 5%;
   border-bottom: 2px solid #ececec;
 }
 
-.chart-heading {
+
+.chart-header-light{
+  padding: 25px 5%;
+  border-bottom: 2px solid #000;
+}
+
+.chart-heading, .chart-heading-light {
   /* font-family: 'Roboto'; */
   font-style: normal;
   font-weight: 600;
@@ -19,7 +34,7 @@
   color: #b0adad;
 }
 
-.chart-value {
+.chart-value, .chart-value-light {
   /* font-family: 'Roboto'; */
   font-style: normal;
   font-weight: 500;
@@ -29,7 +44,7 @@
   color: var(--primary-color);
 }
 
-.chart-subheading {
+.chart-subheading, .chart-subheading-light {
   /* font-family: 'Roboto'; */
   font-style: normal;
   font-weight: 400;
@@ -38,7 +53,12 @@
   color: #f1eeee;
 }
 
-.chart canvas {
+
+.chart-heading-light, .chart-subheading-light, .chart-value-light{
+  color:#000
+}
+
+.chart canvas, .chart-light canvas {
   margin: 2% 3%;
   max-height: 300px;
 }
@@ -54,7 +74,21 @@
   flex: 1 1 1px;
 }
 
-.dual-charts #donut canvas {
+.dual-charts-light #radar canvas {
+  color:black;
+  flex: 1 1 1px;
+}
+
+.dual-charts #donut canvas{
+  /* max-width: 572px !important;
+  max-height: 400px !important; */
+  flex: 1 1 1px;
+  
+}
+
+
+
+.dual-charts-light #donut canvas{
   /* max-width: 572px !important;
   max-height: 400px !important; */
   flex: 1 1 1px;
