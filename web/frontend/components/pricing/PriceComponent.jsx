@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllpricing } from "../../app/features/pricing/pricing";
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
 import { useAuthenticatedFetch } from "../../hooks";
+import { useThemeContext } from "../../contexts/ThemeContext";
 import {
   fetchCurrentPlan,
   fetchSavePlan,
@@ -15,7 +16,7 @@ import {
 const PriceComponent = () => {
   const priceData = useSelector(fetchAllpricing); //Get all Pricing Details Cards
   const activePlan = useSelector(fetchCurrentPlan); //Current Active Plan
-
+  const { theme } = useThemeContext();
   const [pricePlans, setPricePlans] = useState([]);
   const [isLoading, setIsloading] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -218,17 +219,27 @@ const PriceComponent = () => {
   };
 
   return (
-    <div className="pricing-container">
+    <div
+      className={
+        theme === "dark" ? "pricing-container" : "pricing-container-light"
+      }
+    >
       <div className="pricing-title">
         <h2>Select Your Plan</h2>
       </div>
       <div className="price-details-container">
         {priceData?.length > 0 && (
           <div className="action-click-btn">
-            <button className="clickPrev" onClick={handleClickPrev}>
+            <button
+              className={theme === "dark" ? "clickPrev" : "clickPrev-light"}
+              onClick={handleClickPrev}
+            >
               <AiOutlineArrowLeft style={{ height: 19, width: 19 }} />
             </button>
-            <button className="clickNext" onClick={handleClickNext}>
+            <button
+              className={theme === "dark" ? "clickNext" : "clickNext-light"}
+              onClick={handleClickNext}
+            >
               <AiOutlineArrowRight style={{ height: 19, width: 19 }} />
             </button>
           </div>
@@ -254,9 +265,15 @@ const PriceComponent = () => {
                       currentCardIndex * (cardWidth + 10)
                     }px)`,
                   }}
-                  className={`pricing-card ${
-                    isCurrentSubscribedPlan ? "active" : ""
-                  }`}
+                  className={
+                    theme === "dark"
+                      ? `pricing-card ${
+                          isCurrentSubscribedPlan ? "active" : ""
+                        }`
+                      : `pricing-card-light ${
+                          isCurrentSubscribedPlan ? "active" : ""
+                        }`
+                  }
                 >
                   <PricingBlock
                     id={price?.id}
@@ -268,6 +285,7 @@ const PriceComponent = () => {
                     handlePlanSubscribe={handlePlanSubscribe}
                     isSubscribed={price.id === subscribedPlanId}
                     subscribedPlanId={subscribedPlanId}
+                    theme={theme}
                   />
                 </div>
               );
@@ -279,7 +297,9 @@ const PriceComponent = () => {
       </div>
       {priceData?.length > 0 && (
         <div className="pricing-add-ons">
-          <div className="add-on-card">
+          <div
+            className={theme == "dark" ? "add-on-card" : "add-on-card-light"}
+          >
             <div>
               <label>Select Add-ons</label>
               <label>price</label>
@@ -300,9 +320,13 @@ const PriceComponent = () => {
                 <button
                   disabled={isSubscribing || activePlan?.collecting_phones}
                   className={
-                    activePlan?.collecting_phones || isSubscribing
-                      ? "btn-confirmed disabled"
-                      : "btn-confirmed"
+                    theme === "dark"
+                      ? activePlan?.collecting_phones || isSubscribing
+                        ? "btn-confirmed disabled"
+                        : "btn-confirmed"
+                      : activePlan?.collecting_phones || isSubscribing
+                      ? "btn-confirmed-light disabled"
+                      : "btn-confirmed-light"
                   }
                   onClick={handleConfirmAddOn}
                 >

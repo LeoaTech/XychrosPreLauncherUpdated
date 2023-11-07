@@ -13,6 +13,7 @@ const PricingBlock = ({
   isLoading,
   isSubscribed,
   subscribedPlanId,
+  theme,
 }) => {
   const isDisabled = subscribedPlanId === id;
 
@@ -58,7 +59,15 @@ const PricingBlock = ({
       <div className="price-bottom">
         {price && <h2>${`${price}/month`}</h2>}
         <button
-          className={isDisabled ? "btn-subscribe disabled" : "btn-subscribe"}
+          className={
+            theme == "dark"
+              ? isDisabled
+                ? "btn-subscribe disabled"
+                : "btn-subscribe"
+              : isDisabled
+              ? "btn-subscribe-light disabled"
+              : "btn-subscribe-light"
+          }
           disabled={isDisabled}
           onClick={() => handlePlanSubscribe(id)}
         >
