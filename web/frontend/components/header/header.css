@@ -70,6 +70,9 @@
   /* margin-right: 30px; */
 }
 
+.theme-toggle-icon{
+  color:red;
+}
 .right-links button {
   border: none;
   display: flex;

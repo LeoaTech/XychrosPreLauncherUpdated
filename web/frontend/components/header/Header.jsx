@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { MdOutlinePriceChange } from "react-icons/md";
+import {
+  MdOutlinePriceChange,
+  MdLightMode,
+  MdNightlightRound,
+} from "react-icons/md";
 import { CgNotes } from "react-icons/cg";
-import { FaUser} from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import "./header.css";
 
 import { useStateContext } from "../../contexts/ContextProvider";
-import { ViralLaunch } from "../../assets/index";
+import { BlackLogo, ViralLaunch } from "../../assets/index";
 import { Link } from "react-router-dom";
+import { useThemeContext } from "../../contexts/ThemeContext";
 
 const NavButton = ({ title, customFunction, color, icon, dotColor }) => (
   <span>
@@ -33,6 +38,7 @@ const Header = () => {
     screenSize,
     setScreenSize,
   } = useStateContext();
+  const { theme, setTheme } = useThemeContext();
   const [isActive, setIsActive] = useState(false);
   useEffect(() => {
     const handleResize = () => {
@@ -55,12 +61,19 @@ const Header = () => {
     }
   }, [screenSize]);
 
+  const profileActionButton = {
+    cursor: "pointer",
+    color: theme === "dark" ? "#fff" : "#000",
+    height: 20,
+    width: 22,
+  };
+
   return (
     <div className="navbar__container">
       <div className="left">
         <NavButton
           customFunction={() => setActiveMenu(!activeMenu)}
-          color="#fff"
+          color={theme === "dark" ? "#fff" : "#000"}
           icon={<AiOutlineMenu style={{ height: 24, width: 24 }} />}
         />
       </div>
@@ -82,28 +95,54 @@ const Header = () => {
       </div>
       <div className="center">
         {/* logo */}
-        <img
-          src={ViralLaunch}
-          alt="XychrosLogo"
-        // onClick={() => setActiveMenu(!activeMenu)}
-        />
+        {theme === "dark" ? (
+          <img
+            src={ViralLaunch}
+            alt="Viral Launch"
+            // onClick={() => setActiveMenu(!activeMenu)}
+          />
+        ) : (
+          <img
+            src={BlackLogo}
+            alt="Viral Launch"
+            // onClick={() => setActiveMenu(!activeMenu)}
+          />
+        )}
       </div>
 
       <div className="right">
         {/* price , profile,faq*/}
         <div className="right-links">
+          <div className="theme-toggle-icon">
+            {theme === "dark" && (
+              <MdNightlightRound
+                onClick={() => setTheme("light")}
+                style={{
+                  height: 20,
+                  width: 24,
+                  marginTop: "5px",
+                  color:"#FFF"
+                }}
+              />
+            )}
+            {theme === "light" && (
+              <MdLightMode
+                onClick={() => setTheme("dark")}
+                style={{
+                  height: 20,
+                  width: 24,
+                  marginTop: "5px",
+                  color:"black"
+                }}
+              />
+            )}{" "}
+          </div>
           <Link to="/price" onClick={() => setIsActive(true)}>
             <NavButton
               title="Pricing"
-              className={({ isActive }) =>
-                isActive ? "" : "header-links"
-              }
-              color="#fff"
-              icon={
-                <MdOutlinePriceChange
-                  style={{ height: 24, width: 24 }}
-                />
-              }
+              className={({ isActive }) => (isActive ? "" : "header-links")}
+              color={theme === "dark" ? "#fff" : "#000"}
+              icon={<MdOutlinePriceChange style={{ height: 24, width: 24 }} />}
             />
           </Link>
 
@@ -121,12 +160,8 @@ const Header = () => {
           </Link> */}
           <div>
             <Link to="/userprofile">
-              <div
-                className="userProfile"
-              >
-                <FaUser
-                  style={{ height: 20, width: 22, color: "#fff" }}
-                />
+              <div className="userProfile">
+                <FaUser style={profileActionButton} />
               </div>
             </Link>
           </div>
