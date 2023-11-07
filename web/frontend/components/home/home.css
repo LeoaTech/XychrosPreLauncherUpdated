@@ -23,7 +23,7 @@
   margin-left: 1.1%;
 }
 
-.dual-charts {
+.dual-charts, .dual-charts-light {
   max-width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -32,6 +32,44 @@
 .dual-charts div.chart {
   width: 44%;
   margin: 15px 1%;
+}
+
+.dual-charts-light div.chart-light {
+  width: 44%;
+  margin: 15px 1%;
+}
+
+
+.No-data-section {
+  padding: 20px 30px;
+  margin: 0 10px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-right: 2%;
+}
+
+.No-data-card{
+  width: 600px;
+  height: 300px;
+  margin-top: 20px;
+  background-color:#fbfbfb;
+  border-radius: 12px;
+  padding: 25px 7rem;
+  word-break: keep-all;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+  text-align: center;
+  font-size: 32px;
+  font-style: normal;
+  color: #2a2929;
+  font-weight: 400;
+  line-height: normal;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
 }
 
 @media screen and (max-width: 1480px) {

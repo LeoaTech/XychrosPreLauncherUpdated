@@ -1,43 +1,65 @@
-import './HomeComponent.css';
-import './home.css';
-import { intro, about, arrow, Marketing, subscriber, Sale } from '../../assets/index';
-import Charts from '../ui/Charts';
-import React, { useState, useEffect, Fragment, lazy, Suspense } from 'react';
-import { useStateContext } from '../../contexts/ContextProvider';
-import { useDispatch, useSelector } from 'react-redux';
-import { useAuthenticatedFetch } from '../../hooks';
-import SkeletonSummaryCard from '../loading_skeletons/SkeletonSummaryCard';
-import LoadingSkeleton from '../loading_skeletons/LoadingSkeleton';
-import { fetchAllCampaigns, fetchLastActiveCampaign, fetchAllSixMonthsCampaigns } from '../../app/features/campaigns/campaignSlice';
-import { fetchAllReferrals, fetchLastFourCampaignsReferrals, fetchAllSixMonthsReferrals } from '../../app/features/referrals/referralSlice';
-import { fetchAllCampaignClicks } from '../../app/features/user_clicks/totalclicksSlice';
-import { fetchAllLastSixMonthsClicks } from '../../app/features/user_clicks/lastSixMonthsClicksSlice';
-import { fetchAllLastFourCampaignsClicks } from '../../app/features/user_clicks/lastFourCampaignsClicksSlice';
-import { fetchCampaignsDetailsList } from '../../app/features/campaign_details/campaign_details';
-import { fetchAllCampaignsRevenue } from '../../app/features/revenue/totalRevenueSlice';
-import { fetchAllLastSixMonthsRevenue } from '../../app/features/revenue/lastSixMonthsRevenueSlice';
+import "./HomeComponent.css";
+import "./home.css";
+import {
+  intro,
+  about,
+  arrow,
+  Marketing,
+  subscriber,
+  Sale,
+} from "../../assets/index";
+import Charts from "../ui/Charts";
+import React, { useState, useEffect, Fragment, lazy, Suspense } from "react";
+import { useStateContext } from "../../contexts/ContextProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { useAuthenticatedFetch } from "../../hooks";
+import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
+import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
+import {
+  fetchAllCampaigns,
+  fetchLastActiveCampaign,
+  fetchAllSixMonthsCampaigns,
+} from "../../app/features/campaigns/campaignSlice";
+import {
+  fetchAllReferrals,
+  fetchLastFourCampaignsReferrals,
+  fetchAllSixMonthsReferrals,
+} from "../../app/features/referrals/referralSlice";
+import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
+import { fetchAllLastSixMonthsClicks } from "../../app/features/user_clicks/lastSixMonthsClicksSlice";
+import { fetchAllLastFourCampaignsClicks } from "../../app/features/user_clicks/lastFourCampaignsClicksSlice";
+import { fetchCampaignsDetailsList } from "../../app/features/campaign_details/campaign_details";
+import { fetchAllCampaignsRevenue } from "../../app/features/revenue/totalRevenueSlice";
+import { fetchAllLastSixMonthsRevenue } from "../../app/features/revenue/lastSixMonthsRevenueSlice";
+import { useThemeContext } from "../../contexts/ThemeContext";
 
-const SummaryCard = lazy(() => import('../ui/SummaryCard'));
+const SummaryCard = lazy(() => import("../ui/SummaryCard"));
 
 const HomeComponent = () => {
   const dispatch = useDispatch();
+  const { theme } = useThemeContext();
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
   const ReferralList = useSelector(fetchAllReferrals);
   const TotalClicksList = useSelector(fetchAllCampaignClicks);
   const TotalRevenueList = useSelector(fetchAllCampaignsRevenue);
-  const LastFourCampaignsReferralsList = useSelector(fetchLastFourCampaignsReferrals);
-  const LastFourCampaignsClicksList = useSelector(fetchAllLastFourCampaignsClicks);
+  const LastFourCampaignsReferralsList = useSelector(
+    fetchLastFourCampaignsReferrals
+  );
+  const LastFourCampaignsClicksList = useSelector(
+    fetchAllLastFourCampaignsClicks
+  );
   const SixMonthCampaignList = useSelector(fetchAllSixMonthsCampaigns);
   const SixMonthReferralList = useSelector(fetchAllSixMonthsReferrals);
   const LastSixMonthsClicksList = useSelector(fetchAllLastSixMonthsClicks);
   const LastSixMonthsRevenueList = useSelector(fetchAllLastSixMonthsRevenue);
   const lastActiveCampaign = useSelector(fetchLastActiveCampaign);
-  
+
   const [campaignsList, setCampaignsList] = useState([]);
   const [getReferrals, setReferrals] = useState([]);
   const [getTotalClicks, setTotalClicks] = useState([]);
   const [getTotalRevenue, setTotalRevenue] = useState([]);
-  const [getLastFourCampaignsReferrals, setLastFourCampaignsReferrals] = useState([]);
+  const [getLastFourCampaignsReferrals, setLastFourCampaignsReferrals] =
+    useState([]);
   const [getLastFourCampaignsClicks, setLastFourCampaignsClicks] = useState([]);
   const [getSixMonthsCampaignsList, setSixMonthsCampaignsList] = useState([]);
   const [getSixMonthsReferralsList, setSixMonthsReferralsList] = useState([]);
@@ -61,7 +83,9 @@ const HomeComponent = () => {
 
   // Get Last Campaigns Total Revenue
   let last_campaign_revenue;
-  const lastCampaignRevenueInfo = TotalRevenueList?.find((item) => item.campaign_id === lastActiveCampaign?.campaign_id);
+  const lastCampaignRevenueInfo = TotalRevenueList?.find(
+    (item) => item.campaign_id === lastActiveCampaign?.campaign_id
+  );
   if (lastCampaignRevenueInfo) {
     last_campaign_revenue = lastCampaignRevenueInfo.campaign_revenue;
   }
@@ -121,7 +145,10 @@ const HomeComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue.toFixed(2));
+      setTotalRevenue(
+        TotalRevenueList[0].currency +
+          TotalRevenueList[0].total_revenue.toFixed(2)
+      );
     }
   }, [TotalRevenueList, dispatch]);
 
@@ -141,7 +168,7 @@ const HomeComponent = () => {
     const tempDate = new Date(currentYear, currentMonth - index, 1);
     tempDate.setMonth(tempDate.getMonth());
 
-    const labelMonth = tempDate.toLocaleString('default', { month: 'long' });
+    const labelMonth = tempDate.toLocaleString("default", { month: "long" });
     return labelMonth;
   }).reverse();
   // console.log(chartLabels);
@@ -163,7 +190,7 @@ const HomeComponent = () => {
     });
   }
   let finalClicks = chartClicks.reverse();
-  
+
   if (getLastSixMonthsRevenue.length > 0) {
     getLastSixMonthsRevenue.forEach((entry) => {
       const entryDate = new Date(entry.created_month);
@@ -173,32 +200,37 @@ const HomeComponent = () => {
       const monthIndex =
         (currentYear - entryYear) * 12 + (currentMonth - entryMonth);
 
-      chartRevenue[monthIndex] = parseFloat(entry.total_months_revenue.toFixed(2));
+      chartRevenue[monthIndex] = parseFloat(
+        entry.total_months_revenue.toFixed(2)
+      );
     });
   }
   let finalRevenue = chartRevenue.reverse();
 
   // Get Total Revenue For Last Six Months
   let six_months_total_revenue;
-  if(getLastSixMonthsRevenue.length > 0) {
-    const lastSixMonthsTotalRevenue = finalRevenue?.slice(0, 6).reduce((acc, currentValue) => acc + currentValue, 0);
-    six_months_total_revenue = TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue.toFixed(2);
+  if (getLastSixMonthsRevenue.length > 0) {
+    const lastSixMonthsTotalRevenue = finalRevenue
+      ?.slice(0, 6)
+      .reduce((acc, currentValue) => acc + currentValue, 0);
+    six_months_total_revenue =
+      TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue.toFixed(2);
   }
 
   // --------------------- Constructing Line Chart -----------------
   const LineChartOptions = {
     responsive: true,
     animation: {
-      easing: 'easeInOutQuad',
+      easing: "easeInOutQuad",
       duration: 520,
     },
     scales: {
       x: {
         grid: {
-          color: '#fff',
+          color: "#fff",
         },
         ticks: {
-          color: '#fff',
+          color: "#fff",
         },
       },
       y: {
@@ -206,11 +238,11 @@ const HomeComponent = () => {
           display: true,
         },
         grid: {
-          color: '#fff',
+          color: "#fff",
         },
         ticks: {
-          color: '#fff',
-          crossAlign: 'far',
+          color: "#fff",
+          crossAlign: "far",
           beginAtZero: true,
         },
       },
@@ -224,19 +256,19 @@ const HomeComponent = () => {
       display: false,
     },
     point: {
-      backgroundColor: 'white',
+      backgroundColor: "white",
     },
     tooltips: {
-      titleFontFamily: 'Open Sans',
-      backgroundColor: 'rgba(0,0,0,0.3)',
-      titleFontColor: 'red',
+      titleFontFamily: "Open Sans",
+      backgroundColor: "rgba(0,0,0,0.3)",
+      titleFontColor: "red",
       caretSize: 5,
       cornerRadius: 2,
       xPadding: 10,
       yPadding: 10,
     },
     labels: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
 
       // This more specific font property overrides the global property
       font: {
@@ -248,9 +280,9 @@ const HomeComponent = () => {
         propagate: true,
       },
       legend: {
-        position: 'bottom',
+        position: "bottom",
         labels: {
-          color: '#FFFFFF',
+          color: "#FFFFFF",
 
           // This more specific font property overrides the global property
           font: {
@@ -264,38 +296,96 @@ const HomeComponent = () => {
     },
   };
 
+  const LineChartOptionsLight = {
+    ...LineChartOptions,
+    scales: {
+      x: {
+        grid: {
+          color: "#333",
+        },
+        ticks: {
+          color: "#333",
+        },
+      },
+      y: {
+        grid: {
+          color: "#000",
+        },
+        ticks: {
+          color: "#000",
+          crossAlign: "far",
+          beginAtZero: true,
+        },
+      },
+    },
+
+    point: {
+      backgroundColor: "white",
+    },
+    tooltips: {
+      titleFontFamily: "Open Sans",
+      backgroundColor: "rgba(0,0,0,0.3)",
+      titleFontColor: "red",
+      caretSize: 5,
+      cornerRadius: 2,
+      xPadding: 10,
+      yPadding: 10,
+    },
+    labels: {
+      color: "#000",
+
+      // This more specific font property overrides the global property
+      font: {
+        size: 14,
+      },
+    },
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          color: "#000",
+
+          // This more specific font property overrides the global property
+          font: {
+            size: 14,
+          },
+        },
+      },
+    },
+  };
+
   const LineChartData = {
     labels: chartLabels,
     datasets: [
       {
-        label: 'Revenue',
+        label: "Revenue",
         data: finalRevenue,
-        borderColor: '#E1DD8F',
-        backgroundColor: '#E1DD8F',
+        borderColor: "#E1DD8F",
+        backgroundColor: "#E1DD8F",
         borderDash: [5, 5],
-        fill: '',
+        fill: "",
       },
       {
-        label: 'Clicks',
+        label: "Clicks",
         data: finalClicks,
-        borderColor: '#5447df',
-        backgroundColor: '#5447df',
+        borderColor: "#5447df",
+        backgroundColor: "#5447df",
         borderDash: [10, 5],
-        fill: '',
+        fill: "",
       },
       {
-        label: 'Campaigns',
+        label: "Campaigns",
         data: getSixMonthsCampaignsList,
-        borderColor: '#E0777D',
-        backgroundColor: '#E0777D',
-        fill: '+2',
+        borderColor: "#E0777D",
+        backgroundColor: "#E0777D",
+        fill: "+2",
       },
       {
-        label: 'Referrals',
+        label: "Referrals",
         data: getSixMonthsReferralsList,
-        borderColor: '#A1F6F5',
-        backgroundColor: '#A1F6F5',
-        fill: 'origin',
+        borderColor: "#A1F6F5",
+        backgroundColor: "#A1F6F5",
+        fill: "origin",
       },
     ],
   };
@@ -310,7 +400,7 @@ const HomeComponent = () => {
   //     const formattedDate = date.toLocaleDateString('en-US', options);
   //     radarChartLabels.push(formattedDate);
   //   }
-  
+
   //   console.log(radarChartLabels);
   // }
 
@@ -328,25 +418,25 @@ const HomeComponent = () => {
           },
         },
         grid: {
-          color: '#fff',
+          color: "#fff",
         },
         pointLabels: {
-          color: '#fff',
+          color: "#fff",
         },
         ticks: {
-          color: '#fff',
-          backdropColor: 'transparent',
-          fontWeight: 'bold',
+          color: "#fff",
+          backdropColor: "transparent",
+          fontWeight: "bold",
         },
       },
     },
 
     plugins: {
       legend: {
-        position: 'bottom',
+        position: "bottom",
 
         labels: {
-          color: '#FFFFFF',
+          color: "#FFFFFF",
           font: {
             size: 14,
           },
@@ -362,28 +452,28 @@ const HomeComponent = () => {
     labels: chartLabels,
     datasets: [
       {
-        label: 'Revenue',
+        label: "Revenue",
         data: finalRevenue,
-        borderColor: 'rgba(22,91,170, 0.7)',
-        backgroundColor: 'rgba(22,91,170, 0.6)',
+        borderColor: "rgba(22,91,170, 0.7)",
+        backgroundColor: "rgba(22,91,170, 0.6)",
       },
       {
-        label: 'Clicks',
+        label: "Clicks",
         data: finalClicks,
-        borderColor: 'rgba(84, 71, 223, 0.7)',
-        backgroundColor: 'rgba(84, 71, 223, 0.4)',
+        borderColor: "rgba(84, 71, 223, 0.7)",
+        backgroundColor: "rgba(84, 71, 223, 0.4)",
       },
       {
-        label: 'Campaigns',
+        label: "Campaigns",
         data: getSixMonthsCampaignsList,
-        borderColor: 'rgba(245, 102, 128, 0.8)',
-        backgroundColor: 'rgba(245, 102, 128, 0.5)',
+        borderColor: "rgba(245, 102, 128, 0.8)",
+        backgroundColor: "rgba(245, 102, 128, 0.5)",
       },
       {
-        label: 'Referrals',
+        label: "Referrals",
         data: getSixMonthsReferralsList,
-        borderColor: 'rgba(161, 246, 245, 0.7)',
-        backgroundColor: 'rgba(161, 246, 245, 0.6)',
+        borderColor: "rgba(161, 246, 245, 0.7)",
+        backgroundColor: "rgba(161, 246, 245, 0.6)",
       },
     ],
   };
@@ -396,19 +486,21 @@ const HomeComponent = () => {
 
   // Loop through clicks details of last/latest four campaigns
   let sumOfLastFourCampaignsClicks;
-  if(getLastFourCampaignsClicks.length > 0) {
-      getLastFourCampaignsClicks.forEach((item) => {
+  if (getLastFourCampaignsClicks.length > 0) {
+    getLastFourCampaignsClicks.forEach((item) => {
       donutChart_labels.push(`${item.name}`);
       fourcampaigns_clicks.push(parseInt(item.campaign_clicks));
     });
     // Sum of the Last Four Campaigns' Clicks
-    sumOfLastFourCampaignsClicks = parseInt(getLastFourCampaignsClicks[0].total_fourcampaigns_clicks);
+    sumOfLastFourCampaignsClicks = parseInt(
+      getLastFourCampaignsClicks[0].total_fourcampaigns_clicks
+    );
   }
 
   // Loop through referrals details of last/latest four campaigns
   let sumOfLastFourCampaignsReferrals;
-  if(getLastFourCampaignsReferrals.length > 0) {
-      getLastFourCampaignsReferrals.forEach((item) => {
+  if (getLastFourCampaignsReferrals.length > 0) {
+    getLastFourCampaignsReferrals.forEach((item) => {
       donutChart_labels2.push(`${item.campaignName}`);
       four_campaigns_referrals.push(parseInt(item.totalReferrals));
     });
@@ -424,9 +516,28 @@ const HomeComponent = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'right',
+        position: "right",
         labels: {
-          color: '#FFFFFF',
+          color: "#FFFFFF",
+
+          // This more specific font property overrides the global property
+          font: {
+            size: 14,
+          },
+        },
+      },
+      title: {
+        display: false,
+      },
+    },
+  };
+  const DonutChartOptionsLight = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "right",
+        labels: {
+          color: "#000",
 
           // This more specific font property overrides the global property
           font: {
@@ -445,8 +556,8 @@ const HomeComponent = () => {
     datasets: [
       {
         data: fourcampaigns_clicks,
-        backgroundColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
-        borderColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
+        backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
+        borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
         borderWidth: 1,
       },
     ],
@@ -457,8 +568,8 @@ const HomeComponent = () => {
     datasets: [
       {
         data: four_campaigns_referrals,
-        backgroundColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
-        borderColor: ['#FFFF8F', '#A1F6F5', '#F56680', '#5447df'],
+        backgroundColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
+        borderColor: ["#FFFF8F", "#A1F6F5", "#F56680", "#5447df"],
         borderWidth: 1,
       },
     ],
@@ -467,116 +578,151 @@ const HomeComponent = () => {
   return (
     <div>
       {campaignsList.length === 0 ? (
-        <div className='home-container'>
+        <div
+          className={
+            theme === "dark" ? "home-container" : "home-container-light"
+          }
+        >
           <h2>Welcome to Viral Launch!</h2>
-          <div className='intro-section'>
-            <div className='intro-card'>
+          <div
+            className={
+              theme === "dark" ? "intro-section" : "intro-section-light"
+            }
+          >
+            <div
+              className={theme === "dark" ? "intro-card" : "intro-card-light"}
+            >
               <p>
                 New to Viral Launch? Get up to speed with everything about your
                 product/service launch!
               </p>
             </div>
-            <div className='intro-img'>
-              <img
-                src={intro}
-                alt='INTRO'
-                loading='lazy'
-              />
+            <div className="intro-img">
+              <img src={intro} alt="INTRO" loading="lazy" />
             </div>
           </div>
-          <div className='about-section'>
-            <div className='about-img'>
-              <img
-                src={about}
-                alt='About'
-              />
+          <div
+            className={
+              theme === "dark" ? "about-section" : "about-section-light"
+            }
+          >
+            <div className="about-img">
+              <img src={about} alt="About" />
             </div>
-            <div className='about-card'>
+            <div
+              className={theme === "dark" ? "about-card" : "about-card-light"}
+            >
               <p>
                 Create a new campaign and get your email database filled even
                 before you launch!
               </p>
             </div>
           </div>
-          <div className='contact-us-section'>
-            <div className='contact-us-card'>
+          <div
+            className={
+              theme === "dark"
+                ? "contact-us-section"
+                : "contact-us-section-light"
+            }
+          >
+            <div
+              className={
+                theme === "dark" ? "contact-us-card" : "contact-us-card-light"
+              }
+            >
               <p>Contact Us for further assistance and Feedback!</p>
             </div>
           </div>
         </div>
       ) : (
-        <div className='home-container'>
-          <div className='summary-blocks'>
+        <div className="home-container">
+          <div className="summary-blocks">
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
                 value={campaignsList?.length}
-                title='Campaigns'
+                title="Campaigns"
                 icon={Marketing}
-                class='campaign-icon'
+                class="campaign-icon"
               />
             </Suspense>
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
                 value={getReferrals?.length}
-                title='Referrals'
+                title="Referrals"
                 icon={subscriber}
-                class='referral-icon'
+                class="referral-icon"
               />
             </Suspense>
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
-                value={getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks}
-                title='Clicks'
+                value={
+                  getTotalClicks.length === 0
+                    ? 0
+                    : getTotalClicks[0].total_clicks
+                }
+                title="Clicks"
                 icon={arrow}
-                class='clicks-icon'
+                class="clicks-icon"
               />
             </Suspense>
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
-                  value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
-                  title='Revenue'
-                  icon={Sale}
-                  class='revenue-icon'
-                />
+                value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
+                title="Revenue"
+                icon={Sale}
+                class="revenue-icon"
+              />
             </Suspense>
           </div>
-          <div className='single-chart'>
+          <div className="single-chart">
             <Charts
-              type='line'
-              header='Total Revenue'
+              type="line"
+              header="Total Revenue"
               value={six_months_total_revenue || 0}
-              subheader='Last 6 Months Data'
-              LineChartOptions={LineChartOptions}
+              subheader="Last 6 Months Data"
+              LineChartOptions={
+                theme === "dark" ? LineChartOptions : LineChartOptionsLight
+              }
               LineChartData={LineChartData}
             />
           </div>
-          <div className='dual-charts'>
+          <div
+            className={theme === "dark" ? "dual-charts" : "dual-charts-light"}
+          >
             {getTotalClicks.length > 0 ? (
               <Charts
-                type='donut'
-                header='Total Clicks'
+                type="donut"
+                header="Total Clicks"
                 value={sumOfLastFourCampaignsClicks || 0}
-                subheader='Last 4 Campaigns Data'
-                DonutChartOptions={DonutChartOptions}
+                subheader="Last 4 Campaigns Data"
+                DonutChartOptions={
+                  theme === "dark" ? DonutChartOptions : DonutChartOptionsLight
+                }
                 DonutChartData={DonutChartData}
               />
             ) : (
-              <div className='intro-section'>
-                <div className='intro-card'><p>Last Four Campaigns Clicks Not Available Yet</p></div>
+              <div className="No-data-section">
+                <div className="No-data-card">
+                  <p>Last Four Campaigns Clicks Not Available Yet</p>
+                </div>
               </div>
             )}
             {getReferrals.length > 0 ? (
               <Charts
-                type='donut'
-                header='Total Referrals'
+                type="donut"
+                header="Total Referrals"
                 value={sumOfLastFourCampaignsReferrals || 0}
-                subheader='Last 4 Campaigns Data'
-                DonutChartOptions={DonutChartOptions}
+                subheader="Last 4 Campaigns Data"
+                DonutChartOptions={
+                  theme === "dark" ? DonutChartOptions : DonutChartOptionsLight
+                }
                 DonutChartData={DonutChartData2}
               />
             ) : (
-              <div className='intro-section'>
-                <div className='intro-card'><p>Last Four Campaigns Referrals Not Available Yet</p></div>
+              <div className="No-data-section">
+                <div className="No-data-card">
+                  <p>Last Four Campaigns Referrals Not Available Yet</p>
+                </div>
               </div>
             )}
           </div>

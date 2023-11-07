@@ -1,17 +1,25 @@
-.home-container h2 {
+.home-container h2,
+.home-container-light h2 {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 32px;
-  font-weight: 500;
+  font-weight: 600;
   color: #fff;
   margin-bottom: 20px;
   margin-top: 20px;
 }
 
+.home-container-light h2 {
+  color: #1b1a21;
+  font-weight: 600;
+}
 .intro-section,
 .about-section,
-.contact-us-section {
+.contact-us-section,
+.intro-section-light,
+.about-section-light,
+.contact-us-section-light {
   padding: 20px 30px;
   margin: 0 30px;
   padding: 0 20px;
@@ -20,6 +28,12 @@
   justify-content: center;
   align-items: flex-end;
   margin-right: 2%;
+}
+
+.intro-section-light,
+.about-section-light,
+.contact-us-section-light {
+  color: #1b1a21;
 }
 
 .about-section {
@@ -34,7 +48,10 @@
 
 .intro-card,
 .about-card,
-.contact-us-card {
+.contact-us-card,
+.intro-card-light,
+.about-card-light,
+.contact-us-card-light {
   width: 600px;
   height: 300px;
   margin-top: 20px;
@@ -53,9 +70,23 @@
   line-height: normal;
 }
 
+.intro-card-light,
+.about-card-light {
+  background-color: #fff;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
 .intro-img img {
   height: 260px;
   z-index: 1000;
+  /* background-color: rgba(255, 251, 251, 0.235); */
+  box-shadow: 0 3px 10px rgb(255 240 251 / 0.2);
+
+  border-radius:20px;
+  -webkit-border-radius:20px;
+  -moz-border-radius:20px;
+  -ms-border-radius:20px;
+  -o-border-radius:20px;
 }
 
 .about-img img {
@@ -74,7 +105,7 @@
   width: 400px;
 }
 
-.contact-us-card {
+.contact-us-card, .contact-us-card-light {
   background-color: #ccc7f8;
   height: 300px;
   color: #4f4f4f;
@@ -209,7 +240,8 @@
     padding: 10px;
   }
 
-  .about-card,.intro-card{
+  .about-card,
+  .intro-card {
     height: 220px;
   }
 
