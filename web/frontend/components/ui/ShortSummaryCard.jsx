@@ -1,6 +1,23 @@
 import "./ShortSummaryCard.css";
 
 const ShortSummaryCard = (props) => {
+
+    // Format Largest Number Value(Clicks,Revenue,TotalRevenue, Referrals and Total Campaigns)
+    function formatNumber(num) {
+      if (num >= 1000000000000) {
+        return (num / 1000000000).toFixed(1) + "T";
+      } else if (num >= 1000000000) {
+        return (num / 1000000000).toFixed(1) + "B";
+      } else if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + "M";
+      } else if (num >= 1000) {
+        return (num / 1000).toFixed(1) + "k";
+      } else {
+        return num.toString();
+      }
+    }
+
+  
   return (
     <div
       className={`short-summary-card ${
@@ -12,7 +29,7 @@ const ShortSummaryCard = (props) => {
           props?.is_deactivated ? "deactive" : ""
         }`}
       >
-        {props.value}
+       <span className="short-summary-card-currency">{props?.value > 0 ?  props?.currency: ''} </span> {formatNumber(props.value)}
       </div>
       <img
         src={props.icon}

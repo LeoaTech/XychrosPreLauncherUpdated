@@ -31,7 +31,6 @@ export default function CampaignBlock({
   setDeleteModal,
   deleteModal,
   deleteId,
-  editData,
   setDeleteId,
   campaignName,
   setCampaignName,
@@ -241,23 +240,31 @@ export default function CampaignBlock({
                 className="referral-icon"
               />
             </Suspense>
-            <Suspense fallback={<SkeletonShortSummaryCard />}>
-              <ShortSummaryCard
-                value={campaign_revenue === 0 ? 0 : TotalRevenueList[0]?.currency + campaign_revenue}
-                icon={Sale}
-                className="revenue-icon"
-              />
-            </Suspense>
+
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
                 is_deactivated={is_deactivated}
-                value={campaign_clicks || 0}
+                value={campaign_clicks}
                 icon={arrow}
                 className="clicks-icon"
               />
             </Suspense>
+            <Suspense fallback={<SkeletonShortSummaryCard />}>
+              <ShortSummaryCard
+                value={
+                  campaign_revenue === 0
+                    ? 0
+                    : TotalRevenueList[0]?.currency + campaign_revenue
+                }
+                icon={Sale}
+                className="revenue-icon"
+                currency={TotalRevenueList[0]?.currency}
+              />
+            </Suspense>
           </div>
+        </div>
 
+        <div className="campaign-actions">
           {is_deactivated ? (
             <MdOfflineBolt
               // MdBlock
@@ -266,7 +273,7 @@ export default function CampaignBlock({
               style={{ height: 24, width: 24, color: "crimson" }}
             />
           ) : (
-            <div className="campaign-actions">
+            <>
               <IconContext.Provider
                 value={{
                   size: 24,
@@ -323,8 +330,8 @@ export default function CampaignBlock({
                     <span>Delete</span>
                   </div>
                 </div>
-              </IconContext.Provider>
-            </div>
+              </IconContext.Provider>{" "}
+            </>
           )}
         </div>
       </div>

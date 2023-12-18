@@ -26,7 +26,20 @@ export const campaignDetailsSlice = createSlice({
 
 export const fetchCampaignsDetailsList = (state) =>
   state?.campaign_details?.campaigns_details?.filter(
-    (camp) => camp?.is_deleted === false
+    (camp) => camp?.is_draft === false
+  );
+
+export const fetchCampaignsProuctsList = (state) => {
+  let products = [];
+  state?.campaign_details?.campaigns_details?.filter(
+    (camp) => {camp?.product != "" && products?.push(camp?.product)}
+  );
+  return products;
+};
+
+export const fetchCampaignDetailsById = (state, campaignId) =>
+state?.campaign_details?.campaigns_details?.find(
+    (campaign) => campaign?.campaign_id === campaignId
   );
 
 export const fetchCampaignsDiscountCodes = (state) => {
@@ -57,6 +70,11 @@ export const fetchDeactivatedCampaignsByName = (state) => {
   });
   return result;
 };
+
+export const getActiveCampaigns = (state) =>
+  state?.campaign_details?.campaigns_details?.filter(
+    (campaign) => campaign?.is_active == true
+  ) || [];
 
 // All Action of the campaign
 

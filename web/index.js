@@ -36,7 +36,7 @@ import { verifyWebhookRequest } from "./VerifyWebhook.js";
 import { throwError } from "@shopify/app-bridge/actions/Error/index.js";
 import * as dotenv from "dotenv";
 import discountCodesApiEndpoints from "./middleware/discount-codes-api.js";
-
+import campaignProductsDetailsApiEndpoints from "./middleware/reward-product-api.js";
 
 dotenv.config();
 
@@ -47,7 +47,7 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 // TODO: There should be provided by env vars
 const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
-
+const DB_PATH = process.env.DATABASE_URL;
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -60,7 +60,6 @@ Shopify.Context.initialize({
   // This should be replaced with your preferred storage strategy
   SESSION_STORAGE: new Shopify.Session.PostgreSQLSessionStorage(DB_PATH),
 });
-
 
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
 // See the ensureBilling helper to learn more about billing in this template.
@@ -164,6 +163,7 @@ export async function createServer(
 
   campaignApiEndpoints(app);
   campaignDetailsApiEndpoints(app);
+  campaignProductsDetailsApiEndpoints(app);
   referralsApiEndpoints(app);
   createTemplateApiEndpoint(app);
   globalSettingsApiEndPoint(app);

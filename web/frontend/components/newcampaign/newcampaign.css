@@ -185,7 +185,7 @@
   margin-top: 10px;
 }
 
-.discount_code-error{
+.discount_code-error {
   /* font-size: 15.6px;
   margin: 0 5px;
   margin-bottom: 15px;
@@ -203,8 +203,6 @@
   padding: 0 3px;
   display: block;
 }
-
-
 
 .discount_error_text {
   color: #b70404;
@@ -229,6 +227,29 @@
   justify-content: flex-start;
   align-items: center;
 }
+.product-validation {
+  color: rgb(197, 46, 71);
+  font-weight: 400;
+  font-size: 15px;
+  margin: 0 5px;
+  padding: 0 10px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.product-validation h5 {
+ margin-left: 20px;
+ color:#cfcfcf;
+ cursor: pointer;
+}
+.product-validation h5:hover {
+  color:rgb(62, 50, 154);
+  font-size: 17px;
+}
+
+
 .form-group {
   display: flex;
   justify-content: space-between;
@@ -253,33 +274,48 @@ label {
   background-color: #25242d;
   border: none;
   padding: 25px 10px;
-  border-radius: 18px;
+  border-radius: 25px;
   height: 45px;
   color: white;
   width: 470px;
   font-size: 20px;
   font-weight: 500;
-  -webkit-border-radius: 18px;
-  -moz-border-radius: 18px;
-  -ms-border-radius: 18px;
-  -o-border-radius: 18px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+  padding-left: 20px;
 }
 
 /*    Products Select field */
 .select-products,
+.product-tier,
 .select-user-input {
   position: relative;
   display: inline-block;
   width: 100%;
+  border-radius: 25px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
 }
-
+.product-tier {
+  border-radius: 10px;
+  width: 100%;
+  background-color: #fff;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
 .select-products select,
 .select-user-input select {
   display: block;
   padding: 12px 16px;
   background-color: #25242d;
   border: none;
-  border-radius: 18px;
+  border-radius: 25px;
   height: 45px;
   color: white;
   width: 470px;
@@ -289,10 +325,33 @@ label {
   -webkit-appearance: none;
   -moz-appearance: none;
   cursor: pointer;
-  -webkit-border-radius: 18px;
-  -moz-border-radius: 18px;
-  -ms-border-radius: 18px;
-  -o-border-radius: 18px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+  padding-left: 20px;
+}
+
+.product-tier select {
+  display: block;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  height: 60px;
+  width:100%;
+  color: rgb(5, 5, 5);
+  font-size: 20px;
+  font-weight: 700;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  padding-left: 10px;
 }
 
 .select-products:after,
@@ -303,11 +362,40 @@ label {
   right: 16px;
   transform: translateY(-50%);
   pointer-events: none;
-  color: #f1ecec;
+  color:#ebf0f2;            
+  /* #f1ecec; */
+  border-radius: 25px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+
+.product-tier::after {
+  content: "\25BC";
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #0f0f0f;
+  border-radius: 25px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
 }
 
 .datepicker-input {
-  padding-left: 10px;
+  padding-left: 20px;
 }
 
 /*     Date Selector Input field  */
@@ -373,18 +461,19 @@ label {
 }
 
 .campaign-form .store-links .social-inputfield {
-  height: 30px;
+  height: 33px;
   width: 100%;
   background-color: #25242d;
   border: none;
   color: #fff;
   padding: 10px;
   line-height: 1.4;
-  border-radius: 12px;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
-  -ms-border-radius: 12px;
-  -o-border-radius: 12px;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  padding-left: 15px;
 }
 
 .sub-heading {
@@ -420,6 +509,7 @@ label {
   font-size: 17px;
 }
 
+/* Radion Button */
 .collect-settings .checkbox-input {
   height: 20px;
   width: 30px;
@@ -648,7 +738,7 @@ input[type="checkbox"]:checked {
 }
 
 .check-input input {
-  height: 28px;
+  height: 22px;
   margin: 10px;
   width: 25px;
   border-radius: 10px;
@@ -662,16 +752,17 @@ input[type="checkbox"]:checked {
   background-color: #25242d;
   border: none;
   padding: 25px 15px;
-  border-radius: 18px;
+  padding-left: 20px;
+  border-radius: 25px;
   height: 45px;
   color: white;
   width: 500px;
   font-size: 20px;
   font-weight: 500;
-  -webkit-border-radius: 18px;
-  -moz-border-radius: 18px;
-  -ms-border-radius: 18px;
-  -o-border-radius: 18px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
 }
 
 .integrate-setting-btn {
@@ -853,6 +944,15 @@ input[type="checkbox"]:checked {
   .select-user-input select {
     width: 370px;
     font-size: 18px;
+  }
+
+  .select-products select,
+  .select-user-input select {
+    border-radius: 25px !important;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    -ms-border-radius: 25px;
+    -o-border-radius: 25px;
   }
 
   .campaign-form .store-links .store-social-links {

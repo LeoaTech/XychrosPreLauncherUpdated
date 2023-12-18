@@ -25,7 +25,37 @@
   font-size: 32px;
   margin-top: 2px;
 }
+.upgrade-message {
+  color: #fff;
+  font-size: 18px;
+  padding: 5px 22px;
+  float: center;
+}
 
+.upgrade-plan {
+  margin-top: 45px;
+  height: 55px;
+  width: 150px;
+  background-color: var(--secondary-color);
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 20px;
+  margin-left: 20px;
+  border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+}
+
+.upgrade-plan:hover,
+.upgrade-plan:focus {
+  font-size: 17px;
+  /* box-shadow: 1px 2px -1px 2px #cfcfcf; */
+}
 /* [data-column-id='friends_joined'].rdt_TableCol, */
 [data-column-id="details"].rdt_TableCol {
   max-width: 12px;
