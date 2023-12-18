@@ -25,10 +25,12 @@ export default function campaignDetailsApiEndpoints(app) {
 
       const campaigns = await pool.query(
         `SELECT cs.*,
-                cd.is_active, cd.is_draft, cd.landing_page_link, cd.rewards_page_link, cd.landing_template_link, cd.rewards_template_link
-                FROM campaign_settings cs
-                JOIN campaign_details cd ON cs.campaign_id = cd.campaign_id
-                WHERE cs.shop_id = $1 `,
+            cd.is_active, cd.is_draft, cd.landing_page_link, cd.rewards_page_link, cd.landing_template_link, cd.rewards_template_link,
+            cp.tier1_product_name, cp.tier2_product_name, cp.tier3_product_name, cp.tier4_product_name
+         FROM campaign_settings cs
+        JOIN campaign_details cd ON cs.campaign_id = cd.campaign_id
+        JOIN campaign_product_details cp ON cs.campaign_id = cp.campaign_id
+        WHERE cs.shop_id = $1`,
         [session?.shop]
       );
       return res.status(200).json(campaigns?.rows);

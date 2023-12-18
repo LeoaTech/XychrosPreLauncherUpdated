@@ -1,9 +1,8 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-
-name = "XychrosUpdatedTestServer"
-client_id = "038304675f7b4a7b2b16705368a68a45"
-application_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com"
+name = "test-2-app"
+client_id = "5c477447c78bc3bbdecf326daf0aaab6"
+application_url = "https://dominant-understanding-commons-appointed.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -12,11 +11,9 @@ scopes = "read_orders,read_products,read_content,write_content,read_themes,write
 
 [auth]
 redirect_urls = [
-
-
-  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/auth/callback",
-  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/auth/shopify/callback",
-  "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/auth/callback"
+  "https://dominant-understanding-commons-appointed.trycloudflare.com/auth/callback",
+  "https://dominant-understanding-commons-appointed.trycloudflare.com/auth/shopify/callback",
+  "https://dominant-understanding-commons-appointed.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -29,8 +26,8 @@ api_version = "2023-07"
   shop_deletion_url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com/api/webhooks"
 
 [app_proxy]
-url = "https://xychrostest-6ab89d0ac1e3.herokuapp.com"
-subpath = "product-prelauncher"
+url = "https://dominant-understanding-commons-appointed.trycloudflare.com"
+subpath = "test-2-app"
 prefix = "apps"
 
 [pos]

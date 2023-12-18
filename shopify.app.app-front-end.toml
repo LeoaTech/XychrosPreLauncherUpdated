@@ -1,0 +1,27 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "app-front-end"
+client_id = "1304ed49ab34a02f272aeac6e6603a26"
+application_url = "https://kelly-walked-nearly-assumption.trycloudflare.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_orders,read_products,read_content,write_content,read_themes,write_themes,read_price_rules,write_price_rules,read_customers,write_customers, read_discounts"
+
+[auth]
+redirect_urls = [
+  "https://kelly-walked-nearly-assumption.trycloudflare.com/auth/callback",
+  "https://kelly-walked-nearly-assumption.trycloudflare.com/auth/shopify/callback",
+  "https://kelly-walked-nearly-assumption.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2022-10"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "app-running.myshopify.com"

@@ -77,10 +77,7 @@ const CampaignsComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(
-        TotalRevenueList[0].currency +
-          TotalRevenueList[0].total_revenue.toFixed(2)
-      );
+      setTotalRevenue(TotalRevenueList[0]?.total_revenue.toFixed(2));
     }
   }, [TotalRevenueList]);
 
@@ -248,9 +245,7 @@ const CampaignsComponent = () => {
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
             value={
-              getTotalClicks.length === 0
-                ? 345079491
-                : getTotalClicks[0].total_clicks
+              getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks
             }
             title="Clicks"
             icon={arrow}
@@ -259,10 +254,11 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalRevenue.length === 0 ? 23094 : getTotalRevenue}
+            value={getTotalRevenue?.length === 0 ? 0 : getTotalRevenue}
             title="Revenue"
             icon={Sale}
             class="revenue-icon"
+            currency={TotalRevenueList[0]?.currency}
           />
         </Suspense>
       </div>
@@ -270,8 +266,8 @@ const CampaignsComponent = () => {
         {getDetails?.length > 0 ? (
           <>
             <div className="campaigns-blocks">
-              {currentItems?.map((campaign) => (
-                <Suspense fallback={<LoadingSkeleton />}>
+              {currentItems?.map((campaign, index) => (
+                <Suspense fallback={<LoadingSkeleton key={index} />}>
                   <CampaignBlock
                     key={campaign?.campaign_id}
                     eitData={editData}
