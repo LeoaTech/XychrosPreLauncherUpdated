@@ -17,7 +17,7 @@ export const campaignSlice = createSlice({
         (campaign) => campaign?.campaign_id === action.payload.campaign_id
       );
 
-      console.log(allCampaigns, action.payload);
+      // console.log(allCampaigns, action.payload);
       state.campaigns = [...allCampaigns, action.payload];
     },
 
