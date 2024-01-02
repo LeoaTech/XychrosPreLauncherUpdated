@@ -46,19 +46,6 @@ const Campaigns = () => {
       headers: { "Content-Type": "application/json" },
       signal: abortController.signal,
     });
-
-  // Get Campaign Settings List
-  // const campaigns = useFetchCampaignsData("/api/getcampaigns", {
-  //   method: "GET",
-  //   headers: { "Content-Type": "application/json" },
-  // });
-
-  // // Get Campaign Details
-  // const campaignsDetails = useFetchCampaignsDetails("/api/campaigndetails", {
-  //   method: "GET",
-  //   headers: { "Content-Type": "application/json" },
-  // });
-
   // Get Referral Details
   const { data: referrals, error: referralsError } = useFetchReferralsData(
     "/api/getallreferralcount",
@@ -103,6 +90,7 @@ const Campaigns = () => {
   useEffect(() => {
     if (currentTier && campaignsDetails?.length > 0) {
       // Then Sort by Date Difference
+
       sortedCampaigns = campaignsDetails
         ?.slice()
         .sort((a, b) => new Date(b.end_date) - new Date(a.end_date));
@@ -119,44 +107,66 @@ const Campaigns = () => {
         (camp) =>
           new Date(camp?.start_date) <= new Date() &&
           new Date(camp?.end_date) > new Date()
-        // &camp.is_active === true
       );
 
       // For Tier1 Get 2 Latest Campaigns which has ending date not expired yet
-      let mostTwoLatestCampaign = mostLatestCampaign?.splice(0, 2);
+      let mostTwoLatestCampaign = mostLatestCampaign?.slice(0, 2);
 
       // CASE 1   "Free" Active only Lates Campaign ( created or updated recently)
 
       if (currentTier === "Free" || currentTier === "Free + Add-ons") {
         // Update App Component with all other campaigns remaining INACTIVE except the Latest campaign
-        const updateCampaigns = sortedCampaigns?.map((camp) =>
-          camp.campaign_id === latestCampaign?.campaign_id
-            ? { ...camp, is_active: true }
-            : { ...camp, is_active: false }
-        );
+        const updateCampaigns = sortedCampaigns?.map((camp) => {
+          const startDate = new Date(camp?.start_date);
+          const endDate = new Date(camp?.end_date);
+          const currentDate = new Date();
+
+          // Check if the campaign is a draft
+          if (camp.is_draft) {
+            // If it's a draft, keep the details as they are, but update is_active based on the latest campaign
+            return {
+              ...camp,
+              is_active: camp.campaign_id === latestCampaign?.campaign_id,
+            };
+          } else {
+            // If it's not a draft, update is_active based on the date conditions
+            return {
+              ...camp,
+              is_active:
+                camp.campaign_id === latestCampaign?.campaign_id &&
+                currentDate >= startDate &&
+                currentDate <= endDate,
+            };
+          }
+        });
 
         dispatch(fetchCampaignDetails(updateCampaigns));
       }
       // CASE 2   "TIER 1"
 
       if (currentTier === "Tier 1" || currentTier === "Tier 1 + Add-ons") {
-        /* const updateCampaigns = sortedCampaigns?.map((camp) => {
-          const isActive = mostTwoLatestCampaign?.some(
-            (mc) => mc.campaign_id === camp.campaign_id
-          );
-          return { ...camp, is_active: isActive };
-        }); */
+        // Combine draft and non-draft campaigns into a single array
 
         const updateCampaigns = sortedCampaigns?.map((camp) => {
           let isActive = false;
-          if (
-            new Date(camp?.start_date) <= new Date() &&
-            new Date(camp?.end_date) > new Date()
-          ) {
+          // Check if the campaign is a draft
+          if (camp.is_draft) {
+            // If it's a draft, set is_active based on whether it's in the mostTwoLatestCampaign array
             isActive = mostTwoLatestCampaign?.some(
               (mc) => mc.campaign_id === camp.campaign_id
             );
+          } else {
+            // If it's not a draft, set is_active based on the date conditions and mostTwoLatestCampaign array
+            if (
+              new Date(camp?.start_date) <= new Date() &&
+              new Date(camp?.end_date) > new Date()
+            ) {
+              isActive = mostTwoLatestCampaign?.some(
+                (mc) => mc.campaign_id === camp.campaign_id
+              );
+            }
           }
+
           return { ...camp, is_active: isActive };
         });
 
@@ -169,19 +179,27 @@ const Campaigns = () => {
         currentTier !== "Free + Add-ons" &&
         currentTier !== "Tier 1 + Add-ons"
       ) {
-        const updateCampaigns = campaignsDetails?.map((camp) => {
+        // Combine draft and non-draft campaigns into a single array
+
+        const combinedCampaigns = campaignsDetails?.map((camp) => {
           const startDate = new Date(camp?.start_date);
           const endDate = new Date(camp?.end_date);
           const currentDate = new Date();
 
-          if (currentDate >= startDate && currentDate <= endDate) {
-            return { ...camp, is_active: true };
-          } else {
+          if (camp.is_draft) {
+            // If it's a draft, keep the details as they are, but update is_active to false
             return { ...camp, is_active: false };
+          } else {
+            // If it's not a draft, update is_active based on the date conditions
+            if (currentDate >= startDate && currentDate <= endDate) {
+              return { ...camp, is_active: true };
+            } else {
+              return { ...camp, is_active: false };
+            }
           }
         });
-
-        dispatch(fetchCampaignDetails(updateCampaigns));
+        // Dispatch the combined array to the Redux store
+        dispatch(fetchCampaignDetails(combinedCampaigns));
       }
     }
     return () => {
