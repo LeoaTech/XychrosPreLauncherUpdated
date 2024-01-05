@@ -74,7 +74,7 @@ async function hasActivePayment(session, { chargeName, interval }) {
     for (let i = 0, len = subscriptions?.length; i < len; i++) {
       if (
         subscriptions[i].name === chargeName &&
-        !subscriptions[i].test // ||!isProd 
+        !subscriptions[i].test // ||!isProd
       ) {
         return true;
       }
@@ -174,12 +174,18 @@ async function requestRecurringPayment(
                   amount: totalBill,
                   currencyCode: currencyCode, // Set the correct currency code here
                 },
+                discount: {
+                  value: {
+                    percentage: 0.2,
+                  },
+                  durationLimitInIntervals: 6,
+                },
               },
             },
           },
         ],
         returnUrl,
-        test: null || false, //!isProd,
+        test:  false, //!isProd,
       },
     },
   });
@@ -221,6 +227,7 @@ async function requestSinglePayment(
 
   return mutationResponse;
 }
+//    USING REST API TO GET RECURRING APP CHARGES
 
 export async function getSubscriptionCharge(session) {
   const baseUrl = `https://${session?.shop}/admin/api/2022-10/recurring_application_charges.json`;
@@ -246,13 +253,89 @@ let subscribed_id;
 
 // Get Current Active Subscription Plan Object From (recurring_application_charges) API
 
+//    USING GRAPHQL API TO GET RECURRING APP CHARGES
+async function getRecuuringChargeWithDiscount(session, subscriptionId) {
+  const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
+
+  let result = await client.query({
+    data: {
+      query: `query {
+      node(id: "gid://shopify/AppSubscription/${subscriptionId}") {
+        id
+        ... on AppSubscription {
+          status
+          name
+          lineItems {
+            plan {
+              pricingDetails {
+                ... on AppRecurringPricing {
+                  discount {
+                    value{
+                      ... on AppSubscriptionDiscountPercentage{
+                        percentage
+                      }
+                    }
+                    priceAfterDiscount {
+                      amount
+                      currencyCode
+                    }
+                    durationLimitInIntervals
+                    remainingDurationInIntervals
+                  }
+                  interval
+                  price {
+                    amount
+                    currencyCode
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }`,
+    },
+  });
+
+  // console.log(
+  //   result.body.data,
+  //   "Active Purchase query",
+  //   result.body.data.node.lineItems[0].plan.pricingDetails.discount
+  // );
+  if (result?.body.data) {
+    const discountValue = {
+      ...result.body.data.node.lineItems[0].plan.pricingDetails.discount,
+    };
+
+    return discountValue;
+  }
+  return null;
+}
+
 export async function getCurrentActivePricingPlan(session) {
-  // function to get all Recurring charge list (Extract only active charge)
+  let isDiscount = false;
+  // Get Active Recurring charge data
   let current_plan = await getSubscriptionCharge(session);
 
   subscribed_id = current_plan?.id;
+  let valueDiscount = await getRecuuringChargeWithDiscount(
+    session,
+    subscribed_id
+  );
+
+  if(valueDiscount){
+    isDiscount = true;
+  }
+
+  let Total_bill_after_discount = valueDiscount.priceAfterDiscount.amount;
+  let updatedPlan = {
+    ...current_plan,
+    ...valueDiscount,
+    totalBillAfterDiscount: Total_bill_after_discount,
+  };
   // Save the Active plan details in subscription_list Table of database
-  await saveSubscribedPlan(current_plan, session);
+  await saveSubscribedPlan(updatedPlan, session);
+  return isDiscount;
 }
 
 // Save the Subscribed Plan into the database
@@ -278,7 +361,7 @@ async function saveSubscribedPlan(subscribedPlan, session) {
     } else {
       collectingPhones = true;
     }
-    totalBill = subscribedPlan?.price;
+    totalBill = subscribedPlan?.totalBillAfterDiscount;
 
     subscriptionId = `gid://shopify/AppSubscription/${subscribedPlan?.id}`;
 
@@ -589,6 +672,7 @@ const CANCEL_MUTATION = `mutation AppSubscriptionCancel($id: ID! ) {
   }
 }`;
 
+
 const ONE_TIME_PURCHASES_QUERY = `
   query appPurchases($endCursor: String) {
     currentAppInstallation {
@@ -663,5 +747,3 @@ const ONE_TIME_PURCHASE_MUTATION = `
     }
   }
 `;
-
-// Cancel Recurring charge
