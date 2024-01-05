@@ -1,132 +1,21 @@
 import React, { useEffect, useState } from "react";
-import BillingCard from "./BillingCard";
 import "./user.css";
-import { useAuthenticatedFetch } from "../../hooks";
 import { fetchUserDetails, SaveUser } from "../../app/features/users/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { fetchCurrentPlan } from "../../app/features/current_plan/current_plan";
 import { fetchAllpricing } from "../../app/features/pricing/pricing";
-import DataTable from "react-data-table-component";
+import ContactDetailsForm from "./ContactDetailsForm";
+import BillingDetailsCard from "./BillingDetailsCard";
 
-// Billing Details Table Custom Styles
-const billingStyles = {
-  headCells: {
-    style: {
-      fontSize: "15px",
-      fontWeight: "semi-bold",
-      paddingLeft: "0 6px",
-      justifyContent: "center",
-      color: "#FCFCFC",
-      backgroundColor: "#232227",
-      // width: "20px"
-    },
-  },
-  cells: {
-    style: {
-      textAlign: "center",
-      alignItems: "center",
-      justifyContent: "center",
-      border: "none",
-      borderLeft: "1px solid #fff",
-      borderRight: "1px solid #fcfcfc",
-      borderBottom: "1px solid #fff",
-    },
-  },
-  rows: {
-    style: {
-      backgroundColor: "#232229",
-      color: "#ECECEC",
-      textAlign: "center",
-    },
-    highlightOnHoverStyle: {
-      color: "#f3f3f3",
-      backgroundColor: "gray",
-      transitionDuration: "0.15s",
-      transitionProperty: "background-color",
-      borderBottomColor: "white",
-      outlineStyle: "solid",
-      outlineWidth: "1px",
-      outlineColor: "lightgray",
-    },
-  },
-  pagination: {
-    style: {
-      color: "white",
-      fontSize: "13px",
-      minHeight: "56px",
-      backgroundColor: "#232229",
-      border: "1px solid #fff",
-      borderTop: "none",
-    },
-    pageButtonsStyle: {
-      borderRadius: "50%",
-      height: "20px",
-      width: "30px",
-      padding: "4px",
-      margin: "px",
-      cursor: "pointer",
-      transition: "0.4s",
-      color: "#fcfcfc",
-      fill: "f3f3f3",
-      backgroundColor: "transparent",
-      "&:disabled": {
-        cursor: "unset",
-        color: "#fff",
-        fill: "#fff",
-      },
-      "&:hover:not(:disabled)": {
-        backgroundColor: "#fcfcfc",
-      },
-      "&:focus": {
-        outline: "none",
-        backgroundColor: "#fff",
-      },
-    },
-  },
-};
 const UserProfile = () => {
   const data = useSelector(fetchUserDetails);
   const priceData = useSelector(fetchAllpricing);
   const billingPlan = useSelector(fetchCurrentPlan);
-
   const [subscribeMessage, setSubscribeMessage] = useState("");
-
   const [userDetails, setUserDetails] = useState();
   const [subscribedCardId, setSubscribedCardId] = useState(null);
   const [priceCard, setPriceCard] = useState([]);
   const [tableData, setTableData] = useState([]);
-
-  // Billing Table Columns
-  const billingColumns = [
-    {
-      name: "Name",
-      selector: (row) => row.plan_name,
-      sortable: true,
-      id: "charge_name",
-      style: {
-        fontSize: 17,
-      },
-    },
-    {
-      name: "Amount",
-      selector: (row) => row.price,
-      sortable: true,
-      id: "charge_amount",
-
-      style: {
-        fontSize: 17,
-      },
-    },
-    {
-      name: "Charged Date",
-      selector: (row) => row.created_at,
-      sortable: true,
-      id: "charged_date",
-      style: {
-        fontSize: 15,
-      },
-    },
-  ];
 
   // Get user Details From DB(if any) and Set Values in States
   useEffect(() => {
@@ -159,7 +48,7 @@ const UserProfile = () => {
           (plan) => plan?.plan_name === billingPlan?.plan_name
         );
       }
-      setPriceCard([{ ...cardId }]);
+      setPriceCard([{ ...cardId, discountPrice: billingPlan?.price }]);
       setSubscribedCardId(cardId?.id);
       setUserDetails({ ...userDetails, billing_id: subscribedCardId });
       setSubscribeMessage(
@@ -190,12 +79,6 @@ const UserProfile = () => {
     }
   }, [billingPlan]);
 
-  // Handle Input Change
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserDetails((prev) => ({ ...prev, [name]: value }));
-  };
-
   return (
     <div className="user-container">
       <div className="account-section">
@@ -204,106 +87,14 @@ const UserProfile = () => {
         </div>
 
         {/* Contact Details Form */}
-        <div className="contact-details">
-          <h3>Contact Details </h3>
-
-          <div className="form-section">
-            <div className="form-input-group">
-              <div className="inputfield">
-                <label htmlFor="firstname">First Name</label>
-                <input
-                  type="text"
-                  name="firstname"
-                  id="firstname"
-                  placeholder="e.g Joseph"
-                  value={userDetails?.firstname}
-                  onChange={handleChange}
-                  disabled
-                />
-              </div>
-              <div className="inputfield">
-                <label htmlFor="lastname">Last Name</label>
-                <input
-                  type="text"
-                  name="lastname"
-                  id="lastname"
-                  placeholder="e.g Henry"
-                  value={userDetails?.lastname}
-                  onChange={handleChange}
-                  disabled
-                />
-              </div>
-            </div>
-            <div className="form-input-group">
-              <div className="inputfield">
-                <label htmlFor="email">Contact Email</label>
-                <input
-                  type="text"
-                  name="email"
-                  id="email"
-                  placeholder="joseph@gmail.com"
-                  value={userDetails?.email}
-                  onChange={handleChange}
-                  disabled
-                />
-              </div>
-
-              <div className="inputfield">
-                <label htmlFor="storelink">Store URL</label>
-                <input
-                  type="text"
-                  name="storelink"
-                  id="storelink"
-                  value={userDetails?.store_url}
-                  onChange={handleChange}
-                  disabled
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        <ContactDetailsForm userDetails={userDetails} />
 
         {/* Billing Details with All Pricing Cards */}
-        <div className="billing-details">
-          <h3>Billing Details</h3>
-          <p>{subscribeMessage}</p>
-
-          {priceCard?.length > 0 ? (
-            <div className="carousel">
-              <div className="billing-cards" style={{}}>
-                {priceCard?.length > 0 ? (
-                  priceCard?.map((card, index) => {
-                    return (
-                      <div key={index} style={{}} className="billing-card">
-                        <BillingCard
-                          className="card"
-                          key={card.id}
-                          card={card}
-                        />
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div class="spinner"></div>
-                )}
-              </div>
-              <div className="billing_table">
-                <DataTable
-                  columns={billingColumns}
-                  data={tableData}
-                  customStyles={billingStyles}
-                  pagination
-                  highlightOnHover
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="spinner"></div>
-          )}
-
-          {/* <div className="billing-details-block">
-          </div> */}
-        </div>
+        <BillingDetailsCard
+          subscribeMessage={subscribeMessage}
+          priceCard={priceCard}
+          tableData={tableData}
+        />
       </div>
     </div>
   );

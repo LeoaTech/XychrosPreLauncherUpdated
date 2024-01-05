@@ -1,32 +1,52 @@
-import React, { useState } from "react";
+import React from "react";
 import "./billingCard.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BsCheck2 } from "react-icons/bs";
 
 const BillingCard = ({ card }) => {
-
   const navigate = useNavigate();
   return (
     <div className="card-block">
       <h2>{card.plan_name}</h2>
       <ul className="card-content">
-        {card?.features && Object.entries(card?.features).map(([key, value]) => (
-          <li className="feature" key={key}>
-            <BsCheck2
-              style={{
-                height: "24",
-                width: "24",
-              }}
-            />{value}
-          </li>
-        ))}
+        {card?.features &&
+          Object.entries(card?.features).map(([key, value]) => (
+            <li className="feature" key={key}>
+              <BsCheck2
+                style={{
+                  height: "24",
+                  width: "24",
+                  fill: "#fff",
+                  strokeWidth: "0.5",
+                }}
+              />
+              {value}
+            </li>
+          ))}
       </ul>
 
-
       <div className="price-tag">
-        <p>${card.price}/month</p>
-        <button className='subscribed-btn' onClick={() => navigate("/price")}> Change Plan</button>
+        <p>
+          <span
+            style={{
+              fontsize: "12px",
+              fontWeight: "normal",
+              textDecoration: "line-through",
+              color: "#848884",
+            }}
+          >
+            $ {card.price}
+          </span>{" "}
+        </p>
+        <p>
+          $ {card.discountPrice}
+          <span> /month</span>
+        </p>
       </div>
+      <button className="subscribed-btn" onClick={() => navigate("/price")}>
+        {" "}
+        Change Plan
+      </button>
     </div>
   );
 };

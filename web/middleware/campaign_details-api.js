@@ -29,7 +29,7 @@ export default function campaignDetailsApiEndpoints(app) {
             cp.tier1_product_name, cp.tier2_product_name, cp.tier3_product_name, cp.tier4_product_name
          FROM campaign_settings cs
         JOIN campaign_details cd ON cs.campaign_id = cd.campaign_id
-        JOIN campaign_product_details cp ON cs.campaign_id = cp.campaign_id
+        LEFT JOIN campaign_product_details cp ON cs.campaign_id = cp.campaign_id
         WHERE cs.shop_id = $1`,
         [session?.shop]
       );

@@ -34,13 +34,13 @@ export default function SubscribePlanApiEndPoint(myApp) {
         myApp.get("use-online-tokens")
       );
       try {
-        await getCurrentActivePricingPlan(session);
-
+        let result = await getCurrentActivePricingPlan(session);
         const planExists = await pool.query(
           `select * from subscriptions_list where shop_id =$1`,
           [session?.shop]
         );
-        return res.status(200).json(planExists?.rows[0]);
+
+        return res.status(200).json({ ...planExists?.rows[0], isdiscount: result });
       } catch (error) {
         return res.json(error);
       }
