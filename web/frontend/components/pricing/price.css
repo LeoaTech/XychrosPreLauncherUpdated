@@ -42,6 +42,25 @@
   background-color: var(--secondary-color);
 }
 
+.pricing-card .price-bottom{
+  margin-top: 30px;
+}
+
+.pricing-card:first-child .price-bottom{
+  margin-top: 8rem;
+}
+
+.pricing-card:first-child .flag:after{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 13px solid #5447df;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+}
 .pricing-card button:first-child {
   background-color: var(--secondary-color);
 }
@@ -53,10 +72,16 @@
   transition: opacity 0.5s;
   border-radius: 12px;
   background-color: var(--secondary-text-color);
+  box-shadow: 0px 0px 8px 3px rgba(31, 28, 28, 0.21);
+}
+
+.pricing-card:hover{
+  opacity: 1;
 }
 
 .pricing-card.active {
   opacity: 1;
+  border: 1px solid rgba(239, 195, 86, 0.689);
 }
 
 .pricing-card:last-child {
@@ -79,6 +104,8 @@
 .clickPrev:hover,
 .clickNext:hover {
   background-color: var(--secondary-text-color);
+  border:1px solid rgb(196, 164, 83);
+  box-shadow: 0px 0px 8px 3px rgba(140, 138, 138, 0.21);
 }
 
 .spinner {

@@ -2,20 +2,23 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useAppBridge, useNavigate } from "@shopify/app-bridge-react";
 import { Redirect } from "@shopify/app-bridge/actions/index.js";
 import "./price.css";
-import PricingBlock from "./pricingBlock/PricingBlock";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllpricing } from "../../app/features/pricing/pricing";
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
 import { useAuthenticatedFetch } from "../../hooks";
 import {
   fetchCurrentPlan,
   fetchSavePlan,
 } from "../../app/features/current_plan/current_plan";
+import CarouselScrollButtons from "./CarouselScrollButtons";
+import PriceAddOnCard from "./PriceAddOnCard";
+import PriceCardBlockContainer from "./PriceCardBlockContainer";
+
 
 const PriceComponent = () => {
   const priceData = useSelector(fetchAllpricing); //Get all Pricing Details Cards
   const activePlan = useSelector(fetchCurrentPlan); //Current Active Plan
 
+  console.log(activePlan)
   const [pricePlans, setPricePlans] = useState([]);
   const [isLoading, setIsloading] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -223,103 +226,37 @@ const PriceComponent = () => {
         <h2>Select Your Plan</h2>
       </div>
       <div className="price-details-container">
+        {/* Button to move next and back to see all Plans */}
         {priceData?.length > 0 && (
-          <div className="action-click-btn">
-            <button className="clickPrev" onClick={handleClickPrev}>
-              <AiOutlineArrowLeft style={{ height: 19, width: 19 }} />
-            </button>
-            <button className="clickNext" onClick={handleClickNext}>
-              <AiOutlineArrowRight style={{ height: 19, width: 19 }} />
-            </button>
-          </div>
+          <CarouselScrollButtons
+            handleClickNext={handleClickNext}
+            handleClickPrev={handleClickPrev}
+          />
         )}
-        <div className="price-block">
-          {pricePlans?.length ? (
-            pricePlans?.map((price, index) => {
-              const isCurrentSubscribedPlan = price.id === subscribedPlanId;
 
-              return (
-                <div
-                  key={index}
-                  // style={{
-                  //   transform: `translateX(-${
-                  //     currentCardIndex * (cardWidth + 10)
-                  //   }px)`,
-                  // }}
-                  // className={`pricing-card ${
-                  //   index === subscribedPlanId - 1 ? "" : "active"
-                  // }`}
-                  style={{
-                    transform: `translateX(-${
-                      currentCardIndex * (cardWidth + 10)
-                    }px)`,
-                  }}
-                  className={`pricing-card ${
-                    isCurrentSubscribedPlan ? "active" : ""
-                  }`}
-                >
-                  <PricingBlock
-                    id={price?.id}
-                    key={price?.id}
-                    title={price?.plan_name}
-                    features={price?.features}
-                    price={price?.price}
-                    isLoading={isLoading}
-                    handlePlanSubscribe={handlePlanSubscribe}
-                    isSubscribed={price.id === subscribedPlanId}
-                    subscribedPlanId={subscribedPlanId}
-                  />
-                </div>
-              );
-            })
-          ) : (
-            <div class="spinner"></div>
-          )}
-        </div>
+        {/* Cards Block for Pricing Plans */}
+        <PriceCardBlockContainer
+          handlePlanSubscribe={handlePlanSubscribe}
+          currentCardIndex={currentCardIndex}
+          cardWidth={cardWidth}
+          subscribedPlanId={subscribedPlanId}
+          isSubscribed={isSubscribed}
+          isLoading={isLoading}
+          pricePlans={pricePlans}
+          isDiscount ={activePlan?.isdiscount}
+        />
       </div>
+
+      {/* Add-ons */}
       {priceData?.length > 0 && (
-        <div className="pricing-add-ons">
-          <div className="add-on-card">
-            <div>
-              <label>Select Add-ons</label>
-              <label>price</label>
-            </div>
-            <div>
-              <input
-                id="collect-numbers"
-                name="collect-numbers"
-                type="checkbox"
-                checked={collectNumbers}
-                onChange={handleCollectNumbersInput}
-              />
-              <label htmlFor="collect-numbers">Collecting phone numbers</label>
-              <h4 className="price-tag">$5</h4>
-            </div>
-            <div className="confirmation-btn">
-              {collectNumbers && (
-                <button
-                  disabled={isSubscribing || activePlan?.collecting_phones}
-                  className={
-                    activePlan?.collecting_phones || isSubscribing
-                      ? "btn-confirmed disabled"
-                      : "btn-confirmed"
-                  }
-                  onClick={handleConfirmAddOn}
-                >
-                  Confirm Add-Ons
-                </button>
-              )}
-              {activePlan?.collecting_phones && (
-                <button
-                  className="btn-confirmed"
-                  onClick={handleCancelAddOnSubscription}
-                >
-                  Cancel Add-on
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <PriceAddOnCard
+          handleCancelAddOnSubscription={handleCancelAddOnSubscription}
+          handleConfirmAddOn={handleConfirmAddOn}
+          handleCollectNumbersInput={handleCollectNumbersInput}
+          collectNumbers={collectNumbers}
+          activePlan={activePlan}
+          isSubscribing={isSubscribing}
+        />
       )}
     </div>
   );
