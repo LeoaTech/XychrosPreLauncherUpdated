@@ -17,8 +17,6 @@ import PriceCardBlockContainer from "./PriceCardBlockContainer";
 const PriceComponent = () => {
   const priceData = useSelector(fetchAllpricing); //Get all Pricing Details Cards
   const activePlan = useSelector(fetchCurrentPlan); //Current Active Plan
-
-  console.log(activePlan)
   const [pricePlans, setPricePlans] = useState([]);
   const [isLoading, setIsloading] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);

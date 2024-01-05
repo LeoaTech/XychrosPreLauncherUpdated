@@ -35,12 +35,10 @@ const UserProfile = () => {
     }
   }, [data, subscribedCardId]);
 
-  console.log(billingPlan)
   // Get Current Plan and Set Billing Details in TableData
   useEffect(() => {
     let cardId;
     if (billingPlan !== undefined) {
-
       if (billingPlan?.plan_name?.includes("Add-on")) {
         const charged_name = billingPlan?.plan_name?.split(" + ");
         const tierName = charged_name[0]; // Extract "Tier Name"
@@ -50,7 +48,7 @@ const UserProfile = () => {
           (plan) => plan?.plan_name === billingPlan?.plan_name
         );
       }
-      setPriceCard([{ ...cardId, discountPrice:billingPlan?.price }]);
+      setPriceCard([{ ...cardId, discountPrice: billingPlan?.price }]);
       setSubscribedCardId(cardId?.id);
       setUserDetails({ ...userDetails, billing_id: subscribedCardId });
       setSubscribeMessage(
