@@ -1,10 +1,10 @@
 import { subscriber, Sale, arrow } from "../../assets/index";
 import { IconContext } from "react-icons";
-import { BsToggleOff } from "react-icons/bs";
-import { MdBlock, MdTimerOff, MdOfflineBolt } from "react-icons/md";
+import { BsToggle2On } from "react-icons/bs";
+import { MdBlock, MdToggleOn, MdOfflineBolt } from "react-icons/md";
 import { FaEdit, FaHourglassEnd } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { IoCalendarSharp } from "react-icons/io5";
+import { IoCalendarSharp, IoToggle, IoToggleOutline } from "react-icons/io5";
 import "./CampaignBlock.css";
 import { Link } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
@@ -44,6 +44,7 @@ export default function CampaignBlock({
     start_date,
     end_date,
     is_active,
+    is_draft,
     landing_page_link,
     rewards_page_link,
     landing_template_link,
@@ -71,7 +72,7 @@ export default function CampaignBlock({
   const [deleteEndData, setDeleteEndDate] = useState(null);
   const [isToggled, setIsToggled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(isToggled);
-  const [isDeactivated, setIsDeactivated] = useState(false);
+  const [draftToggle, setDraftToggle] = useState(false);
 
   // Individual campaign clicks
   const campaign_clicks = useSelector((state) =>
@@ -104,9 +105,16 @@ export default function CampaignBlock({
     } else {
       setIsToggled(false);
     }
-  }, [is_active]);
+
+    if (is_draft) {
+      setDraftToggle(true);
+    } else {
+      setDraftToggle(false);
+    }
+  }, [is_active, is_draft]);
 
   let is_deactivated = new Date(end_date) < now;
+  let draftCampaignToggle = is_draft || draftToggle;
 
   return (
     <>
@@ -124,23 +132,34 @@ export default function CampaignBlock({
             {is_deactivated ? (
               <span>
                 {" "}
-                <BsToggleOff style={{ height: 31, width: 30, color: "#ccc" }} />
+                {!draftCampaignToggle && (
+                  <IoToggle style={{ height: 31, width: 30, color: "#ccc" }} />
+                )}{" "}
               </span>
             ) : (
               <span>
+                {!draftCampaignToggle && (
+                  <ToggleSwitch
+                    rounded={true}
+                    isToggled={isToggled}
+                    draftCampaignToggle={draftCampaignToggle}
+                  />
+                )}
+              </span>
+            )}
+            {/* Draft Campaign Toggle Switch */}
+            {draftCampaignToggle && (
+              <span data-tooltip-id="draft-campaign-tooltip">
                 <ToggleSwitch
                   rounded={true}
                   isToggled={isToggled}
-                  id={campaign_id}
-                  start_date={start_date}
-                  end_date={end_date}
+                  draftCampaignToggle={draftCampaignToggle || draftToggle}
                 />
               </span>
             )}
           </div>
 
-          <Link
-            to={product}
+          <p
             className={`campaign-block-product-name ${
               is_deactivated ? "deactive" : ""
             }`}
@@ -149,7 +168,7 @@ export default function CampaignBlock({
             }
           >
             {product ? product : "Product Name"}
-          </Link>
+          </p>
 
           <div className="campaign-block-duration">
             <IoCalendarSharp
@@ -194,41 +213,43 @@ export default function CampaignBlock({
               Rewards Page
             </a>
           </div>
-          <div
-            className={`campaign_details_links ${
-              is_deactivated ? "deactive" : ""
-            }`}
-          >
-            <a
-              href={landing_template_link}
-              target="_blank"
-              className="btn"
-              disabled={!is_deactivated}
-              style={{ cursor: !is_deactivated ? "pointer" : "not-allowed" }}
-              onClick={(e) => {
-                if (is_deactivated) {
-                  e.preventDefault();
-                }
-              }}
+          {!draftCampaignToggle && (
+            <div
+              className={`campaign_details_links ${
+                is_deactivated ? "deactive" : ""
+              }`}
             >
-              Open in Editor
-            </a>
+              <a
+                href={landing_template_link}
+                target="_blank"
+                className="btn"
+                disabled={!is_deactivated}
+                style={{ cursor: !is_deactivated ? "pointer" : "not-allowed" }}
+                onClick={(e) => {
+                  if (is_deactivated) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                Open in Editor
+              </a>
 
-            <a
-              href={rewards_template_link}
-              target="_blank"
-              className="btn"
-              disabled={!is_deactivated}
-              style={{ cursor: !is_deactivated ? "pointer" : "not-allowed" }}
-              onClick={(e) => {
-                if (is_deactivated) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              Open in Editor
-            </a>
-          </div>
+              <a
+                href={rewards_template_link}
+                target="_blank"
+                className="btn"
+                disabled={!is_deactivated}
+                style={{ cursor: !is_deactivated ? "pointer" : "not-allowed" }}
+                onClick={(e) => {
+                  if (is_deactivated) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                Open in Editor
+              </a>
+            </div>
+          )}
         </div>
         <div className="campaign-right-card">
           <div className="campaign-kpis">
@@ -251,14 +272,11 @@ export default function CampaignBlock({
             </Suspense>
             <Suspense fallback={<SkeletonShortSummaryCard />}>
               <ShortSummaryCard
-                value={
-                  campaign_revenue === 0
-                    ? 0
-                    : TotalRevenueList[0]?.currency + campaign_revenue
-                }
+                is_deactivated={is_deactivated}
+                value={campaign_revenue === 0 ? 0 : campaign_revenue}
                 icon={Sale}
                 className="revenue-icon"
-                currency={TotalRevenueList[0]?.currency}
+                currency={campaign_revenue > 0 && TotalRevenueList[0]?.currency}
               />
             </Suspense>
           </div>
@@ -280,17 +298,14 @@ export default function CampaignBlock({
                 }}
                 // disabled={!is_active}
               >
-                <div
-                  className="icon-image"
-                  style={campaignActionButtonStyle}
-                  // onMouseEnter={() => setHovered(true)}
-                  // onMouseLeave={() => setHovered(false)}
-                >
+                <div className="icon-image" style={campaignActionButtonStyle}>
                   <Link to={`/campaigns/${campaign_id}`}>
                     <FaEdit
+                      data-tooltip-id={
+                        draftCampaignToggle ? "draft-campaign-tooltip" : ""
+                      }
                       style={{ height: 24, width: 24, cursor: "pointer" }}
                       onClick={() => handleEdit(campaign_id)}
-                      // style={{ textDecoration: "none" }}
                       disabled={isDisabled}
                     />
                     <div>
@@ -360,6 +375,14 @@ export default function CampaignBlock({
         variant="info"
         offset={20}
         content="Links are no longer available"
+      />
+
+      <ReactTooltip
+        id="draft-campaign-tooltip"
+        place="top-left"
+        variant="light"
+        offset={20}
+        content="Campaign Draft, Please click to Edit &  save your campaign"
       />
     </>
   );

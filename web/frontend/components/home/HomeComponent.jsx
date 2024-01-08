@@ -465,7 +465,6 @@ const HomeComponent = () => {
   };
 
 
-  console.log(getTotalRevenue,"Revenues")
   return (
     <div>
       {campaignsList.length === 0 ? (
