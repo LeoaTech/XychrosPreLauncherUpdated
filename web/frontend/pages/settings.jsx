@@ -6,7 +6,6 @@ import {
 } from "../app/features/settings/settingsSlice";
 import { SideBar, Header } from "../components/index";
 import useFetchSettings from "../constant/fetchGlobalSettings";
-import { useStateContext } from "../contexts/ContextProvider";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
@@ -14,7 +13,7 @@ import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
 const Settings = lazy(() => import("../components/settings/SettingComponent"));
 
 const SettingsPage = () => {
-  const { activeMenu } = useStateContext();
+  const { theme } = useThemeContext();
   const abortController = new AbortController();
   const dispatch = useDispatch();
 
@@ -44,40 +43,25 @@ const SettingsPage = () => {
   }, [dispatch, settings]);
 
   return (
-    <div className="app">
-      {activeMenu ? (
-        <div className="header">
-          <Header />
+    <div className={theme === "dark" ? "app" : "app-light"}>
+
+
+      <input type="checkbox" name="" id="menu-toggle" />
+      <div className="overlay">
+        <label htmlFor="menu-toggle"> </label>
+      </div>
+      <div className="sidebar">
+        <div className="sidebar-container">
+          <SideBar />
         </div>
-      ) : (
-        <div className="header">
-          <Header />
-        </div>
-      )}
-      <div className="main-app">
-        {activeMenu ? (
-          <>
-            <div className="sidebar">
-              <SideBar />
-            </div>
-            <div className="main-container">
-              <Suspense fallback={<SkeletonLoader />}>
-                <Settings />
-              </Suspense>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="sidebar closed">
-              <SideBar />
-            </div>
-            <div className="main-container full">
-              <Suspense fallback={<SkeletonLoader />}>
-                <Settings />
-              </Suspense>
-            </div>
-          </>
-        )}
+      </div>
+      <div className="main-content">
+        <Header />
+        <main>
+          <Suspense fallback={<SkeletonLoader />}>
+            <Settings />
+          </Suspense>
+        </main>
       </div>
     </div>
   );
