@@ -1,5 +1,5 @@
-.sidebar-container {
-  height: 100vh;
+.side-bar-container {
+  height: 100%;
 
   display: flex;
   flex-direction: column;
@@ -36,7 +36,9 @@ a {
 
 .sidebar_header {
   display: flex;
-  padding: 5px 17px;
+  padding: 15px 17px;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 /* New Campaign button  */
@@ -157,7 +159,7 @@ a {
 
   .sidebar_header {
     display: flex;
-    padding: 7px 0px;
+    padding: 22px 0px;
     justify-content: center;
     margin: 0 10px;
     align-items: center;
@@ -171,7 +173,7 @@ a {
   }
 
   .add-button {
-    padding: 4px 6px;
+    padding: 6px 18px;
     font-size: 15px;
     font-weight: 500;
   }
@@ -241,7 +243,8 @@ a {
   .sidebar_header {
     display: flex;
     font-size: 12px;
-    padding: 5px 3px;
+    padding: 25px;
+    margin: 0 45px;
     justify-content: flex-start;
     align-items: center;
   }
@@ -262,8 +265,8 @@ a {
   }
 
   .add-button {
-    padding: 7px 2px;
-    font-size: 14px;
+    padding: 4px 12px;
+    font-size: 16px;
     font-weight: 500;
   }
 
@@ -284,21 +287,21 @@ a {
 
   .top .normallink .icon-img,
   .bottom .sidebar-link-bottom .normallink .icon-img {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 
   .top .normallink,
   .bottom .normallink {
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
 
   .icon-text,
   .sidebar-link-bottom .icon-text {
     display: block;
     font-weight: 500;
-    font-size: 16.5px;
+    font-size: 17px;
   }
 
   .bottom .sidebar-link-bottom .normallink {
@@ -330,15 +333,15 @@ a {
 
 @media only screen and (max-width: 786px) {
   .sidebar-content .sidebar-logo {
-    width: 130px;
-    margin: 0 10px;
+    width: 150px;
+    margin: 20px 15px;
   }
   .sidebar_header {
     display: flex;
-    padding: 6px 0px;
+    padding: 3px 0px;
     justify-content: space-between;
     align-items: center;
-    margin: 0 15px;
+    margin: 0 45px;
     margin-bottom: 4px;
   }
 
@@ -372,12 +375,12 @@ a {
 
   .top .normallink,
   .bottom .sidebar-link-bottom .normallink {
-    font-size: 22px;
+    font-size: 18px;
     align-items: center;
   }
 
   .bottom .sidebar-link-bottom .normallink .icon-text {
-    font-size: 19px;
+    font-size: 17px;
   }
 
   .sidebar-link-bottom a {
@@ -401,7 +404,10 @@ a {
   .sidebar_header {
     display: flex;
     padding: 10px 5px;
-    margin: 0 20px;
+    margin: 10px 40px;
+  }
+  .sidebar_header img{
+    width: 50%;
   }
 
   .close-menubtn {
@@ -416,8 +422,8 @@ a {
   }
 
   .add-button {
-    padding: 5px 4px;
-    font-size: 15px;
+    padding: 5px 14px;
+    font-size: 17px;
     font-weight: 500;
   }
 
@@ -456,7 +462,7 @@ a {
   .top .normallink,
   .bottom .normallink {
     align-items: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 14px;
+    padding-bottom: 12px;
   }
 }
