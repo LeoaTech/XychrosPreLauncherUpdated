@@ -6,7 +6,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { QueryClient, QueryClientProvider } from "react-query";
-
+import "./styles.css"
 const queryClient = new QueryClient();
 
 ReactDOM.render(
