@@ -10,11 +10,12 @@ import { fetchpricing } from "../app/features/pricing/pricing";
 import { fetchSavePlan } from "../app/features/current_plan/current_plan";
 import useFetchBillingModel from "../constant/fetchBillingModel";
 import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
+import { useThemeContext } from "../contexts/ThemeContext";
 
 const UserProfile = lazy(() => import("../components/user/UserProfile"));
 
 const UserProfilePage = () => {
-  const { activeMenu } = useStateContext();
+  const { theme } = useThemeContext();
   const abortController = new AbortController();
 
   const dispatch = useDispatch();
@@ -56,7 +57,6 @@ const UserProfilePage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
   useEffect(() => {
     if (userDetails !== undefined) {
       dispatch(SaveUser(userDetails));
@@ -87,40 +87,24 @@ const UserProfilePage = () => {
   }, [dispatch, pricingData]);
 
   return (
-    <div className="app">
-      {activeMenu ? (
-        <div className="header">
-          <Header />
+    <div className={theme === "dark" ? "app" : "app-light"}>
+
+      <input type="checkbox" name="" id="menu-toggle" />
+      <div className="overlay">
+        <label htmlFor="menu-toggle"> </label>
+      </div>
+      <div className="sidebar">
+        <div className="sidebar-container">
+          <SideBar />
         </div>
-      ) : (
-        <div className="header">
-          <Header />
-        </div>
-      )}
-      <div className="main-app">
-        {activeMenu ? (
-          <>
-            <div className="sidebar">
-              <SideBar />
-            </div>
-            <div className="main-container">
-              <Suspense fallback={<SkeletonLoader />}>
-                <UserProfile />
-              </Suspense>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="sidebar closed">
-              <SideBar />
-            </div>
-            <div className="main-container full">
-              <Suspense fallback={<SkeletonLoader />}>
-                <UserProfile />
-              </Suspense>
-            </div>
-          </>
-        )}
+      </div>
+      <div className="main-content">
+        <Header />
+        <main>
+          <Suspense fallback={<SkeletonLoader />}>
+            <UserProfile />
+          </Suspense>
+        </main>
       </div>
     </div>
   );

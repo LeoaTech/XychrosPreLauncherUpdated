@@ -28,8 +28,13 @@
   font-weight: 700;
 }
 
+.account-section-light .account-title h2{
+  color:#1b1a21;
+}
+
 /* Save Btn */
-.account-section button, .account-section-light button {
+.account-section button,
+.account-section-light button {
   float: right;
 }
 
@@ -53,16 +58,15 @@
   -o-border-radius: 10px;
 }
 
-
 .contact-details-light,
-.billing-details-light{
-  background-color:#fcfcfc;
-  color:#1b1a21;
-  border:1px solid #dbdcef;
+.billing-details-light {
+  background-color: #fcfcfc;
+  color: #1b1a21;
+  border: 1px solid #dbdcef;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-
 }
-.contact-details .contact-header , .contact-details-light .contact-header{
+.contact-details .contact-header,
+.contact-details-light .contact-header {
   display: flex;
   /* justify-content: space-between; */
   /* align-items: center; */
@@ -125,9 +129,8 @@
   -o-border-radius: 10px;
 }
 
-.billing-card-light{
+.billing-card-light {
   background-color: #f5f5f5;
-
 }
 
 .billing-card {
@@ -140,7 +143,7 @@
   -o-transition: opacity 0.5s;
 }
 
-.contact-details h3, 
+.contact-details h3,
 .billing-details h3 {
   font-size: 22px;
   font-weight: 500;
@@ -149,7 +152,8 @@
 
 /* Contact Details Form */
 
-.account-section, .account-section-light {
+.account-section,
+.account-section-light {
   line-height: 1.7;
 }
 
@@ -171,12 +175,11 @@
   color: rgb(200, 199, 199);
 }
 
-
-
-.contact-details-light .form-input-group label{
-  color:#1b1a21;
+.contact-details-light .form-input-group label {
+  color: #1b1a21;
 }
-.account-section input, .account-section-light input {
+.account-section input,
+.account-section-light input {
   background-color: rgba(41, 40, 40, 0.921);
   border: none;
   padding: 25px 10px;
@@ -192,14 +195,13 @@
   -o-border-radius: 12px;
 }
 
-.account-section-light input{
-  color:#1b1a21;
+.account-section-light input {
+  color: #1b1a21;
   background-color: #f5f5f5;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.17);
-
 }
 
-.contact-details-light h3, 
+.contact-details-light h3,
 .billing-details-light h3 {
   font-size: 22px;
   font-weight: 500;
@@ -296,7 +298,8 @@
 }
 
 @media screen and (max-width: 1480px) {
-  .account-section input {
+  .account-section input,
+  .account-section-light input {
     width: 380px;
   }
 
@@ -321,17 +324,29 @@
 
 @media screen and (max-width: 1250px) {
   .contact-details,
-  .billing-details {
+  .contact-details-light,
+  .billing-details,
+  .billing-details-light {
     width: 100%;
     background-color: #1b1a21;
     padding: 46px;
   }
 
-  .account-section input {
+  .contact-details-light,
+  .billing-details-light {
+    background-color: #fcfcfc;
+    color: #1b1a21;
+    border: 1px solid #dbdcef;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  }
+
+  .account-section input,
+  .account-section-light input {
     width: 370px;
   }
 
-  .account-section {
+  .account-section,
+  .account-section-light {
     flex-direction: column;
   }
 
@@ -347,7 +362,8 @@
 }
 
 @media screen and (max-width: 1050px) {
-  .account-section {
+  .account-section,
+  .account-section-light {
     margin-left: 2%;
     padding: 5px 10px;
     margin: 5px 12px;
@@ -359,25 +375,37 @@
   }
 
   .contact-details,
+  .contact-details-light,
+  .billing-details-light,
   .billing-details {
     width: 100%;
     background-color: #1b1a21;
     padding: 40px;
   }
 
-  .billing-details {
+  .billing-details,
+  .billing-details-light {
     background-color: #1b1a21;
     padding: 25px 15px;
     margin: 20px 0;
     border-radius: 10px;
   }
+  .billing-details-light,
+  .contact-details-light {
+    background-color: #fcfcfc;
+    color: #1b1a21;
+    border: 1px solid #dbdcef;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  }
 
-  .account-section input {
+  .account-section input,
+  .account-section-light input {
     width: 310px;
     height: 48px;
   }
 
-  .account-section {
+  .account-section,
+  .account-section-light {
     flex-direction: column;
   }
 
@@ -397,7 +425,8 @@
 }
 
 @media screen and (max-width: 786px) {
-  .account-section input {
+  .account-section input,
+  .account-section-light input {
     width: 100%;
   }
 
@@ -406,7 +435,8 @@
     justify-content: center;
   }
 
-  .billing-details {
+  .billing-details,
+  .billing-details-light {
     padding: 25px 30px;
     margin: 20px 0;
     border-radius: 10px;
@@ -435,7 +465,8 @@
 /* Mobile View */
 
 @media screen and (max-width: 500px) {
-  .account-section {
+  .account-section,
+  .account-section-light {
     justify-content: space-between;
   }
 
@@ -443,19 +474,27 @@
   .billing-details {
     width: 100%;
     background-color: #1b1a21;
-    padding: 16px 10px;
+  }
+
+  .contact-details-light,
+  .billing-details-light {
+    width: 100%;
   }
 
   .billing-details h3,
-  .contact-details h3 {
+  .billing-details-light h3,
+  .contact-details h3,
+  .contact-details-light h3 {
     font-size: 20px;
   }
 
-  .billing-details p {
+  .billing-details p,
+  .billing-details-light p {
     font-size: 14px;
   }
 
-  .account-section {
+  .account-section,
+  .account-section-light {
     flex-direction: column;
     padding: 10px 4px;
     margin: 5px 0px;
@@ -466,7 +505,8 @@
     justify-content: center;
   }
 
-  .account-section input {
+  .account-section input,
+  .account-section-light input {
     width: 100%;
   }
 
@@ -487,7 +527,8 @@
     gap: 0.2rem;
   }
 
-  .billing-card {
+  .billing-card,
+  .billing-card-light {
     flex: 0 0 130px;
   }
 
