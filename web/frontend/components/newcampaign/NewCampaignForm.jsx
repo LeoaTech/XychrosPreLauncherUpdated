@@ -224,7 +224,6 @@ function NewCampaignForm() {
       signal: abortController.signal,
     });
 
-
   useEffect(() => {
     if (fetchDiscountCodes?.length > 0) {
       setDiscountList([...discountList, ...fetchDiscountCodes]);
@@ -290,6 +289,7 @@ function NewCampaignForm() {
       setGlobalSettings({ ...settings });
     }
   }, [settings]);
+
 
   // get the Products in select box
   useEffect(() => {
@@ -688,7 +688,7 @@ function NewCampaignForm() {
   // Handle Previous Step event for each Form
   const handlePrevious = (index) => {
     setNewCampaignData((prev) => ({ ...prev, template_id: null }));
-    setSelectedTemplateData(undefined);
+    setSelectedTemplateData(null);
 
     setExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
@@ -993,7 +993,6 @@ function NewCampaignForm() {
 
     return productId || null;
   }
-
 
   // Handle Discount Codes Validation on Next Button click
   const handleDiscountValidation = (index) => {
@@ -2998,6 +2997,7 @@ function NewCampaignForm() {
     }
   };
 
+
   return (
     <>
       {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
@@ -4734,7 +4734,10 @@ function NewCampaignForm() {
                                   name="klaviyo_api_key"
                                   id="klaviyo_api_key"
                                   placeholder="Enter API Key"
-                                  value={globalSettings?.klaviyo_api_key}
+                                  value={
+                                    globalSettings?.klaviyo_api_key ||
+                                    editCampaignData?.klaviyo_api_key
+                                  }
                                   onChange={handleChange}
                                   readOnly
                                 />
@@ -4752,61 +4755,73 @@ function NewCampaignForm() {
                               )}
                             </div>
                           </div>
-                          <div className="form-group">
-                            <div className="inputfield">
-                              {klaviyoList?.length > 2 && (
-                                <label htmlFor="">List to Add Users</label>
-                              )}
+                          {newCampaignData?.klaviyo_integration ||
+                          editCampaignData?.klaviyo_integration ? (
+                            <div className="form-group">
+                              <div className="inputfield">
+                                {klaviyoList?.length > 2 && (
+                                  <label htmlFor="">List to Add Users</label>
+                                )}
 
-                              {klaviyoList?.length > 2 ? (
-                                <div className="select-user-input">
-                                  {isEdit ? (
-                                    <select
-                                      name="klaviyo_list_id"
-                                      id="klaviyo_list_id"
-                                      value={editCampaignData?.klaviyo_list_id}
-                                      onChange={handleChange}
-                                    >
-                                      <option value="Select">Select</option>
-                                      {klaviyoList?.map((list) => (
-                                        <option
-                                          key={list?.list_id}
-                                          value={list?.list_id}
-                                        >
-                                          {list?.list_name}
-                                        </option>
-                                      ))}
-                                    </select>
-                                  ) : (
-                                    <select
-                                      name="klaviyo_list_id"
-                                      id="klaviyo_list_id"
-                                      value={newCampaignData?.klaviyo_list_id}
-                                      onChange={handleChange}
-                                    >
-                                      <option value="Select">Select</option>
-                                      {klaviyoList?.map((list) => (
-                                        <option
-                                          key={list?.list_id}
-                                          value={list?.list_id}
-                                        >
-                                          {list?.list_name}
-                                        </option>
-                                      ))}
-                                    </select>
-                                  )}
-                                </div>
-                              ) : (
-                                <Link to="/settings">
-                                  {!isEdit && (
-                                    <p className="klaviyo-message">
-                                      Please Enable API Key in Global Settings
-                                    </p>
-                                  )}
-                                </Link>
-                              )}
+                                {klaviyoList?.length > 2 ? (
+                                  <div className="select-user-input">
+                                    {isEdit ? (
+                                      <select
+                                        name="klaviyo_list_id"
+                                        id="klaviyo_list_id"
+                                        value={
+                                          editCampaignData?.klaviyo_list_id
+                                        }
+                                        onChange={handleChange}
+                                      >
+                                        <option value="Select">Select</option>
+                                        {klaviyoList?.map((list) => (
+                                          <option
+                                            key={list?.list_id}
+                                            value={list?.list_id}
+                                          >
+                                            {list?.list_name}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    ) : (
+                                      <select
+                                        name="klaviyo_list_id"
+                                        id="klaviyo_list_id"
+                                        value={newCampaignData?.klaviyo_list_id}
+                                        onChange={handleChange}
+                                      >
+                                        <option value="Select">Select</option>
+                                        {klaviyoList?.map((list) => (
+                                          <option
+                                            key={list?.list_id}
+                                            value={list?.list_id}
+                                          >
+                                            {list?.list_name}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <Link to="/settings">
+                                    {!isEdit && (
+                                      <p className="klaviyo-message">
+                                        Please Enable API Key in Global Settings
+                                      </p>
+                                    )}
+                                  </Link>
+                                )}
+                              </div>
                             </div>
-                          </div>
+                          ) : (
+                            <p>
+                              Please Enable klaviyo Integration from{" "}
+                              <Link to="/settings" style={{ color: "purple" }}>
+                                Global Settings
+                              </Link>
+                            </p>
+                          )}
                         </div>
                       </div>
                     )}
