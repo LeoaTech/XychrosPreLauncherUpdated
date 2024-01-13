@@ -10,11 +10,30 @@ import {
 import useFetchAllProducts from "../../constant/fetchProducts";
 import { useStateContext } from "../../contexts/ContextProvider";
 import "../../index.css";
+import useFetchSettingsData from "../../constant/fetchGlobalSettings";
+import { fetchSettings } from "../../app/features/settings/settingsSlice";
 
 const CampaignId = () => {
   const { activeMenu } = useStateContext();
   const dispatch = useDispatch();
   const abortController = new AbortController();
+  const { data: settingsData, error: settingsError } = useFetchSettingsData(
+    "/api/updatesettings",
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    }
+  );
+
+  useEffect(() => {
+    if (settingsData) {
+      dispatch(fetchSettings(settingsData));
+    }
+    return () => {
+      abortController.abort();
+    };
+  }, [dispatch, settingsData]);
 
   let { data: productsData, error: productsError } = useFetchAllProducts(
     "/api/2022-10/products.json",
