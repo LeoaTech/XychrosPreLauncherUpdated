@@ -117,8 +117,8 @@
   border: 1px solid rgb(186, 182, 182);
   /* padding: 4px ; */
   /* background-color: var(--primary-color); */
-  height: 300px;
-  width: 500px;
+  height: 100%px;
+  width: 100%;
   margin-top: 20px;
   display: flex;
   flex-direction: column;
@@ -228,7 +228,7 @@
   }
 
   .referral_detail-table {
-    height: 230px;
+    height: 100%;
     width: 380px;
     margin-top: 20px;
     margin-left: 2px;
@@ -265,8 +265,8 @@
   }
 
   .referral_detail-table {
-    height: 180px;
-    width: 330px;
+    height: 100%;
+    width:100%;
     margin-top: 10px;
     margin-left: 2px;
   }
@@ -280,8 +280,8 @@
     top: 50%;
     left: 48%;
     transform: translate(-50%, -50%);
-    width: 400px;
-    height: 450px;
+    width: 350px;
+    height: 500px;
     -webkit-transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
@@ -304,9 +304,11 @@
   }
 
   .referral_detail-table {
-    height: 150px;
-    width: 330px;
+    height: 100%;
+    width: 300px;
     margin-top: 20px;
     margin-left: 2px;
+    /* margin-bottom: 20px; */
   }
+
 }
