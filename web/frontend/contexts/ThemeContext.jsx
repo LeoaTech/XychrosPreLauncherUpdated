@@ -10,12 +10,16 @@ const initialState = {
 export const ThemeProvider = ({ children }) => {
   const [lightTheme, setLightTheme] = useState(false);
   const [darkTheme, setDarkTheme] = useState(true);
+  const [theme, setTheme] = useState('dark')
 
   return (
     <ThemeContext.Provider
       value={{
         lightTheme,
         darkTheme,
+        setLightTheme,
+        setDarkTheme,
+        theme,setTheme
       }}
     >
       {children}
