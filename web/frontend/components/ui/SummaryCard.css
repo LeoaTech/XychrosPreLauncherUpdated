@@ -107,7 +107,7 @@
 }
 
 @media only screen and (max-width: 1280px) {
-  .summary-card {
+  .summary-card, .summary-card-light {
     width: 250px;
     height: 110px;
     padding: 10px;
@@ -145,7 +145,7 @@
 }
 
 @media only screen and (max-width: 1050px) {
-  .summary-card {
+  .summary-card,.summary-card-light {
     width: 25%;
     height: 90px;
     padding: 10px 14px;
@@ -183,7 +183,7 @@
 }
 
 @media only screen and (max-width: 786px) {
-  .summary-card {
+  .summary-card, .summary-card-light {
     width: 200px;
     height: 100px;
     flex-wrap: wrap;
@@ -192,7 +192,7 @@
     /* align-items: center; */
   }
 
-  .summary-details {
+  .summary-details, .summary-details-light {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -235,7 +235,7 @@
 }
 
 @media only screen and (max-width: 500px) {
-  .summary-card {
+  .summary-card,.summary-card-light {
     width: 146px;
     height: 150px;
     display: flex;
@@ -247,7 +247,7 @@
     margin: 10px;
   }
 
-  .summary-details {
+  .summary-details, .summary-details-light {
     display: flex;
     /* flex-direction: column; */
     /* justify-content: center; */
@@ -287,7 +287,7 @@
 }
 
 @media only screen and (max-width: 390px) {
-  .summary-card {
+  .summary-card, .summary-card-light {
     gap: 10px;
     width: 130px;
     padding: 5px;

@@ -29,8 +29,10 @@
 }
 
 .short-summary-card-light{
-  background-color:#fcfcfc;
-}
+  background-color: #fcfcfc;
+  color: #1b1a21;
+  border: 1px solid #dbdcef;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);}
 
 .short-summary-card.deactive {
   border: 1px solid #fcfcfc;
@@ -71,7 +73,7 @@
 }
 
 @media only screen and (max-width: 1050px) {
-  .short-summary-card {
+  .short-summary-card, .short-summary-card-light {
     /* width: 110px; */
     margin: 10px 5px;
     display: flex;
@@ -81,7 +83,7 @@
     flex-wrap: wrap;
   }
 
-  .short-summary-card-value {
+  .short-summary-card-value, .short-summary-card-value-light {
     font-size: 19.5px;
     font-weight: 700;
   }
@@ -91,24 +93,24 @@
     width: 25px;
   } */
 
-  .short-summary-card .revenue-icon {
+  .short-summary-card .revenue-icon , .short-summary-card-light .revenue-icon{
     width: 27px;
     height: 26px;
   }
 
-  .short-summary-card .referral-icon {
+  .short-summary-card .referral-icon, .short-summary-card-light .referral-icon {
     width: 37px;
     height: 26px;
   }
 
-  .short-summary-card .clicks-icon {
+  .short-summary-card .clicks-icon, .short-summary-card-light .clicks-icon {
     height: 26px;
     width: 28px;
   }
 }
 
 @media only screen and (max-width: 786px) {
-  .short-summary-card {
+  .short-summary-card, .short-summary-card-light {
     /* width: 140px; */
     /* gap: 10px; */
     padding: 10px 10px;
@@ -119,7 +121,7 @@
     margin: 10px 10px;
   }
 
-  .short-summary-card-value {
+  .short-summary-card-value, .short-summary-card-value-light {
     margin-top: 20px;
     font-size: 29px;
   }
@@ -131,7 +133,7 @@
 }
 
 @media only screen and (max-width: 500px) {
-  .short-summary-card {
+  .short-summary-card, .short-summary-card-light {
     /* width: 70px; */
     /* height: 105px; */
     margin: 10px 18px;
@@ -142,13 +144,13 @@
     align-items: center;
   }
 
-  .short-summary-card-value {
+  .short-summary-card-value, .short-summary-card-value-light {
     font-size: 23px;
   }
 }
 
 @media only screen and (max-width: 380px) {
-  .short-summary-card {
+  .short-summary-card, .short-summary-card-light {
     /* width: 200px;
     height: 70px; */
     margin: 10px;
