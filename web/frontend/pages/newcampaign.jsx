@@ -5,19 +5,19 @@ import { fetchSettings } from "../app/features/settings/settingsSlice";
 import { SideBar, Header } from "../components/index";
 import useFetchSettings from "../constant/fetchGlobalSettings";
 import useFetchAllProducts from "../constant/fetchProducts";
-import { useStateContext } from "../contexts/ContextProvider";
 import "../index.css";
 import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
 import useFetchCampaignsDetails from "../constant/fetchCampaignDetails";
 import { fetchCampaignDetails } from "../app/features/campaign_details/campaign_details";
 import { fetchCurrentPlan } from "../app/features/current_plan/current_plan";
+import { useThemeContext } from "../contexts/ThemeContext";
 
 const NewCampaignForm = lazy(() =>
   import("../components/newcampaign/NewCampaignForm")
 );
 
 const NewCampaign = () => {
-  const { activeMenu } = useStateContext();
+  const { theme } = useThemeContext();
   const currentPlan = useSelector(fetchCurrentPlan);
 
   const abortController = new AbortController();
@@ -55,14 +55,15 @@ const NewCampaign = () => {
   );
 
   useEffect(() => {
-    if (settingsData?.length > 0) {
-      dispatch(fetchSettings(settingsData));
+    if (settingsData !== undefined) {
+      dispatch(fetchSettings({ ...settingsData }));
     }
     return () => {
       abortController.abort();
     };
   }, [dispatch, settingsData]);
 
+  console.log(settingsData);
   useEffect(() => {
     if (productsList?.length > 0) {
       dispatch(fetchProducts(productsList));
@@ -182,40 +183,23 @@ const NewCampaign = () => {
   ]);
 
   return (
-    <div className="app">
-      {activeMenu ? (
-        <div className="header">
-          <Header />
+    <div className={theme === "dark" ? "app" : "app-light"}>
+      <input type="checkbox" name="" id="menu-toggle" />
+      <div className="overlay">
+        <label htmlFor="menu-toggle"> </label>
+      </div>
+      <div className="sidebar">
+        <div className="sidebar-container">
+          <SideBar />
         </div>
-      ) : (
-        <div className="header">
-          <Header />
-        </div>
-      )}
-      <div className="main-app">
-        {activeMenu ? (
-          <>
-            <div className="sidebar">
-              <SideBar />
-            </div>
-            <div className="main-container">
-              <Suspense fallback={<SkeletonLoader />}>
-                <NewCampaignForm />
-              </Suspense>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="sidebar closed">
-              <SideBar />
-            </div>
-            <div className="main-container full">
-              <Suspense fallback={<SkeletonLoader />}>
-                <NewCampaignForm />
-              </Suspense>
-            </div>
-          </>
-        )}
+      </div>
+      <div className="main-content">
+        <Header />
+        <main>
+          <Suspense fallback={<SkeletonLoader />}>
+            <NewCampaignForm />
+          </Suspense>
+        </main>
       </div>
     </div>
   );

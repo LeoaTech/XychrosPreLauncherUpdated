@@ -19,6 +19,7 @@ import "./newcampaign.css";
 import { useDispatch, useSelector } from "react-redux";
 import "./socialsBlocks/social.css";
 import "./rewardTier/RewardTier.css";
+import { useThemeContext } from "../../contexts/ThemeContext";
 import {
   updateCampaign,
   fetchCampaignById,
@@ -85,8 +86,8 @@ function NewCampaignForm() {
   let getNextDate = new Date();
   getStartDate.setDate(today.getDate() + 1); // Get Start Date
   getNextDate.setDate(today.getDate() + 6); //Get End Date
-  getStartDate.setHours(0, 0, 0, 0); //Start Camapign with Midnight Time
-  getNextDate.setHours(0, 0, 0, 0); //End Camapign with Midnight Time
+  getStartDate.setHours(0, 0, 0, 1); //Start Camapign with Midnight Time
+  getNextDate.setHours(23, 59, 59, 59); //End Camapign with Midnight Time
 
   // Local States of Components
 
@@ -99,7 +100,7 @@ function NewCampaignForm() {
   const [productsData, setProductsData] = useState([]);
   const [startDate, setStartDate] = useState(getStartDate);
   const [endDate, setEndDate] = useState(getNextDate);
-
+  const { theme } = useThemeContext();
   const [draftModal, setDraftModal] = useState(false);
   const [showPrompt, confirmNavigation, cancelNavigation] =
     useCallbackPrompt(draftModal);
@@ -250,8 +251,8 @@ function NewCampaignForm() {
 
   //! Re-render all the global settings fields into the Form
   useEffect(() => {
-    if (settings?.length > 0) {
-      setGlobalSettings(settings[0]);
+    if (settings != undefined) {
+      setGlobalSettings(settings);
     }
   }, [settings]);
 
@@ -262,6 +263,7 @@ function NewCampaignForm() {
     }
   }, [products]);
 
+  console.log(globalSettings);
   // Get New Campaign Form pre-filled fields From Global Settings
   useEffect(() => {
     if (globalSettings !== undefined) {
@@ -441,7 +443,7 @@ function NewCampaignForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          signal: abortController.signal,
+          // signal: abortController.signal,
         });
 
         if (response.ok) {
@@ -457,18 +459,27 @@ function NewCampaignForm() {
   }
 
   // Update Klaviyo API Lists in the Form
-  useEffect(async () => {
+  useEffect(() => {
     if (isEdit && editCampaignData?.klaviyo_api_key != "") {
-      let apiList = await getKlaviyoList();
-      setKlaviyoList(apiList);
+      (async () => {
+        try {
+          let apiList = await getKlaviyoList();
+          setKlaviyoList(apiList);
+        } catch (error) {}
+      })();
     } else if (!isEdit && globalSettings?.klaviyo_api_key != null) {
-      let findList = await getKlaviyoList();
-      setKlaviyoList(findList);
+      (async () => {
+        try {
+          let findList = await getKlaviyoList();
+          setKlaviyoList(findList);
+        } catch (error) {}
+      })();
     }
-    return () => {
-      abortController.abort();
-    };
+    // return () => {
+    //   abortController.abort();
+    // };
   }, [globalSettings?.klaviyo_api_key, editCampaignData?.klaviyo_api_key]);
+  console.log(klaviyoList, "list", globalSettings?.klaviyo_api_key);
 
   //? When user try to reload or change the route to other page
   useEffect(() => {
@@ -491,7 +502,11 @@ function NewCampaignForm() {
     <div className="wrapper">
       <div className="icon">
         <AiOutlineCalendar
-          style={{ height: "20px", width: "20px" }}
+          style={
+            theme === "dark"
+              ? { color: "#FFF", height: "18px", width: "18px" }
+              : { color: "#333", height: 18, width: 18 }
+          }
           onClick={onClick}
         />
       </div>
@@ -1096,7 +1111,6 @@ function NewCampaignForm() {
     }
   };
 
-
   // Save  New Campaign form  & Update Campaign Form
   const handleSaveClick = async (e) => {
     e.preventDefault();
@@ -1303,7 +1317,11 @@ function NewCampaignForm() {
       {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
         (myPlan == "Tier 1" && TotalCampaign?.length >= 2)) &&
       !isEdit ? (
-        <div className="upgrade-container">
+        <div
+          className={
+            theme === "dark" ? "upgrade-container" : "upgrade-container-light"
+          }
+        >
           <p>
             You already have {TotalCampaign?.length} Active Campaign
             {TotalCampaign?.length > 1 && "s"}
@@ -1315,7 +1333,11 @@ function NewCampaignForm() {
         </div>
       ) : (
         <div className="new-campaign-container">
-          <div className="newcampaign-title">
+          <div
+            className={
+              theme === "dark" ? "newcampaign-title" : "newcampaign-title-light"
+            }
+          >
             <h1>{isEdit ? "Edit Campaign" : "New Campaign"}</h1>
           </div>
 
@@ -1338,11 +1360,25 @@ function NewCampaignForm() {
           />
           <form onSubmit={handleSaveClick}>
             {/* Basic Settings Input Form Section  */}
-            <section className="newcampaign-settings">
+            <section
+              className={
+                theme === "dark"
+                  ? "newcampaign-settings"
+                  : "newcampaign-settings-light"
+              }
+            >
               <div
-                className={`basic-form-settings ${
-                  expanded[0] ? "active-card" : "inactive-card"
-                }`}
+                className={
+                  theme === "dark"
+                    ? `basic-form-settings ${
+                        expanded[0] ? "active-card" : "inactive-card"
+                      }`
+                    : `basic-form-settings ${
+                        expanded[0]
+                          ? "active-card-light"
+                          : "inactive-card-light"
+                      }`
+                }
                 onClick={() => handleExpand(0)}
               >
                 <div className="card-header">
@@ -1365,7 +1401,13 @@ function NewCampaignForm() {
               {expanded[0] && (
                 <>
                   <div className="campaign-form">
-                    <div className="input-form-groups">
+                    <div
+                      className={
+                        theme === "dark"
+                          ? "input-form-groups"
+                          : "input-form-groups-light"
+                      }
+                    >
                       <div className="form-group">
                         <div className="inputfield">
                           <label htmlFor="name">
@@ -1415,7 +1457,13 @@ function NewCampaignForm() {
                         <div className="inputfield">
                           <label htmlFor="product_link">Product Link</label>
                           {isEdit ? (
-                            <div className="select-products">
+                            <div
+                              className={
+                                theme === "dark"
+                                  ? "select-products"
+                                  : "select-products-light"
+                              }
+                            >
                               <select
                                 name="product"
                                 id="product"
@@ -1434,11 +1482,18 @@ function NewCampaignForm() {
                               </select>
                             </div>
                           ) : (
-                            <div className="select-products">
+                            <div
+                              className={
+                                theme === "dark"
+                                  ? "select-products"
+                                  : "select-products-light"
+                              }
+                            >
                               <select
                                 name="product"
                                 id="product"
-                                placeholder="T-Shirts"
+                                placeholder=""
+                                
                                 value={newCampaignData?.product}
                                 onChange={handleChange}
                               >
@@ -1581,7 +1636,11 @@ function NewCampaignForm() {
                             </span>
                             {isEdit ? (
                               <input
-                                className="social-inputfield"
+                                className={
+                                  theme === "dark"
+                                    ? "social-inputfield"
+                                    : "social-inputfield-light"
+                                }
                                 type="text"
                                 name={`${link?.name}`}
                                 value={editCampaignData[`${link?.name}`]}
@@ -1589,7 +1648,11 @@ function NewCampaignForm() {
                               />
                             ) : (
                               <input
-                                className="social-inputfield"
+                                className={
+                                  theme === "dark"
+                                    ? "social-inputfield"
+                                    : "social-inputfield-light"
+                                }
                                 type="text"
                                 name={`${link?.name}`}
                                 value={newCampaignData[`${link?.name}`]}
@@ -1602,7 +1665,13 @@ function NewCampaignForm() {
                     </div>
 
                     <div className="collect-setup">
-                      <div className="collect-settings">
+                      <div
+                        className={
+                          theme === "dark"
+                            ? "collect-settings"
+                            : "collect-settings-light"
+                        }
+                      >
                         <h2 className="sub-heading">Collect</h2>
                         <div>
                           {isEdit ? (
@@ -1679,11 +1748,25 @@ function NewCampaignForm() {
             </section>
 
             {/* Referal Settings */}
-            <section className="newcampaign-settings">
+            <section
+              className={
+                theme === "dark"
+                  ? "newcampaign-settings"
+                  : "newcampaign-settings-light"
+              }
+            >
               <div
-                className={`referrals-settings ${
-                  expanded[1] ? "active-card" : "inactive-card"
-                }`}
+                className={
+                  theme === "dark"
+                    ? `referrals-settings ${
+                        expanded[1] ? "active-card" : "inactive-card"
+                      }`
+                    : `referrals-settings ${
+                        expanded[1]
+                          ? "active-card-light"
+                          : "inactive-card-light"
+                      }`
+                }
                 //  onClick={() => handleExpand(1)}
               >
                 <div className="card-header">
@@ -1711,7 +1794,13 @@ function NewCampaignForm() {
               {expanded[1] && (
                 <>
                   <div className="referral-settings-form">
-                    <div className="referral-container">
+                    <div
+                      className={
+                        theme === "dark"
+                          ? "referral-container"
+                          : "referral-container-light"
+                      }
+                    >
                       <p>
                         Select the Social Media channels that you want to allow
                         your customers to share their referral link with!
@@ -1727,7 +1816,13 @@ function NewCampaignForm() {
                               <span className="social-icons">{link?.icon}</span>
                             </div>
 
-                            <div className="check-input">
+                            <div
+                              className={
+                                theme === "dark"
+                                  ? "check-input"
+                                  : "check-input-light"
+                              }
+                            >
                               {isEdit ? (
                                 <input
                                   type="checkbox"
@@ -1759,7 +1854,11 @@ function NewCampaignForm() {
                             <div className="referral-link-input">
                               {isEdit ? (
                                 <textarea
-                                  className="referral-input"
+                                  className={
+                                    theme === "dark"
+                                      ? "referral-input"
+                                      : "referral-input-light"
+                                  }
                                   name={`share_${link?.title}_message`}
                                   rows={4}
                                   value={
@@ -1771,7 +1870,11 @@ function NewCampaignForm() {
                                 />
                               ) : (
                                 <textarea
-                                  className="referral-input"
+                                  className={
+                                    theme === "dark"
+                                      ? "referral-input"
+                                      : "referral-input-light"
+                                  }
                                   name={`share_${link?.title}_message`}
                                   rows={4}
                                   value={
@@ -1807,11 +1910,25 @@ function NewCampaignForm() {
 
             {/* Reward Settings */}
 
-            <section className="newcampaign-settings">
+            <section
+              className={
+                theme === "dark"
+                  ? "newcampaign-settings"
+                  : "newcampaign-settings-light"
+              }
+            >
               <div
-                className={`rewards-settings ${
-                  expanded[2] ? "active-card" : "inactive-card"
-                }`}
+                className={
+                  theme === "dark"
+                    ? `rewards-settings ${
+                        expanded[2] ? "active-card" : "inactive-card"
+                      }`
+                    : `rewards-settings ${
+                        expanded[2]
+                          ? "active-card-light"
+                          : "inactive-card-light"
+                      }`
+                }
                 // onClick={() => handleExpand(2)}
               >
                 <div className="card-header">
@@ -1837,7 +1954,13 @@ function NewCampaignForm() {
 
               {expanded[2] && (
                 <>
-                  <div className="rewards-settings-form">
+                  <div
+                    className={
+                      theme === "dark"
+                        ? "rewards-settings-form"
+                        : "rewards-settings-form-light"
+                    }
+                  >
                     <p>
                       Set up the Rewards for your customers here! Select the
                       discount type and then the reward tiers!
@@ -1849,7 +1972,13 @@ function NewCampaignForm() {
 
                     <div className="rewards-settings-container">
                       <h2 className="sub-heading">Discount</h2>
-                      <div className="discount-settings">
+                      <div
+                        className={
+                          theme === "dark"
+                            ? "discount-settings"
+                            : "discount-settings-light"
+                        }
+                      >
                         <div>
                           {isEdit ? (
                             <input
@@ -1927,9 +2056,22 @@ function NewCampaignForm() {
                     )}
                     <div className="rewards-container">
                       {RewardData.map((reward) => (
-                        <div key={reward.id} className="reward-card">
+                        <div
+                          key={reward.id}
+                          className={
+                            theme === "dark"
+                              ? "reward-card"
+                              : "reward-card-light"
+                          }
+                        >
                           <div classname="reward-tier-card">
-                            <div className="reward-title">
+                            <div
+                              className={
+                                theme === "dark"
+                                  ? "reward-title"
+                                  : "reward-title-light"
+                              }
+                            >
                               <h2>{reward.title}</h2>
                               <span>
                                 {" "}
@@ -1987,7 +2129,13 @@ function NewCampaignForm() {
                                 )}
                               </div>
                               <div className="reward-form">
-                                <div className="inputfield">
+                                <div
+                                  className={
+                                    theme === "dark"
+                                      ? "inputfield"
+                                      : "inputfield-light"
+                                  }
+                                >
                                   <label htmlFor={`reward_${reward?.id}_tier`}>
                                     No of Referrals
                                   </label>
@@ -2040,7 +2188,13 @@ function NewCampaignForm() {
                                     />
                                   )}
                                 </div>
-                                <div className="inputfield">
+                                <div
+                                  className={
+                                    theme === "dark"
+                                      ? "inputfield"
+                                      : "inputfield-light"
+                                  }
+                                >
                                   <label
                                     htmlFor={`reward_${reward?.id}_discount`}
                                   >
@@ -2096,7 +2250,13 @@ function NewCampaignForm() {
                                   )}
                                 </div>
 
-                                <div className="inputfield">
+                                <div
+                                  className={
+                                    theme === "dark"
+                                      ? "inputfield"
+                                      : "inputfield-light"
+                                  }
+                                >
                                   <label htmlFor={`reward_${reward?.id}_code`}>
                                     Discount Code
                                   </label>
@@ -2244,11 +2404,25 @@ function NewCampaignForm() {
             </section>
 
             {/* Email Settings */}
-            <section className="newcampaign-settings">
+            <section
+              className={
+                theme === "dark"
+                  ? "newcampaign-settings"
+                  : "newcampaign-settings-light"
+              }
+            >
               <div
-                className={`emails-settings ${
-                  expanded[3] ? "active-card" : "inactive-card"
-                }`}
+                className={
+                  theme === "dark"
+                    ? `emails-settings ${
+                        expanded[3] ? "active-card" : "inactive-card"
+                      }`
+                    : `emails-settings ${
+                        expanded[3]
+                          ? "active-card-light"
+                          : "inactive-card-light"
+                      }`
+                }
                 // onClick={() => handleExpand(3)}
               >
                 <div className="card-header">
@@ -2455,11 +2629,25 @@ function NewCampaignForm() {
 
             {/* Integration Settings */}
 
-            <section className="newcampaign-settings">
+            <section
+              className={
+                theme === "dark"
+                  ? "newcampaign-settings"
+                  : "newcampaign-settings-light"
+              }
+            >
               <div
-                className={`integration-settings ${
-                  expanded[4] ? "active-card" : "inactive-card"
-                }`}
+                className={
+                  theme === "dark"
+                    ? `integration-settings ${
+                        expanded[4] ? "active-card" : "inactive-card"
+                      }`
+                    : `integration-settings ${
+                        expanded[4]
+                          ? "active-card-light"
+                          : "inactive-card-light"
+                      }`
+                }
               >
                 <div className="card-header">
                   <h2 className="card-title">Integration Settings</h2>
@@ -2482,7 +2670,11 @@ function NewCampaignForm() {
                 <>
                   <div className="integration-container">
                     <div className="integration-block-content">
-                      <div className="check-input">
+                      <div
+                        className={
+                          theme === "dark" ? "check-input" : "check-input-light"
+                        }
+                      >
                         {isEdit ? (
                           <input
                             type="checkbox"
@@ -2508,7 +2700,13 @@ function NewCampaignForm() {
 
                       <div className="integration-settings-container">
                         <div className="form-group">
-                          <div className="inputfield">
+                          <div
+                            className={
+                              theme === "dark"
+                                ? "inputfield"
+                                : "inputfield-light"
+                            }
+                          >
                             <label htmlFor="klaviyo_api_key">
                               Private API Key
                             </label>
@@ -2521,7 +2719,7 @@ function NewCampaignForm() {
                                 placeholder="Enter API Key"
                                 value={globalSettings?.klaviyo_api_key}
                                 onChange={handleChange}
-                                disabled
+                                readOnly
                               />
                             ) : (
                               <input
@@ -2532,19 +2730,31 @@ function NewCampaignForm() {
                                 placeholder="Enter API Key"
                                 value={newCampaignData?.klaviyo_api_key}
                                 onChange={handleChange}
-                                disabled
+                                readOnly
                               />
                             )}
                           </div>
                         </div>
                         <div className="form-group">
-                          <div className="inputfield">
+                          <div
+                            className={
+                              theme === "dark"
+                                ? "inputfield"
+                                : "inputfield-light"
+                            }
+                          >
                             {klaviyoList?.length > 2 && (
                               <label htmlFor="">List to Add Users</label>
                             )}
 
                             {klaviyoList?.length > 2 ? (
-                              <div className="select-user-input">
+                              <div
+                                className={
+                                  theme === "dark"
+                                    ? "select-user-input"
+                                    : "select-user-input-light"
+                                }
+                              >
                                 {isEdit ? (
                                   <select
                                     name="klaviyo_list_id"
@@ -2612,11 +2822,25 @@ function NewCampaignForm() {
 
             {/* Template Settings */}
 
-            <section className="newcampaign-settings">
+            <section
+              className={
+                theme === "dark"
+                  ? "newcampaign-settings"
+                  : "newcampaign-settings-light"
+              }
+            >
               <div
-                className={`template-settings ${
-                  expanded[5] ? "active-card" : "inactive-card"
-                }`}
+                className={
+                  theme === "dark"
+                    ? `template-settings ${
+                        expanded[5] ? "active-card" : "inactive-card"
+                      }`
+                    : `template-settings ${
+                        expanded[5]
+                          ? "active-card-light"
+                          : "inactive-card-light"
+                      }`
+                }
               >
                 <div className="card-header">
                   <h2 className="card-title">Template Settings</h2>
@@ -2638,12 +2862,24 @@ function NewCampaignForm() {
               {expanded[5] && (
                 <>
                   <div className="template-container">
-                    <div className="template-content">
+                    <div
+                      className={
+                        theme === "dark"
+                          ? "template-content"
+                          : "template-content-light"
+                      }
+                    >
                       <p>
                         Select one of the following specially curated template
                       </p>
                     </div>
-                    <div className="templates-block-container">
+                    <div
+                      className={
+                        theme === "dark"
+                          ? "templates-block-container"
+                          : "templates-block-container-light"
+                      }
+                    >
                       <div className="template-cards">
                         {randomTemplate?.map((template, index) => (
                           <div
@@ -2675,7 +2911,11 @@ function NewCampaignForm() {
                       </div>
                     </div>
 
-                    <div className="laststep">
+                    <div
+                      className={
+                        theme === "dark" ? "laststep" : "laststep-light"
+                      }
+                    >
                       <p>
                         After the Campaign is created, you will be navigated to
                         Campaigns Table Where You can Edit or Finalize Your

@@ -1,16 +1,22 @@
-.reward-title {
+.reward-title,
+.reward-title-light {
   display: flex;
   gap: 20px;
 }
 
-.reward-title h2 {
+.reward-title h2,
+.reward-title-light h2 {
   font-size: 28px;
   font-weight: 300;
   margin-bottom: 30px;
 }
 
-.reward-title span{
-  color:rgb(214, 216, 216);
+.reward-title span {
+  color: rgb(214, 216, 216);
+}
+
+.reward-title-light span {
+  color: #1b1b1b;
 }
 
 .reward-form {
@@ -19,13 +25,21 @@
   margin-bottom: 20px;
 }
 
-.reward-form .inputfield {
+.reward-form .inputfield,
+.reward-form .inputfield-light {
   display: flex;
   flex-direction: column;
 }
 
 .reward-content .inputfield label {
-  font-size: 18px;
+  font-size: 16.5px;
+  font-weight: 600;
+}
+
+.reward-content .inputfield-light label {
+  font-size: 16.5px;
+  font-weight: 600;
+  color: #1b1b1b;
 }
 
 .small-inputfield {
@@ -33,7 +47,7 @@
   width: 75px;
   padding: 10px;
   border-radius: 10px;
-  border:none;
+  border: none;
   font-size: 28px;
   font-weight: 700;
   background-color: #ebf0f2;
@@ -48,7 +62,7 @@
   padding: 10px;
   font-size: 28px;
   border-radius: 10px;
-  border:none;
+  border: none;
   font-weight: 700;
   width: 150px !important;
   background-color: #ebf0f2;
@@ -56,6 +70,12 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
+}
+
+.inputfield-light input {
+  color: #1b1a21;
+  border: 1px solid #dbdcef;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 
 @media screen and (max-width: 1480px) {
@@ -67,7 +87,19 @@
     gap: 10px;
   }
 
-  .reward-form .inputfield {
+  .reward-content .inputfield label {
+    font-size: 16.5px;
+    font-weight: 600;
+  }
+
+  .reward-content .inputfield-light label {
+    font-size: 16.5px;
+    font-weight: 600;
+    color: #1b1b1b;
+  }
+
+  .reward-form .inputfield,
+  .reward-form .inputfield-light {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -94,8 +126,15 @@
     margin-bottom: 10px;
     gap: 10px;
   }
+  .reward-title h2,
+  .reward-title-light h2 {
+    font-size: 21px;
+    font-weight: 500;
+    margin-bottom: 25px;
+  }
 
-  .reward-form .inputfield {
+  .reward-form .inputfield,
+  .reward-form .inputfield-light {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -119,7 +158,8 @@
     display: flex;
   }
 
-  .reward-form .inputfield {
+  .reward-form .inputfield,
+  .reward-form .inputfield-light {
     display: flex;
   }
 }
@@ -131,13 +171,15 @@
     justify-content: space-between;
     margin-bottom: 10px;
   }
-  .reward-title h2 {
+  .reward-title h2,
+  .reward-title-light h2 {
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 30px;
   }
 
-  .reward-form .inputfield {
+  .reward-form .inputfield,
+  .reward-form .inputfield-light {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -146,12 +188,14 @@
 
   .small-inputfield {
     height: 45px;
+    width: 100%;
     padding: 13px;
-    background-color: #e4e4e4;
+    /* background-color: #e4e4e4; */
   }
   .large-field {
     font-size: 19px;
     height: 45px;
-    width: 105px !important;
+    width: 100% !important;
+    /* width: 105px !important; */
   }
 }

@@ -26,17 +26,21 @@
 .social-title h3 {
   font-size: 2rem;
   font-weight: 700;
+
+  
 }
 
-.check-input label{
+.check-input label, .check-input-light label{
   font-size: 18px;
 }
+
+
 
 .referral-link-input {
   width: 100%;
 }
 
-.referral-input {
+.referral-input,.referral-input-light {
   height: 80px;
   width: 100%;
   border: none;
@@ -49,6 +53,15 @@
   -moz-border-radius: 12px;
   -ms-border-radius: 12px;
   -o-border-radius: 12px;
+}
+
+
+.referral-input-light {
+color:#25242d;
+background-color: #f5f5f5;
+box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
+
 }
 
 @media screen and (max-width: 1480px) {
