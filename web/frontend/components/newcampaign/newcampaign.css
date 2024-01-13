@@ -589,7 +589,7 @@ input[type="checkbox"]:checked {
   border-radius: 16px;
   box-shadow: 0px 5px 2px 5px #1d1b1bd6;
   padding: 30px;
-  margin: 22px 20px;
+  margin: 22px 2px;
   -webkit-border-radius: 16px;
   -moz-border-radius: 16px;
   -ms-border-radius: 16px;
