@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchCampaign } from "../app/features/campaigns/campaignSlice";
 import useFetchCampaignsData from "../constant/fetchCampaignsData";
-import { SideBar, Header, HomeComponent, MainPage } from "../components/index";
-import { useStateContext } from "../contexts/ContextProvider";
+import { SideBar, Header, MainPage } from "../components/index";
 import { useThemeContext } from "../contexts/ThemeContext";
 import "../index.css";
 import { fetchProducts } from "../app/features/productSlice";
@@ -26,10 +25,11 @@ import useFetchTotalRevenue from "../constant/fetchTotalRevenue";
 import { fetchTotalRevenue } from "../app/features/revenue/totalRevenueSlice";
 import useFetchLastSixMonthsRevenue from "../constant/fetchLastSixMonthsRevenue";
 import { fetchLastSixMonthsRevenue } from "../app/features/revenue/lastSixMonthsRevenueSlice";
+import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
 
+const HomeComponent = lazy(() => import("../components/home/HomeComponent"));
 export default function HomePage() {
-  const { activeMenu } = useStateContext();
-  const { darkTheme } = useThemeContext();
+  const { darkTheme, theme } = useThemeContext();
   const abortController = new AbortController();
 
   const [currentTier, setCurrentTier] = useState("");
@@ -316,36 +316,23 @@ export default function HomePage() {
   }, [six_months_revenue, dispatch]);
 
   return (
-    <div className="app">
-      {activeMenu ? (
-        <div className="header">
-          <Header />
+    <div className={theme === "dark" ? "app" : "app-light"}>
+      <input type="checkbox" name="" id="menu-toggle" />
+      <div className="overlay">
+        <label htmlFor="menu-toggle"> </label>
+      </div>
+      <div className="sidebar">
+        <div className="sidebar-container">
+          <SideBar />
         </div>
-      ) : (
-        <div className="header">
-          <Header />
-        </div>
-      )}
-      <div className="main-app">
-        {activeMenu ? (
-          <>
-            <div className="sidebar">
-              <SideBar />
-            </div>
-            <div className="main-container">
-              <HomeComponent />
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="sidebar closed">
-              <SideBar />
-            </div>
-            <div className="main-container full">
-              <HomeComponent />
-            </div>
-          </>
-        )}
+      </div>
+      <div className="main-content">
+        <Header />
+        <main>
+          <Suspense fallback={<SkeletonLoader />}>
+            <HomeComponent />
+          </Suspense>
+        </main>
       </div>
     </div>
   );
