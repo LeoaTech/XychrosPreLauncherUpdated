@@ -43,8 +43,13 @@
   letter-spacing: -0.0375em;
   color: var(--primary-color);
 }
-
-.chart-subheading, .chart-subheading-light {
+.chart-value span{
+  font-size: 20px;
+  margin-right: 7px;
+  font-weight: 700;
+  color:rgb(235, 233, 233)
+}
+.chart-subheading {
   /* font-family: 'Roboto'; */
   font-style: normal;
   font-weight: 400;

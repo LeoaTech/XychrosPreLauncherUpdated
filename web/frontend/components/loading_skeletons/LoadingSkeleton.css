@@ -41,6 +41,7 @@
   justify-content: space-between;
   gap: 5px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .loading_skeleton__summary-card-light {
@@ -119,12 +120,12 @@
 .loading-skeleton-light .loading-skeleton__img {
   height: 50px;
   width: 30px;
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: rgb(138, 137, 137);
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
 }
 .loading-skeleton__row:last-child {
   margin-bottom: 0;

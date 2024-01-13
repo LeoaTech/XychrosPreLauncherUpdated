@@ -33,7 +33,7 @@ const {theme} =useThemeContext()
           props?.is_deactivated ? "deactive" : ""
         }`}
       >
-       <span className="short-summary-card-currency">PKR </span> {formatNumber(props.value)}
+       <span className="short-summary-card-currency">{props?.value > 0 ?  props?.currency: ''} </span> {formatNumber(props.value)}
       </div>
       <img
         src={props.icon}

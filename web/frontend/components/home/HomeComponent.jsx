@@ -145,10 +145,7 @@ const HomeComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(
-        TotalRevenueList[0].currency +
-          TotalRevenueList[0].total_revenue.toFixed(2)
-      );
+      setTotalRevenue(TotalRevenueList[0]?.total_revenue.toFixed(2));
     }
   }, [TotalRevenueList, dispatch]);
 
@@ -209,12 +206,9 @@ const HomeComponent = () => {
 
   // Get Total Revenue For Last Six Months
   let six_months_total_revenue;
-  if (getLastSixMonthsRevenue.length > 0) {
-    const lastSixMonthsTotalRevenue = finalRevenue
-      ?.slice(0, 6)
-      .reduce((acc, currentValue) => acc + currentValue, 0);
-    six_months_total_revenue =
-      TotalRevenueList[0]?.currency + lastSixMonthsTotalRevenue.toFixed(2);
+  if(getLastSixMonthsRevenue.length > 0) {
+    const lastSixMonthsTotalRevenue = finalRevenue?.slice(0, 6).reduce((acc, currentValue) => acc + currentValue, 0);
+    six_months_total_revenue = lastSixMonthsTotalRevenue.toFixed(2);
   }
 
   // --------------------- Constructing Line Chart -----------------
@@ -575,6 +569,7 @@ const HomeComponent = () => {
     ],
   };
 
+
   return (
     <div>
       {campaignsList.length === 0 ? (
@@ -665,13 +660,16 @@ const HomeComponent = () => {
                 class="clicks-icon"
               />
             </Suspense>
+
+
             <Suspense fallback={<SkeletonSummaryCard />}>
               <SummaryCard
-                value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
-                title="Revenue"
-                icon={Sale}
-                class="revenue-icon"
-              />
+                  value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
+                  title='Revenue'
+                  icon={Sale}
+                  class='revenue-icon'
+                  currency={TotalRevenueList[0]?.currency}
+                  />
             </Suspense>
           </div>
           <div className="single-chart">
@@ -684,6 +682,7 @@ const HomeComponent = () => {
                 theme === "dark" ? LineChartOptions : LineChartOptionsLight
               }
               LineChartData={LineChartData}
+              currency={TotalRevenueList[0]?.currency}
             />
           </div>
           <div

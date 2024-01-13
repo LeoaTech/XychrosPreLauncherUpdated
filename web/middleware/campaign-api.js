@@ -578,9 +578,24 @@ export default function campaignApiEndpoints(app) {
         `DELETE FROM campaign_details WHERE campaign_id =$1 AND shop_id= $2 RETURNING *`,
         [campaign_id, session?.shop]
       );
+      console.log(deleteCampaignDetailsID?.rowCount, "campaign_details");
 
-      if (deleteCampaignDetailsID.rowCount > 0) {
-        // If Delete ID from CampaignDetails, then delete the campaign from Settings table of campaign
+      // Delete Campaign Details From Campaign Product Detail Table also
+      const deleteCampaignProductDetailsID = await pool.query(
+        `DELETE FROM campaign_product_details WHERE campaign_id =$1 RETURNING *`,
+        [campaign_id]
+      );
+
+      console.log(
+        deleteCampaignProductDetailsID?.rowCount,
+        "campaignProduct_details"
+      );
+
+      if (
+        deleteCampaignDetailsID?.rowCount > 0 ||
+        deleteCampaignProductDetailsID?.rowCount > 0
+      ) {
+        // If Delete ID Exists in any Table from CampaignDetails or CampaignProductDetails, then delete the campaign from Settings table of campaign
         const deleteCampaignSettingsID = await pool.query(
           `DELETE FROM campaign_settings WHERE campaign_id =$1 AND shop_id= $2 RETURNING *`,
           [campaign_id, session?.shop]
@@ -596,6 +611,7 @@ export default function campaignApiEndpoints(app) {
             .json({ error: "Failed to delete campaign settings" });
         }
       } else {
+        console.log("NO ID Available");
         return res.status(403).json({ error: "No id available" });
       }
     } catch (err) {

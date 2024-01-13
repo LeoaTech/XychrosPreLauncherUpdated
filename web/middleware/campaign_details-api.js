@@ -25,12 +25,15 @@ export default function campaignDetailsApiEndpoints(app) {
 
       const campaigns = await pool.query(
         `SELECT cs.*,
-                cd.is_active, cd.is_draft, cd.landing_page_link, cd.rewards_page_link, cd.landing_template_link, cd.rewards_template_link
-                FROM campaign_settings cs
-                JOIN campaign_details cd ON cs.campaign_id = cd.campaign_id
-                WHERE cs.shop_id = $1 `,
+        cd.is_active, cd.is_draft, cd.landing_page_link, cd.rewards_page_link, cd.landing_template_link, cd.rewards_template_link,
+        cp.tier1_product_name, cp.tier2_product_name, cp.tier3_product_name, cp.tier4_product_name
+ FROM campaign_settings cs
+ LEFT JOIN campaign_details cd ON cs.campaign_id = cd.campaign_id
+ LEFT JOIN campaign_product_details cp ON cs.campaign_id = cp.campaign_id
+ where cs.shop_id = $1`,
         [session?.shop]
       );
+
       return res.status(200).json(campaigns?.rows);
     } catch (err) {
       return res.status(500).json(err.message);
@@ -138,6 +141,120 @@ export default function campaignDetailsApiEndpoints(app) {
           discount_code_2,
           discount_code_3,
           discount_code_4,
+          session?.shop,
+        ]);
+
+        return res.status(201).json(campaigns.rows);
+      } else {
+        return res.json({ message: "Campaign not exists" });
+      }
+    } catch (err) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+
+
+  // Update Details of a campaign in DB
+  // Update Campaign Details Value for Draft Campaign Only
+  app.put("/api/campaigndetails", async (req, res) => {
+    try {
+      const session = await Shopify.Utils.loadCurrentSession(
+        req,
+        res,
+        app.get("use-online-tokens")
+      );
+
+      const {
+        campaign_name,
+        theme_id,
+        landing_template_key,
+        landing_template_link,
+        landing_page_id,
+        landing_page_link,
+        rewards_template_key,
+        rewards_template_link,
+        rewards_page_id,
+        rewards_page_link,
+        tier1_segment_id,
+        tier2_segment_id,
+        tier3_segment_id,
+        tier4_segment_id,
+        tier1_price_rule_id,
+        tier2_price_rule_id,
+        tier3_price_rule_id,
+        tier4_price_rule_id,
+        discount_code_1,
+        discount_code_2,
+        discount_code_3,
+        discount_code_4,
+        is_draft,
+        is_active,
+      } = req.body;
+
+      let campaignID;
+      const campaignExists = await pool.query(
+        `select * from campaign_settings where name = $1`,
+        [campaign_name]
+      );
+
+      if (campaignExists?.rowCount > 0) {
+        campaignID = campaignExists?.rows[0]?.campaign_id;
+        const query = `
+        UPDATE campaign_details SET
+            is_draft=$1,
+            is_active=$2,
+            theme_id=$3,
+            landing_template_key=$4,
+            rewards_template_key=$5,
+            landing_page_id=$6,
+            rewards_page_id=$7,
+            landing_template_link=$8,
+            rewards_template_link=$9,
+            landing_page_link=$10,
+            rewards_page_link=$11,
+            tier1_segment_id=$12,
+            tier2_segment_id=$13,
+            tier3_segment_id=$14,
+            tier4_segment_id=$15,
+            tier1_price_rule_id=$16,
+            tier2_price_rule_id=$17,
+            tier3_price_rule_id=$18,
+            tier4_price_rule_id=$19,
+            discount_code_1=$20,
+            discount_code_2=$21,
+            discount_code_3=$22,
+            discount_code_4=$23
+            WHERE
+            campaign_id =$24
+            AND
+            shop_id=$25
+             RETURNING* `;
+
+        const campaigns = await pool.query(query, [
+          is_draft,
+          is_active,
+          theme_id,
+          landing_template_key,
+          rewards_template_key,
+          landing_page_id,
+          rewards_page_id,
+          landing_template_link,
+          rewards_template_link,
+          landing_page_link,
+          rewards_page_link,
+          tier1_segment_id,
+          tier2_segment_id,
+          tier3_segment_id,
+          tier4_segment_id,
+          tier1_price_rule_id,
+          tier2_price_rule_id,
+          tier3_price_rule_id,
+          tier4_price_rule_id,
+          discount_code_1,
+          discount_code_2,
+          discount_code_3,
+          discount_code_4,
+          campaignID,
           session?.shop,
         ]);
 

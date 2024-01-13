@@ -1,5 +1,12 @@
 import { Marketing, subscriber, Sale, arrow } from "../../assets/index";
-import React, { useState, useEffect, Fragment, lazy, Suspense } from "react";
+import React, {
+  useState,
+  useEffect,
+  Fragment,
+  lazy,
+  Suspense,
+  useRef,
+} from "react";
 import { useStateContext } from "../../contexts/ContextProvider";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,7 +24,8 @@ import {
 } from "../../app/features/campaign_details/campaign_details";
 import { fetchAllCampaignClicks } from "../../app/features/user_clicks/totalclicksSlice";
 import { fetchAllCampaignsRevenue } from "../../app/features/revenue/totalRevenueSlice";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
 import SkeletonShortSummaryCard from "../loading_skeletons/SkeletonShortSummaryCard";
@@ -29,6 +37,7 @@ const CampaignsComponent = () => {
   const fetch = useAuthenticatedFetch();
   const { setIsEdit } = useStateContext();
   const dispatch = useDispatch();
+  const toastId = useRef(null);
 
   const List = useSelector(fetchAllCampaigns);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
@@ -78,10 +87,7 @@ const CampaignsComponent = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(
-        TotalRevenueList[0].currency +
-          TotalRevenueList[0].total_revenue.toFixed(2)
-      );
+      setTotalRevenue(TotalRevenueList[0]?.total_revenue.toFixed(2));
     }
   }, [TotalRevenueList]);
 
@@ -104,6 +110,8 @@ const CampaignsComponent = () => {
 
   // Delete From Store API Call
   async function deleteFromStore(id) {
+    toastId.current = toast.loading("Deleting Campaign Data From Store...");
+
     try {
       const response = await fetch("/api/delete_from_store", {
         method: "POST",
@@ -114,9 +122,41 @@ const CampaignsComponent = () => {
           campaign_id: id,
         }),
       });
-      const responseData = await response.json();
-      console.log(responseData);
+      if (response?.ok) {
+        toast.update(toastId.current, {
+          render: "Campaign Data Deleted From Store",
+          type: "success",
+          isLoading: true,
+          position: "top-right",
+          autoClose: 1000,
+        });
+        const responseData = await response.json();
+        setTimeout(() => {
+          toast.dismiss(toastId.current);
+        }, 1000);
+      } else {
+        let error = await response.json();
+        toast.update(toastId.current, {
+          render: "Failed to Delete Campaign Data From Store",
+          type: "error",
+          isLoading: "false",
+          autoClose: 3000,
+        });
+        setTimeout(() => {
+          toast.dismiss(toastId.current);
+        }, 3000);
+        return error;
+      }
     } catch (error) {
+      toast.update(toastId.current, {
+        render: "Error Deleting Campaign Data From Store",
+        type: "error",
+        isLoading: "false",
+        autoClose: 5000,
+      });
+      setTimeout(() => {
+        toast.dismiss(toastId.current);
+      }, 3000);
       console.log(error);
     }
   }
@@ -185,6 +225,8 @@ const CampaignsComponent = () => {
     setCampaignName(deletedCampaign?.name);
     try {
       await deleteFromStore(camp_id);
+      let campaignSettingsId = toast.loading("Deleting campaign Details...");
+
       const response2 = await fetch(`/api/campaignsettings/${camp_id}`, {
         method: "DELETE",
         headers: {
@@ -193,6 +235,15 @@ const CampaignsComponent = () => {
       });
 
       if (response2.ok) {
+        setTimeout(() => {
+          toast.update(campaignSettingsId, {
+            render: "Successfully Deleted Campaign Settings",
+            type: "success",
+            isLoading: true,
+            position: "top-right",
+            autoClose: 3000,
+          });
+        }, 1000);
         // Update the state after a successful deletion
         await dispatch(updateCampaign(deletedCampaign));
         await dispatch(updateCampaignDetails(deletedDetails));
@@ -204,7 +255,9 @@ const CampaignsComponent = () => {
           const newDetails = getDetails?.filter(
             (campaign) => campaign?.campaign_id !== camp_id
           );
-
+          setTimeout(() => {
+            toast.dismiss(campaignSettingsId);
+          }, 3000);
           await dispatch(fetchCampaign(newData));
           await dispatch(fetchCampaignDetails(newDetails));
           setCampaigns([...newData]);
@@ -214,9 +267,29 @@ const CampaignsComponent = () => {
         }
         console.log("Campaign deleted successfully");
       } else {
+        setTimeout(() => {
+          toast.update(campaignSettingsId, {
+            render: "Failed to Delete Campaign",
+            type: "error",
+            isLoading: "false",
+            autoClose: 2000,
+          });
+        }, 1000);
+        setTimeout(() => {
+          toast.dismiss(campaignSettingsId);
+        }, 3000);
         console.error("Failed to delete campaign");
       }
     } catch (error) {
+      toast.update(campaignSettingsId, {
+        render: "Error Deleting Campaign",
+        type: "error",
+        isLoading: "false",
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        toast.dismiss(campaignSettingsId);
+      }, 3000);
       console.error("Error deleting campaign:", error);
     }
   };
@@ -250,6 +323,7 @@ const CampaignsComponent = () => {
           <SummaryCard
             value={
               getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks
+              getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks
             }
             title="Clicks"
             icon={arrow}
@@ -258,20 +332,29 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
+            value={getTotalRevenue?.length === 0 ? 0 : getTotalRevenue}
             title="Revenue"
             icon={Sale}
             class="revenue-icon"
+            currency={TotalRevenueList[0]?.currency}
           />
         </Suspense>
       </div>
-
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        draggable
+        theme="colored"
+      />
       <div className="campaigns">
         {getDetails?.length > 0 ? (
           <>
             <div className="campaigns-blocks">
-              {currentItems?.map((campaign) => (
-                <Suspense fallback={<LoadingSkeleton />}>
+              {currentItems?.map((campaign, index) => (
+                <Suspense fallback={<LoadingSkeleton key={index} />}>
                   <CampaignBlock
                     key={campaign?.campaign_id}
                     eitData={editData}

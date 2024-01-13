@@ -19,14 +19,32 @@ export const campaignDetailsSlice = createSlice({
       );
       state.campaigns_details = [...allCampaigns, action.payload];
     },
+
+    addNewCampaignDetails: (state, action) => {
+      state.campaigns_details.push(action.payload);
+    },
   },
 });
 
 // Get All Campaigns
 
 export const fetchCampaignsDetailsList = (state) =>
+  state?.campaign_details?.campaigns_details
+  // ?.filter(
+  //   (camp) => camp?.is_draft === false
+  // );
+
+export const fetchCampaignsProuctsList = (state) => {
+  let products = [];
   state?.campaign_details?.campaigns_details?.filter(
-    (camp) => camp?.is_draft === false
+    (camp) => {camp?.product != "" && products?.push(camp?.product)}
+  );
+  return products;
+};
+
+export const fetchCampaignDetailsById = (state, campaignId) =>
+state?.campaign_details?.campaigns_details?.find(
+    (campaign) => campaign?.campaign_id === campaignId
   );
 
 export const fetchCampaignsDiscountCodes = (state) => {
@@ -65,7 +83,7 @@ export const getActiveCampaigns = (state) =>
 
 // All Action of the campaign
 
-export const { fetchCampaignDetails, updateCampaignDetails } =
+export const { fetchCampaignDetails, updateCampaignDetails,addNewCampaignDetails } =
   campaignDetailsSlice.actions;
 
 export default campaignDetailsSlice.reducer;

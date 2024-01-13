@@ -52,7 +52,7 @@ const Referrals = () => {
   // Get Total Revenue
   useEffect(() => {
     if (TotalRevenueList.length > 0) {
-      setTotalRevenue(TotalRevenueList[0].currency + TotalRevenueList[0].total_revenue.toFixed(2));
+      setTotalRevenue(TotalRevenueList[0]?.total_revenue.toFixed(2));
     }
   }, [TotalRevenueList]);
 
@@ -79,21 +79,23 @@ const Referrals = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks}
-            title='Clicks'
+            value={
+              getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks
+            }
+            title="Clicks"
             icon={arrow}
-            class='clicks-icon'
+            class="clicks-icon"
           />
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
             value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
-            title='Revenue'
+            title="Revenue"
             icon={Sale}
-            class='revenue-icon'
+            class="revenue-icon"
+            currency={TotalRevenueList[0]?.currency}
           />
         </Suspense>
-
       </div>
 
       <div className="referral_table">
