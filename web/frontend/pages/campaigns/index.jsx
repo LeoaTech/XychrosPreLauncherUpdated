@@ -14,11 +14,12 @@ import { fetchTotalClicks } from "../../app/features/user_clicks/totalclicksSlic
 import SkeletonLoader from "../../components/loading_skeletons/SkeletonTable";
 import useFetchTotalRevenue from "../../constant/fetchTotalRevenue";
 import { fetchTotalRevenue } from "../../app/features/revenue/totalRevenueSlice";
+import { useThemeContext } from "../../contexts/ThemeContext";
 
 const Campaign = lazy(() => import("../../components/campaigns/Campaign"));
 
 const Campaigns = () => {
-  const { activeMenu } = useStateContext();
+  const { theme } = useThemeContext();
   const abortController = new AbortController();
 
   const dispatch = useDispatch();
@@ -47,17 +48,7 @@ const Campaigns = () => {
       signal: abortController.signal,
     });
 
-  // Get Campaign Settings List
-  // const campaigns = useFetchCampaignsData("/api/getcampaigns", {
-  //   method: "GET",
-  //   headers: { "Content-Type": "application/json" },
-  // });
-
-  // // Get Campaign Details
-  // const campaignsDetails = useFetchCampaignsDetails("/api/campaigndetails", {
-  //   method: "GET",
-  //   headers: { "Content-Type": "application/json" },
-  // });
+ 
 
   // Get Referral Details
   const referrals = useFetchReferralsData("/api/getallreferralcount", {
@@ -223,40 +214,24 @@ const Campaigns = () => {
   }, []);
 
   return (
-    <div className="app">
-      {activeMenu ? (
-        <div className="header">
-          <Header />
+    <div className={theme === "dark" ? "app" : "app-light"}>
+     
+      <input type="checkbox" name="" id="menu-toggle" />
+      <div className="overlay">
+        <label htmlFor="menu-toggle"> </label>
+      </div>
+      <div className="sidebar">
+        <div className="sidebar-container">
+          <SideBar />
         </div>
-      ) : (
-        <div className="header">
-          <Header />
-        </div>
-      )}
-      <div className="main-app">
-        {activeMenu ? (
-          <>
-            <div className="sidebar">
-              <SideBar />
-            </div>
-            <div className="main-container">
-              <Suspense fallback={<SkeletonLoader />}>
-                <Campaign />
-              </Suspense>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="sidebar closed">
-              <SideBar />
-            </div>
-            <div className="main-container full">
-              <Suspense fallback={<SkeletonLoader />}>
-                <Campaign />
-              </Suspense>
-            </div>
-          </>
-        )}
+      </div>
+      <div className="main-content">
+        <Header />
+        <main>
+          <Suspense fallback={<SkeletonLoader />}>
+            <Campaign />
+          </Suspense>
+        </main>
       </div>
     </div>
   );
