@@ -1,6 +1,5 @@
 import { Suspense, lazy, useEffect } from "react";
 import { SideBar, Header } from "../components/index";
-import { useStateContext } from "../contexts/ContextProvider";
 import "../index.css";
 import useFetchPricingPlans from "../constant/fetchPricingPlans";
 import { fetchpricing } from "../app/features/pricing/pricing";
@@ -8,11 +7,12 @@ import { useDispatch } from "react-redux";
 import { fetchSavePlan } from "../app/features/current_plan/current_plan";
 import useFetchBillingModel from "../constant/fetchBillingModel";
 import SkeletonLoader from "../components/loading_skeletons/SkeletonTable";
+import { useThemeContext } from "../contexts/ThemeContext";
 
 const Pricing = lazy(() => import("../components/pricing/PriceComponent"));
 
 const PricePage = () => {
-  const { activeMenu } = useStateContext();
+  const { theme } = useThemeContext();
   const abortController = new AbortController();
 
   const dispatch = useDispatch();
@@ -67,40 +67,23 @@ const PricePage = () => {
   }, [dispatch, billingData]);
 
   return (
-    <div className="app">
-      {activeMenu ? (
-        <div className="header">
-          <Header />
+    <div className={theme === "dark" ? "app" : "app-light"}>
+      <input type="checkbox" name="" id="menu-toggle" />
+      <div className="overlay">
+        <label htmlFor="menu-toggle"> </label>
+      </div>
+      <div className="sidebar">
+        <div className="sidebar-container">
+          <SideBar />
         </div>
-      ) : (
-        <div className="header">
-          <Header />
-        </div>
-      )}
-      <div className="main-app">
-        {activeMenu ? (
-          <>
-            <div className="sidebar">
-              <SideBar />
-            </div>
-            <div className="main-container">
-              <Suspense fallback={<SkeletonLoader />}>
-                <Pricing />
-              </Suspense>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="sidebar closed">
-              <SideBar />
-            </div>
-            <div className="main-container full">
-              <Suspense fallback={<SkeletonLoader />}>
-                <Pricing />
-              </Suspense>
-            </div>
-          </>
-        )}
+      </div>
+      <div className="main-content">
+        <Header />
+        <main>
+          <Suspense fallback={<SkeletonLoader />}>
+            <Pricing />
+          </Suspense>
+        </main>
       </div>
     </div>
   );

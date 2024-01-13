@@ -1,4 +1,5 @@
-.pricing-container, .pricing-container-light {
+.pricing-container,
+.pricing-container-light {
   margin-top: 20px;
   width: 100%;
   padding: 10px;
@@ -6,10 +7,10 @@
   margin-left: 1%;
 }
 
-
 .pricing-container-light {
   color: #1b1b1b;
   background-color: #fff;
+  
 }
 .pricing-title h2 {
   display: flex;
@@ -25,6 +26,7 @@
   width: 97%;
   padding: 15px 25px;
   overflow: hidden;
+  
 }
 
 .action-click-btn {
@@ -43,9 +45,10 @@
   /* overflow: hidden; */
 }
 
-.pricing-card:first-child, .pricing-card-light:first-child {
+.pricing-card:first-child,
+.pricing-card-light:first-child {
   background-color: var(--secondary-color);
-  color:#fff;
+  color: #fff;
 }
 
 .pricing-card button:first-child,
@@ -53,35 +56,35 @@
   background-color: var(--secondary-color);
 }
 
-.pricing-card, .pricing-card-light {
+.pricing-card,
+.pricing-card-light {
   flex: 0 0 300px;
   margin-right: 10px;
   opacity: 0.65;
   transition: opacity 0.5s;
   border-radius: 12px;
   background-color: var(--secondary-text-color);
-
 }
 
-.pricing-card:hover, .pricing-card-light:hover{
+.pricing-card:hover,
+.pricing-card-light:hover {
   opacity: 1;
   cursor: pointer;
 }
 
-
-.pricing-card-light{
+.pricing-card-light {
   background-color: #fff;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-  color:#1b1b1b;
+  color: #1b1b1b;
 }
 
-.pricing-card.active, .pricing-card-light.active {
+.pricing-card.active,
+.pricing-card-light.active {
   opacity: 1;
 }
 
-.pricing-card:last-child ,
+.pricing-card:last-child,
 .pricing-card-light:last-child {
-
   margin-right: 0;
 }
 
@@ -101,24 +104,22 @@
 }
 
 .clickNext-light,
-.clickPrev-light{
-  background-color: rgb(210, 208, 208)bab;
-  color:#2c2b2b;
+.clickPrev-light {
+  background-color: rgb(210, 208, 208) bab;
+  color: #2c2b2b;
 }
 
 .clickPrev:hover,
 .clickNext:hover {
   background-color: var(--secondary-text-color);
   box-shadow: 0 3px 10px rgb(255 255 255 / 0.2);
-
 }
 .clickNext-light:hover,
-.clickPrev-light:hover{
+.clickPrev-light:hover {
   background-color: #fff;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-  color:#070707;
+  color: #070707;
 }
-
 
 .spinner {
   width: 56px;
@@ -159,7 +160,8 @@
   align-items: center;
 }
 
-.add-on-card, .add-on-card-light {
+.add-on-card,
+.add-on-card-light {
   padding: 20px 60px;
   border-radius: 13px;
   background-color: var(--secondary-text-color);
@@ -172,14 +174,13 @@
   gap: 15px;
 }
 
-.add-on-card-light{
+.add-on-card-light {
   background-color: #fff;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 
-
-
-.add-on-card h2, .add-on-card-light h2 {
+.add-on-card h2,
+.add-on-card-light h2 {
   font-size: 20px;
   margin-bottom: 20px;
   font-weight: 700;
@@ -187,16 +188,19 @@
   text-decoration: underline;
 }
 
-.add-on-card div, .add-on-card-light div {
+.add-on-card div,
+.add-on-card-light div {
   display: flex;
   justify-content: space-between;
   gap: 2rem;
   align-items: center;
 }
-.add-on-card-light h2, .add-on-card-light label{
-  color:#0a0a0a;
+.add-on-card-light h2,
+.add-on-card-light label {
+  color: #0a0a0a;
 }
-.add-on-card input, .add-on-card-light input {
+.add-on-card input,
+.add-on-card-light input {
   height: 20px;
   width: 20px;
   border-radius: 10px;
@@ -207,12 +211,14 @@
   -o-border-radius: 10px;
 }
 
-.add-on-card .price-tag, .add-on-card-light .price-tag {
+.add-on-card .price-tag,
+.add-on-card-light .price-tag {
   font-size: 23px;
   font-weight: 700;
 }
 
-.add-on-card .confirmation-btn, .add-on-card-light .confirmation-btn {
+.add-on-card .confirmation-btn,
+.add-on-card-light .confirmation-btn {
   margin-top: 1rem;
   justify-content: center;
   align-items: center;
@@ -251,8 +257,8 @@
 @media only screen and (max-width: 500px) {
   .price-details-container {
     padding: 10px;
-    margin: 0 20px;
-    padding-left: 0.1%;
+    /* margin: 0 20px; */
+    padding-left: 1%;
   }
 
   .price-block {
@@ -260,5 +266,9 @@
     display: flex;
     gap: 10px;
     /* flex-direction: column; */
+  }
+
+  .pricing-add-ons {
+    margin: 30px 20px;
   }
 }
