@@ -1,0 +1,28 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "viral-product"
+client_id = "caa72d4cf21afb12a2c4761b7d250de0"
+application_url = "https://org-palm-fiscal-origin.trycloudflare.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_orders,read_products,read_content,write_content,read_themes,write_themes,read_price_rules,write_price_rules,read_customers,write_customers,read_discounts"
+
+[auth]
+redirect_urls = [
+  "https://org-palm-fiscal-origin.trycloudflare.com/auth/callback",
+  "https://org-palm-fiscal-origin.trycloudflare.com/auth/shopify/callback",
+  "https://org-palm-fiscal-origin.trycloudflare.com/api/auth/callback",
+  "https://org-palm-fiscal-origin.trycloudflare.com/.shopify/graphiql/auth/callback"
+]
+
+[webhooks]
+api_version = "2023-10"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "app-running.myshopify.com"
