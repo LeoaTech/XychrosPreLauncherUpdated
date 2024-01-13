@@ -2,21 +2,23 @@ import "./ReferralsBlock.css";
 import * as React from "react";
 import { referralRows, referralColumns } from "./dummyData";
 import { BiShow } from "react-icons/bi";
-
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { ShowModal, DeleteModal } from "../modal/index";
 import DataTable from "react-data-table-component";
 import { customStyles, customStylesLight } from "./customStyles";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { fetchReferralById } from "../../app/features/referrals/referralSlice";
 import { fetchDeactivatedCampaignsByName } from "../../app/features/campaign_details/campaign_details";
 import { useThemeContext } from "../../contexts/ThemeContext";
+
+
+
+
 const ReferralsBlock = (props) => {
   const [openModal, setOpenModal] = React.useState(false);
   const [modalData, setModalData] = React.useState();
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [campaignName, setCampaignName] = React.useState([]);
-  const [TableData, setTableData] = React.useState([]);
+
   const { theme } = useThemeContext();
 
   let getDeactivatedCampaignsName = useSelector(

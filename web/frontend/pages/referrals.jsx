@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCampaign } from "../app/features/campaigns/campaignSlice";
 import { fetchReferrals } from "../app/features/referrals/referralSlice";
 import { SideBar, Header } from "../components/index";
-import { useStateContext } from "../contexts/ContextProvider";
 import useFetchCampaignsData from "../constant/fetchCampaignsData";
 import useFetchReferralsData from "../constant/fetchReferralsData";
 import { useThemeContext } from "../contexts/ThemeContext";
@@ -17,15 +16,15 @@ import useFetchTotalRevenue from "../constant/fetchTotalRevenue";
 import { fetchTotalRevenue } from "../app/features/revenue/totalRevenueSlice";
 import { fetchCurrentTier } from "../app/features/current_plan/current_plan";
 
+
 const Referral = lazy(() => import("../components/referrals/Referrals"));
 
 const Referrals = () => {
-  const { activeMenu } = useStateContext();
+  const { theme } = useThemeContext();
   const abortController = new AbortController();
-
   const dispatch = useDispatch();
-  const { darkTheme, lightTheme } = useThemeContext();
   const currentPlan = useSelector(fetchCurrentTier);
+
 
   const { data: campaigns, error: campaignsError } = useFetchCampaignsData(
     "/api/getcampaigns",
@@ -207,40 +206,23 @@ const Referrals = () => {
   ]);
 
   return (
-    <div className="app">
-      {activeMenu ? (
-        <div className="header">
-          <Header />
+    <div className={theme === "dark" ? "app" : "app-light"}>
+      <input type="checkbox" name="" id="menu-toggle" />
+      <div className="overlay">
+        <label htmlFor="menu-toggle"> </label>
+      </div>
+      <div className="sidebar">
+        <div className="sidebar-container">
+          <SideBar />
         </div>
-      ) : (
-        <div className="header">
-          <Header />
-        </div>
-      )}
-      <div className="main-app">
-        {activeMenu ? (
-          <>
-            <div className="sidebar">
-              <SideBar />
-            </div>
-            <div className="main-container">
-              <Suspense fallback={<SkeletonLoader />}>
-                <Referral />
-              </Suspense>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="sidebar closed">
-              <SideBar />
-            </div>
-            <div className="main-container full">
-              <Suspense fallback={<SkeletonLoader />}>
-                <Referral />
-              </Suspense>
-            </div>
-          </>
-        )}
+      </div>
+      <div className="main-content">
+        <Header />
+        <main>
+          <Suspense fallback={<SkeletonLoader />}>
+            <Referral />
+          </Suspense>
+        </main>
       </div>
     </div>
   );
