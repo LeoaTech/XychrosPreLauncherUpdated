@@ -20,6 +20,7 @@ import { fetchAllCampaignsRevenue } from "../../app/features/revenue/totalRevenu
 
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import LoadingSkeleton from "../loading_skeletons/LoadingSkeleton";
+import SkeletonShortSummaryCard from "../loading_skeletons/SkeletonShortSummaryCard";
 
 const SummaryCard = lazy(() => import("../ui/SummaryCard"));
 const CampaignBlock = lazy(() => import("./CampaignBlock"));
@@ -248,9 +249,7 @@ const CampaignsComponent = () => {
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
             value={
-              getTotalClicks.length === 0
-                ? 345079491
-                : getTotalClicks[0].total_clicks
+              getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks
             }
             title="Clicks"
             icon={arrow}
@@ -259,13 +258,14 @@ const CampaignsComponent = () => {
         </Suspense>
         <Suspense fallback={<SkeletonSummaryCard />}>
           <SummaryCard
-            value={getTotalRevenue.length === 0 ? 23094 : getTotalRevenue}
+            value={getTotalRevenue.length === 0 ? 0 : getTotalRevenue}
             title="Revenue"
             icon={Sale}
             class="revenue-icon"
           />
         </Suspense>
       </div>
+
       <div className="campaigns">
         {getDetails?.length > 0 ? (
           <>

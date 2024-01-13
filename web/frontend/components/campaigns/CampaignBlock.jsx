@@ -4,7 +4,7 @@ import { BsToggleOff } from "react-icons/bs";
 import { MdBlock, MdTimerOff, MdOfflineBolt } from "react-icons/md";
 import { FaEdit, FaHourglassEnd } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { IoCalendarSharp } from "react-icons/io5";
+import { IoCalendarSharp, IoToggle, IoToggleOutline } from "react-icons/io5";
 import "./CampaignBlock.css";
 import { Link } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
@@ -157,7 +157,15 @@ export default function CampaignBlock({
             {is_deactivated ? (
               <span>
                 {" "}
-                <BsToggleOff style={{ height: 31, width: 30, color: "#ccc" }} />
+                {theme === "dark" ? (
+                  <IoToggleOutline
+                    style={{ height: "32px", width: "30px", color: "#ccc" }}
+                  />
+                ) : (
+                  <IoToggle
+                    style={{ height: "32px", width: "30px", color: "gray" }}
+                  />
+                )}{" "}
               </span>
             ) : (
               <span>
@@ -335,7 +343,15 @@ export default function CampaignBlock({
                       disabled={isDisabled}
                     />
                     <div>
-                      <span>Edit</span>
+                      <span
+                        style={
+                          theme === "dark"
+                            ? { color: "#fff" }
+                            : { color: "#333" }
+                        }
+                      >
+                        Edit
+                      </span>
                     </div>
                   </Link>
                 </div>
@@ -368,10 +384,15 @@ export default function CampaignBlock({
                           }
                         : { height: 24, width: 24 }
                     }
-                  />
-                  <div>
-                    <span>Delete</span>
-                  </div>
+                  />{" "}
+                 
+                  <div> <span
+                    style={
+                      theme === "dark" ? { color: "#fff" } : { color: "#333" }
+                    }
+                  >
+                    Delete
+                  </span></div>
                 </div>
               </IconContext.Provider>{" "}
             </>
