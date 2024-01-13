@@ -217,20 +217,22 @@ function NewCampaignForm() {
     }
   }, [isEdit]);
 
-  const fetchCodes = useFetchDiscountCodes("/api/fetch_discount_codes", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    signal: abortController.signal,
-  });
+  const { data: fetchDiscountCodes, error: fetchDiscountCodesError } =
+    useFetchDiscountCodes("/api/fetch_discount_codes", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    });
+
 
   useEffect(() => {
-    if (fetchCodes?.length > 0) {
-      setDiscountList([...discountList, ...fetchCodes]);
+    if (fetchDiscountCodes?.length > 0) {
+      setDiscountList([...discountList, ...fetchDiscountCodes]);
     }
     return () => {
       abortController.abort();
     };
-  }, [fetchCodes]);
+  }, [fetchDiscountCodes]);
 
   // Get All Campaigns Discount Code List
   useEffect(() => {
@@ -500,7 +502,6 @@ function NewCampaignForm() {
 
         if (response.ok) {
           const list = await response.json();
-          console.log(list);
           return list;
         } else {
           return;
@@ -992,6 +993,7 @@ function NewCampaignForm() {
 
     return productId || null;
   }
+
 
   // Handle Discount Codes Validation on Next Button click
   const handleDiscountValidation = (index) => {
@@ -2296,7 +2298,6 @@ function NewCampaignForm() {
             });
             // Discount Codes Generated
 
-            console.log(discount_details, "Codes");
             if (discount_details?.success) {
               // Continue next task
               const template_details = await createTemplates(
@@ -2340,10 +2341,8 @@ function NewCampaignForm() {
                   }, 3000);
 
                   let updatedCamapignData = await updateCampaignSettings.json();
-                  console.log(updatedCamapignData, "Campaign updated");
                   idExists =
                     campaignById?.campaign_id || editCampaignData?.campaign_id;
-                  console.log(updatedCamapignData, "Changed Campaign data");
                   // dispatch(updateCampaign(updatedCamapignData));
                 } else {
                   setTimeout(() => {
@@ -2500,7 +2499,7 @@ function NewCampaignForm() {
       } catch (error) {
         console.log(error, "Updating Campaign settings");
       }
-    } else  {
+    } else {
       e.preventDefault();
 
       setDraftModal(false);
@@ -2743,7 +2742,6 @@ function NewCampaignForm() {
   };
   // Save Draft campaign Product Details
   const saveDraftProductDetails = async (product_details) => {
-    console.log(product_details, "Product Details");
     let campaignDetailsId = toast.loading("Saving Discount Codes and Pages");
     if (isEdit) {
       try {
@@ -2756,7 +2754,6 @@ function NewCampaignForm() {
             ...product_details,
           }),
         });
-        console.log(detailsResponse, "Product details repsonse");
         if (detailsResponse.ok) {
           setTimeout(() => {
             toast.update(campaignDetailsId, {
@@ -2772,7 +2769,6 @@ function NewCampaignForm() {
             toast.dismiss(campaignDetailsId);
           }, 2000);
           const detailsData = await detailsResponse.json();
-          console.log(detailsData, "after saving campaign product details");
           return detailsData;
         } else {
           setTimeout(() => {
