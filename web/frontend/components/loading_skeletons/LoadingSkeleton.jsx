@@ -1,9 +1,11 @@
 import React from "react";
 import "./LoadingSkeleton.css"; // Create a CSS file for styling
+import { useThemeContext } from "../../contexts/ThemeContext";
 
 const LoadingSkeleton = () => {
+  const {theme} = useThemeContext();
   return (
-    <div className="loading-skeleton">
+    <div className={theme ==="dark"?"loading-skeleton":"loading-skeleton-light"}>
       <div className="loading-skeleton__first_row animate-pulse">
         <div className="loading-skeleton__row animate-pulse"></div>
         <div className="loading-skeleton__row animate-pulse"></div>
