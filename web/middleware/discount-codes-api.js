@@ -20,8 +20,7 @@ export default function discountCodesApiEndpoints(app) {
   });
 }
 
-
-// Get Discount Codes From Store 
+// Get Discount Codes From Store
 async function getCodesListNode(session) {
   try {
     const client = new Shopify.Clients.Graphql(
@@ -100,7 +99,9 @@ async function getCodesListNode(session) {
 
     console.log(allDiscountCodes, "All Codes");
 
-    return allDiscountCodes;
+    return allDiscountCodes?.filter(
+      (discount) => discount != null && discount !== undefined
+    );
   } catch (error) {
     console.log(error?.response?.errors, "Mutation Response Error");
     return [];
