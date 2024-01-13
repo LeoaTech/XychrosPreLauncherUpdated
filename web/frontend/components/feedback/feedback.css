@@ -1,4 +1,5 @@
-.feedback-container, .feedback-container-light {
+.feedback-container,
+.feedback-container-light {
   color: white;
   margin: 40px;
   margin-left: 5%;
@@ -6,9 +7,8 @@
   padding: 10px;
 }
 
-
-.feedback-container-light{
-  color:black;
+.feedback-container-light {
+  color: black;
 }
 .feedback-desc {
   font-size: 21px;
@@ -19,8 +19,8 @@
   margin-bottom: 15px;
 }
 
-.feedback-form, .feedback-form-light {
- 
+.feedback-form,
+.feedback-form-light {
   width: 100%;
   height: 100%;
   padding: 20px;
@@ -38,11 +38,15 @@
   -o-border-radius: 10px;
 }
 
-.feedback-form-light{
+.feedback-form-light {
   background-color: #fcfcfc;
+  color: #1b1a21;
+  border: 1px solid #dbdcef;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 
-.feedback-form h2, .feedback-form-light h2 {
+.feedback-form h2,
+.feedback-form-light h2 {
   font-size: 30px;
   font-weight: 700px;
   margin-bottom: 20px;
@@ -51,7 +55,7 @@
 .feedback-google-form {
   width: 100%;
   height: 981px;
-  overflow: hidden
+  overflow: hidden;
 }
 
 .rating-content {
@@ -116,8 +120,6 @@
   font-size: 23px;
 }
 
-
-
 .spinner {
   width: 56px;
   height: 56px;
@@ -155,7 +157,6 @@
   }
 }
 
-
 /* Media Queries */
 
 @media only screen and (max-width: 1440px) {
@@ -191,7 +192,7 @@
   }
 
   .feedback-form {
-    width: 100%;
+    width: 88%;
     height: 90%;
     /* overflow-y: hidden; */
     padding: 20px;
@@ -245,7 +246,7 @@
   }
 
   .feedback-form {
-    width: 520px;
+    width: 95%;
     padding: 20px;
     margin-left: 20px;
     display: flex;
