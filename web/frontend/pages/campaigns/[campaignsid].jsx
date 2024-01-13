@@ -1,18 +1,18 @@
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchProducts } from "../../app/features/productSlice";
-import {
-  SideBar,
-  Header,
-  NewCampaignForm,
-  MainPage,
-} from "../../components/index";
+import { SideBar, Header, MainPage } from "../../components/index";
 import useFetchAllProducts from "../../constant/fetchProducts";
-import { useStateContext } from "../../contexts/ContextProvider";
 import "../../index.css";
+import { useThemeContext } from "../../contexts/ThemeContext";
+import SkeletonLoader from "../../components/loading_skeletons/SkeletonTable";
+
+const NewCampaignForm = lazy(() =>
+  import("../../components/newcampaign/NewCampaignForm")
+);
 
 const CampaignId = () => {
-  const { activeMenu } = useStateContext();
+  const { theme } = useThemeContext();
   const dispatch = useDispatch();
   const abortController = new AbortController();
 
@@ -38,36 +38,23 @@ const CampaignId = () => {
     };
   }, [productsData, dispatch]);
   return (
-    <div className="app">
-      {activeMenu ? (
-        <div className="header">
-          <Header />
+    <div className={theme === "dark" ? "app" : "app-light"}>
+      <input type="checkbox" name="" id="menu-toggle" />
+      <div className="overlay">
+        <label htmlFor="menu-toggle"> </label>
+      </div>
+      <div className="sidebar">
+        <div className="sidebar-container">
+          <SideBar />
         </div>
-      ) : (
-        <div className="header">
-          <Header />
-        </div>
-      )}
-      <div className="main-app">
-        {activeMenu ? (
-          <>
-            <div className="sidebar">
-              <SideBar />
-            </div>
-            <div className="main-container">
-              <NewCampaignForm />
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="sidebar closed">
-              <SideBar />
-            </div>
-            <div className="main-container full">
-              <NewCampaignForm />
-            </div>
-          </>
-        )}
+      </div>
+      <div className="main-content">
+        <Header />
+        <main>
+          <Suspense fallback={<SkeletonLoader />}>
+            <NewCampaignForm />
+          </Suspense>
+        </main>
       </div>
     </div>
   );
