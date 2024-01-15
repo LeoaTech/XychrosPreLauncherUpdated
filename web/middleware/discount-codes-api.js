@@ -100,7 +100,7 @@ async function getCodesListNode(session) {
 
     console.log(allDiscountCodes, "All Codes");
 
-    return allDiscountCodes;
+    return allDiscountCodes?.filter((code) => code !== null && code !== undefined);
   } catch (error) {
     console.log(error?.response?.errors, "Mutation Response Error");
     return [];
