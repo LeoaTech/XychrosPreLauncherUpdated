@@ -96,7 +96,7 @@ function NewCampaignForm() {
   });
 
   const [draftModal, setDraftModal] = useState(false);
-  const [showPrompt, confirmNavigation, cancelNavigation,setShowPrompt] =
+  const [showPrompt, confirmNavigation, cancelNavigation, setShowPrompt] =
     useCallbackPrompt(draftModal);
   const [updateCampaignData, setUpdateCampaignData] = useState({});
   const [templateList, setTemplateList] = useState([]); //To store all templates received from Template API
@@ -1585,7 +1585,6 @@ function NewCampaignForm() {
 
   const onModalClose = () => {
     setShowPrompt(false);
-    
   };
 
   // Update the Reward Product
@@ -2956,6 +2955,7 @@ function NewCampaignForm() {
 
               if (productDetails) {
                 console.log("Saved data in product details");
+                cancelNavigation();
               }
             }
           }
@@ -2963,6 +2963,7 @@ function NewCampaignForm() {
           console.log(err, "Failed to save Campaign Drfat");
         }
       } else {
+        cancelNavigation();
         return;
       }
     } else {
@@ -3009,6 +3010,7 @@ function NewCampaignForm() {
           if (typeof draftCampaignId == "number") {
             let result = await saveDraftCampaignDetails(campaignDetails);
             if (result) {
+              console.log(result, "Draft campaign result");
               dispatch(addNewCampaignDetails(result[0]));
             } else {
               console.log("no result Found");
@@ -3024,17 +3026,18 @@ function NewCampaignForm() {
                 console.log("Saved data in product details");
               }
             }
+            cancelNavigation();
           }
         } catch (err) {
           console.log(err, "Failed to save Campaign Drfat");
         }
       } else {
+        cancelNavigation();
         return;
       }
     }
   };
 
-  console.log(discountList, "Codes ALL");
   return (
     <>
       {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
@@ -3068,7 +3071,6 @@ function NewCampaignForm() {
             <SaveDraft
               openModal={showPrompt}
               confirmNavigation={confirmNavigation}
-              cancelNavigation={cancelNavigation}
               handleSaveDraft={onDraftSave}
               onClose={onModalClose}
             />
@@ -5069,7 +5071,7 @@ function NewCampaignForm() {
                               </div>
                             </div>
                           ) : (
-                            <p>
+                            <p className="klaviyo-message">
                               Please Enable klaviyo Integration from{" "}
                               <Link to="/settings" style={{ color: "purple" }}>
                                 Global Settings

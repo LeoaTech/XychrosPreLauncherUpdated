@@ -7,7 +7,6 @@ import { AiOutlineClose } from "react-icons/ai";
 const SaveDraft = ({
   openModal,
   onClose,
-  cancelNavigation,
   confirmNavigation,
   handleSaveDraft,
 }) => {
@@ -46,7 +45,6 @@ const SaveDraft = ({
               className="discard-btn"
               onClick={() => {
                 handleSaveDraft();
-                cancelNavigation();
               }}
             >
               Save to Draft
