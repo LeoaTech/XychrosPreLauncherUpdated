@@ -26,10 +26,11 @@
 .draft-slider:before {
   position: absolute;
   content: "";
-  height: 20px;
+  height: 19px;
   width: 18px;
   left: 3px;
   bottom: 1px;
+  top:0.2px;
   background-color: #fff;
   transition: 0.4s;
   -webkit-transition: 0.4s;
@@ -40,7 +41,7 @@
 
 .draft-slider:before {
   background-color: #f4f4e0;
-  border: 1px solid #d2d2d1;
+  border: 1px solid #b2b205;
 }
 
 input:checked + .slider {
@@ -49,6 +50,7 @@ input:checked + .slider {
 
 input:checked + .draft-slider {
   background-color: #ffff7c;
+  border:1px solid goldenrod;
 }
 
 input:checked + .slider:before,
