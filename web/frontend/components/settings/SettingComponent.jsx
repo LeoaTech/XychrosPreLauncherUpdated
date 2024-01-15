@@ -242,7 +242,6 @@ const SettingComponent = () => {
     }));
   }
 
-  console.log(defaultSettings);
 
   return (
     <div
