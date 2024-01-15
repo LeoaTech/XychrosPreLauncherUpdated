@@ -74,7 +74,7 @@
 /* Campaign Block Component */
 
 .campaign-block {
-  width: 96%;
+  width: 97%;
   background: var(--sidebar-bg-color);
   border: 1px solid #fff;
   box-shadow: 0px 4px 4px rgba(192, 191, 191, 0.343);
@@ -122,7 +122,8 @@
 .campaign-details {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
+  /* justify-content: space-around; */
 }
 
 .camapign-block-name.deactive,
@@ -189,13 +190,15 @@
 .campaign_details_links {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 18px;
   font-size: 17px;
   text-decoration: underline;
 }
 
 .campaign_details_links a {
-  margin: 10px;
+  margin: 8px;
 }
 
 .campaign-right-card {
