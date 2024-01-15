@@ -1,6 +1,6 @@
 .pricing-details {
   height: 500px;
-  width: 300px;
+  width: 320px;
   display: flex;
   flex-direction: column;
 
@@ -72,7 +72,7 @@
 }
 
 .pricing-features p {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 500;
   margin: 10px 10px;
   line-height: 1.6;
@@ -82,7 +82,11 @@
 
 .feature {
   display: flex;
+  font-size: 15px;
+  margin-bottom: 5px;
   gap: 10px;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .btn-subscribe,

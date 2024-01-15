@@ -49,6 +49,7 @@ const PricingBlock = ({
                     height: "24",
                     width: "24",
                     marginRight: "5px",
+                    strokeWidth:"0.2"
                   }}
                 />
                 {value}

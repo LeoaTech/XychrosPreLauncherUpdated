@@ -82,10 +82,15 @@
   color: #1b1b1b;
 }
 
-.pricing-card.active,
+.pricing-card.active{
+  opacity: 1;
+  border:1px solid goldenrod;
+}
 .pricing-card-light.active {
   opacity: 1;
+  border:1px solid green;
 }
+
 
 .pricing-card:last-child,
 .pricing-card-light:last-child {
