@@ -49,9 +49,20 @@
   border-top-right-radius: 12px;
 }
 
+
+.draft-modal-container .modal-nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px;
+}
 .modal-nav h6 {
   font-size: 23px;
   font-weight: 500;
+}
+
+.modal-nav span{
+  cursor:pointer
 }
 
 .warning-sign {

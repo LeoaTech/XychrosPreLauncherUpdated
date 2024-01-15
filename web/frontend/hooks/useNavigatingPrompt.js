@@ -60,5 +60,5 @@ export const useCallbackPrompt = (when) => {
     }
   }, [confirmedNavigation, lastLocation]);
   useBlocker(handleBlockedNavigation, when);
-  return [showPrompt, confirmNavigation, cancelNavigation];
+  return [showPrompt, confirmNavigation, cancelNavigation,setShowPrompt];
 };
