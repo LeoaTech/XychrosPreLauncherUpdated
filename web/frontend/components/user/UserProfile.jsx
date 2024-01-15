@@ -303,7 +303,6 @@ const UserProfile = () => {
                   type="text"
                   name="firstname"
                   id="firstname"
-                  placeholder="e.g Joseph"
                   value={userDetails?.firstname}
                   onChange={handleChange}
                   disabled
@@ -315,7 +314,6 @@ const UserProfile = () => {
                   type="text"
                   name="lastname"
                   id="lastname"
-                  placeholder="e.g Henry"
                   value={userDetails?.lastname}
                   onChange={handleChange}
                   disabled
@@ -329,7 +327,6 @@ const UserProfile = () => {
                   type="text"
                   name="email"
                   id="email"
-                  placeholder="joseph@gmail.com"
                   value={userDetails?.email}
                   onChange={handleChange}
                   disabled
