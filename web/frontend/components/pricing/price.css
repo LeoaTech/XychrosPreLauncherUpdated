@@ -66,6 +66,10 @@
   background-color: var(--secondary-text-color);
 }
 
+.pricing-card-light{
+  opacity: 0.7;
+}
+
 .pricing-card:hover,
 .pricing-card-light:hover {
   opacity: 1;
