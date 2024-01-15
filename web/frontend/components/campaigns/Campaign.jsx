@@ -323,7 +323,6 @@ const CampaignsComponent = () => {
           <SummaryCard
             value={
               getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks
-              getTotalClicks.length === 0 ? 0 : getTotalClicks[0].total_clicks
             }
             title="Clicks"
             icon={arrow}
