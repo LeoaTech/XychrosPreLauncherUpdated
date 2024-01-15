@@ -1,10 +1,12 @@
 import React from "react";
 import "./draftModal.css";
 import { GrStatusWarning } from "react-icons/gr";
-import {RiErrorWarningFill} from 'react-icons/ri'
+import { RiErrorWarningFill } from "react-icons/ri";
+import { AiOutlineClose } from "react-icons/ai";
 
 const SaveDraft = ({
   openModal,
+  onClose,
   cancelNavigation,
   confirmNavigation,
   handleSaveDraft,
@@ -14,6 +16,17 @@ const SaveDraft = ({
       <div className="draft-modal-container">
         <nav className="modal-nav">
           <h6>Unsaved Changes </h6>
+          <span>
+            <AiOutlineClose
+              onClick={onClose}
+              style={{
+                backgroundColor: "black",
+                color: "red",
+                height: 30,
+                width: 24,
+              }}
+            />
+          </span>
         </nav>
         <section className="modal-body">
           <div className="modal-content">
