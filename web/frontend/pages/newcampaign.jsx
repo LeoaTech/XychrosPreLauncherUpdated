@@ -63,7 +63,6 @@ const NewCampaign = () => {
     };
   }, [dispatch, settingsData]);
 
-  console.log(settingsData);
   useEffect(() => {
     if (productsList?.length > 0) {
       dispatch(fetchProducts(productsList));

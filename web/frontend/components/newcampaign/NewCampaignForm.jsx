@@ -233,7 +233,6 @@ function NewCampaignForm() {
       }
 
       const data = await response.json();
-      console.log(data, "store");
       return data;
     } catch (error) {
       console.error("Error fetching discount codes:", error);
@@ -2979,7 +2978,6 @@ function NewCampaignForm() {
 
           if (response.ok) {
             draftCampaign = await response.json();
-            console.log(draftCampaign, "Draft campaign");
             draftCampaignId = draftCampaign?.campaign_id;
           } else {
             console.log("Failed to save Campaign Drfat");
@@ -3010,7 +3008,6 @@ function NewCampaignForm() {
           if (typeof draftCampaignId == "number") {
             let result = await saveDraftCampaignDetails(campaignDetails);
             if (result) {
-              console.log(result, "Draft campaign result");
               dispatch(addNewCampaignDetails(result[0]));
             } else {
               console.log("no result Found");
@@ -3020,7 +3017,6 @@ function NewCampaignForm() {
               let productDetails = await saveDraftProductDetails({
                 ...RewardProductDetails,
               });
-              console.log(productDetails);
 
               if (productDetails) {
                 console.log("Saved data in product details");
