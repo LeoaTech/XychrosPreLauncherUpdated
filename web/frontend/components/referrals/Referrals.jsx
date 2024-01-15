@@ -11,11 +11,13 @@ import { fetchAllCampaignsRevenue } from "../../app/features/revenue/totalRevenu
 
 import SkeletonSummaryCard from "../loading_skeletons/SkeletonSummaryCard";
 import SkeletonLoader from "../loading_skeletons/SkeletonTable";
+import { useThemeContext } from "../../contexts/ThemeContext";
 
 const ReferralsBlock = lazy(() => import("./ReferralsBlock"));
 const SummaryCard = lazy(() => import("../ui/SummaryCard"));
 
 const Referrals = () => {
+  const {theme} = useThemeContext();
   // const { getCampaigns } = props;
   const List = useSelector(fetchAllCampaigns);
   const campaignDetails = useSelector(fetchCampaignsDetailsList);
@@ -105,8 +107,18 @@ const Referrals = () => {
           </Suspense>
         ) : (
           <h2
-            style={{
-              color: "#fff",
+            style={
+              theme=="dark" ? 
+              {
+                color: "#fff",
+              fontSize: 29,
+              margin: 20,
+              height: "50vh",
+              display: "Flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }:{
+              color: "#333",
               fontSize: 29,
               margin: 20,
               height: "50vh",
