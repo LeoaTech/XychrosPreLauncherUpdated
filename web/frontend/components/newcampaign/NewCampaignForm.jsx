@@ -19,7 +19,6 @@ import "./newcampaign.css";
 import { useDispatch, useSelector } from "react-redux";
 import "./socialsBlocks/social.css";
 import "./rewardTier/RewardTier.css";
-import { useThemeContext } from "../../contexts/ThemeContext";
 import {
   fetchCampaignByName,
   addNewCampaign,
@@ -47,6 +46,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useFetchDiscountCodes from "../../constant/fetchDiscountCodes";
+import { useThemeContext } from "../../contexts/ThemeContext";
 
 const SaveDraft = lazy(() => import("../modal/SaveDraft"));
 
@@ -56,6 +56,7 @@ function NewCampaignForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { campaignsid } = useParams();
+  const { theme } = useThemeContext();
   const { isEdit, setIsEdit, formErrors, SetFormErrors } = useStateContext();
   const fetch = useAuthenticatedFetch(); //Fetch Campaign data with authenticated credentials
 
@@ -79,8 +80,8 @@ function NewCampaignForm() {
   let getNextDate = new Date();
   getStartDate.setDate(today.getDate() + 1); // Get Start Date
   getNextDate.setDate(today.getDate() + 6); //Get End Date
-  getStartDate.setHours(0, 0, 0, 1); //Start Camapign with Midnight Time
-  getNextDate.setHours(23, 59, 59, 59); //End Camapign with Midnight Time
+  getStartDate.setHours(0, 1, 0, 0); // Set to 00:01 AM
+  getNextDate.setHours(23, 59, 59, 999); // Set to 11:59 PM
 
   // Local States of Components
 
@@ -93,13 +94,9 @@ function NewCampaignForm() {
     filteredTierProducts: [],
     productsList: [],
   });
-  const [globalSettings, setGlobalSettings] = useState();
-  const [productsData, setProductsData] = useState([]);
-  const [startDate, setStartDate] = useState(getStartDate);
-  const [endDate, setEndDate] = useState(getNextDate);
-  const { theme } = useThemeContext();
+
   const [draftModal, setDraftModal] = useState(false);
-  const [showPrompt, confirmNavigation, cancelNavigation] =
+  const [showPrompt, confirmNavigation, cancelNavigation,setShowPrompt] =
     useCallbackPrompt(draftModal);
   const [updateCampaignData, setUpdateCampaignData] = useState({});
   const [templateList, setTemplateList] = useState([]); //To store all templates received from Template API
@@ -223,45 +220,72 @@ function NewCampaignForm() {
     }
   }, [isEdit]);
 
-  const fetchCodes = useFetchDiscountCodes("/api/fetch_discount_codes", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    signal: abortController.signal,
-  });
+  const handleFetchDiscountCodes = async () => {
+    try {
+      const response = await fetch("/api/fetch_discount_codes", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        signal: abortController.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch discount codes");
+      }
+
+      const data = await response.json();
+      console.log(data, "store");
+      return data;
+    } catch (error) {
+      console.error("Error fetching discount codes:", error);
+      throw error;
+    }
+  };
 
   useEffect(() => {
-    if (fetchCodes?.length > 0) {
-      setDiscountList([...discountList, ...fetchCodes]);
-    }
+    const fetchData = async () => {
+      try {
+        const fetchDiscountCodes = await handleFetchDiscountCodes();
+
+        if (fetchDiscountCodes.length > 0) {
+          setDiscountList((prev) => [
+            ...new Set([...prev, ...fetchDiscountCodes]),
+          ]);
+        }
+      } catch (error) {
+        // Handle error as needed
+        console.log(error);
+      }
+    };
+
+    fetchData();
+
     return () => {
       abortController.abort();
     };
-  }, [fetchCodes]);
+  }, []);
 
-  // Get All Campaigns Discount Code List
   useEffect(() => {
-    if (campaignsDiscountCode?.length > 0) {
-      // Use Set to remove duplicates and convert back to an array
-      let uniqueCodes = [...new Set(campaignsDiscountCode)];
+    const updateDiscountList = (codes) => {
+      setDiscountList((prev) => [...new Set([...prev, ...codes])]);
+    };
 
-      let codesList = [...uniqueCodes, ...discountList];
-      setDiscountList([...new Set(codesList)]);
+    if (campaignsDiscountCode && campaignsDiscountCode.length > 0) {
+      let uniqueCodes = [...new Set(campaignsDiscountCode)];
+      setDiscountList(uniqueCodes);
     }
 
-    // Get All Campaigns Discount Code
-    if (fetchCampaign?.length > 0) {
-      let codesList = [];
-      fetchCampaign.forEach((campaign) => {
-        codesList.push(campaign?.reward_1_code);
-        codesList.push(campaign?.reward_2_code);
-        codesList.push(campaign?.reward_3_code);
-        codesList.push(campaign?.reward_4_code);
-      });
+    if (fetchCampaign && fetchCampaign.length > 0) {
+      let codesList = fetchCampaign.reduce((acc, campaign) => {
+        return acc.concat(
+          campaign.reward_1_code,
+          campaign.reward_2_code,
+          campaign.reward_3_code,
+          campaign.reward_4_code
+        );
+      }, []);
 
-      let uniqueList = codesList?.filter((code) => code !== null);
-
-      let uniqudiscounts = [...uniqueList, ...discountList];
-      setDiscountList([...new Set(uniqudiscounts)]);
+      let uniqueList = codesList.filter((code) => code !== null);
+      setDiscountList(uniqueList);
     }
   }, [campaignsDiscountCode, fetchCampaign]);
 
@@ -308,7 +332,6 @@ function NewCampaignForm() {
     }
   }, [products, campaignsProductlist]);
 
-  console.log(globalSettings);
   // Get New Campaign Form pre-filled fields From Global Settings
   useEffect(() => {
     if (globalSettings !== undefined) {
@@ -502,12 +525,11 @@ function NewCampaignForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          // signal: abortController.signal,
+          signal: abortController.signal,
         });
 
         if (response.ok) {
           const list = await response.json();
-          console.log(list);
           return list;
         } else {
           return;
@@ -558,7 +580,6 @@ function NewCampaignForm() {
       getLists();
     }
   }, [globalSettings?.klaviyo_api_key, editCampaignData?.klaviyo_api_key]);
-  console.log(klaviyoList, "list", globalSettings?.klaviyo_api_key);
 
   //? When user try to reload or change the route to other page
   useEffect(() => {
@@ -699,7 +720,7 @@ function NewCampaignForm() {
   // Handle Previous Step event for each Form
   const handlePrevious = (index) => {
     setNewCampaignData((prev) => ({ ...prev, template_id: null }));
-    setSelectedTemplateData(undefined);
+    setSelectedTemplateData(null);
 
     setExpanded((prevExpand) =>
       prevExpand.map((state, i) => (i === index ? !state : false))
@@ -1562,6 +1583,11 @@ function NewCampaignForm() {
     }
   };
 
+  const onModalClose = () => {
+    setShowPrompt(false);
+    
+  };
+
   // Update the Reward Product
   const handleRewardProductChange = (name, value, tierId) => {
     if (isEdit) {
@@ -2308,7 +2334,6 @@ function NewCampaignForm() {
             });
             // Discount Codes Generated
 
-            console.log(discount_details, "Codes");
             if (discount_details?.success) {
               // Continue next task
               const template_details = await createTemplates(
@@ -2352,10 +2377,8 @@ function NewCampaignForm() {
                   }, 3000);
 
                   let updatedCamapignData = await updateCampaignSettings.json();
-                  console.log(updatedCamapignData, "Campaign updated");
                   idExists =
                     campaignById?.campaign_id || editCampaignData?.campaign_id;
-                  console.log(updatedCamapignData, "Changed Campaign data");
                   // dispatch(updateCampaign(updatedCamapignData));
                 } else {
                   setTimeout(() => {
@@ -2512,7 +2535,7 @@ function NewCampaignForm() {
       } catch (error) {
         console.log(error, "Updating Campaign settings");
       }
-    } else  {
+    } else {
       e.preventDefault();
 
       setDraftModal(false);
@@ -2755,7 +2778,6 @@ function NewCampaignForm() {
   };
   // Save Draft campaign Product Details
   const saveDraftProductDetails = async (product_details) => {
-    console.log(product_details, "Product Details");
     let campaignDetailsId = toast.loading("Saving Discount Codes and Pages");
     if (isEdit) {
       try {
@@ -2768,7 +2790,6 @@ function NewCampaignForm() {
             ...product_details,
           }),
         });
-        console.log(detailsResponse, "Product details repsonse");
         if (detailsResponse.ok) {
           setTimeout(() => {
             toast.update(campaignDetailsId, {
@@ -2784,7 +2805,6 @@ function NewCampaignForm() {
             toast.dismiss(campaignDetailsId);
           }, 2000);
           const detailsData = await detailsResponse.json();
-          console.log(detailsData, "after saving campaign product details");
           return detailsData;
         } else {
           setTimeout(() => {
@@ -3014,6 +3034,7 @@ function NewCampaignForm() {
     }
   };
 
+  console.log(discountList, "Codes ALL");
   return (
     <>
       {((myPlan == "Free" && TotalCampaign?.length >= 1) ||
@@ -3049,6 +3070,7 @@ function NewCampaignForm() {
               confirmNavigation={confirmNavigation}
               cancelNavigation={cancelNavigation}
               handleSaveDraft={onDraftSave}
+              onClose={onModalClose}
             />
           </Suspense>
           <ToastContainer
@@ -3111,7 +3133,12 @@ function NewCampaignForm() {
                       }
                     >
                       <div className="form-group">
-                        <div className="inputfield">
+                        <div
+                          className="inputfield"
+                          // className={
+                          //   theme === "dark" ? "inputfield" : "inputfield-light"
+                          // }
+                        >
                           <label htmlFor="name">
                             Campaign Name
                             {formErrors?.requiredInputName && (
@@ -3173,6 +3200,7 @@ function NewCampaignForm() {
                                   : "select-products-light"
                               }
                             >
+                              {" "}
                               <select
                                 name="product"
                                 id="product"
@@ -3235,11 +3263,11 @@ function NewCampaignForm() {
                                   : "select-products-light"
                               }
                             >
+                              {" "}
                               <select
                                 name="product"
                                 id="product"
-                                placeholder=""
-                                
+                                placeholder="T-Shirts"
                                 value={newCampaignData?.product}
                                 onChange={handleChange}
                               >
@@ -3500,7 +3528,7 @@ function NewCampaignForm() {
               )}
             </section>
 
-            {/* Referal Settings */}
+            {/* Referral Settings */}
             <section
               className={
                 theme === "dark"
@@ -3537,7 +3565,7 @@ function NewCampaignForm() {
                       <IoIosArrowDown
                         disabled={expanded[0]}
                         style={{ strokeWidth: "70", fill: "#fff" }}
-                        onClick={() => handleExpand(1)}
+                        // onClick={() => handleExpand(1)}
                       />
                     )}
                   </span>
@@ -3934,174 +3962,471 @@ function NewCampaignForm() {
                                   </h6>
                                 )}
                               </div>
-                              <div className="reward-form">
-                                <div
-                                  className={
-                                    theme === "dark"
-                                      ? "inputfield"
-                                      : "inputfield-light"
-                                  }
-                                >
-                                  <label htmlFor={`reward_${reward?.id}_tier`}>
-                                    No of Referrals
-                                  </label>
-                                  {isEdit ? (
-                                    <input
-                                      className="small-inputfield"
-                                      type="number"
-                                      name={`reward_${reward?.id}_tier`}
-                                      value={
-                                        editCampaignData[
-                                          `reward_${reward?.id}_tier`
-                                        ]
-                                      }
-                                      onChange={handleChange}
-                                      disabled={isEdit}
-                                    />
-                                  ) : (
-                                    <input
-                                      className="small-inputfield"
-                                      type="number"
-                                      min={
-                                        newCampaignData?.discount_type ===
-                                        "percent"
-                                          ? 1
-                                          : 1
-                                      }
-                                      max={
-                                        newCampaignData?.discount_type ===
-                                        "percent"
-                                          ? 100
-                                          : null
-                                      }
-                                      name={`reward_${reward?.id}_tier`}
-                                      value={
-                                        newCampaignData[
-                                          `reward_${reward?.id}_tier`
-                                        ]
-                                      }
-                                      onChange={handleChange}
-                                      disabled={
-                                        isFieldDisabled(reward?.id) ||
-                                        (reward?.id > 1 &&
-                                          reward?.id < 4 &&
-                                          !newCampaignData[
-                                            `reward_${reward?.id - 1}_tier`
-                                          ])
-                                        // (reward?.id === 2 && !isTier1Filled) || (reward?.id === 4 && (!isTier3Filled))
-                                      }
-                                      // disabled={reward?.id > 1 && reward?.id < 4 && !newCampaignData[`reward_${reward?.id - 1}_tier`]}
-                                    />
-                                  )}
-                                </div>
-                                <div
-                                  className={
-                                    theme === "dark"
-                                      ? "inputfield"
-                                      : "inputfield-light"
-                                  }
-                                >
-                                  <label
-                                    htmlFor={`reward_${reward?.id}_discount`}
-                                  >
-                                    Discount
-                                  </label>
-                                  {isEdit ? (
-                                    <input
-                                      className="small-inputfield"
-                                      type="number"
-                                      name={`reward_${reward?.id}_discount`}
-                                      value={
-                                        editCampaignData[
-                                          `reward_${reward?.id}_discount`
-                                        ]
-                                      }
-                                      onChange={handleChange}
-                                      disabled={isEdit}
-                                    />
-                                  ) : (
-                                    <input
-                                      className="small-inputfield"
-                                      type="number"
-                                      min={
-                                        newCampaignData?.discount_type ===
-                                        "percent"
-                                          ? 1
-                                          : 1
-                                      }
-                                      max={
-                                        newCampaignData?.discount_type ===
-                                        "percent"
-                                          ? 100
-                                          : null
-                                      }
-                                      name={`reward_${reward?.id}_discount`}
-                                      value={
-                                        newCampaignData[
-                                          `reward_${reward?.id}_discount`
-                                        ]
-                                      }
-                                      onChange={handleChange}
-                                      disabled={
-                                        isFieldDisabled(reward?.id) ||
-                                        (reward?.id > 1 &&
-                                          reward?.id < 4 &&
-                                          !newCampaignData[
-                                            `reward_${reward?.id - 1}_discount`
-                                          ])
-                                        // ||(reward?.id === 2 && !isTier1Filled) || (reward?.id === 4 && !isTier3Filled)
-                                      }
-                                      // disabled={reward?.id > 1 && reward?.id < 4 && !newCampaignData[`reward_${reward?.id - 1}_discount`]}
-                                    />
-                                  )}
-                                </div>
+                              {/* Reward Setting form for Amount/Percent Discount Types */}
 
-                                <div
-                                  className={
-                                    theme === "dark"
-                                      ? "inputfield"
-                                      : "inputfield-light"
-                                  }
-                                >
-                                  <label htmlFor={`reward_${reward?.id}_code`}>
-                                    Discount Code
-                                  </label>
-                                  {isEdit ? (
-                                    <input
-                                      className="large-field"
-                                      type="text"
-                                      name={`reward_${reward?.id}_code`}
-                                      value={
-                                        editCampaignData[
-                                          `reward_${reward?.id}_code`
-                                        ]
-                                      }
-                                      onChange={handleChange}
-                                      disabled={isEdit}
-                                    />
-                                  ) : (
-                                    <input
-                                      className="large-field"
-                                      type="text"
-                                      name={`reward_${reward?.id}_code`}
-                                      value={
-                                        newCampaignData[
-                                          `reward_${reward?.id}_code`
-                                        ]
-                                      }
-                                      onChange={handleChange}
-                                      disabled={
-                                        isFieldDisabled(reward?.id) ||
-                                        (reward?.id > 1 &&
-                                          reward?.id < 4 &&
-                                          !newCampaignData[
-                                            `reward_${reward?.id - 1}_code`
-                                          ])
-                                      }
-                                    />
-                                  )}
+                              {newCampaignData?.discount_type != "product" &&
+                              editCampaignData?.discount_type != "product" ? (
+                                <div className="reward-form">
+                                  <div
+                                    className={
+                                      theme === "dark"
+                                        ? "inputfield"
+                                        : "inputfield-light"
+                                    }
+                                  >
+                                    <label
+                                      htmlFor={`reward_${reward?.id}_tier`}
+                                    >
+                                      No of Referrals
+                                    </label>
+                                    {isEdit ? (
+                                      <input
+                                        className="small-inputfield"
+                                        type="number"
+                                        name={`reward_${reward?.id}_tier`}
+                                        min={
+                                          editCampaignData?.discount_type ===
+                                          "percent"
+                                            ? 1
+                                            : 1
+                                        }
+                                        max={
+                                          editCampaignData?.discount_type ===
+                                          "percent"
+                                            ? 100
+                                            : null
+                                        }
+                                        value={
+                                          editCampaignData[
+                                            `reward_${reward?.id}_tier`
+                                          ]
+                                        }
+                                        onChange={
+                                          isEdit && editCampaignData?.is_draft
+                                            ? handleChange
+                                            : undefined
+                                        }
+                                        disabled={
+                                          isEdit && !editCampaignData?.is_draft
+                                        }
+                                      />
+                                    ) : (
+                                      <input
+                                        className="small-inputfield"
+                                        type="number"
+                                        min={
+                                          newCampaignData?.discount_type ===
+                                          "percent"
+                                            ? 1
+                                            : 1
+                                        }
+                                        max={
+                                          newCampaignData?.discount_type ===
+                                          "percent"
+                                            ? 100
+                                            : null
+                                        }
+                                        name={`reward_${reward?.id}_tier`}
+                                        value={
+                                          newCampaignData[
+                                            `reward_${reward?.id}_tier`
+                                          ]
+                                        }
+                                        onChange={handleChange}
+                                        disabled={
+                                          isFieldDisabled(reward?.id) ||
+                                          (reward?.id > 1 &&
+                                            reward?.id < 4 &&
+                                            !newCampaignData[
+                                              `reward_${reward?.id - 1}_tier`
+                                            ])
+                                        }
+                                      />
+                                    )}
+                                  </div>
+                                  <div
+                                    className={
+                                      theme === "dark"
+                                        ? "inputfield"
+                                        : "inputfield-light"
+                                    }
+                                  >
+                                    <label
+                                      htmlFor={`reward_${reward?.id}_discount`}
+                                    >
+                                      Discount
+                                    </label>
+                                    {isEdit ? (
+                                      <input
+                                        className="small-inputfield"
+                                        type="number"
+                                        name={`reward_${reward?.id}_discount`}
+                                        value={
+                                          editCampaignData[
+                                            `reward_${reward?.id}_discount`
+                                          ]
+                                        }
+                                        onChange={
+                                          isEdit && editCampaignData?.is_draft
+                                            ? handleChange
+                                            : undefined
+                                        }
+                                        disabled={
+                                          isEdit && !editCampaignData?.is_draft
+                                        }
+                                      />
+                                    ) : (
+                                      <input
+                                        className="small-inputfield"
+                                        type="number"
+                                        min={
+                                          newCampaignData?.discount_type ===
+                                          "percent"
+                                            ? 1
+                                            : 1
+                                        }
+                                        max={
+                                          newCampaignData?.discount_type ===
+                                          "percent"
+                                            ? 100
+                                            : null
+                                        }
+                                        name={`reward_${reward?.id}_discount`}
+                                        value={
+                                          newCampaignData[
+                                            `reward_${reward?.id}_discount`
+                                          ]
+                                        }
+                                        onChange={handleChange}
+                                        disabled={
+                                          isFieldDisabled(reward?.id) ||
+                                          (reward?.id > 1 &&
+                                            reward?.id < 4 &&
+                                            !newCampaignData[
+                                              `reward_${
+                                                reward?.id - 1
+                                              }_discount`
+                                            ])
+                                          // ||(reward?.id === 2 && !isTier1Filled) || (reward?.id === 4 && !isTier3Filled)
+                                        }
+                                        // disabled={reward?.id > 1 && reward?.id < 4 && !newCampaignData[`reward_${reward?.id - 1}_discount`]}
+                                      />
+                                    )}
+                                  </div>
+
+                                  <div
+                                    className={
+                                      theme === "dark"
+                                        ? "inputfield"
+                                        : "inputfield-light"
+                                    }
+                                  >
+                                    <label
+                                      htmlFor={`reward_${reward?.id}_code`}
+                                    >
+                                      Discount Code
+                                    </label>
+                                    {isEdit ? (
+                                      <input
+                                        className="large-field"
+                                        type="text"
+                                        name={`reward_${reward?.id}_code`}
+                                        value={
+                                          editCampaignData[
+                                            `reward_${reward?.id}_code`
+                                          ]
+                                        }
+                                        onChange={
+                                          isEdit && editCampaignData?.is_draft
+                                            ? handleChange
+                                            : undefined
+                                        }
+                                        disabled={
+                                          isEdit && !editCampaignData?.is_draft
+                                        }
+                                      />
+                                    ) : (
+                                      <input
+                                        className="large-field"
+                                        type="text"
+                                        name={`reward_${reward?.id}_code`}
+                                        value={
+                                          newCampaignData[
+                                            `reward_${reward?.id}_code`
+                                          ]
+                                        }
+                                        onChange={handleChange}
+                                        disabled={
+                                          isFieldDisabled(reward?.id) ||
+                                          (reward?.id > 1 &&
+                                            reward?.id < 4 &&
+                                            !newCampaignData[
+                                              `reward_${reward?.id - 1}_code`
+                                            ])
+                                        }
+                                      />
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
+                              ) : (
+                                // Reward Settings Form For Free Product Reward
+                                <div className="reward-form">
+                                  <div
+                                    className={
+                                      theme === "dark"
+                                        ? "inputfield"
+                                        : "inputfield-light"
+                                    }
+                                  >
+                                    <label
+                                      htmlFor={`reward_${reward?.id}_tier`}
+                                    >
+                                      No of Referrals
+                                    </label>
+                                    {isEdit ? (
+                                      <input
+                                        className="small-inputfield"
+                                        type="number"
+                                        name={`reward_${reward?.id}_tier`}
+                                        value={
+                                          editCampaignData[
+                                            `reward_${reward?.id}_tier`
+                                          ]
+                                        }
+                                        onChange={
+                                          isEdit && editCampaignData?.is_draft
+                                            ? handleChange
+                                            : undefined
+                                        }
+                                        disabled={
+                                          isEdit && !editCampaignData?.is_draft
+                                        }
+                                      />
+                                    ) : (
+                                      <input
+                                        className="small-inputfield"
+                                        type="number"
+                                        min={
+                                          newCampaignData?.discount_type ===
+                                          "percent"
+                                            ? 1
+                                            : 1
+                                        }
+                                        max={
+                                          newCampaignData?.discount_type ===
+                                          "percent"
+                                            ? 100
+                                            : null
+                                        }
+                                        name={`reward_${reward?.id}_tier`}
+                                        value={
+                                          newCampaignData[
+                                            `reward_${reward?.id}_tier`
+                                          ]
+                                        }
+                                        onChange={handleChange}
+                                        disabled={
+                                          formErrors?.LaunchProductError ||
+                                          isProductFieldDisabled(reward?.id) ||
+                                          (reward?.id > 1 &&
+                                            reward?.id < 4 &&
+                                            !newCampaignData[
+                                              `reward_${reward?.id - 1}_tier`
+                                            ])
+                                        }
+                                      />
+                                    )}
+                                  </div>
+
+                                  <div
+                                    className={
+                                      theme === "dark"
+                                        ? "inputfield"
+                                        : "inputfield-light"
+                                    }
+                                  >
+                                    <label
+                                      htmlFor={`reward_${reward?.id}_product`}
+                                    >
+                                      Select Free Product
+                                    </label>
+                                    {isEdit ? (
+                                      <div className="product-tier">
+                                        <select
+                                          type="text"
+                                          name={`reward_${reward?.id}_product`}
+                                          value={
+                                            editCampaignData[
+                                              `reward_${reward?.id}_product`
+                                            ]
+                                          }
+                                          onChange={
+                                            editCampaignData?.is_draft
+                                              ? handleChange
+                                              : undefined
+                                          }
+                                          disabled={
+                                            formErrors?.LaunchProductError ||
+                                            (isEdit &&
+                                              !editCampaignData?.is_draft)
+                                          }
+                                        >
+                                          {isEdit &&
+                                          !editCampaignData?.is_draft ? (
+                                            <option>
+                                              {
+                                                editCampaignData[
+                                                  `reward_${reward?.id}_product`
+                                                ]
+                                              }
+                                            </option>
+                                          ) : (
+                                            <>
+                                              <option></option>
+                                              {getProducts?.filteredTierProducts
+                                                .filter((item) => {
+                                                  // Check if the item is not selected in any previous tier
+                                                  for (
+                                                    let i = 1;
+                                                    i < reward?.id;
+                                                    i++
+                                                  ) {
+                                                    if (
+                                                      item.title ===
+                                                      selectProducts[
+                                                        `tier${i}ProductName`
+                                                      ]
+                                                    ) {
+                                                      return false;
+                                                    }
+                                                  }
+                                                  return true;
+                                                })
+                                                .map((item) => (
+                                                  <option
+                                                    value={item.title}
+                                                    key={item.id}
+                                                  >
+                                                    {item.title}
+                                                  </option>
+                                                ))}
+                                            </>
+                                          )}
+                                        </select>
+                                      </div>
+                                    ) : (
+                                      <div className="product-tier">
+                                        <select
+                                          type="text"
+                                          name={`reward_${reward?.id}_product`}
+                                          value={
+                                            newCampaignData[
+                                              `reward_${reward?.id}_product`
+                                            ]
+                                          }
+                                          onChange={handleChange}
+                                          disabled={
+                                            formErrors?.LaunchProductError ||
+                                            isProductFieldDisabled(
+                                              reward?.id
+                                            ) ||
+                                            (reward?.id > 1 &&
+                                              reward?.id < 4 &&
+                                              !newCampaignData[
+                                                `reward_${
+                                                  reward?.id - 1
+                                                }_product`
+                                              ])
+                                          }
+                                        >
+                                          <option></option>{" "}
+                                          {getProducts?.filteredTierProducts
+                                            .filter((item) => {
+                                              // Check if the item is not selected in any previous tier
+                                              for (
+                                                let i = 1;
+                                                i < reward?.id;
+                                                i++
+                                              ) {
+                                                if (
+                                                  item.title ===
+                                                  selectProducts[
+                                                    `tier${i}ProductName`
+                                                  ]
+                                                ) {
+                                                  return false;
+                                                }
+                                              }
+                                              return true;
+                                            })
+                                            .map((item) => (
+                                              <option
+                                                value={item.title}
+                                                key={item.id}
+                                              >
+                                                {item.title}
+                                              </option>
+                                            ))}
+                                        </select>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div
+                                    className={
+                                      theme === "dark"
+                                        ? "inputfield"
+                                        : "inputfield-light"
+                                    }
+                                  >
+                                    <label
+                                      htmlFor={`reward_${reward?.id}_code`}
+                                    >
+                                      Discount Code
+                                    </label>
+                                    {isEdit ? (
+                                      <input
+                                        className="large-field"
+                                        type="text"
+                                        name={`reward_${reward?.id}_code`}
+                                        value={
+                                          editCampaignData[
+                                            `reward_${reward?.id}_code`
+                                          ]
+                                        }
+                                        onChange={
+                                          isEdit && editCampaignData?.is_draft
+                                            ? handleChange
+                                            : undefined
+                                        }
+                                        disabled={
+                                          isEdit && !editCampaignData?.is_draft
+                                        }
+                                      />
+                                    ) : (
+                                      <input
+                                        className="large-field"
+                                        type="text"
+                                        name={`reward_${reward?.id}_code`}
+                                        value={
+                                          newCampaignData[
+                                            `reward_${reward?.id}_code`
+                                          ]
+                                        }
+                                        onChange={handleChange}
+                                        disabled={
+                                          formErrors?.LaunchProductError ||
+                                          isProductFieldDisabled(reward?.id) ||
+                                          (reward?.id > 1 &&
+                                            reward?.id < 4 &&
+                                            !newCampaignData[
+                                              `reward_${reward?.id - 1}_tier`
+                                            ])
+                                        }
+                                      />
+                                    )}
+                                  </div>
+                                </div>
+                              )}
 
                               {/* Duplicates Discount Codes Error */}
                               <div>
@@ -4632,110 +4957,128 @@ function NewCampaignForm() {
                           </label>
                         </div>
 
-                      <div className="integration-settings-container">
-                        <div className="form-group">
-                          <div
-                            className={
-                              theme === "dark"
-                                ? "inputfield"
-                                : "inputfield-light"
-                            }
-                          >
-                            <label htmlFor="klaviyo_api_key">
-                              Private API Key
-                            </label>
-                            {isEdit ? (
-                              <input
-                                type="text"
-                                className="disabled-value"
-                                name="klaviyo_api_key"
-                                id="klaviyo_api_key"
-                                placeholder="Enter API Key"
-                                value={globalSettings?.klaviyo_api_key}
-                                onChange={handleChange}
-                                readOnly
-                              />
-                            ) : (
-                              <input
-                                className="disabled-value"
-                                type="text"
-                                name="klaviyo_api_key"
-                                id="klaviyo_api_key"
-                                placeholder="Enter API Key"
-                                value={newCampaignData?.klaviyo_api_key}
-                                onChange={handleChange}
-                                readOnly
-                              />
-                            )}
+                        <div className="integration-settings-container">
+                          <div className="form-group">
+                            <div
+                              className={
+                                theme === "dark"
+                                  ? "inputfield"
+                                  : "inputfield-light"
+                              }
+                            >
+                              <label htmlFor="klaviyo_api_key">
+                                Private API Key
+                              </label>
+                              {isEdit ? (
+                                <input
+                                  type="text"
+                                  className="disabled-value"
+                                  name="klaviyo_api_key"
+                                  id="klaviyo_api_key"
+                                  placeholder="Enter API Key"
+                                  value={
+                                    globalSettings?.klaviyo_api_key ||
+                                    editCampaignData?.klaviyo_api_key
+                                  }
+                                  onChange={handleChange}
+                                  readOnly
+                                />
+                              ) : (
+                                <input
+                                  className="disabled-value"
+                                  type="text"
+                                  name="klaviyo_api_key"
+                                  id="klaviyo_api_key"
+                                  placeholder="Enter API Key"
+                                  value={newCampaignData?.klaviyo_api_key}
+                                  onChange={handleChange}
+                                  readOnly
+                                />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        <div className="form-group">
-                          <div
-                            className={
-                              theme === "dark"
-                                ? "inputfield"
-                                : "inputfield-light"
-                            }
-                          >
-                            {klaviyoList?.length > 2 && (
-                              <label htmlFor="">List to Add Users</label>
-                            )}
-
-                            {klaviyoList?.length > 2 ? (
+                          {newCampaignData?.klaviyo_integration ||
+                          editCampaignData?.klaviyo_integration ? (
+                            <div className="form-group">
                               <div
                                 className={
                                   theme === "dark"
-                                    ? "select-user-input"
-                                    : "select-user-input-light"
+                                    ? "inputfield"
+                                    : "inputfield-light"
                                 }
                               >
-                                {isEdit ? (
-                                  <select
-                                    name="klaviyo_list_id"
-                                    id="klaviyo_list_id"
-                                    value={editCampaignData?.klaviyo_list_id}
-                                    onChange={handleChange}
+                                {klaviyoList?.length > 2 && (
+                                  <label htmlFor="">List to Add Users</label>
+                                )}
+
+                                {klaviyoList?.length > 2 ? (
+                                  <div
+                                    className={
+                                      theme === "dark"
+                                        ? "select-user-input"
+                                        : "select-user-input-light"
+                                    }
                                   >
-                                    <option value="Select">Select</option>
-                                    {klaviyoList?.map((list) => (
-                                      <option
-                                        key={list?.list_id}
-                                        value={list?.list_id}
+                                    {isEdit ? (
+                                      <select
+                                        name="klaviyo_list_id"
+                                        id="klaviyo_list_id"
+                                        value={
+                                          editCampaignData?.klaviyo_list_id
+                                        }
+                                        onChange={handleChange}
                                       >
-                                        {list?.list_name}
-                                      </option>
-                                    ))}
-                                  </select>
+                                        <option value="Select">Select</option>
+                                        {klaviyoList?.map((list) => (
+                                          <option
+                                            key={list?.list_id}
+                                            value={list?.list_id}
+                                          >
+                                            {list?.list_name}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    ) : (
+                                      <select
+                                        name="klaviyo_list_id"
+                                        id="klaviyo_list_id"
+                                        value={newCampaignData?.klaviyo_list_id}
+                                        onChange={handleChange}
+                                      >
+                                        <option value="Select">Select</option>
+                                        {klaviyoList?.map((list) => (
+                                          <option
+                                            key={list?.list_id}
+                                            value={list?.list_id}
+                                          >
+                                            {list?.list_name}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    )}
+                                  </div>
                                 ) : (
-                                  <select
-                                    name="klaviyo_list_id"
-                                    id="klaviyo_list_id"
-                                    value={newCampaignData?.klaviyo_list_id}
-                                    onChange={handleChange}
-                                  >
-                                    <option value="Select">Select</option>
-                                    {klaviyoList?.map((list) => (
-                                      <option
-                                        key={list?.list_id}
-                                        value={list?.list_id}
-                                      >
-                                        {list?.list_name}
-                                      </option>
-                                    ))}
-                                  </select>
+                                  <Link to="/settings">
+                                    {!isEdit && (
+                                      <p className="klaviyo-message">
+                                        Please Enable API Key in Global Settings
+                                      </p>
+                                    )}
+                                  </Link>
                                 )}
                               </div>
-                            ) : (
-                              <Link to="/settings">
-                                <p className="klaviyo-message">
-                                  Please Enable API Key in Global Settings
-                                </p>
+                            </div>
+                          ) : (
+                            <p>
+                              Please Enable klaviyo Integration from{" "}
+                              <Link to="/settings" style={{ color: "purple" }}>
+                                Global Settings
                               </Link>
-                            )}
-                          </div>
+                            </p>
+                          )}
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                   <div className="integrate-setting-btn">
                     <>
