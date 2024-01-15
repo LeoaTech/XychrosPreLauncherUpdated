@@ -5,7 +5,6 @@ import { MdBlock, MdToggleOn, MdOfflineBolt } from "react-icons/md";
 import { FaEdit, FaHourglassEnd } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { IoCalendarSharp, IoToggle, IoToggleOutline } from "react-icons/io5";
-import { IoCalendarSharp, IoToggle, IoToggleOutline } from "react-icons/io5";
 import "./CampaignBlock.css";
 import { Link } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
@@ -214,8 +213,8 @@ export default function CampaignBlock({
               is_deactivated ? "deactivate-campaigns-tooltip" : ""
             }
           >
-            {product ? product : "Product Name"}
-          </p>
+            <p>{product ? product : "Product Name"}</p>
+          </Link>
 
           <div className="campaign-block-duration">
             <IoCalendarSharp
@@ -273,7 +272,7 @@ export default function CampaignBlock({
               <a
                 href={landing_template_link}
                 target="_blank"
-                className="btn"
+                // className="btn"
                 disabled={!is_deactivated}
                 style={{ cursor: !is_deactivated ? "pointer" : "not-allowed" }}
                 onClick={(e) => {
@@ -288,7 +287,7 @@ export default function CampaignBlock({
               <a
                 href={rewards_template_link}
                 target="_blank"
-                className="btn"
+                // className="btn"
                 disabled={!is_deactivated}
                 style={{ cursor: !is_deactivated ? "pointer" : "not-allowed" }}
                 onClick={(e) => {
@@ -308,7 +307,6 @@ export default function CampaignBlock({
               <ShortSummaryCard
                 is_deactivated={is_deactivated}
                 value={referralsById}
-                value={referralsById}
                 icon={subscriber}
                 className="referral-icon"
               />
@@ -318,7 +316,7 @@ export default function CampaignBlock({
               <ShortSummaryCard
                 is_deactivated={is_deactivated}
                 value={campaign_clicks}
-                value={campaign_clicks}
+                
                 icon={arrow}
                 className="clicks-icon"
               />
@@ -403,14 +401,16 @@ export default function CampaignBlock({
                         : { height: 24, width: 24 }
                     }
                   />{" "}
-                 
-                  <div> <span
-                    style={
-                      theme === "dark" ? { color: "#fff" } : { color: "#333" }
-                    }
-                  >
-                    Delete
-                  </span></div>
+                  <div>
+                    {" "}
+                    <span
+                      style={
+                        theme === "dark" ? { color: "#fff" } : { color: "#333" }
+                      }
+                    >
+                      Delete
+                    </span>
+                  </div>
                 </div>
               </IconContext.Provider>{" "}
             </>
